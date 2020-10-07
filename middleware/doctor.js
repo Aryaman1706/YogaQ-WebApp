@@ -1,14 +1,14 @@
-const User = require("../models/User");
+const Doctor = require("../models/Doctor");
 
-// * User is logged in
+// * Doctor is logged in
 exports.login = async (req, res, next) => {
   try {
     if (req.user) {
-      const user = await User.findById(req.user._id).exec();
-      if (!user) {
-        return res.status(404).json({ error: "Invalid User.", body: null });
+      const doctor = await Doctor.findById(req.user._id).exec();
+      if (!doctor) {
+        return res.status(404).json({ error: "Invalid account.", body: null });
       } else {
-        if (user.role == "user") {
+        if (doctor.role == "doctor" && doctor.restricted) {
           next();
         } else {
           return res
@@ -17,7 +17,7 @@ exports.login = async (req, res, next) => {
         }
       }
     } else {
-      return res.status(401).json({ error: "Login to continue", body: null });
+      return res.status(401).json({ ersror: "Login to continue", body: null });
     }
   } catch (error) {
     console.log("Error occured here\n", error);

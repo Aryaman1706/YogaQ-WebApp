@@ -80,7 +80,7 @@ const doctorSchema = new mongoose.Schema(
           },
           doc: {
             type: String,
-            required: true,
+            default: null,
           },
         },
       ],
@@ -122,6 +122,17 @@ const doctorSchema = new mongoose.Schema(
     welcomeMessage: {
       type: String,
       maxlength: 200,
+    },
+    // Admin Access
+    restricted: {
+      type: Boolean,
+      default: false,
+    },
+    role: {
+      type: String,
+      enum: ["admin", "doctor", "user"],
+      default: "doctor",
+      immutable: true,
     },
   },
   { timestamps: true }

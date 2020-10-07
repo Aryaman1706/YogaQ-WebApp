@@ -1,6 +1,7 @@
 const express = require("express");
 
 // * Middleware
+const { login: loginAdmin } = require("../middleware/admin");
 
 // * Controllers
 const controller = require("../controllers/admin");
@@ -12,13 +13,13 @@ const router = express.Router();
 router.post("/register", controller.create);
 
 // * Get my profile
-router.get("/profile", controller.myProfile);
+router.get("/profile", loginAdmin, controller.myProfile);
 
 // * Edit profile of admin
-router.put("/profile", controller.edit);
+router.put("/profile", loginAdmin, controller.edit);
 
 // * Change Password
-router.put("/changePassword", controller.changePassword);
+router.put("/changePassword", loginAdmin, controller.changePassword);
 
 // * Forgot password 1 (Enter email to send reset link on)
 router.post("/forgotPassword", controller.forgotPassword1);
