@@ -7,18 +7,14 @@ exports.login = async (req, res, next) => {
       const user = await User.findById(req.user._id).exec();
       if (!user) {
         return res.status(404).json({ error: "Invalid User.", body: null });
-      } else {
-        if (user.role == "user") {
-          next();
-        } else {
-          return res
-            .status(550)
-            .json({ error: "Permission Denied.", body: null });
-        }
       }
-    } else {
-      return res.status(401).json({ error: "Login to continue", body: null });
+      if (user.role === "user") {
+        next();
+        return 0;
+      }
+      return res.status(550).json({ error: "Permission Denied.", body: null });
     }
+    return res.status(401).json({ error: "Login to continue", body: null });
   } catch (error) {
     console.log("Error occured here\n", error);
     return res.status(500).json({ error: "Server Error.", body: null });

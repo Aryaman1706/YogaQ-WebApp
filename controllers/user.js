@@ -15,7 +15,7 @@ exports.getProfile = async (req, res) => {
     if (!user)
       return res.status(404).json({ error: "User not found.", body: null });
 
-    res.status(200).json({ error: null, body: user });
+    return res.status(200).json({ error: null, body: user });
   } catch (error) {
     console.log("Error occured here\n", error);
     return res.status(500).json({ error: "Server Error.", body: null });
@@ -25,6 +25,7 @@ exports.getProfile = async (req, res) => {
 // * Create new user
 exports.registerUser = async (req, res) => {
   try {
+    // TODO
   } catch (error) {
     console.log("Error occured here\n", error);
   }
@@ -47,7 +48,7 @@ exports.editProfile = async (req, res) => {
     if (!updatedUser)
       return res.status(404).json({ error: "User not found.", body: null });
 
-    res.status(200).json({ error: null, body: updatedUser });
+    return res.status(200).json({ error: null, body: updatedUser });
   } catch (error) {
     console.log("Error occured here\n", error);
     return res.status(500).json({ error: "Server Error.", body: null });

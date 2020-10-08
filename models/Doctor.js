@@ -42,7 +42,7 @@ const doctorSchema = new mongoose.Schema(
     // Auth
     email: {
       type: String,
-      match: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+      match: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
       maxlength: 150,
       required: true,
       unique: true,
