@@ -1,5 +1,5 @@
-const { string } = require("joi");
 const Joi = require("joi");
+Joi.objectId = require("joi-objectid")(Joi);
 
 exports.enquiry = (body) => {
   const schema = Joi.object({
@@ -11,15 +11,15 @@ exports.enquiry = (body) => {
     gender: Joi.string()
       .lowercase()
       .trim()
-      .valid(["male", "female", "other"])
+      .valid("male", "female", "other")
       .required(),
-    country: Joi.string().max(150).trim().required(),
+    country: Joi.string().max(150).trim().uppercase().required(),
     languages: Joi.array().items(
       Joi.string().max(20).trim().lowercase().required()
     ),
     description: Joi.string().max(200).trim().required(),
     email: Joi.string().email().required(),
-    qualification: Joi.object({
+    qualificational: Joi.object({
       educationalQualification: Joi.array()
         .items(
           Joi.string()
@@ -57,8 +57,38 @@ exports.enquiry = (body) => {
   return schema.validate(body);
 };
 
-exports.test = (body) => {
-  const schema = Joi.object({});
+exports.register = (body) => {
+  const schema = Joi.object({
+    enquiry: Joi.objectId().trim().required(),
+    password: Joi.string().min(8).max(20).trim().required(),
+  });
+
+  return schema.validate(body);
+};
+
+exports.changePassword = (body) => {
+  const schema = Joi.object({
+    oldPassword: Joi.string().min(8).max(20).trim().required(),
+    newPassword: Joi.string().min(8).max(20).trim().required(),
+    confirmPassword: Joi.string().min(8).max(20).trim().required(),
+  });
+
+  return schema.validate(body);
+};
+
+exports.forgotPassword1 = (body) => {
+  const schema = Joi.object({
+    email: Joi.string().email().max(150).trim().required(),
+  });
+
+  return schema.validate(body);
+};
+
+exports.forgotPassword2 = (body) => {
+  const schema = Joi.object({
+    newPassword: Joi.string().min(8).max(20).trim().required(),
+    confirmPassword: Joi.string().min(8).max(20).trim().required(),
+  });
 
   return schema.validate(body);
 };

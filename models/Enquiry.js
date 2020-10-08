@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const doctorSchema = new mongoose.Schema(
+const enquirySchema = new mongoose.Schema(
   {
     // Profile
     username: {
@@ -39,26 +39,12 @@ const doctorSchema = new mongoose.Schema(
       maxlength: 200,
       required: true,
     },
-    // Auth
     email: {
       type: String,
       match: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
       maxlength: 150,
       required: true,
       unique: true,
-    },
-    password: {
-      type: String,
-      default: null,
-    },
-    resetToken: {
-      type: String,
-      max: 50,
-      default: null,
-    },
-    resetTokenValidity: {
-      type: Date,
-      default: null,
     },
     // Details
     qualificational: {
@@ -119,26 +105,10 @@ const doctorSchema = new mongoose.Schema(
       maxlength: 200,
       required: true,
     },
-    welcomeMessage: {
-      type: String,
-      maxlength: 200,
-      default: null,
-    },
-    // Admin Access
-    restricted: {
-      type: Boolean,
-      default: false,
-    },
-    role: {
-      type: String,
-      enum: ["admin", "doctor", "user"],
-      default: "doctor",
-      immutable: true,
-    },
   },
   { timestamps: true }
 );
 
-const Doctor = mongoose.model("Doctor", doctorSchema);
+const Enquiry = mongoose.model("Enquiry", enquirySchema);
 
-module.exports = Doctor;
+module.exports = Enquiry;
