@@ -1,34 +1,74 @@
 // * NPM Packages
-const { genSalt, hash, compare } = require("bcryptjs");
-const { randomBytes } = require("crypto");
+const { genSalt, hash } = require("bcryptjs");
 
 // * Models
-const Admin = require("../models/Admin");
+const Doctor = require("../models/Doctor");
+const Enquiry = require("../models/Enquiry");
 
 // * Utils
-const validation = require("../validationSchemas/admin");
+const validation = require("../validationSchemas/doctor");
 
 // * Controllers -->
 
-// * Create a new admin
-exports.create = async (req, res) => {
+// * Create a new enquiry
+exports.newEnquiry = async (req, res) => {
   try {
-    const { error, value } = validation.create(req.body);
+    const { error, value } = validation.enquiry(req.body);
     if (error)
       return res
         .status(400)
         .json({ error: error.details[0].message, body: null });
 
-    const salt = await genSalt(10);
-    const password = hash(value.password, salt);
+    await Enquiry.create({ ...value });
 
-    const newAdmin = await Admin.create({
-      username: value.username,
-      email: value.email,
-      password,
+    res.status(200).json({
+      error: null,
+      body: "Thank you. Your application was submitted successfully",
     });
+  } catch (error) {
+    console.log("Error occured here\n", error);
+    return res.status(500).json({ error: "Server Error.", body: null });
+  }
+};
 
-    res.status(500).json({ error: null, body: newAdmin });
+// * Create a doctor from enquiry
+exports.register = async (req, res) => {
+  try {
+    const { error, value } = validation.enquiry(req.body);
+    if (error)
+      return res
+        .status(400)
+        .json({ error: error.details[0].message, body: null });
+
+    let enquiry = await Enquiry.findById(value.enquiry).exec();
+    if (!enquiry)
+      return res.status(404).json({ error: "Invalid Enquiry.", body: null });
+
+    const salt = await genSalt(10);
+    const password = await hash(value.password, salt);
+    const doctor = await Doctor.create({ ...enquiry, password });
+
+    res.status(200).json({ error: null, body: doctor });
+
+    await enquiry.remove();
+  } catch (error) {
+    console.log("Error occured here\n", error);
+    return res.status(500).json({ error: "Server Error.", body: null });
+  }
+};
+
+// * Deny an enquiry
+exports.denyEnquiry = async (req, res) => {
+  try {
+    const enquiry = await Enquiry.findByIdAndDelete(
+      req.params.enquiryId
+    ).exec();
+    if (!enquiry)
+      return res.status(404).json({ error: "Invalid enquiry.", body: null });
+
+    res
+      .status(200)
+      .json({ error: null, body: "Enquiry deleted successfully." });
   } catch (error) {
     console.log("Error occured here\n", error);
     return res.status(500).json({ error: "Server Error.", body: null });
@@ -38,35 +78,25 @@ exports.create = async (req, res) => {
 // * Get my profile
 exports.myProfile = async (req, res) => {
   try {
-    const admin = await Admin.findById(req.user._id).exec();
-    if (!admin)
-      return res.status(404).json({ error: "Admin not found", body: null });
+    const doctor = await Doctor.findById(req.user._id).exec();
+    if (!doctor)
+      return res.status(404).json({ error: "Invalid account.", body: null });
 
-    res.status(200).json({ error: null, body: admin });
+    res.status(200).json({ error: null, body: doctor });
   } catch (error) {
     console.log("Error occured here\n", error);
     return res.status(500).json({ error: "Server Error.", body: null });
   }
 };
 
-// * Edit profile of admin
-exports.edit = async (req, res) => {
+// * Edit my profile
+exports.editProfile = async (req, res) => {
   try {
-    const { error, value } = validation.edit(req.body);
-    if (error)
-      return res
-        .status(400)
-        .json({ error: error.details[0].message, body: null });
-
-    const updatedAdmin = await User.findByIdAndUpdate(
-      req.user._id,
-      { ...value },
-      { new: true }
-    ).exec();
-    if (!updatedAdmin)
-      return res.status(404).json({ error: "Admin not found.", body: null });
-
-    res.status(200).json({ error: null, body: updatedAdmin });
+    const { error, value } = validation.enquiry(req.body);
+    if (error);
+    return res
+      .status(400)
+      .json({ error: error.details[0].message, body: null });
   } catch (error) {
     console.log("Error occured here\n", error);
     return res.status(500).json({ error: "Server Error.", body: null });
@@ -82,9 +112,9 @@ exports.changePassword = async (req, res) => {
         .status(400)
         .json({ error: error.details[0].message, body: null });
 
-    let admin = await Admin.findById(req.user._id).exec();
-    if (!admin)
-      return res.status(404).json({ error: "Admin not found.", body: null });
+    let doctor = await Doctor.findById(req.user._id).exec();
+    if (!doctor)
+      return res.status(404).json({ error: "Account not found.", body: null });
 
     const { oldPassword, newPassword, confirmPassword } = value;
     if (newPassword !== confirmPassword)
@@ -92,14 +122,14 @@ exports.changePassword = async (req, res) => {
         .status(400)
         .json({ error: "Passwords do not match.", body: null });
 
-    const result = await compare(oldPassword, admin.password);
+    const result = await compare(oldPassword, doctor.password);
     if (!result)
       return res.status(400).json({ error: "Incorrect Password.", body: null });
 
     const salt = await genSalt(10);
     const password = hash(newPassword, salt);
-    admin.password = password;
-    admin = await admin.save();
+    doctor.password = password;
+    doctor = await doctor.save();
 
     res
       .status(200)
@@ -119,16 +149,16 @@ exports.forgotPassword1 = async (req, res) => {
         .status(400)
         .json({ error: error.details[0].message, body: null });
 
-    const admin = await Admin.findOne({ email: value.email }).exec();
-    if (!admin)
+    const doctor = await Doctor.findOne({ email: value.email }).exec();
+    if (!doctor)
       return res
         .status(404)
-        .json({ error: "Admin not found. Check entered email.", body: null });
+        .json({ error: "Account not found. Check entered email.", body: null });
 
-    admin.resetToken = randomBytes(25);
-    admin.resetTokenValidity = new Date(Date.now() + 15 * 60 * 1000);
-    // TODO Send email to admin.email
-    admin = await admin.save();
+    doctor.resetToken = randomBytes(25);
+    doctor.resetTokenValidity = new Date(Date.now() + 15 * 60 * 1000);
+    // TODO Send email to doctor.email
+    doctor = await doctor.save();
 
     res.status(200).json({
       error: null,
@@ -151,11 +181,11 @@ exports.forgotPassword2 = async (req, res) => {
 
     const token = req.params.resetToken.trim();
 
-    let admin = await Admin.findOne({
+    let doctor = await Doctor.findOne({
       resetToken: token,
       resetTokenValidity: { $gte: new Date() },
     }).exec();
-    if (!admin)
+    if (!doctor)
       return res
         .status(404)
         .json({ error: "Invalid reset token. Try again.", body: null });
@@ -168,10 +198,10 @@ exports.forgotPassword2 = async (req, res) => {
     const salt = await genSalt(10);
     const password = await hash(value.newPassword, salt);
 
-    admin.password = password;
-    admin.resetToken = null;
-    admin.resetTokenValidity = null;
-    admin = await admin.save();
+    doctor.password = password;
+    doctor.resetToken = null;
+    doctor.resetTokenValidity = null;
+    doctor = await doctor.save();
 
     res.status(200).json({ error: null, body: "Password reset successfull." });
   } catch (error) {
