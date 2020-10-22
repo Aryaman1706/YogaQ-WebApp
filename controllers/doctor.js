@@ -1,5 +1,6 @@
 // * NPM Packages
-const { genSalt, hash } = require("bcryptjs");
+const { genSalt, hash, compare } = require("bcryptjs");
+const { randomBytes } = require("crypto");
 
 // * Models
 const Doctor = require("../models/Doctor");
@@ -21,7 +22,7 @@ exports.newEnquiry = async (req, res) => {
 
     await Enquiry.create({ ...value });
 
-    res.status(200).json({
+    return res.status(200).json({
       error: null,
       body: "Thank you. Your application was submitted successfully",
     });
@@ -34,13 +35,13 @@ exports.newEnquiry = async (req, res) => {
 // * Create a doctor from enquiry
 exports.register = async (req, res) => {
   try {
-    const { error, value } = validation.enquiry(req.body);
+    const { error, value } = validation.register(req.body);
     if (error)
       return res
         .status(400)
         .json({ error: error.details[0].message, body: null });
 
-    let enquiry = await Enquiry.findById(value.enquiry).exec();
+    const enquiry = await Enquiry.findById(value.enquiry).exec();
     if (!enquiry)
       return res.status(404).json({ error: "Invalid Enquiry.", body: null });
 
@@ -51,6 +52,7 @@ exports.register = async (req, res) => {
     res.status(200).json({ error: null, body: doctor });
 
     await enquiry.remove();
+    return 0;
   } catch (error) {
     console.log("Error occured here\n", error);
     return res.status(500).json({ error: "Server Error.", body: null });
@@ -66,7 +68,7 @@ exports.denyEnquiry = async (req, res) => {
     if (!enquiry)
       return res.status(404).json({ error: "Invalid enquiry.", body: null });
 
-    res
+    return res
       .status(200)
       .json({ error: null, body: "Enquiry deleted successfully." });
   } catch (error) {
@@ -82,7 +84,7 @@ exports.myProfile = async (req, res) => {
     if (!doctor)
       return res.status(404).json({ error: "Invalid account.", body: null });
 
-    res.status(200).json({ error: null, body: doctor });
+    return res.status(200).json({ error: null, body: doctor });
   } catch (error) {
     console.log("Error occured here\n", error);
     return res.status(500).json({ error: "Server Error.", body: null });
@@ -90,13 +92,15 @@ exports.myProfile = async (req, res) => {
 };
 
 // * Edit my profile
+//! 2 routes -> one to change information and one to remove and reupload docs
 exports.editProfile = async (req, res) => {
   try {
     const { error, value } = validation.enquiry(req.body);
-    if (error);
-    return res
-      .status(400)
-      .json({ error: error.details[0].message, body: null });
+    if (error)
+      return res
+        .status(400)
+        .json({ error: error.details[0].message, body: null });
+    return value;
   } catch (error) {
     console.log("Error occured here\n", error);
     return res.status(500).json({ error: "Server Error.", body: null });
@@ -131,7 +135,7 @@ exports.changePassword = async (req, res) => {
     doctor.password = password;
     doctor = await doctor.save();
 
-    res
+    return res
       .status(200)
       .json({ error: null, body: "Password changed successfully." });
   } catch (error) {
@@ -149,7 +153,7 @@ exports.forgotPassword1 = async (req, res) => {
         .status(400)
         .json({ error: error.details[0].message, body: null });
 
-    const doctor = await Doctor.findOne({ email: value.email }).exec();
+    let doctor = await Doctor.findOne({ email: value.email }).exec();
     if (!doctor)
       return res
         .status(404)
@@ -160,7 +164,7 @@ exports.forgotPassword1 = async (req, res) => {
     // TODO Send email to doctor.email
     doctor = await doctor.save();
 
-    res.status(200).json({
+    return res.status(200).json({
       error: null,
       body: `Email has been send to ${value.email} with further instructions.`,
     });
@@ -203,7 +207,9 @@ exports.forgotPassword2 = async (req, res) => {
     doctor.resetTokenValidity = null;
     doctor = await doctor.save();
 
-    res.status(200).json({ error: null, body: "Password reset successfull." });
+    return res
+      .status(200)
+      .json({ error: null, body: "Password reset successfull." });
   } catch (error) {
     console.log("Error occured here\n", error);
     return res.status(500).json({ error: "Server Error.", body: null });

@@ -42,7 +42,6 @@ const doctorSchema = new mongoose.Schema(
     // Auth
     email: {
       type: String,
-      match: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
       maxlength: 150,
       required: true,
       unique: true,
@@ -79,6 +78,7 @@ const doctorSchema = new mongoose.Schema(
             required: true,
           },
           doc: {
+            // File
             type: String,
             default: null,
           },
@@ -109,6 +109,7 @@ const doctorSchema = new mongoose.Schema(
           },
         },
         doc: {
+          // File
           type: String,
           default: null,
         },

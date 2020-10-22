@@ -20,7 +20,7 @@ exports.create = async (req, res) => {
         .json({ error: error.details[0].message, body: null });
 
     const salt = await genSalt(10);
-    const password = hash(value.password, salt);
+    const password = await hash(value.password, salt);
 
     const newAdmin = await Admin.create({
       username: value.username,
@@ -28,7 +28,7 @@ exports.create = async (req, res) => {
       password,
     });
 
-    res.status(500).json({ error: null, body: newAdmin });
+    return res.status(500).json({ error: null, body: newAdmin });
   } catch (error) {
     console.log("Error occured here\n", error);
     return res.status(500).json({ error: "Server Error.", body: null });
@@ -42,7 +42,7 @@ exports.myProfile = async (req, res) => {
     if (!admin)
       return res.status(404).json({ error: "Admin not found", body: null });
 
-    res.status(200).json({ error: null, body: admin });
+    return res.status(200).json({ error: null, body: admin });
   } catch (error) {
     console.log("Error occured here\n", error);
     return res.status(500).json({ error: "Server Error.", body: null });
@@ -58,7 +58,7 @@ exports.edit = async (req, res) => {
         .status(400)
         .json({ error: error.details[0].message, body: null });
 
-    const updatedAdmin = await User.findByIdAndUpdate(
+    const updatedAdmin = await Admin.findByIdAndUpdate(
       req.user._id,
       { ...value },
       { new: true }
@@ -66,7 +66,7 @@ exports.edit = async (req, res) => {
     if (!updatedAdmin)
       return res.status(404).json({ error: "Admin not found.", body: null });
 
-    res.status(200).json({ error: null, body: updatedAdmin });
+    return res.status(200).json({ error: null, body: updatedAdmin });
   } catch (error) {
     console.log("Error occured here\n", error);
     return res.status(500).json({ error: "Server Error.", body: null });
@@ -97,11 +97,11 @@ exports.changePassword = async (req, res) => {
       return res.status(400).json({ error: "Incorrect Password.", body: null });
 
     const salt = await genSalt(10);
-    const password = hash(newPassword, salt);
+    const password = await hash(newPassword, salt);
     admin.password = password;
     admin = await admin.save();
 
-    res
+    return res
       .status(200)
       .json({ error: null, body: "Password changed successfully." });
   } catch (error) {
@@ -119,7 +119,7 @@ exports.forgotPassword1 = async (req, res) => {
         .status(400)
         .json({ error: error.details[0].message, body: null });
 
-    const admin = await Admin.findOne({ email: value.email }).exec();
+    let admin = await Admin.findOne({ email: value.email }).exec();
     if (!admin)
       return res
         .status(404)
@@ -130,7 +130,7 @@ exports.forgotPassword1 = async (req, res) => {
     // TODO Send email to admin.email
     admin = await admin.save();
 
-    res.status(200).json({
+    return res.status(200).json({
       error: null,
       body: `Email has been send to ${value.email} with further instructions.`,
     });
@@ -173,7 +173,9 @@ exports.forgotPassword2 = async (req, res) => {
     admin.resetTokenValidity = null;
     admin = await admin.save();
 
-    res.status(200).json({ error: null, body: "Password reset successfull." });
+    return res
+      .status(200)
+      .json({ error: null, body: "Password reset successfull." });
   } catch (error) {
     console.log("Error occured here\n", error);
     return res.status(500).json({ error: "Server Error.", body: null });

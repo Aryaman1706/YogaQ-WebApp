@@ -33,7 +33,7 @@ exports.enquiry = (body) => {
           Joi.object({
             name: Joi.string().trim().required(),
             institute: Joi.string().trim().required(),
-            doc: Joi.string(),
+            doc: Joi.string(), // File
           })
         )
         .required(),
@@ -47,7 +47,7 @@ exports.enquiry = (body) => {
             years: Joi.number().integer().min(0).required(),
             months: Joi.number().integer().min(0).max(11).required(),
           }),
-          doc: Joi.string(),
+          doc: Joi.string(), // File
         })
       )
       .required(),

@@ -14,7 +14,6 @@ const adminSchema = new mongoose.Schema(
     },
     email: {
       type: String,
-      match: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
       maxlength: 150,
       required: true,
       unique: true,
@@ -30,6 +29,11 @@ const adminSchema = new mongoose.Schema(
     },
     resetTokenValidity: {
       type: Date,
+      default: null,
+    },
+    welcomeMessage: {
+      type: String,
+      maxlength: 250,
       default: null,
     },
     role: {
