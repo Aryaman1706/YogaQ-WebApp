@@ -35,7 +35,7 @@ exports.newEnquiry = async (req, res) => {
 // * Create a doctor from enquiry
 exports.register = async (req, res) => {
   try {
-    const { error, value } = validation.enquiry(req.body);
+    const { error, value } = validation.register(req.body);
     if (error)
       return res
         .status(400)
@@ -92,6 +92,7 @@ exports.myProfile = async (req, res) => {
 };
 
 // * Edit my profile
+//! 2 routes -> one to change information and one to remove and reupload docs
 exports.editProfile = async (req, res) => {
   try {
     const { error, value } = validation.enquiry(req.body);
@@ -99,7 +100,6 @@ exports.editProfile = async (req, res) => {
       return res
         .status(400)
         .json({ error: error.details[0].message, body: null });
-    // TODO
     return value;
   } catch (error) {
     console.log("Error occured here\n", error);

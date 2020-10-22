@@ -41,7 +41,6 @@ const enquirySchema = new mongoose.Schema(
     },
     email: {
       type: String,
-      match: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
       maxlength: 150,
       required: true,
       unique: true,
@@ -65,6 +64,7 @@ const enquirySchema = new mongoose.Schema(
             required: true,
           },
           doc: {
+            // File
             type: String,
             default: null,
           },
@@ -95,6 +95,7 @@ const enquirySchema = new mongoose.Schema(
           },
         },
         doc: {
+          // File
           type: String,
           default: null,
         },

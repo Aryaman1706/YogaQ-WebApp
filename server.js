@@ -1,20 +1,45 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const passport = require("passport");
 require("dotenv").config();
+require("./config/userPassport");
+const session = require("express-session");
+const cors = require("cors");
 
 const app = express();
 
 // * Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(
+  session({
+    secret: process.env.COOKIESECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: { maxAge: 24 * 60 * 60 * 1000 },
+  })
+);
+app.use(cors({ origin: `${process.env.CLIENT_URL}`, credentials: true }));
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", `${process.env.CLIENT_URL}`);
+  res.header("Access-Control-Allow-Credentials", true);
+  res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  next();
+});
+app.use(passport.initialize());
+app.use(passport.session());
 
 // * Routes import
 const user = require("./routes/user");
 const admin = require("./routes/admin");
 
 // * Server Setup
-const PORT = process.env.PORT || 5000;
-const server = app.listen(PORT, console.log(`Server Started on port ${PORT}`));
+const port = process.env.PORT || 5000;
+app.listen(port, console.log(`Server Started on port ${port}`));
 
 mongoose.connect(
   process.env.MONGO_URI,

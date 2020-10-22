@@ -14,7 +14,6 @@ const adminSchema = new mongoose.Schema(
     },
     email: {
       type: String,
-      match: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
       maxlength: 150,
       required: true,
       unique: true,
@@ -34,7 +33,7 @@ const adminSchema = new mongoose.Schema(
     },
     welcomeMessage: {
       type: String,
-      maxlength: 200,
+      maxlength: 250,
       default: null,
     },
     role: {

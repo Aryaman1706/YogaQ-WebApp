@@ -20,7 +20,7 @@ exports.create = async (req, res) => {
         .json({ error: error.details[0].message, body: null });
 
     const salt = await genSalt(10);
-    const password = hash(value.password, salt);
+    const password = await hash(value.password, salt);
 
     const newAdmin = await Admin.create({
       username: value.username,
@@ -97,7 +97,7 @@ exports.changePassword = async (req, res) => {
       return res.status(400).json({ error: "Incorrect Password.", body: null });
 
     const salt = await genSalt(10);
-    const password = hash(newPassword, salt);
+    const password = await hash(newPassword, salt);
     admin.password = password;
     admin = await admin.save();
 

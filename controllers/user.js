@@ -22,15 +22,6 @@ exports.getProfile = async (req, res) => {
   }
 };
 
-// * Create new user
-exports.registerUser = async (req, res) => {
-  try {
-    // TODO
-  } catch (error) {
-    console.log("Error occured here\n", error);
-  }
-};
-
 // * Edit profile
 exports.editProfile = async (req, res) => {
   try {
