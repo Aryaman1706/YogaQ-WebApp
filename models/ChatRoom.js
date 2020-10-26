@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Message = require("./Message");
 
 const chatroomSchema = new mongoose.Schema(
   {
@@ -32,12 +33,6 @@ const chatroomSchema = new mongoose.Schema(
         default: null,
       },
     },
-    messages: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Message",
-      },
-    ],
   },
   { timestamps: true }
 );
@@ -49,6 +44,11 @@ chatroomSchema.index(
   },
   { unique: true }
 );
+
+chatroomSchema.post("remove", async (doc, next) => {
+  await Message.remove({ chatroomId: doc._id });
+  next();
+});
 
 const ChatRoom = mongoose.model("ChatRoom", chatroomSchema);
 module.exports = ChatRoom;

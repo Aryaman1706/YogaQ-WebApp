@@ -2,6 +2,7 @@
 
 // * Models
 const ChatRoom = require("../models/ChatRoom");
+const Message = require("../models/Message");
 const User = require("../models/User");
 const Admin = require("../models/Admin");
 const Doctor = require("../models/Doctor");
@@ -47,14 +48,10 @@ exports.get = async (req, res) => {
     const chatroom = await ChatRoom.findById(req.params.id)
       .populate("user.id", "username email")
       .populate("partner.id", "username email")
-      .populate({
-        path: "messages",
-        sort: "-time",
-        limit: 50,
-      })
       .exec();
     if (!chatroom)
       return res.status(404).json({ error: "ChatRoom Not Found.", body: null });
+
     return res.status(200).json({
       error: null,
       body: chatroom,
@@ -65,11 +62,27 @@ exports.get = async (req, res) => {
   }
 };
 
-// * Get more messages
-// TODO
+// * Get Messages
 exports.messages = async (req, res) => {
   try {
-    return res.status(200).json({ error: null, body: null });
+    const chatroom = await ChatRoom.findById(req.params.id)
+      .select("messages")
+      .exec();
+    if (!chatroom || parseInt(req.query.page, 10) >= 1)
+      return res.status(404).json({ error: "Invalid Request.", body: null });
+
+    if (parseInt(req.query.page, 10) * 50 < chatroom.messages.length) {
+      const messages = await Message.find({ chatroomId: chatroom._id })
+        .sort("-time")
+        .skip((parseInt(req.query.page, 10) - 1) * 50)
+        .limit(50)
+        .exec();
+
+      return res.status(200).json({ error: null, body: messages });
+    }
+    return res
+      .status(400)
+      .json({ error: null, body: "No More Messages Found." });
   } catch (error) {
     console.log("Error occured here\n", error);
     return res.status(500).json({ error: "Server Error.", body: null });
@@ -110,16 +123,20 @@ exports.lastAccess = async (req, res) => {
       return res
         .status(400)
         .json({ error: error.details[0].message, body: null });
-    const chatroom = await ChatRoom.findById(req.params.id).exec();
+
+    const obj =
+      req.user.role === "user"
+        ? { "lastOpened.user": value.lastAccess }
+        : { "lastOpened.partner": value.lastAccess };
+
+    const chatroom = await ChatRoom.findByIdAndUpdate(
+      req.params.id,
+      { ...obj },
+      { new: true }
+    ).exec();
     if (!chatroom)
       return res.status(404).json({ error: "ChatRoom Not Found.", body: null });
 
-    if (req.user.role === "user") {
-      chatroom.lastOpened.user = value.lastAccess;
-    } else {
-      chatroom.lastOpened.partner = value.lastAccess;
-    }
-    await chatroom.save();
     return res
       .status(200)
       .json({ error: null, body: "Last Opended Updated Successfully." });

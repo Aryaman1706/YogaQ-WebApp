@@ -2,6 +2,10 @@ const mongoose = require("mongoose");
 
 const messageSchema = new mongoose.Schema(
   {
+    chatroomId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "ChatRoom",
+    },
     sender: {
       id: {
         type: mongoose.Schema.Types.ObjectId,
@@ -43,6 +47,8 @@ const messageSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+messageSchema.index({ chatroomId: 1, time: -1 });
 
 const Message = mongoose.model("Message", messageSchema);
 module.exports = Message;
