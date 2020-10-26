@@ -5,33 +5,34 @@ const { login: loginDoctor } = require("../middleware/doctor");
 const { login: loginAdmin } = require("../middleware/admin");
 
 // * Controllers
+const controller = require("../controllers/doctor");
 
 // * API Endpoints -->
 const router = express.Router();
 
 // * Create a new enquiry
-router.post("/enquire");
+router.post("/enquire", controller.newEnquiry);
 
 // * Create a doctor from enquiry
-router.post("/register", loginAdmin);
+router.post("/register", loginAdmin, controller.register);
 
 // * Deny an enquiry
-router.delete("/delete/:enquiryId", loginAdmin);
+router.delete("/delete/:enquiryId", loginAdmin, controller.denyEnquiry);
 
 // * Get my profile
-router.get("/profile", loginDoctor);
+router.get("/profile", loginDoctor, controller.myProfile);
 
 // * Edit my profile
-router.put("/profile", loginDoctor);
+router.put("/profile", loginDoctor, controller.editProfile);
 
 // * Change Password
-router.put("/changePassword", loginDoctor);
+router.put("/changePassword", loginDoctor, controller.changePassword);
 
 // * Forgot password 1 (Enter email to send reset token to)
-router.post("/forgotPassword");
+router.post("/forgotPassword", controller.forgotPassword1);
 
 // * Forgot password 2 (Enter new password)
-router.post("/forgotPassword/:token");
+router.post("/forgotPassword/:token", controller.forgotPassword2);
 
 // * End of API Endpoints -->
 
