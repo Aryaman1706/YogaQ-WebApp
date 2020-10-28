@@ -45,12 +45,35 @@ exports.create = async (req, res) => {
 // * Get a Chat Room
 exports.get = async (req, res) => {
   try {
-    const chatroom = await ChatRoom.findById(req.params.id)
+    const chatroom = await ChatRoom.findById(req.params.id).exec();
+    if (
+      !chatroom ||
+      (!chatroom.user.id.equals(req.user._id) &&
+        !chatroom.partner.id.equals(req.user._id))
+    ) {
+      req.session.active_chatroom = null;
+      return res.status(404).json({ error: "Invalid Request", body: null });
+    }
+
+    // * Set Cookies for subsequent requests
+    req.session.active_chatroom = {
+      chatroomId: chatroom._id,
+      userId: chatroom.user._id,
+      partnerId: chatroom.partner._id,
+    };
+
+    const lastAccess =
+      req.user.role === "user"
+        ? chatroom.lastOpened.user
+        : chatroom.lastOpened.partner;
+
+    await chatroom
       .populate("user.id", "username email")
       .populate("partner.id", "username email")
-      .exec();
-    if (!chatroom)
-      return res.status(404).json({ error: "ChatRoom Not Found.", body: null });
+      .populate({
+        path: "unreadMessages",
+        match: { time: { $gt: lastAccess } },
+      });
 
     return res.status(200).json({
       error: null,
@@ -65,14 +88,9 @@ exports.get = async (req, res) => {
 // * Get Messages
 exports.messages = async (req, res) => {
   try {
-    const chatroom = await ChatRoom.findById(req.params.id)
-      .select("messages")
-      .exec();
-    if (!chatroom || parseInt(req.query.page, 10) >= 1)
-      return res.status(404).json({ error: "Invalid Request.", body: null });
-
-    if (parseInt(req.query.page, 10) * 50 < chatroom.messages.length) {
-      const messages = await Message.find({ chatroomId: chatroom._id })
+    const totalMessages = await Message.count({ chatroomId: req.params.id });
+    if (parseInt(req.query.page, 10) * 50 < totalMessages) {
+      const messages = await Message.find({ chatroomId: req.params.id })
         .sort("-time")
         .skip((parseInt(req.query.page, 10) - 1) * 50)
         .limit(50)
@@ -137,6 +155,7 @@ exports.lastAccess = async (req, res) => {
     if (!chatroom)
       return res.status(404).json({ error: "ChatRoom Not Found.", body: null });
 
+    req.session.active_chatroom = null;
     return res
       .status(200)
       .json({ error: null, body: "Last Opended Updated Successfully." });
