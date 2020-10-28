@@ -16,7 +16,6 @@ exports.create = (body) => {
   return schema.validate(body);
 };
 
-// TODO -> Ask if more edit options are required
 exports.edit = (body) => {
   const schema = Joi.object({
     blocked: Joi.boolean().required(),

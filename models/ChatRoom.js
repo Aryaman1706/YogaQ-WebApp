@@ -34,7 +34,7 @@ const chatroomSchema = new mongoose.Schema(
       },
     },
   },
-  { timestamps: true }
+  { timestamps: true, toJSON: { virtuals: true } }
 );
 
 chatroomSchema.index(
@@ -44,6 +44,13 @@ chatroomSchema.index(
   },
   { unique: true }
 );
+
+chatroomSchema.virtual("unreadMessages", {
+  ref: "Message",
+  localField: "_id", // ! Might cause an error. Try switching
+  foreignField: "chatroomId",
+  count: true,
+});
 
 chatroomSchema.post("remove", async (doc, next) => {
   await Message.remove({ chatroomId: doc._id });
