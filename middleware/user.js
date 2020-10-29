@@ -9,8 +9,7 @@ exports.login = async (req, res, next) => {
         return res.status(404).json({ error: "Invalid User.", body: null });
       }
       if (user.role === "user") {
-        next();
-        return 0;
+        return next();
       }
       return res.status(550).json({ error: "Permission Denied.", body: null });
     }
