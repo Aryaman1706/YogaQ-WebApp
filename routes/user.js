@@ -16,6 +16,12 @@ router.get("/profile", loginMiddleware, controllers.getProfile);
 // * Edit profile
 router.put("/profile", loginMiddleware, controllers.editProfile);
 
+// * Google OAuth
+router.get("/auth", controllers.auth);
+
+// * Google OAuth Redirect
+router.get("/auth/callback", controllers.authCallback);
+
 // * End of API Endpoints -->
 
 module.exports = router;
