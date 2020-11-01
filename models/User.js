@@ -10,8 +10,6 @@ const userSchema = new mongoose.Schema(
     },
     phoneNumber: {
       type: String,
-      match: /[1-9]{1}[0-9]{9}/,
-      required: true,
     },
     age: {
       type: Number,
@@ -19,13 +17,11 @@ const userSchema = new mongoose.Schema(
     },
     gender: {
       type: String,
-      enum: ["male", "female", "other"],
       required: true,
     },
     country: {
       type: String,
       maxlength: 150,
-      required: true,
     },
     email: {
       type: String,
@@ -33,10 +29,9 @@ const userSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
-    googleId: {
-      type: String,
-      required: true,
-      unique: true,
+    complete: {
+      type: Boolean,
+      default: false,
     },
     role: {
       type: String,
