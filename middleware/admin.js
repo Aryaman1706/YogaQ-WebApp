@@ -11,8 +11,7 @@ exports.login = async (req, res, next) => {
           .json({ error: "Invalid Admin account.", body: null });
       }
       if (admin.role === "admin") {
-        next();
-        return 0;
+        return next();
       }
       return res.status(550).json({ error: "Permission Denied.", body: null });
     }
