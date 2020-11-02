@@ -10,7 +10,7 @@ const controller = require("../controllers/admin");
 const router = express.Router();
 
 // * Create a new admin
-router.post("/register", controller.create);
+router.post("/register", loginAdmin, controller.create);
 
 // * Get my profile
 router.get("/profile", loginAdmin, controller.myProfile);

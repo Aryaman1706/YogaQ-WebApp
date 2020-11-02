@@ -33,7 +33,7 @@ const adminSchema = new mongoose.Schema(
     },
     welcomeMessage: {
       type: String,
-      maxlength: 250,
+      maxlength: 500,
       default: null,
     },
     role: {
