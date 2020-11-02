@@ -38,7 +38,7 @@ exports.create = async (req, res) => {
 // * Get my profile
 exports.myProfile = async (req, res) => {
   try {
-    const admin = await Admin.findById(req.user._id).exec();
+    const admin = await Admin.findById(req.user._id).select("-password").exec();
     if (!admin)
       return res.status(404).json({ error: "Admin not found", body: null });
 
@@ -82,7 +82,7 @@ exports.changePassword = async (req, res) => {
         .status(400)
         .json({ error: error.details[0].message, body: null });
 
-    let admin = await Admin.findById(req.user._id).exec();
+    let admin = await Admin.findById(req.user._id).select("password").exec();
     if (!admin)
       return res.status(404).json({ error: "Admin not found.", body: null });
 

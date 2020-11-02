@@ -16,6 +16,10 @@ exports.getProfile = async (req, res) => {
     const user = await User.findById(req.user._id).exec();
     if (!user)
       return res.status(404).json({ error: "User not found.", body: null });
+    if (!user.complete) {
+      const query = user.phoneNumber ? "country" : "country-phoneNumber";
+      return res.redirect(`${process.env.CLIENT_URL}/signup?fields=${query}`);
+    }
 
     return res.status(200).json({ error: null, body: user });
   } catch (error) {
@@ -101,9 +105,36 @@ exports.authCallback = async (req, res) => {
     }
     const newUser = await User.create(profile);
     req.session.user = newUser._id;
+    const query = newUser.phoneNumber ? "country" : "country-phoneNumber";
+    return res.redirect(`${process.env.CLIENT_URL}/signup?fields=${query}`);
+  } catch (error) {
+    console.log("Error occured here\n", error);
     return res
-      .status(200)
-      .json({ error: null, body: "SignUp and Login Successfull." });
+      .status(401)
+      .json({ error: "Login/Signup failed. Try Again.", body: null });
+  }
+};
+
+// * Post request for signup
+exports.signup = async (req, res) => {
+  try {
+    let user = await User.findById(req.user._id).exec();
+    if (!user) return res.status(400).json({ error: null, body: null });
+
+    const { error, value } = user.phoneNumber
+      ? validation.signup_country(req.body)
+      : validation.signup_country_phone(req.body);
+    if (error)
+      return res
+        .status(400)
+        .json({ error: error.details[0].message, body: null });
+
+    user.country = value.country;
+    if (!user.phoneNumber) {
+      user.phoneNumber = value.phoneNumber;
+    }
+    user = await user.save();
+    return res.status(200).json({ error: null, body: user });
   } catch (error) {
     console.log("Error occured here\n", error);
     return res

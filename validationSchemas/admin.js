@@ -3,7 +3,7 @@ Joi.objectId = require("joi-objectid")(Joi);
 
 exports.create = (body) => {
   const schema = Joi.object({
-    username: Joi.string().min(5).max(150).trim().required(),
+    username: Joi.string().min(5).max(40).trim().required(),
     email: Joi.string().email().max(150).trim().required(),
     password: Joi.string().min(8).max(20).trim().required(),
   });
@@ -24,7 +24,7 @@ exports.edit = (body) => {
   const schema = Joi.object({
     username: Joi.string().min(5).max(150).trim().required(),
     email: Joi.string().email().max(150).trim().required(),
-    welcomeMessage: Joi.string().max(200).trim(),
+    welcomeMessage: Joi.string().max(500).trim(),
   });
 
   return schema.validate(body);

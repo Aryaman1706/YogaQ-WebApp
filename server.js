@@ -49,7 +49,13 @@ app.listen(port, console.log(`Server Started on port ${port}`));
 // * Routes Import
 const user = require("./routes/user");
 const admin = require("./routes/admin");
+const doctor = require("./routes/doctor");
+const chatroom = require("./routes/chatroom");
+const call = require("./routes/call");
 
 // * Routes Setup
 app.use("/api/user", user);
 app.use("/api/admin", admin);
+app.use("/api/doctor", doctor);
+app.use("/api/chatroom", chatroom);
+app.use("/api/call", call);

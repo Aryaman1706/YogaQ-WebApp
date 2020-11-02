@@ -22,6 +22,9 @@ router.get("/auth", controllers.auth);
 // * Google OAuth Redirect
 router.get("/auth/callback", controllers.authCallback);
 
+// * Post Request for signup
+router.put("/signup", controllers.signup);
+
 // * End of API Endpoints -->
 
 module.exports = router;
