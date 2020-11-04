@@ -58,9 +58,11 @@ exports.edit = async (req, res) => {
         .status(400)
         .json({ error: error.details[0].message, body: null });
 
+    const body = req.file ? { ...value, profilePicture: req.file.url } : value;
+
     const updatedAdmin = await Admin.findByIdAndUpdate(
       req.user._id,
-      { ...value },
+      { ...body },
       { new: true }
     ).exec();
     if (!updatedAdmin)

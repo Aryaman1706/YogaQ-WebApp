@@ -3,7 +3,7 @@ const User = require("../models/User");
 // * User is logged in
 exports.login = async (req, res, next) => {
   try {
-    if (!req.session.user) {
+    if (!req.session.user || req.session.user.role !== "user") {
       return res.status(403).json({ error: "Login To Continue.", body: null });
     }
     const user = await User.findById(req.session.user).exec();
@@ -21,7 +21,7 @@ exports.login = async (req, res, next) => {
 // * User is logged is and profile is complete
 exports.complete = async (req, res, next) => {
   try {
-    if (!req.session.user) {
+    if (!req.session.user || req.session.user.role !== "user") {
       return res.status(403).json({ error: "Login To Continue.", body: null });
     }
     const user = await User.findById(req.session.user).exec();

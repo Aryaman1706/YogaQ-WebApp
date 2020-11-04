@@ -100,11 +100,11 @@ exports.authCallback = async (req, res) => {
     };
     const user = await User.findOne({ email: profile.email }).exec();
     if (user) {
-      req.session.user = user._id;
+      req.session.user = { id: user._id, role: user.role };
       return res.status(200).json({ error: null, body: "Login Successfull." });
     }
     const newUser = await User.create(profile);
-    req.session.user = newUser._id;
+    req.session.user = { id: newUser._id, role: newUser.role };
     const query = newUser.phoneNumber ? "country" : "country-phoneNumber";
     return res.redirect(`${process.env.CLIENT_URL}/signup?fields=${query}`);
   } catch (error) {

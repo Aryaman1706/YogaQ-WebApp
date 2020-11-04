@@ -123,7 +123,7 @@ const doctorSchema = new mongoose.Schema(
     welcomeMessage: {
       type: String,
       maxlength: 200,
-      default: null,
+      default: "Hello!",
     },
     // Admin Access
     restricted: {

@@ -10,7 +10,7 @@ passport.use(
   "admin",
   new LocalStrategy(async (username, password, done) => {
     const admin = await Admin.findOne({ email: username.trim() })
-      .select("password")
+      .select("role password")
       .exec();
     if (!admin) return done(null, false, { message: "Invalid Credentials." });
 
@@ -26,7 +26,7 @@ passport.use(
   "user",
   new LocalStrategy(async (username, password, done) => {
     const doctor = await Doctor.findOne({ email: username.trim() })
-      .select("password")
+      .select("role password")
       .exec();
     if (!doctor) return done(null, false, { message: "Invalid Credentials." });
 
