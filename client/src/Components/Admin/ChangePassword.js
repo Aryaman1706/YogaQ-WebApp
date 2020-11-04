@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import { TextField, Button, Grid, Typography } from "@material-ui/core";
+import {
+  TextField,
+  Button,
+  Grid,
+  Typography,
+  InputAdornment,
+  IconButton,
+} from "@material-ui/core";
+import { Visibility, VisibilityOff } from "@material-ui/icons";
 
 const ChangePassword = () => {
   const [state, setState] = useState({
@@ -7,10 +15,24 @@ const ChangePassword = () => {
     newPassword: "",
     confirmPassword: "",
   });
+  const [showOld, setShowOld] = useState(false);
+  const [showNew, setShowNew] = useState(false);
 
   const changeHandler = (event) => {
     setState((prev) => {
       return { ...prev, [event.target.id]: event.target.value };
+    });
+  };
+
+  const toggleOld = (event) => {
+    setShowOld((prev) => {
+      return !prev;
+    });
+  };
+
+  const toggleNew = (event) => {
+    setShowNew((prev) => {
+      return !prev;
     });
   };
 
@@ -56,6 +78,7 @@ const ChangePassword = () => {
             <Grid item>
               <TextField
                 fullWidth
+                type={showOld ? "text" : "password"}
                 label="Old Password"
                 id="oldPassword"
                 variant="outlined"
@@ -73,11 +96,21 @@ const ChangePassword = () => {
                     ? "Password must be between 8 to 20 characters long."
                     : null
                 }
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton onClick={(event) => toggleOld(event)}>
+                        {showOld ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
               />
             </Grid>
             <Grid item>
               <TextField
                 fullWidth
+                type={showNew ? "text" : "password"}
                 label="New Password"
                 id="newPassword"
                 variant="outlined"
@@ -95,11 +128,21 @@ const ChangePassword = () => {
                     ? "Password must be between 8 to 20 characters long."
                     : null
                 }
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton onClick={(event) => toggleNew(event)}>
+                        {showNew ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
               />
             </Grid>
             <Grid item>
               <TextField
                 fullWidth
+                type={showNew ? "text" : "password"}
                 label="Confirm Password"
                 id="confirmPassword"
                 variant="outlined"

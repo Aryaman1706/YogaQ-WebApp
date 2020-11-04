@@ -1,4 +1,22 @@
 const express = require("express");
+const multer = require("multer");
+const passport = require("passport");
+
+// * Config
+const customStorage = require("../config/multerStorage");
+
+const checkFileType = (file, cb) => {
+  if (!file.mimetype.startsWith("image")) return cb("Invalid File Type.");
+  if (file.size > 4000000) return cb("File limit exceded");
+  return cb(null, true);
+};
+
+const uploadProfilePicture = multer({
+  storage: customStorage(),
+  fileFilter: function (req, file, cb) {
+    checkFileType(file, cb);
+  },
+});
 
 // * Middleware
 const { login: loginAdmin } = require("../middleware/admin");
@@ -9,6 +27,20 @@ const controller = require("../controllers/admin");
 // * API Endpoints -->
 const router = express.Router();
 
+// * Login Admin
+router.post("/login", (req, res, next) => {
+  passport.authenticate("admin", (err, user, info) => {
+    if (err) return next(err);
+    if (!user) return res.status(400).json({ error: info.message, body: null });
+
+    req.logIn(user, (error) => {
+      if (error) return next(error);
+      return res.status(200).json({ error: null, body: "Login Successfull." });
+    });
+    return next();
+  })(req, res, next);
+});
+
 // * Create a new admin
 router.post("/register", loginAdmin, controller.create);
 
@@ -16,7 +48,11 @@ router.post("/register", loginAdmin, controller.create);
 router.get("/profile", loginAdmin, controller.myProfile);
 
 // * Edit profile of admin
-router.put("/profile", loginAdmin, controller.edit);
+router.put(
+  "/profile",
+  [loginAdmin, uploadProfilePicture.single("file_profilePicture")],
+  controller.edit
+);
 
 // * Change Password
 router.put("/changePassword", loginAdmin, controller.changePassword);

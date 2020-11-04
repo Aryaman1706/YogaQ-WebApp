@@ -1,5 +1,14 @@
 import React, { useState } from "react";
-import { TextField, Button, Grid, Typography } from "@material-ui/core";
+import {
+  TextField,
+  Button,
+  Grid,
+  Typography,
+  InputAdornment,
+  IconButton,
+} from "@material-ui/core";
+
+import { Visibility, VisibilityOff } from "@material-ui/icons";
 
 const Login = () => {
   const [user, setUser] = useState({
@@ -7,11 +16,19 @@ const Login = () => {
     password: "",
   });
 
+  const [show, setShow] = useState(false);
+
   const emailRegex = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/gi;
 
   const changeHandler = (event) => {
     setUser((prev) => {
       return { ...prev, [event.target.id]: event.target.value };
+    });
+  };
+
+  const passwordToggle = (event) => {
+    setShow((prev) => {
+      return !prev;
     });
   };
 
@@ -70,7 +87,7 @@ const Login = () => {
             <Grid item>
               <TextField
                 fullWidth
-                type="password"
+                type={show ? "text" : "password"}
                 label="Password"
                 id="password"
                 variant="outlined"
@@ -86,6 +103,15 @@ const Login = () => {
                     ? "Password must be between 8 to 20 characters long."
                     : null
                 }
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton onClick={(event) => passwordToggle(event)}>
+                        {show ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
               />
             </Grid>
             <Grid item>

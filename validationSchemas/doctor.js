@@ -1,57 +1,67 @@
 const Joi = require("joi");
 Joi.objectId = require("joi-objectid")(Joi);
 
-exports.enquiry = (body) => {
-  const schema = Joi.object({
-    username: Joi.string().min(3).max(150).trim().required(),
-    phoneNumber: Joi.string()
-      .pattern(/[1-9]{1}[0-9]{9}/)
+const enquiryObj = Joi.object({
+  username: Joi.string().min(3).max(150).trim().required(),
+  phoneNumber: Joi.string()
+    .pattern(/[1-9]{1}[0-9]{9}/)
+    .required(),
+  age: Joi.number().integer().required(),
+  gender: Joi.string()
+    .lowercase()
+    .trim()
+    .valid("male", "female", "other")
+    .required(),
+  country: Joi.string().max(150).trim().uppercase().required(),
+  languages: Joi.array().items(
+    Joi.string().max(20).trim().lowercase().required()
+  ),
+  description: Joi.string().max(200).trim().required(),
+  email: Joi.string().email().required(),
+  qualificational: Joi.object({
+    educationalQualification: Joi.array()
+      .items(
+        Joi.string()
+          .trim()
+          .lowercase()
+          .valid("certificate", "diploma", "degree", "graduation", "phd")
+      )
       .required(),
-    age: Joi.number().integer().required(),
-    gender: Joi.string()
-      .lowercase()
-      .trim()
-      .valid("male", "female", "other")
-      .required(),
-    country: Joi.string().max(150).trim().uppercase().required(),
-    languages: Joi.array().items(
-      Joi.string().max(20).trim().lowercase().required()
-    ),
-    description: Joi.string().max(200).trim().required(),
-    email: Joi.string().email().required(),
-    qualificational: Joi.object({
-      educationalQualification: Joi.array()
-        .items(
-          Joi.string()
-            .trim()
-            .lowercase()
-            .valid("certificate", "diploma", "degree", "graduation", "phd")
-        )
-        .required(),
-      docs: Joi.array()
-        .items(
-          Joi.object({
-            name: Joi.string().trim().required(),
-            institute: Joi.string().trim().required(),
-            doc: Joi.string(), // File
-          })
-        )
-        .required(),
-    }),
-    professional: Joi.array()
+    docs: Joi.array()
       .items(
         Joi.object({
-          place: Joi.string().trim().required(),
-          clients: Joi.number().integer().required(),
-          noOfYears: Joi.object({
-            years: Joi.number().integer().min(0).required(),
-            months: Joi.number().integer().min(0).max(11).required(),
-          }),
+          name: Joi.string().trim().required(),
+          institute: Joi.string().trim().required(),
           doc: Joi.string(), // File
         })
       )
       .required(),
-    expertise: Joi.string().max(200).trim().required(),
+  }),
+  professional: Joi.array()
+    .items(
+      Joi.object({
+        place: Joi.string().trim().required(),
+        clients: Joi.number().integer().required(),
+        noOfYears: Joi.object({
+          years: Joi.number().integer().min(0).required(),
+          months: Joi.number().integer().min(0).max(11).required(),
+        }),
+        doc: Joi.string(), // File
+      })
+    )
+    .required(),
+  expertise: Joi.string().max(200).trim().required(),
+});
+
+exports.enquiry = (body) => {
+  const schema = enquiryObj;
+
+  return schema.validate(body);
+};
+
+exports.edit = (body) => {
+  const schema = enquiryObj.append({
+    welcomeMessage: Joi.string().max(200).trim().required(),
   });
 
   return schema.validate(body);

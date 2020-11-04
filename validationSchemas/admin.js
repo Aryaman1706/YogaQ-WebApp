@@ -11,15 +11,6 @@ exports.create = (body) => {
   return schema.validate(body);
 };
 
-exports.login = (body) => {
-  const schema = Joi.object({
-    email: Joi.string().email().max(150).trim().required(),
-    password: Joi.string().min(8).max(20).trim().required(),
-  });
-
-  return schema.validate(body);
-};
-
 exports.edit = (body) => {
   const schema = Joi.object({
     username: Joi.string().min(5).max(150).trim().required(),

@@ -1,12 +1,36 @@
 import React, { useState } from "react";
-import { TextField, Button, Grid, Typography } from "@material-ui/core";
+import {
+  TextField,
+  Button,
+  Grid,
+  Typography,
+  makeStyles,
+} from "@material-ui/core";
+
+const useStyles = makeStyles((theme) => ({
+  profile: {
+    display: "block",
+    height: "200px",
+    width: "200px",
+    objectFit: "cover",
+    maxWidth: "100%",
+    margin: "auto",
+    borderRadius: "50%",
+  },
+  input: {
+    display: "none",
+  },
+}));
 
 const Edit = () => {
+  const classes = useStyles();
   const [user, setUser] = useState({
     username: "",
     email: "",
     welcomeMessage: "",
+    profilePicture: "",
   });
+  const [file, setFile] = useState(null);
 
   const emailRegex = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/gi;
 
@@ -14,6 +38,10 @@ const Edit = () => {
     setUser((prev) => {
       return { ...prev, [event.target.id]: event.target.value };
     });
+  };
+
+  const fileHandler = (event) => {
+    setFile(event.target.files[0]);
   };
 
   const submitHandler = (event) => {
@@ -27,7 +55,7 @@ const Edit = () => {
       user.username.length <= 40 &&
       user.welcomeMessage.length <= 500
     ) {
-      console.log(user);
+      console.log(user, file);
     } else {
       console.log("Invalid Inputs.");
     }
@@ -49,6 +77,21 @@ const Edit = () => {
               <Typography variant="h4" align="center">
                 Edit Profile
               </Typography>
+            </Grid>
+            <Grid item>
+              <img
+                src="https://picsum.photos/200"
+                alt="profile"
+                className={classes.profile}
+              />
+              <input
+                accept="image/*"
+                id="profilePicture"
+                type="file"
+                onChange={(event) => {
+                  fileHandler(event);
+                }}
+              />
             </Grid>
             <Grid item>
               <TextField

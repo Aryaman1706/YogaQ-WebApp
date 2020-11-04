@@ -1,4 +1,13 @@
 const express = require("express");
+const multer = require("multer");
+const passport = require("passport");
+
+// * Config
+const customStorage = require("../config/multerStorage");
+
+const upload = multer({
+  storage: customStorage(),
+});
 
 // * Middleware
 const { login: loginDoctor } = require("../middleware/doctor");
@@ -11,7 +20,7 @@ const controller = require("../controllers/doctor");
 const router = express.Router();
 
 // * Create a new enquiry
-router.post("/enquire", controller.newEnquiry);
+router.post("/enquire", [upload.any()], controller.newEnquiry);
 
 // * Create a doctor from enquiry
 router.post("/register", loginAdmin, controller.register);
@@ -23,7 +32,7 @@ router.delete("/delete/:enquiryId", loginAdmin, controller.denyEnquiry);
 router.get("/profile", loginDoctor, controller.myProfile);
 
 // * Edit my profile
-router.put("/profile", loginDoctor, controller.editProfile);
+router.put("/profile", [loginDoctor, upload.any()], controller.editProfile);
 
 // * Change Password
 router.put("/changePassword", loginDoctor, controller.changePassword);

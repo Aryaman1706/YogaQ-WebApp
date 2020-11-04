@@ -1,6 +1,7 @@
 // * NPM Packages
 const { genSalt, hash, compare } = require("bcryptjs");
 const { randomBytes } = require("crypto");
+const { validate: uuidValidate } = require("uuid");
 
 // * Models
 const Doctor = require("../models/Doctor");
@@ -12,6 +13,7 @@ const validation = require("../validationSchemas/doctor");
 // * Controllers -->
 
 // * Create a new enquiry
+// ? Try to optimize if possible
 exports.newEnquiry = async (req, res) => {
   try {
     const { error, value } = validation.enquiry(req.body);
@@ -19,6 +21,34 @@ exports.newEnquiry = async (req, res) => {
       return res
         .status(400)
         .json({ error: error.details[0].message, body: null });
+
+    // Hash Table for file
+    const fileObj = {};
+    req.files.forEach((file) => {
+      fileObj[file.fieldname] = file;
+    });
+
+    // Replacing uuid with url in qualificational
+    value.qualificational.docs = value.qualificational.docs.map((obj) => {
+      if (uuidValidate(obj.doc)) {
+        if (fileObj[obj.doc]) {
+          return { ...obj, doc: fileObj[obj.doc].url };
+        }
+        return { ...obj, doc: null };
+      }
+      return obj;
+    });
+
+    // Replacing uuid with url in professional
+    value.professional = value.professional.map((obj) => {
+      if (uuidValidate(obj.doc)) {
+        if (fileObj[obj.doc]) {
+          return { ...obj, doc: fileObj[obj.doc].url };
+        }
+        return { ...obj, doc: null };
+      }
+      return obj;
+    });
 
     await Enquiry.create({ ...value });
 
@@ -92,15 +122,51 @@ exports.myProfile = async (req, res) => {
 };
 
 // * Edit my profile
-//! 2 routes -> one to change information and one to remove and reupload docs
 exports.editProfile = async (req, res) => {
   try {
-    const { error, value } = validation.enquiry(req.body);
+    const { error, value } = validation.edit(req.body);
     if (error)
       return res
         .status(400)
         .json({ error: error.details[0].message, body: null });
-    return value;
+
+    // Hash Table for file
+    const fileObj = {};
+    req.files.forEach((file) => {
+      fileObj[file.fieldname] = file;
+    });
+
+    // Replacing uuid with url in qualificational
+    value.qualificational.docs = value.qualificational.docs.map((obj) => {
+      if (uuidValidate(obj.doc)) {
+        if (fileObj[obj.doc]) {
+          return { ...obj, doc: fileObj[obj.doc].url };
+        }
+        return { ...obj, doc: null };
+      }
+      return obj;
+    });
+
+    // Replacing uuid with url in professional
+    value.professional = value.professional.map((obj) => {
+      if (uuidValidate(obj.doc)) {
+        if (fileObj[obj.doc]) {
+          return { ...obj, doc: fileObj[obj.doc].url };
+        }
+        return { ...obj, doc: null };
+      }
+      return obj;
+    });
+
+    const doctor = await Doctor.findByIdAndUpdate(
+      req.user._id,
+      { ...value },
+      { new: true }
+    );
+    if (!doctor)
+      return res.status(400).json({ error: "Invalid Account.", body: null });
+
+    return res.status(200).json({ error: null, body: "Profile Updated" });
   } catch (error) {
     console.log("Error occured here\n", error);
     return res.status(500).json({ error: "Server Error.", body: null });
