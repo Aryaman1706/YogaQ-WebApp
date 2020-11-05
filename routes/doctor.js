@@ -28,6 +28,20 @@ router.post("/register", loginAdmin, controller.register);
 // * Deny an enquiry
 router.delete("/delete/:enquiryId", loginAdmin, controller.denyEnquiry);
 
+// * Login as Doctor
+router.post("/login", (req, res, next) => {
+  passport.authenticate("doctor", (err, user, info) => {
+    if (err) return next(err);
+    if (!user) return res.status(400).json({ error: info.message, body: null });
+
+    req.logIn(user, (error) => {
+      if (error) return next(error);
+      return res.status(200).json({ error: null, body: "Login Successfull." });
+    });
+    return next();
+  })(req, res, next);
+});
+
 // * Get my profile
 router.get("/profile", loginDoctor, controller.myProfile);
 

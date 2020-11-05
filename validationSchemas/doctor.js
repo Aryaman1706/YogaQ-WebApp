@@ -24,7 +24,14 @@ const enquiryObj = Joi.object({
         Joi.string()
           .trim()
           .lowercase()
-          .valid("certificate", "diploma", "degree", "graduation", "phd")
+          .valid(
+            "certificate",
+            "diploma",
+            "degree",
+            "graduation",
+            "postGraduation",
+            "phd"
+          )
       )
       .required(),
     docs: Joi.array()
