@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment } from "react";
 import {
   TextField,
   Grid,
@@ -8,22 +8,10 @@ import {
   MenuItem,
   IconButton,
   InputAdornment,
-  Button,
 } from "@material-ui/core";
 import { Add, Remove } from "@material-ui/icons";
 
-const BasicInfo = () => {
-  const [langs, setLangs] = useState([""]);
-  const [state, setState] = useState({
-    username: "",
-    phoneNumber: "",
-    age: 0,
-    gender: "select",
-    country: "",
-    description: "",
-    email: "",
-  });
-
+const BasicInfo = ({ langs, setLangs, state, setState }) => {
   const changeHandler = (e) => {
     setState((prev) => {
       return { ...prev, [e.target.id]: e.target.value };
@@ -178,26 +166,6 @@ const BasicInfo = () => {
           value={state.email}
           onChange={(event) => changeHandler(event)}
         />
-      </Grid>
-      <Grid item>
-        <Button
-          fullWidth
-          onClick={(event) => {
-            console.log(langs);
-          }}
-        >
-          Print Langs
-        </Button>
-      </Grid>
-      <Grid item>
-        <Button
-          fullWidth
-          onClick={(event) => {
-            console.log({ ...state, languages: langs });
-          }}
-        >
-          Print State
-        </Button>
       </Grid>
     </>
   );

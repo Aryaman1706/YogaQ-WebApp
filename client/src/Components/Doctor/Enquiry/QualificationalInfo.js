@@ -1,9 +1,8 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment } from "react";
 import {
   TextField,
   Grid,
   IconButton,
-  Button,
   FormControl,
   FormControlLabel,
   FormGroup,
@@ -21,21 +20,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const QualificationalInfo = () => {
+const QualificationalInfo = ({
+  edu,
+  docs,
+  files,
+  setEdu,
+  setDocs,
+  setFiles,
+}) => {
   const classes = useStyles();
-
-  const [edu, setEdu] = useState({
-    certificate: false,
-    diploma: false,
-    degree: false,
-    graduation: false,
-    phd: false,
-  });
-  const [docs, setDocs] = useState([
-    { name: "", institute: "", doc: uuidV4() },
-  ]);
-  const [files, setFiles] = useState({});
-
   const handleEdu = (e) => {
     setEdu((prev) => {
       return { ...prev, [e.target.id]: e.target.checked };
@@ -75,10 +68,6 @@ const QualificationalInfo = () => {
     setFiles((prev) => {
       return { ...prev, [uuid]: e.target.files[0] };
     });
-  };
-
-  const print = (e) => {
-    console.log(edu);
   };
 
   return (
@@ -213,21 +202,6 @@ const QualificationalInfo = () => {
             </Fragment>
           );
         })}
-      </Grid>
-      <Grid item>
-        <Button fullWidth onClick={(event) => print(event)}>
-          Print Edu
-        </Button>
-      </Grid>
-      <Grid item>
-        <Button fullWidth onClick={(event) => console.log(docs)}>
-          Print DOcs
-        </Button>
-      </Grid>
-      <Grid item>
-        <Button fullWidth onClick={(event) => console.log(files)}>
-          Print Files
-        </Button>
       </Grid>
     </>
   );
