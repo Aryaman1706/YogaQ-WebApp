@@ -23,7 +23,7 @@ passport.use(
 );
 
 passport.use(
-  "user",
+  "doctor",
   new LocalStrategy(async (username, password, done) => {
     const doctor = await Doctor.findOne({ email: username.trim() })
       .select("role password")

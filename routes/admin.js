@@ -1,6 +1,7 @@
 const express = require("express");
 const multer = require("multer");
 const passport = require("passport");
+const cloudinary = require("../config/cloudinaryConfig");
 
 // * Config
 const customStorage = require("../config/multerStorage");
@@ -50,7 +51,7 @@ router.get("/profile", loginAdmin, controller.myProfile);
 // * Edit profile of admin
 router.put(
   "/profile",
-  [loginAdmin, uploadProfilePicture.single("file_profilePicture")],
+  [loginAdmin, uploadProfilePicture.single("profilePicture")],
   controller.edit
 );
 
@@ -62,6 +63,12 @@ router.post("/forgotPassword", controller.forgotPassword1);
 
 // * Forgot password 2 (Enter a new password)
 router.post("/forgotPassword/:resetToken", controller.forgotPassword2);
+
+// * Test
+router.get("/del", async (req, res) => {
+  const result = await cloudinary.uploader.destroy("690259_vw4hbg");
+  res.send(result);
+});
 
 // * End of API Endpoints -->
 

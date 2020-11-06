@@ -17,8 +17,9 @@ const useStyles = makeStyles((theme) => ({
     margin: "auto",
     borderRadius: "50%",
   },
-  input: {
-    display: "none",
+  container: {
+    display: "flex",
+    justifyContent: "center",
   },
 }));
 
@@ -84,14 +85,16 @@ const Edit = () => {
                 alt="profile"
                 className={classes.profile}
               />
-              <input
-                accept="image/*"
-                id="profilePicture"
-                type="file"
-                onChange={(event) => {
-                  fileHandler(event);
-                }}
-              />
+              <div className={classes.container}>
+                <input
+                  accept="image/*"
+                  id="profilePicture"
+                  type="file"
+                  onChange={(event) => {
+                    fileHandler(event);
+                  }}
+                />
+              </div>
             </Grid>
             <Grid item>
               <TextField
