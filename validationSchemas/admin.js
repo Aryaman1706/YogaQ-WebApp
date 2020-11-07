@@ -4,7 +4,16 @@ Joi.objectId = require("joi-objectid")(Joi);
 exports.create = (body) => {
   const schema = Joi.object({
     username: Joi.string().min(5).max(40).trim().required(),
-    email: Joi.string().email().max(150).trim().required(),
+    email: Joi.string().email().trim().required(),
+    password: Joi.string().min(8).max(20).trim().required(),
+  });
+
+  return schema.validate(body);
+};
+
+exports.login = (body) => {
+  const schema = Joi.object({
+    username: Joi.string().email().trim().required(),
     password: Joi.string().min(8).max(20).trim().required(),
   });
 

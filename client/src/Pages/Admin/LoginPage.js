@@ -1,7 +1,14 @@
 import React from "react";
+import Appbar from "../../Components/Admin/Appbar";
+import Login from "../../Components/Admin/Login";
 
 const LoginPage = () => {
-  return <div></div>;
+  return (
+    <>
+      <Appbar />
+      <Login />
+    </>
+  );
 };
 
 export default LoginPage;

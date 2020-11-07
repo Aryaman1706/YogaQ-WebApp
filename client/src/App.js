@@ -1,22 +1,23 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router } from "react-router-dom";
+import Routes from "./Routes/index";
 import { CssBaseline } from "@material-ui/core";
-import Room from "./Pages/Room";
-import AdminHome from "./Pages/Admin/Home";
-import RegisterPage from "./Pages/Admin/RegisterPage";
+import { Provider } from "react-redux";
+import store, { persistor } from "./redux/store";
+import { PersistGate } from "redux-persist/integration/react";
 
 const App = () => {
   return (
     <>
-      <CssBaseline>
-        <Router>
-          <Switch>
-            <Route exact path="/" component={Room} />
-            <Route exact path="/admin" component={AdminHome} />
-            <Route exact path="/admin/create" component={RegisterPage} />
-          </Switch>
-        </Router>
-      </CssBaseline>
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <CssBaseline>
+            <Router>
+              <Routes />
+            </Router>
+          </CssBaseline>
+        </PersistGate>
+      </Provider>
     </>
   );
 };

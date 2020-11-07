@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useState } from "react";
 import {
   TextField,
   Button,
@@ -8,34 +7,16 @@ import {
   InputAdornment,
   IconButton,
 } from "@material-ui/core";
+
 import { Visibility, VisibilityOff } from "@material-ui/icons";
-import Swal from "sweetalert2";
-import { admin } from "../../redux/actions";
 
 const Login = () => {
   const [user, setUser] = useState({
     email: "",
     password: "",
   });
-  const [show, setShow] = useState(false);
-  const error = useSelector((state) => state.admin.error);
 
-  useEffect(() => {
-    if (error) {
-      Swal.fire({
-        position: "center",
-        icon: "error",
-        title: "Error Occured.",
-        text: `${error}`,
-        showConfirmButton: true,
-        timer: 1500,
-      });
-    }
-    return () => {
-      console.log("hello");
-    };
-  }, [error]);
-  const dispatch = useDispatch();
+  const [show, setShow] = useState(false);
 
   const emailRegex = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/gi;
 
@@ -60,20 +41,9 @@ const Login = () => {
       user.password.length >= 8 &&
       user.password.length <= 20
     ) {
-      const formData = {
-        username: user.email,
-        password: user.password,
-      };
-      dispatch(admin.loginAdmin(formData));
+      console.log(user);
     } else {
-      Swal.fire({
-        position: "center",
-        icon: "error",
-        title: "Invalid Credentials.",
-        text: "Enter valid email and password.",
-        showConfirmButton: true,
-        timer: 1500,
-      });
+      console.log("Invalid Inputs.");
     }
   };
 
@@ -91,7 +61,7 @@ const Login = () => {
           >
             <Grid item>
               <Typography variant="h4" align="center">
-                Login as Admin
+                Login as Doctor
               </Typography>
             </Grid>
             <Grid item>

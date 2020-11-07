@@ -36,7 +36,12 @@ router.post("/login", (req, res, next) => {
 
     req.logIn(user, (error) => {
       if (error) return next(error);
-      return res.status(200).json({ error: null, body: "Login Successfull." });
+      const body = user;
+      body.password = undefined;
+      return res.status(200).json({
+        error: null,
+        body: body,
+      });
     });
     return next();
   })(req, res, next);

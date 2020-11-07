@@ -32,18 +32,23 @@ const router = express.Router();
 router.post("/login", (req, res, next) => {
   passport.authenticate("admin", (err, user, info) => {
     if (err) return next(err);
-    if (!user) return res.status(400).json({ error: info.message, body: null });
+    if (!user) return res.json({ error: info.message, body: null });
 
     req.logIn(user, (error) => {
       if (error) return next(error);
-      return res.status(200).json({ error: null, body: "Login Successfull." });
+      const body = user;
+      body.password = undefined;
+      return res.status(200).json({
+        error: null,
+        body: body,
+      });
     });
     return next();
   })(req, res, next);
 });
 
 // * Create a new admin
-router.post("/register", loginAdmin, controller.create);
+router.post("/register", controller.create);
 
 // * Get my profile
 router.get("/profile", loginAdmin, controller.myProfile);
