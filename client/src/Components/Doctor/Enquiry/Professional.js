@@ -25,11 +25,6 @@ const Professional = ({
 }) => {
   const classes = useStyles();
 
-  const attachFile = (e, uuid) => {
-    const fileInput = document.getElementById(uuid);
-    fileInput.click();
-  };
-
   const addRow = (e) => {
     setProf((prev) => {
       return [...prev, { place: "", clients: 0, noOfYears: 0, doc: uuidV4() }];
@@ -135,11 +130,13 @@ const Professional = ({
                         onChange={(event) => fileChange(event, obj.doc)}
                       />
                       <Tooltip title="Add Document" placement="top" arrow>
-                        <IconButton
-                          onClick={(event) => attachFile(event, obj.doc)}
-                        >
-                          <AttachFile />
-                        </IconButton>
+                        {/*  */}
+                        <label htmlFor={obj.doc}>
+                          <IconButton component="span">
+                            <AttachFile />
+                          </IconButton>
+                        </label>
+                        {/*  */}
                       </Tooltip>
                     </Grid>
                   </Grid>

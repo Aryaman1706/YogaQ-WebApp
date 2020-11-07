@@ -139,6 +139,7 @@ exports.editProfile = async (req, res) => {
     // Replacing uuid with url in qualificational
     value.qualificational.docs = value.qualificational.docs.map((obj) => {
       if (uuidValidate(obj.doc)) {
+        // remove previous file
         if (fileObj[obj.doc]) {
           return { ...obj, doc: fileObj[obj.doc].url };
         }
@@ -150,6 +151,7 @@ exports.editProfile = async (req, res) => {
     // Replacing uuid with url in professional
     value.professional = value.professional.map((obj) => {
       if (uuidValidate(obj.doc)) {
+        // remove previous file
         if (fileObj[obj.doc]) {
           return { ...obj, doc: fileObj[obj.doc].url };
         }

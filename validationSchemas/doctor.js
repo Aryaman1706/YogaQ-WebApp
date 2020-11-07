@@ -49,10 +49,7 @@ const enquiryObj = Joi.object({
       Joi.object({
         place: Joi.string().trim().required(),
         clients: Joi.number().integer().required(),
-        noOfYears: Joi.object({
-          years: Joi.number().integer().min(0).required(),
-          months: Joi.number().integer().min(0).max(11).required(),
-        }),
+        noOfYears: Joi.number().integer().min(0).required(),
         doc: Joi.string(), // File
       })
     )
@@ -77,6 +74,15 @@ exports.edit = (body) => {
 exports.register = (body) => {
   const schema = Joi.object({
     enquiry: Joi.objectId().trim().required(),
+    password: Joi.string().min(8).max(20).trim().required(),
+  });
+
+  return schema.validate(body);
+};
+
+exports.login = (body) => {
+  const schema = Joi.object({
+    username: Joi.string().email().trim().required(),
     password: Joi.string().min(8).max(20).trim().required(),
   });
 

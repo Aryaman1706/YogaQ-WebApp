@@ -52,6 +52,13 @@ chatroomSchema.virtual("unreadMessages", {
   count: true,
 });
 
+chatroomSchema.virtual("callCount", {
+  ref: "Call",
+  localField: "_id", // ! Might cause an error. Try switching
+  foreignField: "chatroomId",
+  count: true,
+});
+
 chatroomSchema.post("remove", async (doc, next) => {
   await Message.remove({ chatroomId: doc._id });
   next();
