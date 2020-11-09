@@ -5,12 +5,22 @@ import AdminAppbar from "./Admin/Appbar";
 const Wrapper = () => {
   const history = useHistory();
   const render = () => {
+    const x = history.location.pathname;
     console.log("Wrapper", history.location.pathname);
-    return (
-      <>
-        <AdminAppbar />
-      </>
-    );
+    if (/\/admin.+/.test(x)) {
+      return (
+        <>
+          <AdminAppbar />
+        </>
+      );
+    }
+    if (/\/doctor.+/.test(x)) {
+      return (
+        <>
+          <h1>Doctor Appbar</h1>
+        </>
+      );
+    }
   };
   return <>{render()}</>;
 };

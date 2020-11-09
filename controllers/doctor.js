@@ -45,14 +45,12 @@ exports.newEnquiryCheck = async (req, res, next) => {
 
 exports.newEnquiry = async (req, res) => {
   try {
-    console.log(req.body);
     const body = {
       ...req.body,
       languages: JSON.parse(req.body.languages),
       qualificational: JSON.parse(req.body.qualificational),
       professional: JSON.parse(req.body.professional),
     };
-    console.log(body);
     const { error, value } = validation.enquiry(body);
     if (error) return res.json({ error: error.details[0].message, body: null });
 
@@ -152,9 +150,17 @@ exports.denyEnquiry = async (req, res) => {
 // * Get my profile
 exports.myProfile = async (req, res) => {
   try {
-    const doctor = await Doctor.findById(req.user._id).exec();
-    if (!doctor)
-      return res.status(404).json({ error: "Invalid account.", body: null });
+    let doctor = null;
+    if (req.query.complete) {
+      doctor = await Doctor.findById(req.user._id)
+        .select("-password -resetToken -resetTokenValidity")
+        .exec();
+    } else {
+      doctor = await Doctor.findById(req.user._id)
+        .select("username email restricted role")
+        .exec();
+    }
+    if (!doctor) return res.json({ error: "Invalid account.", body: null });
 
     return res.status(200).json({ error: null, body: doctor });
   } catch (error) {

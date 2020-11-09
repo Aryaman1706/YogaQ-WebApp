@@ -1,20 +1,51 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { TextField, Button, Grid, Typography } from "@material-ui/core";
+import Swal from "sweetalert2";
+import { useSelector, useDispatch } from "react-redux";
+import { admin } from "../../redux/actions/index";
 
 const Register = () => {
+  const emailRegex = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/gi;
   const [user, setUser] = useState({
     username: "",
     email: "",
     password: "",
   });
-
-  const emailRegex = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/gi;
+  const { error, message } = useSelector((state) => state.admin);
+  const dispatch = useDispatch();
 
   const changeHandler = (event) => {
     setUser((prev) => {
       return { ...prev, [event.target.id]: event.target.value };
     });
   };
+
+  useEffect(() => {
+    if (error) {
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: "Error Occured.",
+        text: error,
+        showConfirmButton: true,
+        timer: 1500,
+      });
+    }
+    if (message) {
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Success!",
+        text: message,
+        showConfirmButton: true,
+        timer: 1500,
+      });
+    }
+    return () => {
+      dispatch(admin.errorAdmin());
+    };
+    // eslint-disable-next-line
+  }, [error, message]);
 
   const submitHandler = (event) => {
     if (
@@ -28,9 +59,21 @@ const Register = () => {
       user.username.length >= 5 &&
       user.username.length <= 40
     ) {
-      console.log(user);
+      dispatch(admin.register(user));
+      setUser({
+        username: "",
+        email: "",
+        password: "",
+      });
     } else {
-      console.log("Invalid Inputs.");
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: "Error Occured.",
+        text: "Invalid Inputs. Please Try Again.",
+        showConfirmButton: true,
+        timer: 1500,
+      });
     }
   };
 

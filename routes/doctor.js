@@ -32,7 +32,7 @@ router.delete("/delete/:enquiryId", loginAdmin, controller.denyEnquiry);
 router.post("/login", (req, res, next) => {
   passport.authenticate("doctor", (err, user, info) => {
     if (err) return next(err);
-    if (!user) return res.status(400).json({ error: info.message, body: null });
+    if (!user) return res.json({ error: info.message, body: null });
 
     req.logIn(user, (error) => {
       if (error) return next(error);
@@ -48,6 +48,7 @@ router.post("/login", (req, res, next) => {
 });
 
 // * Get my profile
+// /doctor/profile?complete=(true/false)
 router.get("/profile", loginDoctor, controller.myProfile);
 
 // * Edit my profile

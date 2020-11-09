@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   TextField,
   Button,
@@ -7,17 +7,18 @@ import {
   InputAdornment,
   IconButton,
 } from "@material-ui/core";
-
 import { Visibility, VisibilityOff } from "@material-ui/icons";
+import Swal from "sweetalert2";
+import { useSelector, useDispatch } from "react-redux";
+import { doctor } from "../../../redux/actions/index";
+import { useHistory } from "react-router-dom";
 
 const Login = () => {
   const [user, setUser] = useState({
     email: "",
     password: "",
   });
-
   const [show, setShow] = useState(false);
-
   const emailRegex = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/gi;
 
   const changeHandler = (event) => {
@@ -32,6 +33,30 @@ const Login = () => {
     });
   };
 
+  const { error, isAuthenticated } = useSelector((state) => state.doctor);
+  const dispatch = useDispatch();
+  const history = useHistory();
+
+  useEffect(() => {
+    if (error) {
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: "Error Occured.",
+        text: error,
+        showConfirmButton: true,
+        timer: 1500,
+      });
+    }
+    if (isAuthenticated) {
+      history.push("/");
+    }
+    return () => {
+      dispatch(doctor.clearError());
+    };
+    // eslint-disable-next-line
+  }, [error, isAuthenticated]);
+
   const submitHandler = (event) => {
     if (
       user.email.length > 0 &&
@@ -41,9 +66,18 @@ const Login = () => {
       user.password.length >= 8 &&
       user.password.length <= 20
     ) {
-      console.log(user);
+      dispatch(
+        doctor.loginDoctor({ username: user.email, password: user.password })
+      );
     } else {
-      console.log("Invalid Inputs.");
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: "Invalid Credentials.",
+        text: "Enter valid email and password.",
+        showConfirmButton: true,
+        timer: 1500,
+      });
     }
   };
 
