@@ -33,6 +33,10 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    quationSet: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "QuestionSet",
+    },
     role: {
       type: String,
       enum: ["admin", "doctor", "user"],
