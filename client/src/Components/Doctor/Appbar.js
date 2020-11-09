@@ -13,7 +13,7 @@ import {
 import { AccountCircle } from "@material-ui/icons";
 import { useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { admin as adminActions } from "../../redux/actions";
+import { doctor as doctorActions } from "../../redux/actions";
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -29,7 +29,7 @@ const Appbar = () => {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
   const history = useHistory();
-  const { isAuthenticated, admin } = useSelector((state) => state.admin);
+  const { isAuthenticated, doctor } = useSelector((state) => state.doctor);
   const dispatch = useDispatch();
 
   const handleClick = (e) => {
@@ -41,7 +41,7 @@ const Appbar = () => {
   };
 
   useEffect(() => {
-    dispatch(adminActions.loadAdmin());
+    dispatch(/**/);
     return () => {
       //
     };
@@ -60,9 +60,9 @@ const Appbar = () => {
               history.push("/");
             }}
           >
-            <Typography variant="h6">Admin Panel</Typography>
+            <Typography variant="h6">Doctor Panel</Typography>
           </Link>
-          {isAuthenticated && admin ? (
+          {isAuthenticated && doctor ? (
             <>
               <IconButton
                 aria-controls="menu"

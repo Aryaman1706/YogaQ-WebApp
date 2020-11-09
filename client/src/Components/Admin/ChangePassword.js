@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   TextField,
   Button,
@@ -8,6 +8,9 @@ import {
   IconButton,
 } from "@material-ui/core";
 import { Visibility, VisibilityOff } from "@material-ui/icons";
+import Swal from "sweetalert2";
+import { useSelector, useDispatch } from "react-redux";
+import { admin } from "../../redux/actions";
 
 const ChangePassword = () => {
   const [state, setState] = useState({
@@ -17,6 +20,40 @@ const ChangePassword = () => {
   });
   const [showOld, setShowOld] = useState(false);
   const [showNew, setShowNew] = useState(false);
+  const { error, message } = useSelector((state) => state.admin);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (error) {
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: "Error Occured.",
+        text: error,
+        showConfirmButton: true,
+        timer: 1500,
+      });
+    }
+    if (message) {
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Success!",
+        text: message,
+        showConfirmButton: true,
+        timer: 1500,
+      });
+    }
+    return () => {
+      dispatch(admin.errorAdmin());
+      setState({
+        oldPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+      });
+    };
+    // eslint-disable-next-line
+  }, [error, message]);
 
   const changeHandler = (event) => {
     setState((prev) => {
@@ -49,12 +86,26 @@ const ChangePassword = () => {
       state.confirmPassword.length <= 20
     ) {
       if (state.newPassword.trim() === state.confirmPassword.trim()) {
-        console.log(state);
+        dispatch(admin.changePassword(state));
       } else {
-        console.log("Passwords do not match.");
+        Swal.fire({
+          position: "center",
+          icon: "error",
+          title: "Error Occured.",
+          text: "Passwords do not match. Try again.",
+          showConfirmButton: true,
+          timer: 1500,
+        });
       }
     } else {
-      console.log("Invalid Inputs.");
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: "Error Occured.",
+        text: "Invalid Inputs. Try again.",
+        showConfirmButton: true,
+        timer: 1500,
+      });
     }
   };
 

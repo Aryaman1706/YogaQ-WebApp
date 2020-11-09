@@ -35,7 +35,7 @@ passport.use(
     const { error, value } = doctorLogin({ username, password });
     if (error) return done(null, false, { message: "Invalid Credentials." });
     const doctor = await Doctor.findOne({ email: value.username })
-      .select("-resetTokenValidity -resetToken")
+      .select("password username email restricted role")
       .exec();
     if (!doctor) return done(null, false, { message: "Invalid Credentials." });
 
@@ -60,7 +60,7 @@ passport.deserializeUser(({ id, role }, done) => {
       });
   } else if (role.trim() === "doctor") {
     Doctor.findById(id)
-      .select("-password -resetToken -resetTokenValidity")
+      .select("username email restricted role")
       .exec((err, doc) => {
         done(err, doc);
       });

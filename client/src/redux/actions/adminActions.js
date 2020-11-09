@@ -1,4 +1,11 @@
-import { LOGIN_ADMIN, ADMIN_ERROR, LOAD_ADMIN, EDIT_ADMIN } from "../types";
+import {
+  LOGIN_ADMIN,
+  ADMIN_ERROR,
+  LOAD_ADMIN,
+  EDIT_ADMIN,
+  CHANGE_PASSWORD,
+  REGISTER_ADMIN,
+} from "../types";
 import axios from "../../utils/axios";
 
 // * Login as Admin
@@ -49,6 +56,7 @@ export const loadAdmin = () => async (dispatch) => {
   }
 };
 
+// * Edit Admin
 export const editAdmin = (formData) => async (dispatch) => {
   try {
     const res = await axios.put("/admin/profile", formData, {
@@ -64,6 +72,54 @@ export const editAdmin = (formData) => async (dispatch) => {
     } else {
       dispatch({
         type: EDIT_ADMIN,
+        payload: res.data.body,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    dispatch({
+      type: ADMIN_ERROR,
+      payload: "Request Failed.",
+    });
+  }
+};
+
+// * Change Password
+export const changePassword = (formData) => async (dispatch) => {
+  try {
+    const res = await axios.put("/admin/changePassword", formData);
+    if (res.data.error) {
+      dispatch({
+        type: ADMIN_ERROR,
+        payload: res.data.error,
+      });
+    } else {
+      dispatch({
+        type: CHANGE_PASSWORD,
+        payload: res.data.body,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    dispatch({
+      type: ADMIN_ERROR,
+      payload: "Request Failed.",
+    });
+  }
+};
+
+// * Register Admin
+export const register = (formData) => async (dispatch) => {
+  try {
+    const res = await axios.post("/admin/register", formData);
+    if (res.data.error) {
+      dispatch({
+        type: ADMIN_ERROR,
+        payload: res.data.error,
+      });
+    } else {
+      dispatch({
+        type: REGISTER_ADMIN,
         payload: res.data.body,
       });
     }
