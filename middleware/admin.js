@@ -4,7 +4,9 @@ const Admin = require("../models/Admin");
 exports.login = async (req, res, next) => {
   try {
     if (req.user) {
-      const admin = await Admin.findById(req.user._id).exec();
+      const admin = await Admin.findById(req.user._id)
+        .select("-password -resetToken -resetTokenValidity")
+        .exec();
       if (!admin) {
         return res
           .status(404)

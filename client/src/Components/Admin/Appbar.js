@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   AppBar,
   Toolbar,
@@ -10,8 +10,10 @@ import {
   MenuItem,
   Link,
 } from "@material-ui/core";
-
 import { AccountCircle } from "@material-ui/icons";
+import { useHistory } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { admin as adminActions } from "../../redux/actions";
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -25,9 +27,10 @@ const useStyles = makeStyles((theme) => ({
 
 const Appbar = () => {
   const classes = useStyles();
-  const login = true; //! Change Later
-
   const [anchorEl, setAnchorEl] = useState(null);
+  const history = useHistory();
+  const { isAuthenticated } = useSelector((state) => state.admin);
+  const dispatch = useDispatch();
 
   const handleClick = (e) => {
     setAnchorEl(e.currentTarget);
@@ -37,16 +40,29 @@ const Appbar = () => {
     setAnchorEl(null);
   };
 
+  useEffect(() => {
+    dispatch(adminActions.loadAdmin());
+    return () => {
+      //
+    };
+    // eslint-disable-next-line
+  }, []);
+
   return (
     <>
       <AppBar className={classes.appbar}>
         <Toolbar>
-          <Typography variant="h6" className={classes.title}>
-            <Link href="/" underline="none" color="inherit">
-              Admin Panel
-            </Link>
-          </Typography>
-          {login ? (
+          <Link
+            underline="none"
+            color="inherit"
+            className={classes.title}
+            onClick={(event) => {
+              history.push("/");
+            }}
+          >
+            <Typography variant="h6">Admin Panel</Typography>
+          </Link>
+          {isAuthenticated ? (
             <>
               <IconButton
                 aria-controls="menu"
@@ -64,19 +80,38 @@ const Appbar = () => {
                 onClose={handleClose}
               >
                 <MenuItem>
-                  <Link href="/" underline="none" color="inherit">
+                  <Link
+                    underline="none"
+                    color="inherit"
+                    onClick={(event) => {
+                      history.push("/admin/profile");
+                    }}
+                  >
                     Profile
                   </Link>
                 </MenuItem>
                 <MenuItem>
-                  <Link href="/" underline="none" color="inherit">
+                  <Link
+                    underline="none"
+                    color="inherit"
+                    onClick={(event) => {
+                      history.push("/");
+                    }}
+                  >
                     LogOut
                   </Link>
                 </MenuItem>
               </Menu>
             </>
           ) : (
-            <Button color="inherit">Login</Button>
+            <Button
+              color="inherit"
+              onClick={(event) => {
+                history.push("/");
+              }}
+            >
+              Login
+            </Button>
           )}
         </Toolbar>
       </AppBar>

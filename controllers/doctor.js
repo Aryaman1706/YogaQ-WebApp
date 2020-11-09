@@ -13,20 +13,62 @@ const validation = require("../validationSchemas/doctor");
 // * Controllers -->
 
 // * Create a new enquiry
-// ? Try to optimize if possible
+exports.newEnquiryCheck = async (req, res, next) => {
+  try {
+    console.log(req.body);
+    const body = {
+      ...req.body,
+      languages: JSON.parse(req.body.languages),
+      qualificational: JSON.parse(req.body.qualificational),
+      professional: JSON.parse(req.body.qualificational),
+    };
+    console.log(body);
+    const { error, value } = validation.enquiry(body);
+    if (error) return res.json({ error: error.details[0].message, body: null });
+
+    if (await Enquiry.findOne({ email: value.email }))
+      return res.json({
+        error: "An application with same email address already exist.",
+        body: null,
+      });
+
+    req.cleanData = value;
+    return next();
+  } catch (error) {
+    console.log(error);
+    return res.json({
+      error: "Invalid Data. Try Again.",
+      body: null,
+    });
+  }
+};
+
 exports.newEnquiry = async (req, res) => {
   try {
-    const { error, value } = validation.enquiry(req.body);
-    if (error)
-      return res
-        .status(400)
-        .json({ error: error.details[0].message, body: null });
+    console.log(req.body);
+    const body = {
+      ...req.body,
+      languages: JSON.parse(req.body.languages),
+      qualificational: JSON.parse(req.body.qualificational),
+      professional: JSON.parse(req.body.professional),
+    };
+    console.log(body);
+    const { error, value } = validation.enquiry(body);
+    if (error) return res.json({ error: error.details[0].message, body: null });
+
+    if (await Enquiry.findOne({ email: value.email }))
+      return res.json({
+        error: "An application with same email address already exist.",
+        body: null,
+      });
 
     // Hash Table for file
     const fileObj = {};
     req.files.forEach((file) => {
       fileObj[file.fieldname] = file;
     });
+
+    // const value = req.cleanData;
 
     // Replacing uuid with url in qualificational
     value.qualificational.docs = value.qualificational.docs.map((obj) => {
@@ -58,7 +100,7 @@ exports.newEnquiry = async (req, res) => {
     });
   } catch (error) {
     console.log("Error occured here\n", error);
-    return res.status(500).json({ error: "Server Error.", body: null });
+    return res.status(500).json({ error: "Server Error.", body: error });
   }
 };
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   TextField,
   Button,
@@ -6,6 +6,9 @@ import {
   Typography,
   makeStyles,
 } from "@material-ui/core";
+import Swal from "sweetalert2";
+import { useSelector, useDispatch } from "react-redux";
+import { admin as adminActions } from "../../redux/actions";
 
 const useStyles = makeStyles((theme) => ({
   profile: {
@@ -29,10 +32,32 @@ const Edit = () => {
     username: "",
     email: "",
     welcomeMessage: "",
-    profilePicture: "",
   });
   const [file, setFile] = useState(null);
+  const { admin, error } = useSelector((state) => state.admin);
+  const dispatch = useDispatch();
 
+  useEffect(() => {
+    setUser({
+      username: admin.username,
+      email: admin.email,
+      welcomeMessage: admin.welcomeMessage ? admin.welcomeMessage : "",
+    });
+    if (error) {
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: "Error Occured.",
+        text: `${error}`,
+        showConfirmButton: true,
+        timer: 1500,
+      });
+    }
+    return () => {
+      dispatch(adminActions.errorAdmin());
+    };
+    // eslint-disable-next-line
+  }, [admin, error]);
   const emailRegex = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/gi;
 
   const changeHandler = (event) => {
@@ -56,9 +81,24 @@ const Edit = () => {
       user.username.length <= 40 &&
       user.welcomeMessage.length <= 500
     ) {
-      console.log(user, file);
+      const formData = new FormData();
+      if (file) {
+        console.log(file, typeof file);
+        formData.append("profilePicture", file);
+      }
+      formData.append("username", user.username);
+      formData.append("email", user.email);
+      formData.append("welcomeMessage", user.welcomeMessage);
+      dispatch(adminActions.editAdmin(formData));
     } else {
-      console.log("Invalid Inputs.");
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: "Invalid Credentials.",
+        text: "Enter valid email and password.",
+        showConfirmButton: true,
+        timer: 1500,
+      });
     }
   };
 
@@ -81,7 +121,7 @@ const Edit = () => {
             </Grid>
             <Grid item>
               <img
-                src="https://picsum.photos/200"
+                src={admin.profilePicture}
                 alt="profile"
                 className={classes.profile}
               />

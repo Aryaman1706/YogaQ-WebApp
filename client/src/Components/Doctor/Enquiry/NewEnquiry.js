@@ -1,6 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Grid, Typography } from "@material-ui/core";
+import Swal from "sweetalert2";
 import { v4 as uuidV4 } from "uuid";
+import { useSelector, useDispatch } from "react-redux";
+import { enquiry } from "../../../redux/actions";
 import BasicInfo from "./BasicInfo";
 import QualificationalInfo from "./QualificationalInfo";
 import Professional from "./Professional";
@@ -36,35 +39,71 @@ const NewEnquiry = () => {
     { place: "", clients: 0, noOfYears: 0, doc: uuidV4() },
   ]);
   const [expertise, setExpertise] = useState("");
+  const dispatch = useDispatch();
+  const { message, error } = useSelector((state) => state.enquiry);
 
-  const printFormData = (event) => {
+  const submitHandler = () => {
+    // * Generating Form Data
+    const formData = new FormData();
+
+    // * Appending State
+    Object.keys(state).forEach((item) => {
+      formData.append(`${item}`, state[item]);
+    });
+
+    // * Appending Languages
+    formData.append("languages", JSON.stringify(langs));
+
+    // * Appending Qualification
     const education = Object.keys(edu).filter((item) => {
       return edu[item];
     });
-    const obj = {
-      ...state,
-      languages: [...langs],
-      qualificational: {
-        educationalQualification: [...education],
-        docs: [...docs],
-      },
-      professional: [...prof],
-      expertise: expertise,
+    const qualificational = {
+      educationalQualification: [...education],
+      docs: [...docs],
     };
+    formData.append("qualificational", JSON.stringify(qualificational));
 
-    console.log(obj, files);
+    // * Appending Professional
+    formData.append("professional", JSON.stringify(prof));
+
+    // * Appending Expertise
+    formData.append("expertise", expertise);
+
+    // * Appending files
+    Object.keys(files).forEach((item) => {
+      formData.append(item, files[item]);
+    });
+    
+    dispatch(enquiry.createEnquiry(formData));
   };
 
-  // const helper = (e) => {
-  //   const docFiles = docs.map((item) => {
-  //     return { ...item, file: files[item.doc]?.name };
-  //   });
-  //   const profFiles = prof.map((item) => {
-  //     return { ...item, file: files[item.doc]?.name };
-  //   });
-
-  //   console.log({ docFiles, profFiles });
-  // };
+  useEffect(() => {
+    if (error) {
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: "Error Occured.",
+        text: `${error}`,
+        showConfirmButton: true,
+        timer: 1500,
+      });
+    }
+    if (message) {
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Success!",
+        text: `${message}`,
+        showConfirmButton: true,
+        timer: 1500,
+      });
+    }
+    return () => {
+      dispatch(enquiry.clearErrors());
+    };
+    // eslint-disable-next-line
+  }, [error, message]);
 
   return (
     <>
@@ -125,7 +164,7 @@ const NewEnquiry = () => {
                 fullWidth
                 variant="contained"
                 color="primary"
-                onClick={(event) => printFormData(event)}
+                onClick={(event) => submitHandler()}
               >
                 Submit
               </Button>

@@ -38,7 +38,9 @@ exports.create = async (req, res) => {
 // * Get my profile
 exports.myProfile = async (req, res) => {
   try {
-    const admin = await Admin.findById(req.user._id).select("-password").exec();
+    const admin = await Admin.findById(req.user._id)
+      .select("-password -resetToken -resetTokenValidity")
+      .exec();
     if (!admin)
       return res.status(404).json({ error: "Admin not found", body: null });
 
@@ -64,7 +66,9 @@ exports.edit = async (req, res) => {
       req.user._id,
       { ...body },
       { new: true }
-    ).exec();
+    )
+      .select("-password -resetToken -resetTokenValidity")
+      .exec();
     if (!updatedAdmin)
       return res.status(404).json({ error: "Admin not found.", body: null });
 

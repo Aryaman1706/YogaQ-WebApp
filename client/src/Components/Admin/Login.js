@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   TextField,
@@ -18,7 +19,9 @@ const Login = () => {
     password: "",
   });
   const [show, setShow] = useState(false);
-  const error = useSelector((state) => state.admin.error);
+  const { error, isAuthenticated } = useSelector((state) => state.admin);
+  const dispatch = useDispatch();
+  const history = useHistory();
 
   useEffect(() => {
     if (error) {
@@ -31,11 +34,14 @@ const Login = () => {
         timer: 1500,
       });
     }
+    if (!error && isAuthenticated) {
+      history.push("/admin");
+    }
     return () => {
-      console.log("hello");
+      dispatch(admin.errorAdmin());
     };
-  }, [error]);
-  const dispatch = useDispatch();
+    // eslint-disable-next-line
+  }, [error, isAuthenticated]);
 
   const emailRegex = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/gi;
 
