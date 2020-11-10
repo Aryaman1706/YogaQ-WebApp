@@ -41,7 +41,7 @@ const Appbar = () => {
   };
 
   useEffect(() => {
-    dispatch(/**/);
+    dispatch(doctorActions.loadDoctor());
     return () => {
       //
     };

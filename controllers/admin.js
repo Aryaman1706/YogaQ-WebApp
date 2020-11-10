@@ -4,6 +4,7 @@ const { randomBytes } = require("crypto");
 
 // * Models
 const Admin = require("../models/Admin");
+const ChatRoom = require("../models/ChatRoom");
 
 // * Utils
 const validation = require("../validationSchemas/admin");
@@ -181,6 +182,35 @@ exports.forgotPassword2 = async (req, res) => {
     return res
       .status(200)
       .json({ error: null, body: "Password reset successfull." });
+  } catch (error) {
+    console.log("Error occured here\n", error);
+    return res.status(500).json({ error: "Server Error.", body: null });
+  }
+};
+
+// * Get My chatrooms
+exports.myChatrooms = async (req, res) => {
+  try {
+    const chatrooms = await ChatRoom.find({
+      "partner.id": req.user._id,
+      "partner.model": "Admin",
+    });
+    const promiseArray = [];
+    chatrooms.forEach((doc) => {
+      const pro = doc
+        .populate("user.id", "username email")
+        .populate("partner.id", "username email")
+        .populate({
+          path: "unreadMessages",
+          match: { time: { $gt: doc.lastOpened.partner } },
+        })
+        .execPopulate();
+
+      promiseArray.push(pro);
+    });
+
+    await Promise.all(promiseArray);
+    return res.status(200).json({ error: null, body: chatrooms });
   } catch (error) {
     console.log("Error occured here\n", error);
     return res.status(500).json({ error: "Server Error.", body: null });
