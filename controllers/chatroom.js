@@ -73,7 +73,8 @@ exports.get = async (req, res) => {
       .populate({
         path: "unreadMessages",
         match: { time: { $gt: lastAccess } },
-      });
+      })
+      .execPopulate();
 
     return res.status(200).json({
       error: null,
@@ -89,18 +90,24 @@ exports.get = async (req, res) => {
 exports.messages = async (req, res) => {
   try {
     const totalMessages = await Message.count({ chatroomId: req.params.id });
-    if (parseInt(req.query.page, 10) * 50 < totalMessages) {
+    if ((parseInt(req.query.page, 10) - 1) * 50 < totalMessages) {
       const messages = await Message.find({ chatroomId: req.params.id })
         .sort("-time")
         .skip((parseInt(req.query.page, 10) - 1) * 50)
         .limit(50)
         .exec();
 
-      return res.status(200).json({ error: null, body: messages });
+      return res.status(200).json({
+        error: null,
+        body: {
+          messages,
+          end: false
+        },
+      });
     }
     return res
       .status(400)
-      .json({ error: null, body: "No More Messages Found." });
+      .json({ error: null, body: { messages: "No More Messages Found.", end: true });
   } catch (error) {
     console.log("Error occured here\n", error);
     return res.status(500).json({ error: "Server Error.", body: null });

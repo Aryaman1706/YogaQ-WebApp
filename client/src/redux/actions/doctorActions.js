@@ -80,6 +80,28 @@ export const loadDoctorComplete = () => async (dispatch) => {
 };
 
 // * Change Password
+export const changePassword = (formData) => async (dispatch) => {
+  try {
+    const res = await axios.put("/doctor/", formData);
+    if (res.data.error) {
+      dispatch({
+        type: DOCTOR_ERROR,
+        payload: res.data.error,
+      });
+    } else {
+      dispatch({
+        type: CHANGE_PASSWORD_DOCTOR,
+        payload: res.data.body,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    dispatch({
+      type: DOCTOR_ERROR,
+      payload: "Request Failed.",
+    });
+  }
+};
 
 // * Clear Errors
 export const clearError = () => async (dispatch) => {

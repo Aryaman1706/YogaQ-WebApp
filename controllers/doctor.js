@@ -6,6 +6,7 @@ const { validate: uuidValidate } = require("uuid");
 // * Models
 const Doctor = require("../models/Doctor");
 const Enquiry = require("../models/Enquiry");
+const ChatRoom = require("../models/ChatRoom");
 
 // * Utils
 const validation = require("../validationSchemas/doctor");
@@ -326,6 +327,98 @@ exports.forgotPassword2 = async (req, res) => {
     return res
       .status(200)
       .json({ error: null, body: "Password reset successfull." });
+  } catch (error) {
+    console.log("Error occured here\n", error);
+    return res.status(500).json({ error: "Server Error.", body: null });
+  }
+};
+
+// * List all enquiries
+exports.listEnquiries = async (req, res) => {
+  try {
+    const total = await Enquiry.countDocuments();
+    if ((parseInt(req.page, 10) - 1) * 20 < total) {
+      const enquiries = await Enquiry.find()
+        .sort("-postedOn")
+        .skip((parseInt(req.page, 10) - 1) * 20)
+        .limit(20)
+        .exec();
+
+      return res.status(200).json({
+        error: null,
+        body: { enquiries, end: true },
+      });
+    }
+
+    return res.status(200).json({
+      error: null,
+      body: { enquiries: "No more enquiries found.", end: true },
+    });
+  } catch (error) {
+    console.log("Error occured here\n", error);
+    return res.status(500).json({ error: "Server Error.", body: null });
+  }
+};
+
+// * View an Enquiry
+exports.viewEnquiry = async (req, res) => {
+  try {
+    const enquiry = await Enquiry.findById(req.params.id).exec();
+    if (!enquiry)
+      return res.status(400).json({ error: "Enquiry not found.", body: null });
+
+    return res.status(200).json({ error: null, body: enquiry });
+  } catch (error) {
+    console.log("Error occured here\n", error);
+    return res.status(500).json({ error: "Server Error.", body: null });
+  }
+};
+
+// * List all Doctors
+exports.listDoctors = async (req, res) => {
+  try {
+    const total = await Doctor.countDocuments();
+    if ((parseInt(req.page, 10) - 1) * 20 < total) {
+      const doctors = await Doctor.find()
+        .sort("-joinedOn")
+        .skip((parseInt(req.page, 10) - 1) * 20)
+        .limit(20)
+        .exec();
+
+      return res.status(200).json({
+        error: null,
+        body: { doctors, end: true },
+      });
+    }
+
+    return res.status(200).json({
+      error: null,
+      body: { doctors: "No more doctors found.", end: true },
+    });
+  } catch (error) {
+    console.log("Error occured here\n", error);
+    return res.status(500).json({ error: "Server Error.", body: null });
+  }
+};
+
+// * View a Doctor
+exports.viewDoctor = async (req, res) => {
+  try {
+    const doctor = await Doctor.findById(req.params.id).exec();
+    if (!doctor)
+      return res.status(400).json({ error: "Doctor not found.", body: null });
+
+    const chatrooms = await ChatRoom.find({
+      "partner.id": doctor._id,
+      "partner.model": "Doctor",
+    })
+      .select("user partner blocked")
+      .populate("user.id", "username email")
+      .populate("partner.id", "username email")
+      .exec();
+
+    doctor.chatrooms = chatrooms;
+    return res.status(200).json({ error: null, body: doctor });
   } catch (error) {
     console.log("Error occured here\n", error);
     return res.status(500).json({ error: "Server Error.", body: null });

@@ -26,6 +26,12 @@ const stateHandler = (state = defaultState, action) => {
         error: null,
         message: null,
       };
+    case CHANGE_PASSWORD_DOCTOR:
+      return {
+        ...state,
+        message: action.payload,
+        error: null,
+      };
     case LOAD_DOCTOR_COMPLETE:
       return {
         ...state,

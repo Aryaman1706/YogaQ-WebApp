@@ -63,6 +63,21 @@ router.post("/forgotPassword", controller.forgotPassword1);
 // * Forgot password 2 (Enter new password)
 router.post("/forgotPassword/:token", controller.forgotPassword2);
 
+// * List all enquiries
+// "/doctor/enquiry/list/?page=1"
+router.get("/enquiry/list", loginAdmin);
+
+// * View an enquiry
+router.get("/enquiry/:id", loginAdmin);
+
+// * List all Doctors
+// "/doctor/list/?page=1"
+router.get("/list", loginAdmin);
+
+// * View a Doctor
+// Chatrooms and details
+router.get("/:id", loginAdmin);
+
 // * End of API Endpoints -->
 
 module.exports = router;

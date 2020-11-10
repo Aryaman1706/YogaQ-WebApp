@@ -133,6 +133,7 @@ exports.signup = async (req, res) => {
     if (!user.phoneNumber) {
       user.phoneNumber = value.phoneNumber;
     }
+    //! create chatroom with admin
     user = await user.save();
     return res.status(200).json({ error: null, body: user });
   } catch (error) {

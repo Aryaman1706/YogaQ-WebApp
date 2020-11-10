@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   TextField,
   Button,
@@ -7,7 +7,10 @@ import {
   InputAdornment,
   IconButton,
 } from "@material-ui/core";
+import Swal from "sweetalert2";
 import { Visibility, VisibilityOff } from "@material-ui/icons";
+import { useSelector, useDispatch } from "react-redux";
+import { doctor } from "../../../redux/actions/index";
 
 const ChangePassword = () => {
   const [state, setState] = useState({
@@ -36,6 +39,37 @@ const ChangePassword = () => {
     });
   };
 
+  const { error, message } = useSelector((state) => state.doctor);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (error) {
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: "Error Occured.",
+        text: error,
+        showConfirmButton: true,
+        timer: 1500,
+      });
+    }
+    if (message) {
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Success!",
+        text: message,
+        showConfirmButton: true,
+        timer: 1500,
+      });
+    }
+    return () => {
+      dispatch(doctor.clearError());
+    };
+
+    // eslint-disable-next-line
+  }, [error, message]);
+
   const submitHandler = (event) => {
     if (
       state.oldPassword.length > 0 &&
@@ -49,12 +83,26 @@ const ChangePassword = () => {
       state.confirmPassword.length <= 20
     ) {
       if (state.newPassword.trim() === state.confirmPassword.trim()) {
-        console.log(state);
+        dispatch(doctor.changePassword(state));
       } else {
-        console.log("Passwords do not match.");
+        Swal.fire({
+          position: "center",
+          icon: "error",
+          title: "Error Occured.",
+          text: "Passwords do not match. Try Again.",
+          showConfirmButton: true,
+          timer: 1500,
+        });
       }
     } else {
-      console.log("Invalid Inputs.");
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: "Error Occured.",
+        text: "Invalid Data. Kindly check the form.",
+        showConfirmButton: true,
+        timer: 1500,
+      });
     }
   };
 

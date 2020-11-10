@@ -69,6 +69,9 @@ router.post("/forgotPassword", controller.forgotPassword1);
 // * Forgot password 2 (Enter a new password)
 router.post("/forgotPassword/:resetToken", controller.forgotPassword2);
 
+// * Get My Chatrooms
+router.get("/mychatrooms", loginAdmin, controller.myChatrooms);
+
 // * Test
 router.get("/del", async (req, res) => {
   const result = await cloudinary.uploader.destroy("690259_vw4hbg");
