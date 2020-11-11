@@ -1,9 +1,13 @@
-import { ENQUIRY_ERROR, NEW_ENQUIRY } from "../types";
+import {
+  ENQUIRY_ERROR,
+  NEW_ENQUIRY,
+  SELECT_ENQUIRY,
+  CLEAR_ENQUIRY,
+} from "../types";
 import axios from "../../utils/axios";
 
 // * Create new enquiry
 export const createEnquiry = (formData) => async (dispatch) => {
-  console.log(formData);
   try {
     const res = await axios.post("/doctor/enquire", formData, {
       headers: {
@@ -28,6 +32,22 @@ export const createEnquiry = (formData) => async (dispatch) => {
       payload: "Request Failed.",
     });
   }
+};
+
+// * Select Enquiry
+export const selectEnquiry = (enquiry) => async (dispatch) => {
+  dispatch({
+    type: SELECT_ENQUIRY,
+    payload: enquiry,
+  });
+};
+
+// * Clear Enquiry
+export const clearEnquiry = () => async (dispatch) => {
+  dispatch({
+    type: CLEAR_ENQUIRY,
+    payload: null,
+  });
 };
 
 // * Clear errors

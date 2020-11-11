@@ -2,6 +2,7 @@
 const { genSalt, hash, compare } = require("bcryptjs");
 const { randomBytes } = require("crypto");
 const { validate: uuidValidate } = require("uuid");
+const omit = require("lodash/omit");
 
 // * Models
 const Doctor = require("../models/Doctor");
@@ -115,17 +116,17 @@ exports.register = async (req, res) => {
     const enquiry = await Enquiry.findById(value.enquiry).exec();
     if (!enquiry)
       return res.status(404).json({ error: "Invalid Enquiry.", body: null });
-
+    const body = omit(enquiry.toObject(), ["postedOn"]);
     const salt = await genSalt(10);
     const password = await hash(value.password, salt);
-    const doctor = await Doctor.create({ ...enquiry, password });
+    const [doctor] = await Promise.all([
+      Doctor.create({ ...body, password }),
+      enquiry.remove(),
+    ]);
 
-    res.status(200).json({ error: null, body: doctor });
-
-    await enquiry.remove();
-    return 0;
+    return res.status(200).json({ error: null, body: doctor });
   } catch (error) {
-    console.log("Error occured here\n", error);
+    console.log("Error occured here\n");
     return res.status(500).json({ error: "Server Error.", body: null });
   }
 };
@@ -336,23 +337,24 @@ exports.forgotPassword2 = async (req, res) => {
 // * List all enquiries
 exports.listEnquiries = async (req, res) => {
   try {
+    const limit = 5;
     const total = await Enquiry.countDocuments();
-    if ((parseInt(req.page, 10) - 1) * 20 < total) {
+    if ((parseInt(req.query.page, 10) - 1) * limit < total) {
       const enquiries = await Enquiry.find()
         .sort("-postedOn")
-        .skip((parseInt(req.page, 10) - 1) * 20)
-        .limit(20)
+        .skip((parseInt(req.query.page, 10) - 1) * limit)
+        .limit(limit)
         .exec();
 
       return res.status(200).json({
         error: null,
-        body: { enquiries, end: true },
+        body: { enquiries, end: enquiries.length < limit },
       });
     }
 
     return res.status(200).json({
       error: null,
-      body: { enquiries: "No more enquiries found.", end: true },
+      body: { enquiries: [], end: true },
     });
   } catch (error) {
     console.log("Error occured here\n", error);
@@ -414,7 +416,7 @@ exports.viewDoctor = async (req, res) => {
     })
       .select("user partner blocked")
       .populate("user.id", "username email")
-      .populate("partner.id", "username email")
+      .populate("callCount")
       .exec();
 
     doctor.chatrooms = chatrooms;

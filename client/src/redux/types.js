@@ -9,6 +9,8 @@ export const REGISTER_ADMIN = "REGISTER_ADMIN";
 // * Enquiry
 export const NEW_ENQUIRY = "NEW_ENQUIRY";
 export const ENQUIRY_ERROR = "ENQUIRY_ERROR";
+export const SELECT_ENQUIRY = "SELECT_ENQUIRY";
+export const CLEAR_ENQUIRY = "CLEAR_ENQUIRY";
 
 // * Doctor
 export const LOGIN_DOCTOR = "LOGIN_DOCTOR";

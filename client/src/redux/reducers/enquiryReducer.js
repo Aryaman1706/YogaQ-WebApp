@@ -1,8 +1,14 @@
-import { NEW_ENQUIRY, ENQUIRY_ERROR } from "../types";
+import {
+  NEW_ENQUIRY,
+  ENQUIRY_ERROR,
+  SELECT_ENQUIRY,
+  CLEAR_ENQUIRY,
+} from "../types";
 
 const defaultState = {
   message: null,
   error: null,
+  enquiry: null,
 };
 
 const stateHandler = (state = defaultState, action) => {
@@ -16,6 +22,16 @@ const stateHandler = (state = defaultState, action) => {
       return {
         ...state,
         error: action.payload,
+      };
+    case SELECT_ENQUIRY:
+      return {
+        ...state,
+        enquiry: action.payload,
+      };
+    case CLEAR_ENQUIRY:
+      return {
+        ...state,
+        enquiry: null,
       };
     default:
       return state;

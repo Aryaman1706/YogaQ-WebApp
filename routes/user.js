@@ -25,6 +25,8 @@ router.get("/auth/callback", controllers.authCallback);
 // * Post Request for signup
 router.put("/signup", controllers.signup);
 
+// * Get my chatrooms
+
 // * End of API Endpoints -->
 
 module.exports = router;
