@@ -36,7 +36,7 @@ const ViewEnquiry = () => {
 
   useEffect(() => {
     setLoading(true);
-    axios.get(`/doctor/enquiry/${id}`).then((res) => {
+    axios.get(`/doctor/enquiry/view/${id}`).then((res) => {
       setEnquiry(res.data.body);
       setLoading(false);
     });
@@ -304,6 +304,15 @@ const ViewEnquiry = () => {
                       </Grid>
                     </Fragment>
                   ))}
+                </Grid>
+                <Grid item>
+                  <TextField
+                    fullWidth
+                    multiline
+                    variant="outlined"
+                    label="Expertise"
+                    value={enquiry.expertise}
+                  />
                 </Grid>
                 <Grid item>
                   <Toolbar></Toolbar>

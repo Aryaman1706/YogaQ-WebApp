@@ -31,7 +31,7 @@ const RegisterEnquiry = () => {
       position: "center",
       icon: "question",
       title: "Are you sure?",
-      text: `Email\n${enquiry.email}\nPassword\n${password}`,
+      text: `Email\n  ${enquiry.email}\nPassword\n  ${password}`,
       showConfirmButton: true,
       backdrop: false,
     }).then(() => {

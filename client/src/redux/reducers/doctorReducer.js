@@ -13,6 +13,7 @@ const defaultState = {
   message: null,
   isAuthenticated: false,
   completeProfile: null,
+  selectDoctor: null,
 };
 
 const stateHandler = (state = defaultState, action) => {
