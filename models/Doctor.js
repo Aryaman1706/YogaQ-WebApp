@@ -47,7 +47,7 @@ const doctorSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    default: null,
+    required: true,
   },
   resetToken: {
     type: String,
@@ -95,17 +95,9 @@ const doctorSchema = new mongoose.Schema({
         required: true,
       },
       noOfYears: {
-        years: {
-          type: Number,
-          min: 0,
-          required: true,
-        },
-        months: {
-          type: Number,
-          min: 0,
-          max: 11,
-          required: true,
-        },
+        type: Number,
+        min: 0,
+        required: true,
       },
       doc: {
         // File

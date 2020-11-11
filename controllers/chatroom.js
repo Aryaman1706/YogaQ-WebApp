@@ -101,13 +101,14 @@ exports.messages = async (req, res) => {
         error: null,
         body: {
           messages,
-          end: false
+          end: false,
         },
       });
     }
-    return res
-      .status(400)
-      .json({ error: null, body: { messages: "No More Messages Found.", end: true });
+    return res.status(400).json({
+      error: null,
+      body: { messages: "No More Messages Found.", end: true },
+    });
   } catch (error) {
     console.log("Error occured here\n", error);
     return res.status(500).json({ error: "Server Error.", body: null });
