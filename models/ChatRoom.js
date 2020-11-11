@@ -52,11 +52,10 @@ chatroomSchema.virtual("unreadMessages", {
   count: true,
 });
 
-chatroomSchema.virtual("callCount", {
+chatroomSchema.virtual("call", {
   ref: "Call",
   localField: "_id", // ! Might cause an error. Try switching
   foreignField: "chatroomId",
-  count: true,
 });
 
 chatroomSchema.post("remove", async (doc, next) => {

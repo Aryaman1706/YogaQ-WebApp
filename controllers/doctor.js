@@ -341,6 +341,7 @@ exports.listEnquiries = async (req, res) => {
     const total = await Enquiry.countDocuments();
     if ((parseInt(req.query.page, 10) - 1) * limit < total) {
       const enquiries = await Enquiry.find()
+        .select("postedOn username email")
         .sort("-postedOn")
         .skip((parseInt(req.query.page, 10) - 1) * limit)
         .limit(limit)
@@ -380,22 +381,24 @@ exports.viewEnquiry = async (req, res) => {
 exports.listDoctors = async (req, res) => {
   try {
     const total = await Doctor.countDocuments();
-    if ((parseInt(req.page, 10) - 1) * 20 < total) {
+    const limit = 5;
+    if ((parseInt(req.query.page, 10) - 1) * limit < total) {
       const doctors = await Doctor.find()
+        .select("username email joinedOn")
         .sort("-joinedOn")
-        .skip((parseInt(req.page, 10) - 1) * 20)
-        .limit(20)
+        .skip((parseInt(req.query.page, 10) - 1) * limit)
+        .limit(limit)
         .exec();
 
       return res.status(200).json({
         error: null,
-        body: { doctors, end: true },
+        body: { doctors, end: doctors.length < limit },
       });
     }
 
     return res.status(200).json({
       error: null,
-      body: { doctors: "No more doctors found.", end: true },
+      body: { doctors: [], end: true },
     });
   } catch (error) {
     console.log("Error occured here\n", error);
@@ -406,7 +409,9 @@ exports.listDoctors = async (req, res) => {
 // * View a Doctor
 exports.viewDoctor = async (req, res) => {
   try {
-    const doctor = await Doctor.findById(req.params.id).exec();
+    const doctor = await Doctor.findById(req.params.id)
+      .select("-password -resetToken -resetTokenValidity")
+      .exec();
     if (!doctor)
       return res.status(400).json({ error: "Doctor not found.", body: null });
 
@@ -416,11 +421,10 @@ exports.viewDoctor = async (req, res) => {
     })
       .select("user partner blocked")
       .populate("user.id", "username email")
-      .populate("callCount")
+      .populate("call", "time")
       .exec();
 
-    doctor.chatrooms = chatrooms;
-    return res.status(200).json({ error: null, body: doctor });
+    return res.status(200).json({ error: null, body: { doctor, chatrooms } });
   } catch (error) {
     console.log("Error occured here\n", error);
     return res.status(500).json({ error: "Server Error.", body: null });

@@ -42,9 +42,6 @@ const Appbar = () => {
 
   useEffect(() => {
     dispatch(doctorActions.loadDoctor());
-    return () => {
-      //
-    };
     // eslint-disable-next-line
   }, []);
 

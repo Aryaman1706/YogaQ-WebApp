@@ -68,7 +68,7 @@ router.post("/forgotPassword/:token", controller.forgotPassword2);
 router.get("/enquiry/list", loginAdmin, controller.listEnquiries);
 
 // * View an enquiry
-router.get("/enquiry/:id", loginAdmin, controller.viewEnquiry);
+router.get("/enquiry/view/:id", loginAdmin, controller.viewEnquiry);
 
 // * List all Doctors
 // "/doctor/list/?page=1"
@@ -76,7 +76,7 @@ router.get("/list", loginAdmin, controller.listDoctors);
 
 // * View a Doctor
 // Chatrooms and details
-router.get("/:id", loginAdmin, controller.viewDoctor);
+router.get("/view/:id", loginAdmin, controller.viewDoctor);
 
 // * End of API Endpoints -->
 
