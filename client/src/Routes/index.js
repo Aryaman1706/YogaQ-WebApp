@@ -12,6 +12,8 @@ import ViewEnquiry from "../Components/Admin/Dashboard/ViewEnquiry";
 import RegisterEnquiry from "../Components/Admin/Dashboard/RegisterEnquiry";
 import DoctorList from "../Components/Admin/Dashboard/DoctorList";
 import ViewDoctor from "../Components/Admin/Dashboard/ViewDoctor";
+import Home from "../Pages/Home";
+import Signup from "../Pages/Signup";
 
 const Routes = () => {
   return (
@@ -31,6 +33,9 @@ const Routes = () => {
         {/* Doctor */}
         <Route exact path="/enquire" component={NewEnquiry} />
         <Route exact path="/doctor/login" component={DoctorLogin} />
+        {/* User */}
+        <Route exact path="/" component={Home} />
+        <Route exact path="/signup" component={Signup} />
       </Switch>
     </>
   );

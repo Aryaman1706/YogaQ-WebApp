@@ -2,6 +2,7 @@ import React from "react";
 import { useHistory } from "react-router-dom";
 import AdminAppbar from "./Admin/Appbar";
 import DoctorAppbar from "./Doctor/Appbar";
+import UserAppbar from "./User/Appbar";
 
 const Wrapper = () => {
   const history = useHistory();
@@ -23,7 +24,7 @@ const Wrapper = () => {
     } else {
       return (
         <>
-          <h1>Unknown Appbar</h1>
+          <UserAppbar />
         </>
       );
     }

@@ -100,13 +100,15 @@ exports.authCallback = async (req, res) => {
     };
     const user = await User.findOne({ email: profile.email }).exec();
     if (user) {
+      req.session.passport = null;
       req.session.user = { id: user._id, role: user.role };
-      return res.status(200).json({ error: null, body: "Login Successfull." });
+      return res.redirect(`${process.env.CLIENT_URL}`);
     }
     const newUser = await User.create(profile);
+    req.session.passport = null;
     req.session.user = { id: newUser._id, role: newUser.role };
     const query = newUser.phoneNumber ? "country" : "country-phoneNumber";
-    return res.redirect(`${process.env.CLIENT_URL}/signup?fields=${query}`);
+    return res.redirect(`${process.env.CLIENT_URL}/signup/?fields=${query}`);
   } catch (error) {
     console.log("Error occured here\n", error);
     return res
@@ -133,6 +135,7 @@ exports.signup = async (req, res) => {
     if (!user.phoneNumber) {
       user.phoneNumber = value.phoneNumber;
     }
+    user.complete = true;
     //! create chatroom with admin
     user = await user.save();
     return res.status(200).json({ error: null, body: user });

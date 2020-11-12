@@ -2,7 +2,7 @@
 const express = require("express");
 
 // * Middleware
-const { login: loginMiddleware } = require("../middleware/user");
+const middleware = require("../middleware/user");
 
 // * Controllers
 const controllers = require("../controllers/user");
@@ -11,10 +11,10 @@ const controllers = require("../controllers/user");
 const router = express.Router();
 
 // * Get my profile
-router.get("/profile", loginMiddleware, controllers.getProfile);
+router.get("/profile", middleware.login, controllers.getProfile);
 
 // * Edit profile
-router.put("/profile", loginMiddleware, controllers.editProfile);
+router.put("/profile", middleware.login, controllers.editProfile);
 
 // * Google OAuth
 router.get("/auth", controllers.auth);
@@ -23,7 +23,7 @@ router.get("/auth", controllers.auth);
 router.get("/auth/callback", controllers.authCallback);
 
 // * Post Request for signup
-router.put("/signup", controllers.signup);
+router.put("/signup", middleware.login, controllers.signup);
 
 // * Get my chatrooms
 
