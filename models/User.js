@@ -33,7 +33,7 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    quationSet: {
+    questionSet: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "QuestionSet",
     },

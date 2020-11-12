@@ -34,16 +34,16 @@ const DoctorProfile = ({ doctor, chatrooms }) => {
       </Grid>
       <Grid item>
         <div className={classes.div}>
-          <Typography variant="h6">Number of Chat Rooms</Typography>
-          <Typography variant="h6" color="secondary">
+          <Typography variant="subtitle1">Number of Chat Rooms</Typography>
+          <Typography variant="subtitle1" color="secondary">
             {chatrooms.length}
           </Typography>
         </div>
       </Grid>
       <Grid item>
         <div className={classes.div}>
-          <Typography variant="h6">Number of Calls</Typography>
-          <Typography variant="h6" color="secondary">
+          <Typography variant="subtitle1">Number of Calls</Typography>
+          <Typography variant="subtitle1" color="secondary">
             {callCount}
           </Typography>
         </div>

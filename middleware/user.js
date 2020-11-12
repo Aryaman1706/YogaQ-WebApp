@@ -6,7 +6,7 @@ exports.login = async (req, res, next) => {
     if (!req.session.user || req.session.user.role !== "user") {
       return res.status(403).json({ error: "Login To Continue.", body: null });
     }
-    const user = await User.findById(req.session.user).exec();
+    const user = await User.findById(req.session.user.id).exec();
     if (!user || user.role !== "user") {
       return res.status(401).json({ error: "Invalid Profile.", body: null });
     }

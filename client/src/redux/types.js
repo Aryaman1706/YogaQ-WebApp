@@ -18,3 +18,8 @@ export const CHANGE_PASSWORD_DOCTOR = "CHANGE_PASSWORD_DOCTOR";
 export const DOCTOR_ERROR = "DOCTOR_ERROR";
 export const LOAD_DOCTOR = "LOAD_DOCTOR";
 export const LOAD_DOCTOR_COMPLETE = "LOAD_DOCTOR_COMPLETE";
+
+// * User
+export const LOAD_USER = "LOAD_USER";
+export const USER_ERROR = "USER_ERROR";
+export const TEST = "TEST";
