@@ -1,13 +1,17 @@
 const mongoose = require("mongoose");
 
 const responseSchema = new mongoose.Schema({
+  questionSet: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "QuestionSet",
+  },
   date: {
     type: Date,
     default: new Date(),
   },
   responses: {
     type: Map,
-    of: Array,
+    of: String,
   },
 });
 

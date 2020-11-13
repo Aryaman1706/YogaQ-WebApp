@@ -14,10 +14,6 @@ const questionSchema = new mongoose.Schema({
     default: [],
     min: 4,
   },
-  active: {
-    type: Boolean,
-    default: true,
-  },
 });
 
 const Question = mongoose.model("Question", questionSchema);
