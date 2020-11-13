@@ -36,7 +36,14 @@ const userSchema = new mongoose.Schema(
     questionSet: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "QuestionSet",
+      unique: true,
     },
+    doctors: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Doctor",
+      },
+    ],
     role: {
       type: String,
       enum: ["admin", "doctor", "user"],

@@ -7,6 +7,7 @@ const User = require("../models/User");
 // * Utils
 const validation = require("../validationSchemas/user");
 const { getAccessToken, getProfile } = require("../utils/oauth");
+const ChatRoom = require("../models/ChatRoom");
 
 // * Controllers -->
 
@@ -120,7 +121,7 @@ exports.authCallback = async (req, res) => {
 // * Post request for signup
 exports.signup = async (req, res) => {
   try {
-    let user = await User.findById(req.user._id).exec();
+    const user = await User.findById(req.user._id).exec();
     if (!user) return res.status(400).json({ error: null, body: null });
 
     const { error, value } = user.phoneNumber
@@ -136,9 +137,44 @@ exports.signup = async (req, res) => {
       user.phoneNumber = value.phoneNumber;
     }
     user.complete = true;
-    //! create chatroom with admin
-    user = await user.save();
+    const chatroom = {
+      user: {
+        id: user._id,
+      },
+      partner: {
+        id: "5fa1e53ecbfc17d447d1a520",
+        model: "Admin",
+      },
+    };
+    await Promise.all([user.save(), ChatRoom.create(chatroom)]);
     return res.status(200).json({ error: null, body: user });
+  } catch (error) {
+    console.log("Error occured here\n", error);
+    return res
+      .status(401)
+      .json({ error: "Login/Signup failed. Try Again.", body: null });
+  }
+};
+
+// * Get my ChatRooms
+exports.getChatrooms = async (req, res) => {
+  try {
+    const chatrooms = await ChatRoom.find({ "user.id": req.user._id }).exec();
+    const promiseArray = [];
+    chatrooms.forEach((doc) => {
+      const pro = doc
+        .populate("partner.id", "username email")
+        .populate({
+          path: "unreadMessages",
+          match: { time: { $gt: doc.lastOpened.user } },
+        })
+        .execPopulate();
+
+      promiseArray.push(pro);
+    });
+    await Promise.all(promiseArray);
+
+    return res.status(200).json({ error: null, body: chatrooms });
   } catch (error) {
     console.log("Error occured here\n", error);
     return res

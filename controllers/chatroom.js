@@ -21,18 +21,21 @@ exports.create = async (req, res) => {
         .status(400)
         .json({ error: error.details[0].message, body: null });
 
-    const user = await User.findById(value.user.id).exec();
-    const partner =
+    const userPromise = User.findById(value.user.id).exec();
+    const partnerPromise =
       value.partner.model === "Admin"
-        ? await Admin.findById(value.partner.id).exec()
-        : await Doctor.findById(value.partner.id).exec();
+        ? Admin.findById(value.partner.id).exec()
+        : Doctor.findById(value.partner.id).exec();
+
+    const [user, partner] = await Promise.all([userPromise, partnerPromise]);
 
     if (!user || !partner)
       return res
         .status(400)
         .json({ error: "Invalid User or Partner", body: null });
 
-    await ChatRoom.create(value);
+    user.doctors.push(partner._id);
+    await Promise.all([ChatRoom.create(value), user.save()]);
     return res
       .status(200)
       .json({ error: null, body: "ChatRoom created succesfully." });
