@@ -7,12 +7,15 @@ const express = require("express");
 const router = express.Router();
 
 // * Toggle Active status of Question Set
+// id -> QuestionSet._id
 router.put("/active/:id");
 
 // * Add Question to question set
+// id -> QuestionSet._id
 router.put("/addQuestion/:id");
 
 // * Delete given Question
+// id -> Question._id
 router.delete("/removeQuestion/:id");
 
 // * Get Question Set (User)
@@ -22,10 +25,11 @@ router.get("/get");
 router.post("/fill");
 
 // * Get Question Set (Doctor)
+// id -> questionSet._id
 router.get("/doctor/get/:id");
 
 // * Get Question Set with responses datewise
-// /questionSet/doctor/fill/:id?date=(JS date)
+// /questionSet/doctor/fill/:id?date=(JS date), id -> questionSet._id
 router.get("/doctor/fill/:id");
 
 // * End API Endpoints -->
