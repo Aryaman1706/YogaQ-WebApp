@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const QuestionSet = require("./QuestionSet");
 
 const questionSchema = new mongoose.Schema({
   questionSetId: {
@@ -14,6 +15,16 @@ const questionSchema = new mongoose.Schema({
     default: [],
     min: 4,
   },
+});
+
+questionSchema.post("remove", async (doc, next) => {
+  await QuestionSet.update(
+    { questions: doc._id },
+    { $pull: { questions: doc._id } },
+    { multi: true }
+  );
+
+  next();
 });
 
 const Question = mongoose.model("Question", questionSchema);
