@@ -29,7 +29,9 @@ const Appbar = () => {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
   const history = useHistory();
-  const { isAuthenticated, user } = useSelector((state) => state.user);
+  const { isAuthenticated, user, error, query } = useSelector(
+    (state) => state.user
+  );
   const dispatch = useDispatch();
 
   const handleClick = (e) => {
@@ -42,11 +44,18 @@ const Appbar = () => {
 
   useEffect(() => {
     dispatch(userAction.loadUser());
-    return () => {
-      //
-    };
     // eslint-disable-next-line
   }, []);
+
+  useEffect(() => {
+    if (error && query) {
+      history.push(`/signup/?fields=${query}`);
+    }
+    if (/User not found./i.test(error)) {
+      history.push("/");
+    }
+    // eslint-disable-next-line
+  }, [error, query]);
 
   return (
     <>
@@ -92,7 +101,12 @@ const Appbar = () => {
               </Menu>
             </>
           ) : (
-            <Button color="inherit">Login</Button>
+            <Button
+              color="inherit"
+              href={`${process.env.REACT_APP_SERVER_URL}/api/user/auth`}
+            >
+              Login with Google
+            </Button>
           )}
         </Toolbar>
       </AppBar>

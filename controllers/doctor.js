@@ -421,7 +421,11 @@ exports.viewDoctor = async (req, res) => {
     })
       .select("user partner blocked")
       .populate("user.id", "username email")
-      .populate("call", "time")
+      .populate({
+        path: "call",
+        select: "time",
+        sort: "-time",
+      })
       .exec();
 
     return res.status(200).json({ error: null, body: { doctor, chatrooms } });

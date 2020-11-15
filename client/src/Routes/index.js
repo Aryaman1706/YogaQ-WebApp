@@ -14,6 +14,7 @@ import DoctorList from "../Components/Admin/Dashboard/DoctorList";
 import ViewDoctor from "../Components/Admin/Dashboard/ViewDoctor";
 import Home from "../Pages/Home";
 import Signup from "../Pages/Signup";
+import EditUser from "../Components/User/Edit";
 
 const Routes = () => {
   return (
@@ -36,6 +37,7 @@ const Routes = () => {
         {/* User */}
         <Route exact path="/" component={Home} />
         <Route exact path="/signup" component={Signup} />
+        <Route exact path="/edit" component={EditUser} />
       </Switch>
     </>
   );

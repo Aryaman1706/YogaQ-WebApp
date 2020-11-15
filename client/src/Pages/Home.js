@@ -1,15 +1,16 @@
-import React, { Fragment } from "react";
-import { Button } from "@material-ui/core";
+import React, { Fragment, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { user as userActions } from "../redux/actions/index";
 
 const Home = () => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(userActions.listChatrooms());
+    // eslint-disable-next-line
+  }, []);
   return (
     <Fragment>
-      <Button
-        variant="contained"
-        href={`${process.env.REACT_APP_SERVER_URL}/api/user/auth`}
-      >
-        SignUp with Google
-      </Button>
+      <h1>Home Page</h1>
     </Fragment>
   );
 };

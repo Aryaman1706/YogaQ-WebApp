@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import DoctorProfile from "./DoctorProfile";
 import DoctorProfileComplete from "./DoctorProfileComplete";
 import {
@@ -7,7 +7,10 @@ import {
   Grid,
   Button,
   makeStyles,
+  Paper,
+  IconButton,
 } from "@material-ui/core";
+import VisibilityIcon from "@material-ui/icons/Visibility";
 import { useParams } from "react-router-dom";
 import axios from "../../../utils/axios";
 
@@ -15,6 +18,11 @@ const useStyles = makeStyles((theme) => ({
   div: {
     display: "flex",
     justifyContent: "flex-end",
+  },
+  div2: {
+    padding: "5px 10px 5px 10px",
+    display: "flex",
+    justifyContent: "space-between",
   },
 }));
 
@@ -72,35 +80,43 @@ const ViewDoctor = () => {
                   <DoctorProfile doctor={doctor} chatrooms={chatrooms} />
                 )}
               </Grid>
+              <Toolbar></Toolbar>
+              <Typography variant="h3" align="center">
+                Chat Rooms
+              </Typography>
+              <Grid
+                container
+                direction="column"
+                justify="space-around"
+                alignItems="stretch"
+                spacing={2}
+              >
+                {chatrooms.map((obj, index) => {
+                  return (
+                    <Fragment key={index}>
+                      <Grid item>
+                        <Paper>
+                          <div className={classes.div2}>
+                            <div>
+                              <Typography variant="subtitle1">
+                                Username:- {obj.user.id.username}
+                              </Typography>
+                              <Typography variant="subtitle1">
+                                Email Address:- {obj.user.id.email}
+                              </Typography>
+                            </div>
+                            <IconButton>
+                              <VisibilityIcon />
+                            </IconButton>
+                          </div>
+                        </Paper>
+                      </Grid>
+                    </Fragment>
+                  );
+                })}
+              </Grid>
             </Grid>
             <Grid item xs={1} lg={3}></Grid>
-          </Grid>
-          <Toolbar></Toolbar>
-          <Typography variant="h3" align="center">
-            Chat Rooms
-          </Typography>
-          <Grid
-            container
-            direction="column"
-            justify="space-around"
-            alignItems="stretch"
-            spacing={2}
-          >
-            {chatrooms.map((obj, index) => {
-              return (
-                <>
-                  <Grid item>
-                    <Typography variant="h6">User :-</Typography>
-                    <Typography variant="subtitle1">
-                      {obj.user.username}
-                    </Typography>
-                    <Typography variant="subtitle1">
-                      {obj.user.email}
-                    </Typography>
-                  </Grid>
-                </>
-              );
-            })}
           </Grid>
         </>
       ) : null}

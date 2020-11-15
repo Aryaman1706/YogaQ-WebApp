@@ -34,6 +34,7 @@ exports.create = async (req, res) => {
         .status(400)
         .json({ error: "Invalid User or Partner", body: null });
 
+    // ! only if not already present
     user.doctors.push(partner._id);
     await Promise.all([ChatRoom.create(value), user.save()]);
     return res

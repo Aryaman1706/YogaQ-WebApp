@@ -7,16 +7,19 @@ const chatroomSchema = new mongoose.Schema(
       id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
+        required: true,
       },
     },
     partner: {
       id: {
         type: mongoose.Schema.Types.ObjectId,
         refPath: "partner.model",
+        required: true,
       },
       model: {
         type: String,
         enum: ["Doctor", "Admin"],
+        required: true,
       },
     },
     blocked: {
@@ -39,8 +42,8 @@ const chatroomSchema = new mongoose.Schema(
 
 chatroomSchema.index(
   {
-    doctorId: 1,
-    userId: 1,
+    "partner.id": 1,
+    "user.id": 1,
   },
   { unique: true }
 );

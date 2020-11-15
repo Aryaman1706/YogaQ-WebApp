@@ -36,7 +36,7 @@ const userSchema = new mongoose.Schema(
     questionSet: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "QuestionSet",
-      unique: true,
+      // unique: true,
     },
     doctors: [
       {
