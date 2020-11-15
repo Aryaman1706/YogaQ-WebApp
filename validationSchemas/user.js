@@ -9,7 +9,7 @@ exports.edit = (body) => {
     gender: Joi.string()
       .lowercase()
       .trim()
-      .valid(["male", "female", "other"])
+      .valid("male", "female", "other")
       .required(),
     country: Joi.string().max(150).trim().required(),
   });

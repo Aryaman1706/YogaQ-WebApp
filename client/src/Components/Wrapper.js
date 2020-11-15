@@ -9,13 +9,13 @@ const Wrapper = () => {
   const render = () => {
     const x = history.location.pathname;
     console.log("Wrapper", history.location.pathname);
-    if (/\/admin.+/.test(x)) {
+    if (/\/admin*/.test(x)) {
       return (
         <>
           <AdminAppbar />
         </>
       );
-    } else if (/\/doctor.+/.test(x)) {
+    } else if (/\/doctor*/.test(x)) {
       return (
         <>
           <DoctorAppbar />

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import {
   TextField,
@@ -9,12 +9,45 @@ import {
 } from "@material-ui/core";
 import queryString from "query-string";
 import Swal from "sweetalert2";
-import axios from "../utils/axios";
+import { useDispatch, useSelector } from "react-redux";
+import { user as userActions } from "../redux/actions/index";
 
 const Signup = () => {
   const history = useHistory();
-  const parsed = queryString.parse(history.location.search);
-  const fields = parsed.fields.trim().split("-");
+  const dispatch = useDispatch();
+  const { error, user } = useSelector((state) => state.user);
+  const [prop, setProp] = useState([]);
+  useEffect(() => {
+    const parsed = queryString.parse(history.location.search);
+    if (!parsed.fields || !parsed.fields.includes("country")) {
+      history.push("/");
+    } else {
+      const fields = parsed.fields.trim().split("-");
+      setProp(fields);
+    }
+    return () => {
+      dispatch(userActions.clearIncompleteProfile());
+    };
+    // eslint-disable-next-line
+  }, []);
+
+  useEffect(() => {
+    if (/^Validation Failed.*/i.test(error)) {
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: "Error!",
+        text: `${error}`,
+        showConfirmButton: true,
+        timer: 1500,
+      });
+    }
+    if (user && user.complete) {
+      history.push("/");
+    }
+    // eslint-disable-next-line
+  }, [error, user]);
+
   const [state, setState] = useState({
     country: "",
     phoneNumber: "",
@@ -31,25 +64,14 @@ const Signup = () => {
 
   const submitHandler = (e) => {
     const body = { ...state };
-    if (!fields.includes("phoneNumber")) {
+    if (!prop.includes("phoneNumber")) {
       body.phoneNumber = undefined;
     }
-    axios.put("/user/signup", body).then((res) => {
-      Swal.fire({
-        position: "center",
-        icon: "success",
-        title: "Success",
-        text: "Account Registeration Complete!",
-        showConfirmButton: true,
-        timer: 1500,
-      }).then(() => {
-        history.push("/");
-      });
-    });
+    dispatch(userActions.sigupUser(body));
   };
 
   const render = () => {
-    if (fields.includes("phoneNumber")) {
+    if (prop.includes("phoneNumber")) {
       return (
         <>
           <Grid item>

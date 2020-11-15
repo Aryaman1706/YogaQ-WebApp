@@ -10,8 +10,8 @@ const useStyles = makeStyles((theme) => ({
 
 const DoctorProfile = ({ doctor, chatrooms }) => {
   let callCount = 0;
-  chatrooms.forEach((item) => {
-    callCount = callCount + 1;
+  chatrooms.forEach((chatroom) => {
+    callCount = callCount + chatroom.call.length;
   });
   const classes = useStyles();
   return (

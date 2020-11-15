@@ -21,5 +21,9 @@ export const LOAD_DOCTOR_COMPLETE = "LOAD_DOCTOR_COMPLETE";
 
 // * User
 export const LOAD_USER = "LOAD_USER";
+export const SIGNUP_USER = "SIGNUP_USER";
 export const USER_ERROR = "USER_ERROR";
+export const INCOMPLETE_PROFILE = "INCOMPLETE_PROFILE";
+export const GET_CHATROOMS = "GET_CHATROOMS";
+export const EDIT_USER = "EDIT_USER";
 export const TEST = "TEST";
