@@ -24,7 +24,7 @@ const Login = () => {
   const history = useHistory();
 
   useEffect(() => {
-    if (error) {
+    if (/^Validation Error*/i.test(error)) {
       Swal.fire({
         position: "center",
         icon: "error",

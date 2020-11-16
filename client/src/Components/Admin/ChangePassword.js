@@ -24,7 +24,7 @@ const ChangePassword = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (error) {
+    if (/Validation Error*/i.test(error)) {
       Swal.fire({
         position: "center",
         icon: "error",
@@ -34,7 +34,7 @@ const ChangePassword = () => {
         timer: 1500,
       });
     }
-    if (message) {
+    if (/Password changed successfully*/i.test(message)) {
       Swal.fire({
         position: "center",
         icon: "success",

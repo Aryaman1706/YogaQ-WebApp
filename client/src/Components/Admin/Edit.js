@@ -43,7 +43,7 @@ const Edit = () => {
       email: admin.email,
       welcomeMessage: admin.welcomeMessage ? admin.welcomeMessage : "",
     });
-    if (error) {
+    if (/^Validation Error*/i.test(error)) {
       Swal.fire({
         position: "center",
         icon: "error",

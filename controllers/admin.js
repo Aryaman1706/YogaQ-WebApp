@@ -15,11 +15,15 @@ const validation = require("../validationSchemas/admin");
 exports.create = async (req, res) => {
   try {
     const { error, value } = validation.create(req.body);
-    if (error) return res.json({ error: error.details[0].message, body: null });
+    if (error)
+      return res.status(400).json({
+        error: `Validation Error ${error.details[0].message}`,
+        body: null,
+      });
 
     if (await Admin.findOne({ email: value.email }).exec())
-      return res.json({
-        error: "Admin with same email address already exists.",
+      return res.status(400).json({
+        error: "Validation Error Admin with same email address already exists.",
         body: null,
       });
 
@@ -32,13 +36,13 @@ exports.create = async (req, res) => {
       password,
     });
 
-    return res.json({
+    return res.status(200).json({
       error: null,
       body: "New admin registered successfully.",
     });
   } catch (error) {
     console.log("Error occured here\n", error);
-    return res.json({ error: "Server Error.", body: null });
+    return res.status(500).json({ error: "Server Error.", body: null });
   }
 };
 
@@ -63,9 +67,10 @@ exports.edit = async (req, res) => {
   try {
     const { error, value } = validation.edit(req.body);
     if (error)
-      return res
-        .status(400)
-        .json({ error: error.details[0].message, body: null });
+      return res.status(400).json({
+        error: `Validation Error ${error.details[0].message}`,
+        body: null,
+      });
 
     const body = req.file ? { ...value, profilePicture: req.file.url } : value;
 
@@ -90,17 +95,28 @@ exports.edit = async (req, res) => {
 exports.changePassword = async (req, res) => {
   try {
     const { error, value } = validation.changePassword(req.body);
-    if (error) return res.json({ error: error.details[0].message, body: null });
+    if (error)
+      return res.status(400).json({
+        error: `Validation Error ${error.details[0].message}`,
+        body: null,
+      });
 
     let admin = await Admin.findById(req.user._id).select("password").exec();
-    if (!admin) return res.json({ error: "Admin not found.", body: null });
+    if (!admin)
+      return res.status(404).json({ error: "Admin not found.", body: null });
 
     const { oldPassword, newPassword, confirmPassword } = value;
     if (newPassword !== confirmPassword)
-      return res.json({ error: "Passwords do not match.", body: null });
+      return res.status(400).json({
+        error: "Validation Error Passwords do not match.",
+        body: null,
+      });
 
     const result = await compare(oldPassword, admin.password);
-    if (!result) return res.json({ error: "Incorrect Password.", body: null });
+    if (!result)
+      return res
+        .status(400)
+        .json({ error: "Validation Error Incorrect Password.", body: null });
 
     const salt = await genSalt(10);
     const password = await hash(newPassword, salt);
@@ -112,7 +128,7 @@ exports.changePassword = async (req, res) => {
       .json({ error: null, body: "Password changed successfully." });
   } catch (error) {
     console.log("Error occured here\n", error);
-    return res.json({ error: "Server Error.", body: null });
+    return res.status(500).json({ error: "Server Error.", body: null });
   }
 };
 

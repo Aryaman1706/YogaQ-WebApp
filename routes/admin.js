@@ -32,7 +32,7 @@ const router = express.Router();
 router.post("/login", (req, res, next) => {
   passport.authenticate("admin", (err, user, info) => {
     if (err) return next(err);
-    if (!user) return res.json({ error: info.message, body: null });
+    if (!user) return res.status(404).json({ error: info.message, body: null });
 
     req.logIn(user, (error) => {
       if (error) return next(error);

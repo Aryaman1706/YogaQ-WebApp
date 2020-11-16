@@ -12,22 +12,14 @@ import axios from "../../utils/axios";
 export const loginAdmin = (formData) => async (dispatch) => {
   try {
     const res = await axios.post("/admin/login", formData);
-    if (res.data.error) {
-      dispatch({
-        type: ADMIN_ERROR,
-        payload: res.data.error,
-      });
-    } else {
-      dispatch({
-        type: LOGIN_ADMIN,
-        payload: res.data.body,
-      });
-    }
+    dispatch({
+      type: LOGIN_ADMIN,
+      payload: res.data.body,
+    });
   } catch (error) {
-    console.log(error);
     dispatch({
       type: ADMIN_ERROR,
-      payload: "Request Failed.",
+      payload: error.response.data.error,
     });
   }
 };
@@ -36,22 +28,14 @@ export const loginAdmin = (formData) => async (dispatch) => {
 export const loadAdmin = () => async (dispatch) => {
   try {
     const res = await axios.get("/admin/profile");
-    if (res.data.error) {
-      dispatch({
-        type: ADMIN_ERROR,
-        payload: res.data.error,
-      });
-    } else {
-      dispatch({
-        type: LOAD_ADMIN,
-        payload: res.data.body,
-      });
-    }
+    dispatch({
+      type: LOAD_ADMIN,
+      payload: res.data.body,
+    });
   } catch (error) {
-    console.log(error);
     dispatch({
       type: ADMIN_ERROR,
-      payload: "Request Failed.",
+      payload: error.response.data.error,
     });
   }
 };
@@ -64,22 +48,14 @@ export const editAdmin = (formData) => async (dispatch) => {
         "Content-Type": "multipart/form-data",
       },
     });
-    if (res.data.error) {
-      dispatch({
-        type: ADMIN_ERROR,
-        payload: res.data.error,
-      });
-    } else {
-      dispatch({
-        type: EDIT_ADMIN,
-        payload: res.data.body,
-      });
-    }
+    dispatch({
+      type: EDIT_ADMIN,
+      payload: res.data.body,
+    });
   } catch (error) {
-    console.log(error);
     dispatch({
       type: ADMIN_ERROR,
-      payload: "Request Failed.",
+      payload: error.response.data.error,
     });
   }
 };
@@ -88,22 +64,14 @@ export const editAdmin = (formData) => async (dispatch) => {
 export const changePassword = (formData) => async (dispatch) => {
   try {
     const res = await axios.put("/admin/changePassword", formData);
-    if (res.data.error) {
-      dispatch({
-        type: ADMIN_ERROR,
-        payload: res.data.error,
-      });
-    } else {
-      dispatch({
-        type: CHANGE_PASSWORD,
-        payload: res.data.body,
-      });
-    }
+    dispatch({
+      type: CHANGE_PASSWORD,
+      payload: res.data.body,
+    });
   } catch (error) {
-    console.log(error);
     dispatch({
       type: ADMIN_ERROR,
-      payload: "Request Failed.",
+      payload: error.response.data.error,
     });
   }
 };
@@ -112,19 +80,12 @@ export const changePassword = (formData) => async (dispatch) => {
 export const register = (formData) => async (dispatch) => {
   try {
     const res = await axios.post("/admin/register", formData);
-    if (res.data.error) {
-      dispatch({
-        type: ADMIN_ERROR,
-        payload: res.data.error,
-      });
-    } else {
-      dispatch({
-        type: REGISTER_ADMIN,
-        payload: res.data.body,
-      });
-    }
+
+    dispatch({
+      type: REGISTER_ADMIN,
+      payload: res.data.body,
+    });
   } catch (error) {
-    console.log(error);
     dispatch({
       type: ADMIN_ERROR,
       payload: "Request Failed.",
@@ -136,6 +97,5 @@ export const register = (formData) => async (dispatch) => {
 export const errorAdmin = () => async (dispatch) => {
   dispatch({
     type: ADMIN_ERROR,
-    payload: null,
   });
 };

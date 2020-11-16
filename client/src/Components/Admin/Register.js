@@ -21,7 +21,7 @@ const Register = () => {
   };
 
   useEffect(() => {
-    if (error) {
+    if (/Validation Error*/i.test(error)) {
       Swal.fire({
         position: "center",
         icon: "error",
@@ -31,7 +31,7 @@ const Register = () => {
         timer: 1500,
       });
     }
-    if (message) {
+    if (/New admin registered successfully*/i.test(message)) {
       Swal.fire({
         position: "center",
         icon: "success",
@@ -43,6 +43,7 @@ const Register = () => {
     }
     return () => {
       dispatch(admin.errorAdmin());
+      setUser({ username: "", email: "", password: "" });
     };
     // eslint-disable-next-line
   }, [error, message]);

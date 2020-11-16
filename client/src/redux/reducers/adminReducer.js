@@ -34,7 +34,7 @@ const stateHandler = (state = defaultState, action) => {
     case ADMIN_ERROR:
       return {
         ...state,
-        error: action.payload,
+        error: null,
         message: null,
       };
     default:
