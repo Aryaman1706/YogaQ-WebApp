@@ -1,5 +1,6 @@
 import React from "react";
-import { Route, Switch } from "react-router-dom";
+import { Switch } from "react-router-dom";
+import Route from "./RouteWrapper";
 import Wrapper from "../Components/Wrapper";
 import AdminHome from "../Pages/Admin/Home";
 import AdminLogin from "../Pages/Admin/LoginPage";
@@ -23,21 +24,46 @@ const Routes = () => {
       <Switch>
         {/* Admin */}
         <Route exact path="/admin/login" component={AdminLogin} />
-        <Route exact path="/admin/register" component={RegisterPage} />
-        <Route exact path="/admin" component={AdminHome} />
-        <Route exact path="/admin/profile" component={Profile} />
-        <Route exact path="/admin/enquiries" component={EnquiryList} />
-        <Route exact path="/admin/doctors" component={DoctorList} />
-        <Route exact path="/admin/enquiry/:id" component={ViewEnquiry} />
-        <Route exact path="/admin/doctor/:id" component={ViewDoctor} />
-        <Route exact path="/admin/accept/enquiry" component={RegisterEnquiry} />
+        <Route
+          adminLogin
+          exact
+          path="/admin/register"
+          component={RegisterPage}
+        />
+        <Route adminLogin exact path="/admin" component={AdminHome} />
+        <Route adminLogin exact path="/admin/profile" component={Profile} />
+        <Route
+          adminLogin
+          exact
+          path="/admin/enquiries"
+          component={EnquiryList}
+        />
+        <Route adminLogin exact path="/admin/doctors" component={DoctorList} />
+        <Route
+          adminLogin
+          exact
+          path="/admin/enquiry/:id"
+          component={ViewEnquiry}
+        />
+        <Route
+          adminLogin
+          exact
+          path="/admin/doctor/:id"
+          component={ViewDoctor}
+        />
+        <Route
+          adminLogin
+          exact
+          path="/admin/accept/enquiry"
+          component={RegisterEnquiry}
+        />
         {/* Doctor */}
         <Route exact path="/enquire" component={NewEnquiry} />
         <Route exact path="/doctor/login" component={DoctorLogin} />
         {/* User */}
         <Route exact path="/" component={Home} />
         <Route exact path="/signup" component={Signup} />
-        <Route exact path="/edit" component={EditUser} />
+        <Route userComplete exact path="/edit" component={EditUser} />
       </Switch>
     </>
   );

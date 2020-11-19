@@ -74,9 +74,16 @@ const NewEnquiry = () => {
     Object.keys(files).forEach((item) => {
       formData.append(item, files[item]);
     });
-    
+
     dispatch(enquiry.createEnquiry(formData));
   };
+
+  useEffect(() => {
+    return () => {
+      dispatch(enquiry.clearErrors());
+    };
+    //eslint-disable-next-line
+  }, []);
 
   useEffect(() => {
     if (error) {
@@ -99,9 +106,6 @@ const NewEnquiry = () => {
         timer: 1500,
       });
     }
-    return () => {
-      dispatch(enquiry.clearErrors());
-    };
     // eslint-disable-next-line
   }, [error, message]);
 

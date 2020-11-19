@@ -25,11 +25,11 @@ const stateHandler = (state = defaultState, action) => {
         isAuthenticated: true,
       };
     case EDIT_USER:
-      return{
+      return {
         ...state,
         user: action.payload,
-        message: "Profile updated successfully."
-      }
+        message: "Profile updated successfully.",
+      };
     case SIGNUP_USER:
       return {
         ...state,

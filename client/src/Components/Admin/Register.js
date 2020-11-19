@@ -21,7 +21,15 @@ const Register = () => {
   };
 
   useEffect(() => {
-    if (error) {
+    return () => {
+      dispatch(admin.clear());
+      setUser({ username: "", email: "", password: "" });
+    };
+    // eslint-disable-next-line
+  }, []);
+
+  useEffect(() => {
+    if (/Validation Error*/i.test(error)) {
       Swal.fire({
         position: "center",
         icon: "error",
@@ -31,7 +39,7 @@ const Register = () => {
         timer: 1500,
       });
     }
-    if (message) {
+    if (/New admin registered successfully*/i.test(message)) {
       Swal.fire({
         position: "center",
         icon: "success",
@@ -40,10 +48,8 @@ const Register = () => {
         showConfirmButton: true,
         timer: 1500,
       });
+      setUser({ username: "", email: "", password: "" });
     }
-    return () => {
-      dispatch(admin.errorAdmin());
-    };
     // eslint-disable-next-line
   }, [error, message]);
 

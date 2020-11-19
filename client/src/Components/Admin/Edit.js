@@ -38,12 +38,19 @@ const Edit = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    return () => {
+      dispatch(adminActions.clear());
+    };
+    // eslint-disable-next-line
+  }, []);
+
+  useEffect(() => {
     setUser({
       username: admin.username,
       email: admin.email,
       welcomeMessage: admin.welcomeMessage ? admin.welcomeMessage : "",
     });
-    if (error) {
+    if (/^Validation Error*/i.test(error)) {
       Swal.fire({
         position: "center",
         icon: "error",
@@ -53,9 +60,6 @@ const Edit = () => {
         timer: 1500,
       });
     }
-    return () => {
-      dispatch(adminActions.errorAdmin());
-    };
     // eslint-disable-next-line
   }, [admin, error]);
   const emailRegex = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/gi;

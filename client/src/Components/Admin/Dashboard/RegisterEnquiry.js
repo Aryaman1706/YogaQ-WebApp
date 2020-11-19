@@ -13,12 +13,16 @@ const RegisterEnquiry = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (!enquiry) {
-      history.push("/admin/enquiries");
-    }
     return () => {
       dispatch(enquiryAction.clearEnquiry());
     };
+    // eslint-disable-next-line
+  }, []);
+
+  useEffect(() => {
+    if (!enquiry) {
+      history.push("/admin/enquiries");
+    }
     // eslint-disable-next-line
   }, [enquiry]);
 

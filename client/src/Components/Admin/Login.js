@@ -24,7 +24,14 @@ const Login = () => {
   const history = useHistory();
 
   useEffect(() => {
-    if (error) {
+    return () => {
+      dispatch(admin.clear());
+    };
+    //eslint-disable-next-line
+  }, []);
+
+  useEffect(() => {
+    if (/^Validation Error*/i.test(error)) {
       Swal.fire({
         position: "center",
         icon: "error",
@@ -37,9 +44,6 @@ const Login = () => {
     if (!error && isAuthenticated) {
       history.push("/admin");
     }
-    return () => {
-      dispatch(admin.errorAdmin());
-    };
     // eslint-disable-next-line
   }, [error, isAuthenticated]);
 
@@ -71,6 +75,7 @@ const Login = () => {
         password: user.password,
       };
       dispatch(admin.loginAdmin(formData));
+      dispatch(admin.setLoading(false)); //? Not Sure
     } else {
       Swal.fire({
         position: "center",
