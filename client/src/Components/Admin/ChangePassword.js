@@ -24,6 +24,18 @@ const ChangePassword = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    return () => {
+      dispatch(admin.clear());
+      setState({
+        oldPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+      });
+    };
+    // eslint-disable-next-line
+  }, []);
+
+  useEffect(() => {
     if (/Validation Error*/i.test(error)) {
       Swal.fire({
         position: "center",
@@ -43,15 +55,12 @@ const ChangePassword = () => {
         showConfirmButton: true,
         timer: 1500,
       });
-    }
-    return () => {
-      dispatch(admin.errorAdmin());
       setState({
         oldPassword: "",
         newPassword: "",
         confirmPassword: "",
       });
-    };
+    }
     // eslint-disable-next-line
   }, [error, message]);
 

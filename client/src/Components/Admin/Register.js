@@ -21,6 +21,14 @@ const Register = () => {
   };
 
   useEffect(() => {
+    return () => {
+      dispatch(admin.clear());
+      setUser({ username: "", email: "", password: "" });
+    };
+    // eslint-disable-next-line
+  }, []);
+
+  useEffect(() => {
     if (/Validation Error*/i.test(error)) {
       Swal.fire({
         position: "center",
@@ -40,11 +48,8 @@ const Register = () => {
         showConfirmButton: true,
         timer: 1500,
       });
-    }
-    return () => {
-      dispatch(admin.errorAdmin());
       setUser({ username: "", email: "", password: "" });
-    };
+    }
     // eslint-disable-next-line
   }, [error, message]);
 

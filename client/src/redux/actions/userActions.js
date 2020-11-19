@@ -25,15 +25,10 @@ export const loadUser = () => async (dispatch) => {
           query: error.response.data.body,
         },
       });
-    } else if (error.response.status === 404) {
-      dispatch({
-        type: USER_ERROR,
-        payload: error.response.data.error,
-      });
     } else {
       dispatch({
         type: USER_ERROR,
-        payload: "Request Failed.",
+        payload: error.response.data.error,
       });
     }
   }
@@ -48,17 +43,10 @@ export const sigupUser = (formdata) => async (dispatch) => {
       payload: res.data.body,
     });
   } catch (error) {
-    if (error.response.status === 400) {
-      dispatch({
-        type: USER_ERROR,
-        payload: `Validation Error ${error.response.data.error}`,
-      });
-    } else {
-      dispatch({
-        type: USER_ERROR,
-        payload: "Request Failed.",
-      });
-    }
+    dispatch({
+      type: USER_ERROR,
+      payload: "Request Failed.",
+    });
   }
 };
 
@@ -89,17 +77,10 @@ export const editProfile = (formData) => async (dispatch) => {
       payload: res.data.body,
     });
   } catch (error) {
-    if (error.response.status === 400) {
-      dispatch({
-        type: USER_ERROR,
-        payload: `Validation Error ${error.response.data.error}`,
-      });
-    } else if (error.response.status === 404) {
-      dispatch({
-        type: USER_ERROR,
-        payload: error.response.data.error,
-      });
-    }
+    dispatch({
+      type: USER_ERROR,
+      payload: error.response.data.error,
+    });
   }
 };
 

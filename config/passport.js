@@ -50,12 +50,12 @@ passport.use(
       .exec();
     if (!doctor)
       return done(null, false, {
-        message: "Validation Error Invalid Credentials.",
+        message: "Validation Error. Invalid Credentials.",
       });
 
     if (!(await compare(value.password, doctor.password))) {
       return done(null, false, {
-        message: "Validation Error Invalid Credentials.",
+        message: "Validation Error. Invalid Credentials.",
       });
     }
 

@@ -13,7 +13,7 @@ const RouteWrapper = ({
   const doctorState = useSelector((state) => state.doctor);
   const userState = useSelector((state) => state.user);
 
-  if (adminLogin && !adminState.isAuthenticated) {
+  if (adminLogin && !adminState.loading && !adminState.isAuthenticated) {
     return <Redirect to="/admin/login" />;
   }
 

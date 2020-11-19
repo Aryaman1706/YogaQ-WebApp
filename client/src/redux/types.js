@@ -1,16 +1,20 @@
 // * Admin
 export const LOGIN_ADMIN = "LOGIN_ADMIN";
-export const ADMIN_ERROR = "ADMIN_ERROR";
 export const LOAD_ADMIN = "LOAD_ADMIN";
 export const EDIT_ADMIN = "EDIT_ADMIN";
-export const CHANGE_PASSWORD = "CHANGE_PASSWORD";
-export const REGISTER_ADMIN = "REGISTER_ADMIN";
+export const ADMIN_ERROR = "ADMIN_ERROR";
+export const ADMIN_MESSAGE = "ADMIN_MESSAGE";
+export const ADMIN_LOADING = "ADMIN_LOADING";
+export const CLEAR_ADMIN_ERROR = "RESET_ADMIN_ERROR";
 
 // * Enquiry
 export const NEW_ENQUIRY = "NEW_ENQUIRY";
 export const ENQUIRY_ERROR = "ENQUIRY_ERROR";
+export const LIST_ENQUIRY = "LIST_ENQUIRY";
 export const SELECT_ENQUIRY = "SELECT_ENQUIRY";
+export const CLEAR_ENQUIRY_LIST = "CLEAR_ENQUIRY_LIST";
 export const CLEAR_ENQUIRY = "CLEAR_ENQUIRY";
+export const ENQUIRY_LOADING = "ENQUIRY_LOADING";
 
 // * Doctor
 export const LOGIN_DOCTOR = "LOGIN_DOCTOR";

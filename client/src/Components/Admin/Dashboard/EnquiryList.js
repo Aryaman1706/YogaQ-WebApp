@@ -8,7 +8,8 @@ import {
 } from "@material-ui/core";
 import { ArrowBackIos, ArrowForwardIos } from "@material-ui/icons";
 import EnquiryItem from "./EnquiryItem";
-import axios from "../../../utils/axios";
+import { useDispatch, useSelector } from "react-redux";
+import { enquiry as enquiryActions } from "../../../redux/actions/index";
 
 const EnquiryList = () => {
   const [pagination, setPagination] = useState({
@@ -27,23 +28,33 @@ const EnquiryList = () => {
     enquiries,
     end,
   } = pagination;
-  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+  const enquiryState = useSelector((state) => state.enquiry);
 
   useEffect(() => {
-    setLoading(true);
-    axios.get(`/doctor/enquiry/list/?page=${loadedPages}`).then((res) => {
-      setPagination((prev) => {
-        return {
-          ...prev,
-          startIndex: (prev.loadedPages - 1) * 5,
-          endIndex: prev.loadedPages * 5,
-          enquiries: [...prev.enquiries, ...res.data.body.enquiries],
-          end: res.data.body.end,
-        };
-      });
-      setLoading(false);
-    });
+    return () => {
+      dispatch(enquiryActions.clearList());
+    };
+    // eslint-disable-next-line
+  }, []);
+
+  useEffect(() => {
+    dispatch(enquiryActions.setLoading(true));
+    dispatch(enquiryActions.listEnquiries(loadedPages));
+    // eslint-disable-next-line
   }, [loadedPages]);
+
+  useEffect(() => {
+    setPagination((prev) => {
+      return {
+        ...prev,
+        startIndex: (prev.loadedPages - 1) * 5,
+        endIndex: prev.loadedPages * 5,
+        enquiries: enquiryState.list,
+        end: enquiryState.end,
+      };
+    });
+  }, [enquiryState.end, enquiryState.list]);
 
   const nextHandler = (event) => {
     if (!end) {
@@ -101,7 +112,7 @@ const EnquiryList = () => {
       <Grid container direction="row" justify="center" alignItems="stretch">
         <Grid item xs={2} lg={4}></Grid>
         <Grid item xs={8} lg={4}>
-          {loading ? null : (
+          {enquiryState.loading ? null : (
             <>
               <Grid
                 container

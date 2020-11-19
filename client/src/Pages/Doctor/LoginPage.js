@@ -1,12 +1,12 @@
-import React from 'react'
+import React from "react";
 import Login from "../../Components/Doctor/Profile/Login";
 
 const LoginPage = () => {
-    return (
-        <>
-            <Login />
-        </>
-    )
-}
+  return (
+    <>
+      <Login />
+    </>
+  );
+};
 
-export default LoginPage
+export default LoginPage;

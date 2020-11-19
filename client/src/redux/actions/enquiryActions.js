@@ -3,6 +3,9 @@ import {
   NEW_ENQUIRY,
   SELECT_ENQUIRY,
   CLEAR_ENQUIRY,
+  LIST_ENQUIRY,
+  ENQUIRY_LOADING,
+  CLEAR_ENQUIRY_LIST,
 } from "../types";
 import axios from "../../utils/axios";
 
@@ -34,11 +37,43 @@ export const createEnquiry = (formData) => async (dispatch) => {
   }
 };
 
+// * List Enquiries
+export const listEnquiries = (page) => async (dispatch) => {
+  try {
+    const res = await axios.get(`/doctor/enquiry/list?page=${page}`);
+    dispatch({
+      type: LIST_ENQUIRY,
+      payload: res.data.body,
+    });
+  } catch (error) {
+    dispatch({
+      type: ENQUIRY_ERROR,
+      payload: error.response.data.error,
+    });
+  }
+};
+
+// * Clear List
+export const clearList = () => async (dispatch) => {
+  dispatch({
+    type: CLEAR_ENQUIRY_LIST,
+    payload: null,
+  });
+};
+
 // * Select Enquiry
 export const selectEnquiry = (enquiry) => async (dispatch) => {
   dispatch({
     type: SELECT_ENQUIRY,
     payload: enquiry,
+  });
+};
+
+// * Set Loading
+export const setLoading = (value) => async (dispatch) => {
+  dispatch({
+    type: ENQUIRY_LOADING,
+    payload: value,
   });
 };
 

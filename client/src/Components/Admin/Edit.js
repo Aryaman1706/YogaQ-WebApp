@@ -38,6 +38,13 @@ const Edit = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    return () => {
+      dispatch(adminActions.clear());
+    };
+    // eslint-disable-next-line
+  }, []);
+
+  useEffect(() => {
     setUser({
       username: admin.username,
       email: admin.email,
@@ -53,9 +60,6 @@ const Edit = () => {
         timer: 1500,
       });
     }
-    return () => {
-      dispatch(adminActions.errorAdmin());
-    };
     // eslint-disable-next-line
   }, [admin, error]);
   const emailRegex = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/gi;

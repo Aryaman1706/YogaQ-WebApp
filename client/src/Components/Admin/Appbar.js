@@ -42,6 +42,7 @@ const Appbar = () => {
 
   useEffect(() => {
     dispatch(adminActions.loadAdmin());
+    dispatch(adminActions.setLoading(false));
     // eslint-disable-next-line
   }, []);
 

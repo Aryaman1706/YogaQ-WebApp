@@ -17,13 +17,14 @@ exports.create = async (req, res) => {
     const { error, value } = validation.create(req.body);
     if (error)
       return res.status(400).json({
-        error: `Validation Error ${error.details[0].message}`,
+        error: `Validation Error. ${error.details[0].message}`,
         body: null,
       });
 
     if (await Admin.findOne({ email: value.email }).exec())
       return res.status(400).json({
-        error: "Validation Error Admin with same email address already exists.",
+        error:
+          "Validation Error. Admin with same email address already exists.",
         body: null,
       });
 
@@ -84,7 +85,13 @@ exports.edit = async (req, res) => {
     if (!updatedAdmin)
       return res.status(404).json({ error: "Admin not found.", body: null });
 
-    return res.status(200).json({ error: null, body: updatedAdmin });
+    return res.status(200).json({
+      error: null,
+      body: {
+        admin: updatedAdmin,
+        message: "Changes to profile changed successfully.",
+      },
+    });
   } catch (error) {
     console.log("Error occured here\n", error);
     return res.status(500).json({ error: "Server Error.", body: null });
