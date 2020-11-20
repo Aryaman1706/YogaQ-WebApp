@@ -39,8 +39,11 @@ const EnquiryList = () => {
   }, []);
 
   useEffect(() => {
-    dispatch(enquiryActions.setLoading(true));
-    dispatch(enquiryActions.listEnquiries(loadedPages));
+    const load = async () => {
+      await dispatch(enquiryActions.setLoading(true));
+      dispatch(enquiryActions.listEnquiries(loadedPages));
+    };
+    load();
     // eslint-disable-next-line
   }, [loadedPages]);
 

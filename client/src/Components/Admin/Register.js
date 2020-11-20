@@ -47,8 +47,9 @@ const Register = () => {
         text: message,
         showConfirmButton: true,
         timer: 1500,
+      }).then(() => {
+        setUser({ username: "", email: "", password: "" });
       });
-      setUser({ username: "", email: "", password: "" });
     }
     // eslint-disable-next-line
   }, [error, message]);

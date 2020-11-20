@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect } from "react";
 import {
   Grid,
   Toolbar,
@@ -13,10 +13,9 @@ import {
   makeStyles,
 } from "@material-ui/core";
 import { Description } from "@material-ui/icons";
-import axios from "../../../utils/axios";
 import { useParams, useHistory } from "react-router-dom";
 import Swal from "sweetalert2";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { enquiry as enquiryActions } from "../../../redux/actions/index";
 
 const useStyles = makeStyles((theme) => ({
@@ -27,41 +26,79 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ViewEnquiry = () => {
-  const [enquiry, setEnquiry] = useState(null);
-  const [loading, setLoading] = useState(false);
   const { id } = useParams();
   const history = useHistory();
   const classes = useStyles();
   const dispatch = useDispatch();
+  const { loading, enquiry, error, message } = useSelector(
+    (state) => state.enquiry
+  );
 
   useEffect(() => {
-    setLoading(true);
-    axios.get(`/doctor/enquiry/view/${id}`).then((res) => {
-      setEnquiry(res.data.body);
-      setLoading(false);
-    });
-  }, [id]);
+    const start = async () => {
+      await dispatch(enquiryActions.setLoading(true));
+      await dispatch(enquiryActions.selectEnquiry(id));
+      await dispatch(enquiryActions.setLoading(false));
+    };
+    if (!id) {
+      history.push("/admin/enquiries");
+    } else {
+      start();
+    }
+    return () => {
+      dispatch(enquiryActions.clear());
+    };
+    // eslint-disable-next-line
+  }, []);
 
-  const deleteEnquiry = (e) => {
-    axios.delete(`/doctor/delete/${id}`).then((res) => {
+  useEffect(() => {
+    if (/Enquiry not found*/i.test(error)) {
       Swal.fire({
         position: "center",
-        icon: "success",
-        title: "Success!",
-        text: `${res.data.body}`,
+        icon: "error",
+        title: "Error Occured.",
+        text: error,
         showConfirmButton: true,
         timer: 1500,
       }).then(() => {
         history.push("/admin/enquiries");
       });
+    }
+
+    if (/Enquiry deleted successfully*/i.test(message)) {
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Success!",
+        text: message,
+        showConfirmButton: true,
+        timer: 1500,
+      }).then(() => {
+        history.push("/admin/enquiries");
+      });
+    }
+    // eslint-disable-next-line
+  }, [error, message]);
+
+  const deleteEnquiry = (e) => {
+    Swal.fire({
+      position: "center",
+      icon: "question",
+      title: "Are you sure?",
+      text: "Delete Enquiry?",
+      showConfirmButton: true,
+      showDenyButton: true,
+      backdrop: false,
+    }).then((result) => {
+      if (!result.isDenied) {
+        dispatch(enquiryActions.deleteEnquiry(id));
+        history.push("/admin/enquiries");
+      }
     });
   };
 
   const acceptEnquiry = (e) => {
-    if (enquiry && !loading) {
-      dispatch(enquiryActions.selectEnquiry({ id, email: enquiry.email }));
-      history.push("/admin/accept/enquiry");
-    }
+    history.push("/admin/accept/enquiry");
   };
   return (
     <>

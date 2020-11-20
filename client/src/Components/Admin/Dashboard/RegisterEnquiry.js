@@ -4,27 +4,50 @@ import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { enquiry as enquiryAction } from "../../../redux/actions/index";
 import Swal from "sweetalert2";
-import axios from "../../../utils/axios";
 
 const RegisterEnquiry = () => {
   const [password, setPassword] = useState("");
-  const { enquiry } = useSelector((state) => state.enquiry);
+  const { enquiry, message, error } = useSelector((state) => state.enquiry);
   const history = useHistory();
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    return () => {
-      dispatch(enquiryAction.clearEnquiry());
-    };
-    // eslint-disable-next-line
-  }, []);
 
   useEffect(() => {
     if (!enquiry) {
       history.push("/admin/enquiries");
     }
+    return () => {
+      dispatch(enquiryAction.clearEnquiry());
+      dispatch(enquiryAction.clear());
+    };
     // eslint-disable-next-line
-  }, [enquiry]);
+  }, []);
+
+  useEffect(() => {
+    if (/Validation Error*/i.test(error)) {
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: "Error Occured.",
+        text: error,
+        showConfirmButton: true,
+        timer: 1500,
+      });
+    }
+
+    if (/New Doctor registered successfully*/i.test(message)) {
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Success!",
+        text: message,
+        showConfirmButton: true,
+        timer: 1500,
+      }).then(() => {
+        history.push("/admin/enquiries");
+      });
+    }
+    // eslint-disable-next-line
+  }, [error, message]);
 
   const changeHandler = (e) => {
     setPassword(e.target.value);
@@ -35,32 +58,21 @@ const RegisterEnquiry = () => {
       position: "center",
       icon: "question",
       title: "Are you sure?",
-      text: `Email\n  ${enquiry.email}\nPassword\n  ${password}`,
+      html: `<h4>Email:- ${enquiry.email}</h4><h4>Password:- ${password}</h4>`,
       showConfirmButton: true,
+      showDenyButton: true,
       backdrop: false,
-    }).then(() => {
-      axios
-        .post("/doctor/register", { enquiry: enquiry.id, password })
-        .then((res) => {
-          Swal.fire({
-            position: "center",
-            icon: "success",
-            title: "Success!",
-            text: "New Doctor registered.",
-            showConfirmButton: true,
-            timer: 1500,
-          }).then(() => {
-            history.push("/admin/enquiries");
-          });
-        });
+    }).then((result) => {
+      if (!result.isDenied) {
+        dispatch(
+          enquiryAction.registerEnquiry({ enquiry: enquiry._id, password })
+        );
+      }
     });
   };
 
   return (
     <>
-      <Typography variant="h2" align="center">
-        Register Enquiry
-      </Typography>
       {enquiry ? (
         <>
           <Grid container direction="row" justify="center" alignItems="stretch">
@@ -73,6 +85,11 @@ const RegisterEnquiry = () => {
                 alignItems="stretch"
                 spacing={2}
               >
+                <Grid item>
+                  <Typography variant="h2" align="center">
+                    Register Enquiry
+                  </Typography>
+                </Grid>
                 <Grid item>
                   <TextField
                     fullWidth
@@ -95,6 +112,7 @@ const RegisterEnquiry = () => {
                 <Grid item>
                   <Button
                     fullWidth
+                    variant="contained"
                     color="primary"
                     onClick={(event) => submitHandler(event)}
                   >
