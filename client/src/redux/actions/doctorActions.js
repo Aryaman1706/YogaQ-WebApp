@@ -1,9 +1,15 @@
 import {
   LOGIN_DOCTOR,
-  CHANGE_PASSWORD_DOCTOR,
-  DOCTOR_ERROR,
   LOAD_DOCTOR,
   LOAD_DOCTOR_COMPLETE,
+  EDIT_DOCTOR,
+  LIST_DOCTOR,
+  CLEAR_DOCTOR_LIST,
+  SELECT_DOCTOR,
+  DOCTOR_ERROR,
+  DOCTOR_MESSAGE,
+  DOCTOR_LOADING,
+  CLEAR_DOCTOR_ERROR,
 } from "../types";
 import axios from "../../utils/axios";
 
@@ -11,34 +17,27 @@ import axios from "../../utils/axios";
 export const loginDoctor = (formData) => async (dispatch) => {
   try {
     const res = await axios.post("/doctor/login", formData);
-    if (res.data.error) {
-      dispatch({
-        type: DOCTOR_ERROR,
-        payload: res.data.error,
-      });
-    } else {
-      dispatch({
-        type: LOGIN_DOCTOR,
-        payload: res.data.body,
-      });
-    }
+    dispatch({
+      type: LOGIN_DOCTOR,
+      payload: res.data.body,
+    });
   } catch (error) {
     console.log(error);
     dispatch({
       type: DOCTOR_ERROR,
-      payload: "Request Failed.",
+      payload: error.response.data.error,
     });
   }
 };
 
 // * Load Doctor
-export const loadDoctor = () => async (dispatch) => {
+export const loadDoctor = (complete) => async (dispatch) => {
   try {
-    const res = await axios.get("/doctor/profile?complete=false");
-    if (res.data.error) {
+    const res = await axios.get(`/doctor/profile?complete=${complete}`);
+    if (complete) {
       dispatch({
-        type: DOCTOR_ERROR,
-        payload: res.data.error,
+        type: LOAD_DOCTOR_COMPLETE,
+        payload: res.data.body,
       });
     } else {
       dispatch({
@@ -50,31 +49,24 @@ export const loadDoctor = () => async (dispatch) => {
     console.log(error);
     dispatch({
       type: DOCTOR_ERROR,
-      payload: "Request Failed.",
+      payload: error.response.data.error,
     });
   }
 };
 
-// * Load Doctor (Complete)
-export const loadDoctorComplete = () => async (dispatch) => {
+// * Edit Profile
+export const editProfile = (formData) => async (dispatch) => {
   try {
-    const res = await axios.get("/doctor/profile?complete=true");
-    if (res.data.error) {
-      dispatch({
-        type: DOCTOR_ERROR,
-        payload: res.data.error,
-      });
-    } else {
-      dispatch({
-        type: LOAD_DOCTOR_COMPLETE,
-        payload: res.data.body,
-      });
-    }
+    const res = await axios.put("/doctor/profile", formData);
+    dispatch({
+      type: EDIT_DOCTOR,
+      payload: res.data.body,
+    });
   } catch (error) {
     console.log(error);
     dispatch({
       type: DOCTOR_ERROR,
-      payload: "Request Failed.",
+      payload: error.response.data.error,
     });
   }
 };
@@ -83,30 +75,81 @@ export const loadDoctorComplete = () => async (dispatch) => {
 export const changePassword = (formData) => async (dispatch) => {
   try {
     const res = await axios.put("/doctor/", formData);
-    if (res.data.error) {
-      dispatch({
-        type: DOCTOR_ERROR,
-        payload: res.data.error,
-      });
-    } else {
-      dispatch({
-        type: CHANGE_PASSWORD_DOCTOR,
-        payload: res.data.body,
-      });
-    }
+    dispatch({
+      type: DOCTOR_MESSAGE,
+      payload: res.data.body,
+    });
   } catch (error) {
     console.log(error);
     dispatch({
       type: DOCTOR_ERROR,
-      payload: "Request Failed.",
+      payload: error.response.data.error,
     });
   }
 };
 
-// * Clear Errors
-export const clearError = () => async (dispatch) => {
+// * List Doctors
+export const listDoctor = (page) => async (dispatch) => {
+  try {
+    const res = await axios.get(`/doctor/list/?page=${page}`);
+    dispatch({
+      type: LIST_DOCTOR,
+      payload: res.data.body,
+    });
+  } catch (error) {
+    console.log(error);
+    dispatch({
+      type: DOCTOR_ERROR,
+      payload: error.response.data.error,
+    });
+  }
+};
+
+// * Clear List
+export const clearList = () => async (dispatch) => {
   dispatch({
-    type: DOCTOR_ERROR,
+    type: CLEAR_DOCTOR_LIST,
+    payload: null,
+  });
+};
+
+// * Select Doctor
+export const selectDoctor = (id) => async (dispatch) => {
+  try {
+    const res = await axios.get(`/doctor/view/${id}`);
+    dispatch({
+      type: SELECT_DOCTOR,
+      payload: res.data.body,
+    });
+  } catch (error) {
+    console.log(error);
+    dispatch({
+      type: DOCTOR_ERROR,
+      payload: error.response.data.error,
+    });
+  }
+};
+
+// * Clear Select Doctor
+export const clearSelected = () => async (dispatch) => {
+  dispatch({
+    type: SELECT_DOCTOR,
+    payload: null,
+  });
+};
+
+// * Set Loading
+export const setLoading = (value) => async (dispatch) => {
+  dispatch({
+    type: DOCTOR_LOADING,
+    payload: value,
+  });
+};
+
+// * Clear Errors
+export const clear = () => async (dispatch) => {
+  dispatch({
+    type: CLEAR_DOCTOR_ERROR,
     payload: null,
   });
 };

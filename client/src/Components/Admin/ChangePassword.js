@@ -54,11 +54,12 @@ const ChangePassword = () => {
         text: message,
         showConfirmButton: true,
         timer: 1500,
-      });
-      setState({
-        oldPassword: "",
-        newPassword: "",
-        confirmPassword: "",
+      }).then(() => {
+        setState({
+          oldPassword: "",
+          newPassword: "",
+          confirmPassword: "",
+        });
       });
     }
     // eslint-disable-next-line

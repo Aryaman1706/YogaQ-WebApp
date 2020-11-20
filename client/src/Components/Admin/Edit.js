@@ -34,15 +34,8 @@ const Edit = () => {
     welcomeMessage: "",
   });
   const [file, setFile] = useState(null);
-  const { admin, error } = useSelector((state) => state.admin);
+  const { admin, error, message } = useSelector((state) => state.admin);
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    return () => {
-      dispatch(adminActions.clear());
-    };
-    // eslint-disable-next-line
-  }, []);
 
   useEffect(() => {
     setUser({
@@ -50,6 +43,13 @@ const Edit = () => {
       email: admin.email,
       welcomeMessage: admin.welcomeMessage ? admin.welcomeMessage : "",
     });
+    return () => {
+      dispatch(adminActions.clear());
+    };
+    // eslint-disable-next-line
+  }, []);
+
+  useEffect(() => {
     if (/^Validation Error*/i.test(error)) {
       Swal.fire({
         position: "center",
@@ -60,8 +60,19 @@ const Edit = () => {
         timer: 1500,
       });
     }
+
+    if (/Changes to profile changed successfully.*/i.test(message)) {
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Success!",
+        text: message,
+        showConfirmButton: true,
+        timer: 1500,
+      });
+    }
     // eslint-disable-next-line
-  }, [admin, error]);
+  }, [error, message]);
   const emailRegex = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/gi;
 
   const changeHandler = (event) => {
@@ -99,7 +110,7 @@ const Edit = () => {
         position: "center",
         icon: "error",
         title: "Invalid Credentials.",
-        text: "Enter valid email and password.",
+        text: "Enter valid data",
         showConfirmButton: true,
         timer: 1500,
       });

@@ -41,8 +41,11 @@ const Appbar = () => {
   };
 
   useEffect(() => {
-    dispatch(adminActions.loadAdmin());
-    dispatch(adminActions.setLoading(false));
+    const load = async () => {
+      await dispatch(adminActions.loadAdmin());
+      dispatch(adminActions.setLoading(false));
+    };
+    load();
     // eslint-disable-next-line
   }, []);
 

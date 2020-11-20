@@ -24,7 +24,6 @@ exports.newEnquiryCheck = async (req, res, next) => {
       qualificational: JSON.parse(req.body.qualificational),
       professional: JSON.parse(req.body.qualificational),
     };
-    console.log(body);
     const { error, value } = validation.enquiry(body);
     if (error) return res.json({ error: error.details[0].message, body: null });
 
@@ -54,11 +53,16 @@ exports.newEnquiry = async (req, res) => {
       professional: JSON.parse(req.body.professional),
     };
     const { error, value } = validation.enquiry(body);
-    if (error) return res.json({ error: error.details[0].message, body: null });
+    if (error)
+      return res.status(400).json({
+        error: `Validation Error. ${error.details[0].message}`,
+        body: null,
+      });
 
     if (await Enquiry.findOne({ email: value.email }))
-      return res.json({
-        error: "An application with same email address already exist.",
+      return res.status(400).json({
+        error:
+          "Validation Error. An application with same email address already exist.",
         body: null,
       });
 
@@ -67,8 +71,6 @@ exports.newEnquiry = async (req, res) => {
     req.files.forEach((file) => {
       fileObj[file.fieldname] = file;
     });
-
-    // const value = req.cleanData;
 
     // Replacing uuid with url in qualificational
     value.qualificational.docs = value.qualificational.docs.map((obj) => {
@@ -109,9 +111,10 @@ exports.register = async (req, res) => {
   try {
     const { error, value } = validation.register(req.body);
     if (error)
-      return res
-        .status(400)
-        .json({ error: error.details[0].message, body: null });
+      return res.status(400).json({
+        error: `Validation Error. ${error.details[0].message}`,
+        body: null,
+      });
 
     const enquiry = await Enquiry.findById(value.enquiry).exec();
     if (!enquiry)
@@ -119,12 +122,11 @@ exports.register = async (req, res) => {
     const body = omit(enquiry.toObject(), ["postedOn"]);
     const salt = await genSalt(10);
     const password = await hash(value.password, salt);
-    const [doctor] = await Promise.all([
-      Doctor.create({ ...body, password }),
-      enquiry.remove(),
-    ]);
+    await Promise.all([Doctor.create({ ...body, password }), enquiry.remove()]);
 
-    return res.status(200).json({ error: null, body: doctor });
+    return res
+      .status(200)
+      .json({ error: null, body: "New Doctor registered successfully." });
   } catch (error) {
     console.log("Error occured here\n");
     return res.status(500).json({ error: "Server Error.", body: null });
@@ -162,7 +164,8 @@ exports.myProfile = async (req, res) => {
         .select("username email restricted role")
         .exec();
     }
-    if (!doctor) return res.json({ error: "Invalid account.", body: null });
+    if (!doctor)
+      return res.status(404).json({ error: "Invalid account.", body: null });
 
     return res.status(200).json({ error: null, body: doctor });
   } catch (error) {
@@ -176,9 +179,10 @@ exports.editProfile = async (req, res) => {
   try {
     const { error, value } = validation.edit(req.body);
     if (error)
-      return res
-        .status(400)
-        .json({ error: error.details[0].message, body: null });
+      return res.status(400).json({
+        error: `Validation Error. ${error.details[0].message}`,
+        body: null,
+      });
 
     // Hash Table for file
     const fileObj = {};
@@ -218,7 +222,10 @@ exports.editProfile = async (req, res) => {
     if (!doctor)
       return res.status(400).json({ error: "Invalid Account.", body: null });
 
-    return res.status(200).json({ error: null, body: "Profile Updated" });
+    return res.status(200).json({
+      error: null,
+      body: { doctor, message: "Profile Updated Successfully." },
+    });
   } catch (error) {
     console.log("Error occured here\n", error);
     return res.status(500).json({ error: "Server Error.", body: null });
@@ -230,9 +237,10 @@ exports.changePassword = async (req, res) => {
   try {
     const { error, value } = validation.changePassword(req.body);
     if (error)
-      return res
-        .status(400)
-        .json({ error: error.details[0].message, body: null });
+      return res.status(400).json({
+        error: `Validation Error. ${error.details[0].message}`,
+        body: null,
+      });
 
     let doctor = await Doctor.findById(req.user._id).exec();
     if (!doctor)
@@ -240,13 +248,16 @@ exports.changePassword = async (req, res) => {
 
     const { oldPassword, newPassword, confirmPassword } = value;
     if (newPassword !== confirmPassword)
-      return res
-        .status(400)
-        .json({ error: "Passwords do not match.", body: null });
+      return res.status(400).json({
+        error: "Validation Error. Passwords do not match.",
+        body: null,
+      });
 
     const result = await compare(oldPassword, doctor.password);
     if (!result)
-      return res.status(400).json({ error: "Incorrect Password.", body: null });
+      return res
+        .status(400)
+        .json({ error: "Validation Error. Incorrect Password.", body: null });
 
     const salt = await genSalt(10);
     const password = hash(newPassword, salt);

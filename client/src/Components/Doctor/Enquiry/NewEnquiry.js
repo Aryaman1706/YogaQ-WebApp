@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Button, Grid, Typography } from "@material-ui/core";
 import Swal from "sweetalert2";
 import { v4 as uuidV4 } from "uuid";
+import { useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { enquiry } from "../../../redux/actions";
 import BasicInfo from "./BasicInfo";
@@ -41,6 +42,7 @@ const NewEnquiry = () => {
   const [expertise, setExpertise] = useState("");
   const dispatch = useDispatch();
   const { message, error } = useSelector((state) => state.enquiry);
+  const history = useHistory();
 
   const submitHandler = () => {
     // * Generating Form Data
@@ -80,13 +82,13 @@ const NewEnquiry = () => {
 
   useEffect(() => {
     return () => {
-      dispatch(enquiry.clearErrors());
+      dispatch(enquiry.clear());
     };
     //eslint-disable-next-line
   }, []);
 
   useEffect(() => {
-    if (error) {
+    if (/Validation Error*/i.test(error)) {
       Swal.fire({
         position: "center",
         icon: "error",
@@ -96,7 +98,7 @@ const NewEnquiry = () => {
         timer: 1500,
       });
     }
-    if (message) {
+    if (/Thank you*/i.test(message)) {
       Swal.fire({
         position: "center",
         icon: "success",
@@ -104,6 +106,8 @@ const NewEnquiry = () => {
         text: `${message}`,
         showConfirmButton: true,
         timer: 1500,
+      }).then(() => {
+        history.push("/");
       });
     }
     // eslint-disable-next-line

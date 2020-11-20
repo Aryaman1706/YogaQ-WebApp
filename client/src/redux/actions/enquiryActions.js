@@ -1,11 +1,11 @@
 import {
-  ENQUIRY_ERROR,
-  NEW_ENQUIRY,
-  SELECT_ENQUIRY,
-  CLEAR_ENQUIRY,
   LIST_ENQUIRY,
-  ENQUIRY_LOADING,
+  SELECT_ENQUIRY,
   CLEAR_ENQUIRY_LIST,
+  ENQUIRY_ERROR,
+  ENQUIRY_MESSAGE,
+  ENQUIRY_LOADING,
+  CLEAR_ENQUIRY_ERROR,
 } from "../types";
 import axios from "../../utils/axios";
 
@@ -17,22 +17,15 @@ export const createEnquiry = (formData) => async (dispatch) => {
         "Content-Type": "multipart/form-data",
       },
     });
-    if (res.data.error) {
-      dispatch({
-        type: ENQUIRY_ERROR,
-        payload: res.data.error,
-      });
-    } else {
-      dispatch({
-        type: NEW_ENQUIRY,
-        payload: res.data.body,
-      });
-    }
+    dispatch({
+      type: ENQUIRY_MESSAGE,
+      payload: res.data.body,
+    });
   } catch (error) {
     console.log(error);
     dispatch({
       type: ENQUIRY_ERROR,
-      payload: "Request Failed.",
+      payload: error.response.data.error,
     });
   }
 };
@@ -62,10 +55,58 @@ export const clearList = () => async (dispatch) => {
 };
 
 // * Select Enquiry
-export const selectEnquiry = (enquiry) => async (dispatch) => {
+export const selectEnquiry = (id) => async (dispatch) => {
+  try {
+    const res = await axios.get(`/doctor/enquiry/view/${id}`);
+    dispatch({
+      type: SELECT_ENQUIRY,
+      payload: res.data.body,
+    });
+  } catch (error) {
+    dispatch({
+      type: ENQUIRY_ERROR,
+      payload: error.response.data.error,
+    });
+  }
+};
+
+// * Delete Enquiry
+export const deleteEnquiry = (id) => async (dispatch) => {
+  try {
+    const res = await axios.delete(`/doctor/delete/${id}`);
+    dispatch({
+      type: ENQUIRY_MESSAGE,
+      payload: res.data.body,
+    });
+  } catch (error) {
+    dispatch({
+      type: ENQUIRY_ERROR,
+      payload: error.response.data.error,
+    });
+  }
+};
+
+// * Register Enquiry
+export const registerEnquiry = (formData) => async (dispatch) => {
+  try {
+    const res = await axios.post("/doctor/register", formData);
+    dispatch({
+      type: ENQUIRY_MESSAGE,
+      payload: res.data.body,
+    });
+  } catch (error) {
+    dispatch({
+      type: ENQUIRY_ERROR,
+      payload: error.response.data.error,
+    });
+  }
+};
+
+// * Clear Enquiry
+export const clearEnquiry = () => async (dispatch) => {
   dispatch({
     type: SELECT_ENQUIRY,
-    payload: enquiry,
+    payload: null,
   });
 };
 
@@ -77,18 +118,10 @@ export const setLoading = (value) => async (dispatch) => {
   });
 };
 
-// * Clear Enquiry
-export const clearEnquiry = () => async (dispatch) => {
-  dispatch({
-    type: CLEAR_ENQUIRY,
-    payload: null,
-  });
-};
-
 // * Clear errors
-export const clearErrors = () => async (dispatch) => {
+export const clear = () => async (dispatch) => {
   dispatch({
-    type: ENQUIRY_ERROR,
+    type: CLEAR_ENQUIRY_ERROR,
     payload: null,
   });
 };
