@@ -10,9 +10,9 @@ import {
 
 const defaultState = {
   admin: null,
+  isAuthenticated: false,
   error: null,
   message: null,
-  isAuthenticated: false,
   loading: true,
 };
 

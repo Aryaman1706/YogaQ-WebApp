@@ -164,7 +164,8 @@ exports.myProfile = async (req, res) => {
         .select("username email restricted role")
         .exec();
     }
-    if (!doctor) return res.json({ error: "Invalid account.", body: null });
+    if (!doctor)
+      return res.status(404).json({ error: "Invalid account.", body: null });
 
     return res.status(200).json({ error: null, body: doctor });
   } catch (error) {
@@ -178,9 +179,10 @@ exports.editProfile = async (req, res) => {
   try {
     const { error, value } = validation.edit(req.body);
     if (error)
-      return res
-        .status(400)
-        .json({ error: error.details[0].message, body: null });
+      return res.status(400).json({
+        error: `Validation Error. ${error.details[0].message}`,
+        body: null,
+      });
 
     // Hash Table for file
     const fileObj = {};
@@ -220,7 +222,10 @@ exports.editProfile = async (req, res) => {
     if (!doctor)
       return res.status(400).json({ error: "Invalid Account.", body: null });
 
-    return res.status(200).json({ error: null, body: "Profile Updated" });
+    return res.status(200).json({
+      error: null,
+      body: { doctor, message: "Profile Updated Successfully." },
+    });
   } catch (error) {
     console.log("Error occured here\n", error);
     return res.status(500).json({ error: "Server Error.", body: null });
@@ -232,9 +237,10 @@ exports.changePassword = async (req, res) => {
   try {
     const { error, value } = validation.changePassword(req.body);
     if (error)
-      return res
-        .status(400)
-        .json({ error: error.details[0].message, body: null });
+      return res.status(400).json({
+        error: `Validation Error. ${error.details[0].message}`,
+        body: null,
+      });
 
     let doctor = await Doctor.findById(req.user._id).exec();
     if (!doctor)
@@ -242,13 +248,16 @@ exports.changePassword = async (req, res) => {
 
     const { oldPassword, newPassword, confirmPassword } = value;
     if (newPassword !== confirmPassword)
-      return res
-        .status(400)
-        .json({ error: "Passwords do not match.", body: null });
+      return res.status(400).json({
+        error: "Validation Error. Passwords do not match.",
+        body: null,
+      });
 
     const result = await compare(oldPassword, doctor.password);
     if (!result)
-      return res.status(400).json({ error: "Incorrect Password.", body: null });
+      return res
+        .status(400)
+        .json({ error: "Validation Error. Incorrect Password.", body: null });
 
     const salt = await genSalt(10);
     const password = hash(newPassword, salt);

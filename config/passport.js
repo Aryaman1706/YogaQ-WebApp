@@ -43,7 +43,7 @@ passport.use(
     const { error, value } = doctorLogin({ username, password });
     if (error)
       return done(null, false, {
-        message: `Validation Error ${error.details[0].message}`,
+        message: `Validation Error. ${error.details[0].message}`,
       });
     const doctor = await Doctor.findOne({ email: value.username })
       .select("password username email restricted role")
