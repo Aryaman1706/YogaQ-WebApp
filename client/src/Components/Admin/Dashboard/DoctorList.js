@@ -7,8 +7,9 @@ import {
   Toolbar,
 } from "@material-ui/core";
 import { ArrowBackIos, ArrowForwardIos } from "@material-ui/icons";
+import { useSelector, useDispatch } from "react-redux";
+import { doctor as doctorActions } from "../../../redux/actions/index";
 import DoctorItem from "./DoctorItem";
-import axios from "../../../utils/axios";
 
 const DoctorList = () => {
   const [pagination, setPagination] = useState({
@@ -27,26 +28,40 @@ const DoctorList = () => {
     doctors,
     end,
   } = pagination;
-  const [loading, setLoading] = useState(false);
+  const doctorState = useSelector((state) => state.doctor);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    setLoading(true);
-    axios.get(`/doctor/list/?page=${loadedPages}`).then((res) => {
-      setPagination((prev) => {
-        return {
-          ...prev,
-          startIndex: (prev.loadedPages - 1) * 5,
-          endIndex: prev.loadedPages * 5,
-          doctors: [...prev.doctors, ...res.data.body.doctors],
-          end: res.data.body.end,
-        };
-      });
-      setLoading(false);
-    });
+    return () => {
+      dispatch(doctorActions.clearList());
+      dispatch(doctorActions.clear());
+    };
+    // eslint-disable-next-line
+  }, []);
+
+  useEffect(() => {
+    const load = async () => {
+      await dispatch(doctorActions.setLoading(true));
+      await dispatch(doctorActions.listDoctor(loadedPages));
+    };
+    load();
+    // eslint-disable-next-line
   }, [loadedPages]);
 
+  useEffect(() => {
+    setPagination((prev) => {
+      return {
+        ...prev,
+        startIndex: (prev.loadedPages - 1) * 5,
+        endIndex: prev.loadedPages * 5,
+        doctors: doctorState.list,
+        end: doctorState.end,
+      };
+    });
+  }, [doctorState.end, doctorState.list]);
+
   const nextHandler = (event) => {
-    if (!end) {
+    if (!doctorState.end) {
       if (currentPage === loadedPages) {
         setPagination((prev) => {
           return {
@@ -101,7 +116,7 @@ const DoctorList = () => {
       <Grid container direction="row" justify="center" alignItems="stretch">
         <Grid item xs={2} lg={4}></Grid>
         <Grid item xs={8} lg={4}>
-          {loading ? null : (
+          {doctorState.loading ? null : (
             <>
               <Grid
                 container

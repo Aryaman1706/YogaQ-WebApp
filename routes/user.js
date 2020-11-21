@@ -10,6 +10,10 @@ const controllers = require("../controllers/user");
 // * API Endpoints -->
 const router = express.Router();
 
+// * Get all users
+
+// * View a user
+
 // * Get my profile
 router.get("/profile", middleware.login, controllers.getProfile);
 

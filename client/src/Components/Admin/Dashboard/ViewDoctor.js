@@ -11,8 +11,10 @@ import {
   IconButton,
 } from "@material-ui/core";
 import VisibilityIcon from "@material-ui/icons/Visibility";
-import { useParams } from "react-router-dom";
-import axios from "../../../utils/axios";
+import Swal from "sweetalert2";
+import { useHistory, useParams } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { doctor as doctorActions } from "../../../redux/actions/index";
 
 const useStyles = makeStyles((theme) => ({
   div: {
@@ -28,16 +30,44 @@ const useStyles = makeStyles((theme) => ({
 
 const ViewDoctor = () => {
   const { id } = useParams();
-  const [doctor, setDoctor] = useState(null);
-  const [chatrooms, setChatrooms] = useState(null);
+  const history = useHistory();
+  const { loading, selectDoctor, error } = useSelector((state) => state.doctor);
+  const dispatch = useDispatch();
   const [full, setFull] = useState(false);
 
   useEffect(() => {
-    axios.get(`/doctor/view/${id}`).then((res) => {
-      setDoctor(res.data.body.doctor);
-      setChatrooms(res.data.body.chatrooms);
-    });
-  }, [id]);
+    const start = async () => {
+      await dispatch(doctorActions.setLoading(true));
+      await dispatch(doctorActions.selectDoctor(id));
+    };
+    if (!id) {
+      history.push("/admin/doctors");
+    } else {
+      start();
+    }
+
+    return () => {
+      dispatch(doctorActions.clearSelected());
+      dispatch(doctorActions.clear());
+    };
+    // eslint-disable-next-line
+  }, []);
+
+  useEffect(() => {
+    if (/Doctor not found*/i.test(error)) {
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: "Error Occured.",
+        text: error,
+        showConfirmButton: true,
+        timer: 1500,
+      }).then(() => {
+        history.push("/admin/doctors");
+      });
+    }
+    // eslint-disable-next-line
+  }, [error]);
 
   const toggle = (e) => {
     setFull((prev) => {
@@ -52,7 +82,7 @@ const ViewDoctor = () => {
         Doctor
       </Typography>
       <Toolbar></Toolbar>
-      {doctor && chatrooms ? (
+      {!loading && selectDoctor ? (
         <>
           <Grid container direction="row" justify="center" alignItems="stretch">
             <Grid item xs={1} lg={3}></Grid>
@@ -75,9 +105,12 @@ const ViewDoctor = () => {
                   </div>
                 </Grid>
                 {full ? (
-                  <DoctorProfileComplete doctor={doctor} />
+                  <DoctorProfileComplete doctor={selectDoctor.doctor} />
                 ) : (
-                  <DoctorProfile doctor={doctor} chatrooms={chatrooms} />
+                  <DoctorProfile
+                    doctor={selectDoctor.doctor}
+                    chatrooms={selectDoctor.chatrooms}
+                  />
                 )}
               </Grid>
               <Toolbar></Toolbar>
@@ -91,7 +124,7 @@ const ViewDoctor = () => {
                 alignItems="stretch"
                 spacing={2}
               >
-                {chatrooms.map((obj, index) => {
+                {selectDoctor.chatrooms.map((obj, index) => {
                   return (
                     <Fragment key={index}>
                       <Grid item>
