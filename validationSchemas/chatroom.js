@@ -3,13 +3,9 @@ Joi.objectId = require("joi-objectid")(Joi);
 
 exports.create = (body) => {
   const schema = Joi.object({
-    user: Joi.object({
-      id: Joi.objectId().trim().required(),
-    }).required(),
-    partner: Joi.object({
-      id: Joi.objectId().trim().required(),
-      model: Joi.string().valid("Admin", "Doctor").trim().required(),
-    }).required(),
+    user: Joi.string().email().trim().required(),
+    partner: Joi.string().email().trim().required(),
+    partnerModel: Joi.string().valid("Admin", "Doctor").trim().required(),
     blocked: Joi.boolean().required(),
   });
 

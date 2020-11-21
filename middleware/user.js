@@ -4,12 +4,20 @@ const User = require("../models/User");
 exports.login = async (req, res, next) => {
   try {
     if (!req.session.user || req.session.user.role !== "user") {
-      return res.status(403).json({ error: "Login To Continue.", body: null });
+      return res
+        .status(403)
+        .json({ error: "Permission Error. Login To Continue.", body: null });
     }
     const user = await User.findById(req.session.user.id).exec();
     if (!user || user.role !== "user") {
       return res.status(401).json({ error: "Invalid Profile.", body: null });
     }
+    if (user.blocked)
+      return res.status(401).json({
+        error:
+          "Permission Error. Your account is blocked. Contact Admin for further details.",
+        body: null,
+      });
     req.user = user;
     return next();
   } catch (error) {
@@ -22,12 +30,28 @@ exports.login = async (req, res, next) => {
 exports.complete = async (req, res, next) => {
   try {
     if (!req.session.user || req.session.user.role !== "user") {
-      return res.status(403).json({ error: "Login To Continue.", body: null });
+      return res
+        .status(403)
+        .json({ error: "Permission Error. Login To Continue.", body: null });
     }
     const user = await User.findById(req.session.user.id).exec();
-    if (!user || user.role !== "user" || !user.complete) {
+    if (!user || user.role !== "user") {
       return res.status(401).json({
-        error: "Invalid/Incomplete Profile. Complete the profile to continue.",
+        error: "Invalid Profile.",
+        body: null,
+      });
+    }
+    if (user.blocked) {
+      return res.status(401).json({
+        error:
+          "Permission Error. Your account is blocked. Contact Admin for further details.",
+        body: null,
+      });
+    }
+    if (!user.complete) {
+      return res.status(401).json({
+        error:
+          "Permission Error. Incomplete Profile. Complete the profile to continue.",
         body: null,
       });
     }

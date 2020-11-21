@@ -3,6 +3,7 @@ const express = require("express");
 
 // * Middleware
 const middleware = require("../middleware/user");
+const { login: loginAdmin } = require("../middleware/admin");
 
 // * Controllers
 const controllers = require("../controllers/user");
@@ -11,8 +12,12 @@ const controllers = require("../controllers/user");
 const router = express.Router();
 
 // * Get all users
+// "/user/list/?page=1"
+router.get("/list", loginAdmin, controllers.listUser);
 
 // * View a user
+// Chatroom and details
+router.get("/view/:id", loginAdmin, controllers.viewUser);
 
 // * Get my profile
 router.get("/profile", middleware.login, controllers.getProfile);

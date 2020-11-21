@@ -9,6 +9,7 @@ const Doctor = require("../models/Doctor");
 
 // * Utils
 const validation = require("../validationSchemas/chatroom");
+const { idIsPresent } = require("../utils/functions");
 
 // * Controllers -->
 
@@ -17,26 +18,48 @@ exports.create = async (req, res) => {
   try {
     const { error, value } = validation.create(req.body);
     if (error)
-      return res
-        .status(400)
-        .json({ error: error.details[0].message, body: null });
+      return res.status(400).json({
+        error: `Validation Error. ${error.details[0].message}`,
+        body: null,
+      });
 
-    const userPromise = User.findById(value.user.id).exec();
+    const userPromise = User.findOne({ email: value.user }).exec();
     const partnerPromise =
-      value.partner.model === "Admin"
-        ? Admin.findById(value.partner.id).exec()
-        : Doctor.findById(value.partner.id).exec();
+      value.partnerModel === "Admin"
+        ? Admin.findOne({ email: value.partner }).exec()
+        : Doctor.findOne({ email: value.partner }).exec();
 
     const [user, partner] = await Promise.all([userPromise, partnerPromise]);
-
     if (!user || !partner)
-      return res
-        .status(400)
-        .json({ error: "Invalid User or Partner", body: null });
+      return res.status(400).json({
+        error: "Validation Error. Invalid User or Partner. Check email ids",
+        body: null,
+      });
 
-    // ! only if not already present
+    const existingChatroom = await ChatRoom.findOne({
+      "user.id": user._id,
+      "partner.id": partner._id,
+      "partner.model": value.partnerModel,
+    }).exec();
+    if (existingChatroom || idIsPresent(user.doctors, partner._id))
+      return res.status(400).json({
+        error: "Validation Error. Chatroom between these two already exists.",
+        body: null,
+      });
     user.doctors.push(partner._id);
-    await Promise.all([ChatRoom.create(value), user.save()]);
+    await Promise.all([
+      ChatRoom.create({
+        user: {
+          id: user._id,
+        },
+        partner: {
+          id: partner._id,
+          model: value.partnerModel,
+        },
+        blocked: value.blocked,
+      }),
+      user.save(),
+    ]);
     return res
       .status(200)
       .json({ error: null, body: "ChatRoom created succesfully." });
