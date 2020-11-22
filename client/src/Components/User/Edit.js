@@ -20,7 +20,11 @@ const Edit = () => {
 
   useEffect(() => {
     setState(user);
-  }, [user]);
+    return () => {
+      dispatch(userActions.clear());
+    };
+    // eslint-disable-next-line
+  }, []);
 
   useEffect(() => {
     if (/^Validation Error*/i.test(error)) {

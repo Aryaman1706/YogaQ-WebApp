@@ -27,6 +27,7 @@ const Signup = () => {
     }
     return () => {
       dispatch(userActions.clearIncompleteProfile());
+      dispatch(userActions.clear());
     };
     // eslint-disable-next-line
   }, []);

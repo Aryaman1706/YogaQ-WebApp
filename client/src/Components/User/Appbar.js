@@ -48,10 +48,10 @@ const Appbar = () => {
   }, []);
 
   useEffect(() => {
-    if (error && query) {
+    if (/Incomplete Profile*/i.test(error) && query) {
       history.push(`/signup/?fields=${query}`);
     }
-    if (/User not found./i.test(error)) {
+    if (/^User not found*/i.test(error)) {
       history.push("/");
     }
     // eslint-disable-next-line

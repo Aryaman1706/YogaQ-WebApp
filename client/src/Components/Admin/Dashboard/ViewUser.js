@@ -107,6 +107,11 @@ const ViewUser = () => {
     });
   };
 
+  let callCount = 0;
+  selectUser.chatrooms.forEach((chatroom) => {
+    callCount = callCount + chatroom.call.length;
+  });
+
   const classes = useStyles();
   return (
     <>
@@ -184,6 +189,24 @@ const ViewUser = () => {
                     label="Country"
                     value={selectUser.user.country}
                   />
+                </Grid>
+                <Grid item>
+                  <div className={classes.div}>
+                    <Typography variant="subtitle1">
+                      Number of Chat Rooms
+                    </Typography>
+                    <Typography variant="subtitle1" color="secondary">
+                      {selectUser.chatrooms.length}
+                    </Typography>
+                  </div>
+                </Grid>
+                <Grid item>
+                  <div className={classes.div}>
+                    <Typography variant="subtitle1">Number of Calls</Typography>
+                    <Typography variant="subtitle1" color="secondary">
+                      {callCount}
+                    </Typography>
+                  </div>
                 </Grid>
                 <Grid item>
                   <Button

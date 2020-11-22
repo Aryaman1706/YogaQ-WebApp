@@ -78,7 +78,7 @@ exports.getProfile = async (req, res) => {
       const query = user.phoneNumber ? "country" : "country-phoneNumber";
       return res
         .status(401)
-        .json({ error: "Complete Profile to continue.", body: query });
+        .json({ error: "Incomplete Profile.", body: query });
     }
 
     return res.status(200).json({ error: null, body: user });
