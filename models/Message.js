@@ -22,6 +22,10 @@ const messageSchema = new mongoose.Schema({
     type: String,
     default: null,
   },
+  link: {
+    type: String,
+    default: null,
+  },
   file: {
     type: String,
     default: null,
@@ -43,6 +47,7 @@ const messageSchema = new mongoose.Schema({
   time: {
     type: Date,
     required: true,
+    default: new Date(),
   },
 });
 
