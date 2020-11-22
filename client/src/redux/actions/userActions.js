@@ -6,10 +6,13 @@ import {
   LIST_USER,
   CLEAR_USER_LIST,
   SELECT_USER,
+  SELECT_CHATROOM_USER,
+  USER_GET_MESSAGES,
   USER_ERROR,
   USER_MESSAGE,
   USER_LOADING,
   CLEAR_USER_ERROR,
+  CLEAR_USER_CHATROOM,
 } from "../types";
 import axios from "../../utils/axios";
 
@@ -63,6 +66,54 @@ export const listChatrooms = () => async (dispatch) => {
     dispatch({
       type: GET_CHATROOMS,
       payload: res.data.body,
+    });
+  } catch (error) {
+    dispatch({
+      type: USER_ERROR,
+      payload: error.response.data.error,
+    });
+  }
+};
+
+// * Get chatroom contents
+export const getChatroom = (id) => async (dispatch) => {
+  try {
+    const res = await axios.get(`/chatroom/get/${id}`);
+    dispatch({
+      type: SELECT_CHATROOM_USER,
+      payload: res.data.body,
+    });
+  } catch (error) {
+    dispatch({
+      type: USER_ERROR,
+      payload: error.response.data.error,
+    });
+  }
+};
+
+// * Get Messages of active chatroom
+export const getMessages = ({ id, page }) => async (dispatch) => {
+  try {
+    const res = await axios.get(`/chatroom/messages/${id}/?page=${page}`);
+    dispatch({
+      type: USER_GET_MESSAGES,
+      payload: res.data.body,
+    });
+  } catch (error) {
+    dispatch({
+      type: USER_ERROR,
+      payload: error.response.data.error,
+    });
+  }
+};
+
+// * Modify Last access
+export const modfiyLastAccess = ({ id, formData }) => async (dispatch) => {
+  try {
+    await axios.put(`/lastAccess/${id}`, formData);
+    dispatch({
+      type: CLEAR_USER_CHATROOM,
+      payload: null,
     });
   } catch (error) {
     dispatch({

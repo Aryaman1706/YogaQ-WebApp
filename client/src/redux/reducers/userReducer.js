@@ -6,6 +6,9 @@ import {
   LIST_USER,
   CLEAR_USER_LIST,
   SELECT_USER,
+  SELECT_CHATROOM_USER,
+  USER_GET_MESSAGES,
+  CLEAR_USER_CHATROOM,
   USER_ERROR,
   USER_MESSAGE,
   USER_LOADING,
@@ -15,7 +18,10 @@ import {
 const defaultState = {
   user: null,
   isAuthenticated: null,
-  chatrooms: null,
+  chatrooms: [],
+  active_chatroom: null,
+  user_messages: [],
+  message_end: false,
   list: [],
   end: false,
   selectUser: null,
@@ -71,6 +77,25 @@ const stateHandler = (state = defaultState, action) => {
         ...state,
         selectUser: action.payload,
         loading: action.payload ? false : true,
+      };
+    case SELECT_CHATROOM_USER:
+      return {
+        ...state,
+        active_chatroom: action.payload,
+        loading: false,
+      };
+    case USER_GET_MESSAGES:
+      return {
+        ...state,
+        user_messages: [...state.user_messages, ...action.payload.messages],
+        message_end: action.payload.end,
+      };
+    case CLEAR_USER_CHATROOM:
+      return {
+        ...state,
+        active_chatroom: null,
+        user_messages: [],
+        message_end: false,
       };
     case USER_ERROR:
       return {
