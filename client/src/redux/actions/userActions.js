@@ -147,6 +147,22 @@ export const clearSelectedUser = () => async (dispatch) => {
   });
 };
 
+// * Block/Unblock User
+export const blockUser = ({ id, value }) => async (dispatch) => {
+  try {
+    const res = await axios.put(`/user/block/${id}`, value);
+    dispatch({
+      type: USER_MESSAGE,
+      payload: res.data.body,
+    });
+  } catch (error) {
+    dispatch({
+      type: USER_ERROR,
+      payload: error.response.data.error,
+    });
+  }
+};
+
 // * Set Loading
 export const setLoading = (value) => async (dispatch) => {
   dispatch({

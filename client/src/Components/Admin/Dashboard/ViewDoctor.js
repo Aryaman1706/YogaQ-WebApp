@@ -54,7 +54,7 @@ const ViewDoctor = () => {
   }, []);
 
   useEffect(() => {
-    if (/Doctor not found*/i.test(error)) {
+    if (/^Doctor not found*/i.test(error)) {
       Swal.fire({
         position: "center",
         icon: "error",

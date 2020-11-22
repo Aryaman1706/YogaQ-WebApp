@@ -102,6 +102,22 @@ export const register = (formData) => async (dispatch) => {
   }
 };
 
+// * Create Chatroom
+export const createChatroom = (formData) => async (dispatch) => {
+  try {
+    const res = await axios.post("/chatroom/create", formData);
+    dispatch({
+      type: ADMIN_MESSAGE,
+      payload: res.data.body,
+    });
+  } catch (error) {
+    dispatch({
+      type: ADMIN_ERROR,
+      payload: error.response.data.error,
+    });
+  }
+};
+
 // * Clear
 export const clear = () => async (dispatch) => {
   dispatch({

@@ -25,6 +25,10 @@ router.get("/profile", middleware.login, controllers.getProfile);
 // * Edit profile
 router.put("/profile", middleware.login, controllers.editProfile);
 
+// * Block/Unblock User (Admin)
+// id -> user._id
+router.put("/block/:id", loginAdmin, controllers.blockUser);
+
 // * Google OAuth
 router.get("/auth", controllers.auth);
 

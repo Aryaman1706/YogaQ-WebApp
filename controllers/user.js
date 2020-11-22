@@ -115,6 +115,33 @@ exports.editProfile = async (req, res) => {
   }
 };
 
+// * Block/Unblock user
+exports.blockUser = async (req, res) => {
+  try {
+    const { error, value } = validation.blockUser(req.body);
+    if (error)
+      return res
+        .status(400)
+        .json({ error: `Validation Error. ${error.details[0].message}` });
+
+    const user = await User.findByIdAndUpdate(
+      req.params.id,
+      { ...value },
+      { new: true }
+    );
+    if (!user)
+      return res.status(400).json({ error: "User not found.", body: null });
+
+    return res.status(200).json({
+      error: null,
+      body: `User ${value.blocked ? "Blocked" : "Unblocked"} Successfully.`,
+    });
+  } catch (error) {
+    console.log("Error occured here\n", error);
+    return res.status(500).json({ error: "Server Error.", body: null });
+  }
+};
+
 // * Google OAuth
 exports.auth = async (req, res) => {
   try {
@@ -162,6 +189,7 @@ exports.authCallback = async (req, res) => {
       completed: false,
     };
     const user = await User.findOne({ email: profile.email }).exec();
+    // ! Handle Blocked account
     if (user) {
       req.session.passport = null;
       req.session.user = { id: user._id, role: user.role };

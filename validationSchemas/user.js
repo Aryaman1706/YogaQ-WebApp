@@ -17,6 +17,14 @@ exports.edit = (body) => {
   return schema.validate(body);
 };
 
+exports.blockUser = (body) => {
+  const schema = Joi.object({
+    blocked: Joi.boolean().required(),
+  });
+
+  return schema.validate(body);
+};
+
 exports.signup_country = (body) => {
   const schema = Joi.object({
     country: Joi.string().trim().required(),
