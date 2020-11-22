@@ -30,7 +30,7 @@ const stateHandler = (state = defaultState, action) => {
       return {
         ...state,
         enquiry: action.payload,
-        loading: false,
+        loading: action.payload ? false : true,
       };
     case CLEAR_ENQUIRY_LIST:
       return {

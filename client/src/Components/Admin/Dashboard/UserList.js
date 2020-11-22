@@ -8,16 +8,16 @@ import {
 } from "@material-ui/core";
 import { ArrowBackIos, ArrowForwardIos } from "@material-ui/icons";
 import { useSelector, useDispatch } from "react-redux";
-import { doctor as doctorActions } from "../../../redux/actions/index";
-import DoctorItem from "./DoctorItem";
+import { user as userActions } from "../../../redux/actions/index";
+import UserItem from "./UserItem";
 
-const DoctorList = () => {
+const UserList = () => {
   const [pagination, setPagination] = useState({
     loadedPages: 1,
     currentPage: 1,
     startIndex: 0,
     endIndex: 0,
-    doctors: [],
+    users: [],
     end: false,
   });
   const {
@@ -25,24 +25,24 @@ const DoctorList = () => {
     currentPage,
     startIndex,
     endIndex,
-    doctors,
+    users,
     end,
   } = pagination;
-  const doctorState = useSelector((state) => state.doctor);
+  const userState = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
   useEffect(() => {
     return () => {
-      dispatch(doctorActions.clearList());
-      dispatch(doctorActions.clear());
+      dispatch(userActions.clearListUser());
+      dispatch(userActions.clear());
     };
     // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
     const load = async () => {
-      await dispatch(doctorActions.setLoading(true));
-      await dispatch(doctorActions.listDoctor(loadedPages));
+      await dispatch(userActions.setLoading(true));
+      await dispatch(userActions.listUser(loadedPages));
     };
     load();
     // eslint-disable-next-line
@@ -54,14 +54,14 @@ const DoctorList = () => {
         ...prev,
         startIndex: (prev.loadedPages - 1) * 5,
         endIndex: prev.loadedPages * 5,
-        doctors: doctorState.list,
-        end: doctorState.end,
+        users: userState.list,
+        end: userState.end,
       };
     });
-  }, [doctorState.end, doctorState.list]);
+  }, [userState.end, userState.list]);
 
   const nextHandler = (event) => {
-    if (!doctorState.end) {
+    if (!userState.end) {
       if (currentPage === loadedPages) {
         setPagination((prev) => {
           return {
@@ -110,13 +110,13 @@ const DoctorList = () => {
   return (
     <>
       <Typography variant="h2" align="center">
-        All Doctors
+        All Users
       </Typography>
       <Toolbar></Toolbar>
       <Grid container direction="row" justify="center" alignItems="stretch">
         <Grid item xs={2} lg={4}></Grid>
         <Grid item xs={8} lg={4}>
-          {doctorState.loading ? null : (
+          {userState.loading ? null : (
             <>
               <Grid
                 container
@@ -125,13 +125,13 @@ const DoctorList = () => {
                 alignItems="stretch"
                 spacing={2}
               >
-                {doctors.slice(startIndex, endIndex).map((doctor) => {
+                {users.slice(startIndex, endIndex).map((user) => {
                   return (
-                    <Fragment key={doctor._id}>
-                      <DoctorItem
-                        username={doctor.username}
-                        email={doctor.email}
-                        id={doctor._id}
+                    <Fragment key={user._id}>
+                      <UserItem
+                        username={user.username}
+                        email={user.email}
+                        id={user._id}
                       />
                     </Fragment>
                   );
@@ -165,4 +165,4 @@ const DoctorList = () => {
   );
 };
 
-export default DoctorList;
+export default UserList;

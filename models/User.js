@@ -44,6 +44,10 @@ const userSchema = new mongoose.Schema(
         ref: "Doctor",
       },
     ],
+    blocked: {
+      type: Boolean,
+      default: false,
+    },
     role: {
       type: String,
       enum: ["admin", "doctor", "user"],

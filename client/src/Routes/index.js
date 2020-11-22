@@ -2,17 +2,32 @@ import React from "react";
 import { Switch } from "react-router-dom";
 import Route from "./RouteWrapper";
 import Wrapper from "../Components/Wrapper";
-import AdminHome from "../Pages/Admin/Home";
+
+// * Admin
 import AdminLogin from "../Pages/Admin/LoginPage";
-import Profile from "../Pages/Admin/Profile";
-import NewEnquiry from "../Components/Doctor/Enquiry/NewEnquiry";
-import RegisterPage from "../Pages/Admin/RegisterPage";
-import DoctorLogin from "../Pages/Doctor/LoginPage";
+import AdminHome from "../Pages/Admin/Home";
+import AdminProfile from "../Pages/Admin/Profile";
+
+// * Admin DashBoard
+import AdminRegisterPage from "../Pages/Admin/RegisterPage";
 import EnquiryList from "../Components/Admin/Dashboard/EnquiryList";
 import ViewEnquiry from "../Components/Admin/Dashboard/ViewEnquiry";
 import RegisterEnquiry from "../Components/Admin/Dashboard/RegisterEnquiry";
 import DoctorList from "../Components/Admin/Dashboard/DoctorList";
 import ViewDoctor from "../Components/Admin/Dashboard/ViewDoctor";
+import UserList from "../Components/Admin/Dashboard/UserList";
+import ViewUser from "../Components/Admin/Dashboard/ViewUser";
+import CreateChatroom from "../Components/Admin/Dashboard/CreateChatroom";
+
+// * Enquiry
+import NewEnquiry from "../Components/Doctor/Enquiry/NewEnquiry";
+
+// * Doctor
+import DoctorLogin from "../Pages/Doctor/LoginPage";
+
+// * Doctor Dashboard
+
+// * User
 import Home from "../Pages/Home";
 import Signup from "../Pages/Signup";
 import EditUser from "../Components/User/Edit";
@@ -24,21 +39,27 @@ const Routes = () => {
       <Switch>
         {/* Admin */}
         <Route exact path="/admin/login" component={AdminLogin} />
+        <Route adminLogin exact path="/admin" component={AdminHome} />
+        <Route
+          adminLogin
+          exact
+          path="/admin/profile"
+          component={AdminProfile}
+        />
+
+        {/* Admin Dashboard */}
         <Route
           adminLogin
           exact
           path="/admin/register"
-          component={RegisterPage}
+          component={AdminRegisterPage}
         />
-        <Route adminLogin exact path="/admin" component={AdminHome} />
-        <Route adminLogin exact path="/admin/profile" component={Profile} />
         <Route
           adminLogin
           exact
           path="/admin/enquiries"
           component={EnquiryList}
         />
-        <Route adminLogin exact path="/admin/doctors" component={DoctorList} />
         <Route
           adminLogin
           exact
@@ -48,18 +69,31 @@ const Routes = () => {
         <Route
           adminLogin
           exact
-          path="/admin/doctor/:id"
-          component={ViewDoctor}
-        />
-        <Route
-          adminLogin
-          exact
           path="/admin/accept/enquiry"
           component={RegisterEnquiry}
         />
+        <Route adminLogin exact path="/admin/doctors" component={DoctorList} />
+        <Route
+          adminLogin
+          exact
+          path="/admin/doctor/:id"
+          component={ViewDoctor}
+        />
+        <Route adminLogin exact path="/admin/users" component={UserList} />
+        <Route adminLogin exact path="/admin/user/:id" component={ViewUser} />
+        <Route
+          adminLogin
+          exact
+          path="/admin/chatroom/create"
+          component={CreateChatroom}
+        />
+
         {/* Doctor */}
         <Route exact path="/enquire" component={NewEnquiry} />
         <Route exact path="/doctor/login" component={DoctorLogin} />
+
+        {/* Doctor Dashboard */}
+
         {/* User */}
         <Route exact path="/" component={Home} />
         <Route exact path="/signup" component={Signup} />

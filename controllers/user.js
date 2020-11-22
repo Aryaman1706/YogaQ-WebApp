@@ -11,6 +11,63 @@ const ChatRoom = require("../models/ChatRoom");
 
 // * Controllers -->
 
+// * List all users
+exports.listUser = async (req, res) => {
+  try {
+    const total = await User.countDocuments();
+    const limit = 5;
+    if ((parseInt(req.query.page, 10) - 1) * limit < total) {
+      const users = await User.find()
+        .select("username email createdAt")
+        .sort("createdAt")
+        .skip((parseInt(req.query.page, 10) - 1) * limit)
+        .limit(limit)
+        .exec();
+
+      return res.status(200).json({
+        error: null,
+        body: { users, end: users.length < limit },
+      });
+    }
+
+    return res.status(200).json({
+      error: null,
+      body: { users: [], end: true },
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Server Error.", body: null });
+  }
+};
+
+// * View a user
+exports.viewUser = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id)
+      .populate("doctors", "email username")
+      .exec();
+    if (!user)
+      return res.status(400).json({ error: "User not found.", body: null });
+
+    const chatrooms = await ChatRoom.find({
+      "user.id": user._id,
+    })
+      .select("user partner blocked")
+      .populate("partner.id", "username email")
+      .populate({
+        path: "call",
+        select: "time",
+        sort: "-time",
+      })
+      .exec();
+
+    return res.status(200).json({ error: null, body: { user, chatrooms } });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Server Error.", body: null });
+  }
+};
+
 // * Get my profile
 exports.getProfile = async (req, res) => {
   try {
@@ -48,7 +105,37 @@ exports.editProfile = async (req, res) => {
     if (!updatedUser)
       return res.status(404).json({ error: "User not found.", body: null });
 
-    return res.status(200).json({ error: null, body: updatedUser });
+    return res.status(200).json({
+      error: null,
+      body: { user: updatedUser, message: "Profile Updated Successfully." },
+    });
+  } catch (error) {
+    console.log("Error occured here\n", error);
+    return res.status(500).json({ error: "Server Error.", body: null });
+  }
+};
+
+// * Block/Unblock user
+exports.blockUser = async (req, res) => {
+  try {
+    const { error, value } = validation.blockUser(req.body);
+    if (error)
+      return res
+        .status(400)
+        .json({ error: `Validation Error. ${error.details[0].message}` });
+
+    const user = await User.findByIdAndUpdate(
+      req.params.id,
+      { ...value },
+      { new: true }
+    );
+    if (!user)
+      return res.status(400).json({ error: "User not found.", body: null });
+
+    return res.status(200).json({
+      error: null,
+      body: `User ${value.blocked ? "Blocked" : "Unblocked"} Successfully.`,
+    });
   } catch (error) {
     console.log("Error occured here\n", error);
     return res.status(500).json({ error: "Server Error.", body: null });
@@ -102,6 +189,7 @@ exports.authCallback = async (req, res) => {
       completed: false,
     };
     const user = await User.findOne({ email: profile.email }).exec();
+    // ! Handle Blocked account
     if (user) {
       req.session.passport = null;
       req.session.user = { id: user._id, role: user.role };
@@ -132,7 +220,7 @@ exports.signup = async (req, res) => {
       : validation.signup_country_phone(req.body);
     if (error)
       return res.status(400).json({
-        error: `Validation Failed:- ${error.details[0].message}`,
+        error: `Validation Error. ${error.details[0].message}`,
         body: null,
       });
 
@@ -146,12 +234,15 @@ exports.signup = async (req, res) => {
         id: user._id,
       },
       partner: {
-        id: "5fa1e53ecbfc17d447d1a520",
+        id: "5fb6b2accbecb72838aece98",
         model: "Admin",
       },
     };
     await Promise.all([user.save(), ChatRoom.create(chatroom)]);
-    return res.status(200).json({ error: null, body: user });
+    return res.status(200).json({
+      error: null,
+      body: { user, message: "Congratulations! SignUp process is complete." },
+    });
   } catch (error) {
     console.log("Error occured here\n", error);
     return res.status(500).json({ error: "Server Error.", body: null });

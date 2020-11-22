@@ -17,3 +17,14 @@ exports.getUri = (stream, file) => {
     });
   });
 };
+
+exports.idIsPresent = async (arrayOfIds, id) => {
+  let bool = false;
+  for (let i = 0; i < arrayOfIds.lenght; i += 1) {
+    if (arrayOfIds[i].equals(id)) {
+      bool = true;
+      break;
+    }
+  }
+  return bool;
+};

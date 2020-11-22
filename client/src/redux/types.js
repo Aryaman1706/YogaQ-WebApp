@@ -31,9 +31,13 @@ export const CLEAR_DOCTOR_ERROR = "CLEAR_DOCTOR_ERROR";
 
 // * User
 export const LOAD_USER = "LOAD_USER";
-export const SIGNUP_USER = "SIGNUP_USER";
-export const USER_ERROR = "USER_ERROR";
 export const INCOMPLETE_PROFILE = "INCOMPLETE_PROFILE";
-export const GET_CHATROOMS = "GET_CHATROOMS";
 export const EDIT_USER = "EDIT_USER";
-export const TEST = "TEST";
+export const GET_CHATROOMS = "GET_CHATROOMS";
+export const LIST_USER = "LIST_USER";
+export const CLEAR_USER_LIST = "CLEAR_USER_LIST";
+export const SELECT_USER = "SELECT_USER";
+export const USER_ERROR = "USER_ERROR";
+export const USER_MESSAGE = "USER_MESSAGE";
+export const USER_LOADING = "USER_LOADING";
+export const CLEAR_USER_ERROR = "CLEAR_USER_ERROR";
