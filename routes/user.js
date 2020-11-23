@@ -39,7 +39,7 @@ router.get("/auth/callback", controllers.authCallback);
 router.put("/signup", middleware.login, controllers.signup);
 
 // * Get my chatrooms
-router.get("/chatrooms", middleware.complete, controllers.getChatrooms);
+router.get("/chatrooms", middleware.login, controllers.getChatrooms);
 
 // * End of API Endpoints -->
 

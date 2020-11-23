@@ -85,7 +85,7 @@ const CreateChatroom = () => {
       backdrop: true,
     }).then((result) => {
       if (result.isConfirmed) {
-        dispatch(adminActions.createChatroom(details));
+        dispatch(adminActions.createChatroom({ ...details, blocked: false }));
       }
     });
   };

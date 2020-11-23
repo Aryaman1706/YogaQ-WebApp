@@ -1,6 +1,8 @@
 import React from "react";
 import { Grid, Typography, Paper, Badge, makeStyles } from "@material-ui/core";
 import MailIcon from "@material-ui/icons/Mail";
+import { useDispatch } from "react-redux";
+import { user as userActions } from "../../redux/actions/index";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -11,22 +13,32 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ChatroomItem = () => {
+const ChatroomItem = ({ chatroom }) => {
   const classes = useStyles();
+  const dispatch = useDispatch();
+
+  const clickHandler = async (e) => {
+    await dispatch(userActions.setLoading(true));
+    dispatch(userActions.getChatroom(chatroom._id));
+  };
   return (
     <>
-      <Grid item>
+      <Grid item onClick={(event) => clickHandler(event)}>
         <Paper elevation={4} className={classes.paper}>
           <div>
             <Typography variant="h6" align="left">
-              Username
+              {chatroom.partner.id.username}
             </Typography>
             <Typography variant="subtitle1" align="left">
-              Admin
+              {chatroom.partner.id.role.toUpperCase()}
             </Typography>
           </div>
           <div>
-            <Badge badgeContent={10} max={100} color="secondary">
+            <Badge
+              badgeContent={chatroom.unreadMessages}
+              max={100}
+              color="secondary"
+            >
               <MailIcon />
             </Badge>
           </div>

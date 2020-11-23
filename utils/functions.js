@@ -18,10 +18,10 @@ exports.getUri = (stream, file) => {
   });
 };
 
-exports.idIsPresent = async (arrayOfIds, id) => {
+exports.idIsPresent = (arrayOfIds, id) => {
   let bool = false;
-  for (let i = 0; i < arrayOfIds.lenght; i += 1) {
-    if (arrayOfIds[i].equals(id)) {
+  for (let i = 0; i < arrayOfIds.length; i += 1) {
+    if (id.toString() === arrayOfIds[i].toString()) {
       bool = true;
       break;
     }

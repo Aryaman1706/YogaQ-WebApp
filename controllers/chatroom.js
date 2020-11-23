@@ -73,10 +73,17 @@ exports.create = async (req, res) => {
 exports.get = async (req, res) => {
   try {
     const chatroom = await ChatRoom.findById(req.params.id).exec();
+    console.log(
+      chatroom.user.id.equals(req.user._id),
+      chatroom.partner.id.equals(req.user._id)
+    );
+    if (!chatroom) {
+      req.session.active_chatroom = null;
+      return res.status(404).json({ error: "Invalid Request", body: null });
+    }
     if (
-      !chatroom ||
-      (!chatroom.user.id.equals(req.user._id) &&
-        !chatroom.partner.id.equals(req.user._id))
+      !chatroom.user.id.equals(req.user._id) &&
+      !chatroom.partner.id.equals(req.user._id)
     ) {
       req.session.active_chatroom = null;
       return res.status(404).json({ error: "Invalid Request", body: null });

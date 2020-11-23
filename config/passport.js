@@ -10,6 +10,7 @@ const Doctor = require("../models/Doctor");
 // * Utils
 const { login: adminLogin } = require("../validationSchemas/admin");
 const { login: doctorLogin } = require("../validationSchemas/doctor");
+const User = require("../models/User");
 
 passport.use(
   "admin",
@@ -69,16 +70,23 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser(({ id, role }, done) => {
   if (role.trim() === "admin") {
+    console.log("passport admin");
     Admin.findById(id)
       .select("-password -resetToken -resetTokenValidity")
       .exec((err, doc) => {
         done(err, doc);
       });
   } else if (role.trim() === "doctor") {
+    console.log("passport doctor");
     Doctor.findById(id)
       .select("username email restricted role")
       .exec((err, doc) => {
         done(err, doc);
       });
+  } else if (role.trim() === "user") {
+    console.log("passport user");
+    User.findById(id).exec((err, doc) => {
+      done(err, doc);
+    });
   }
 });

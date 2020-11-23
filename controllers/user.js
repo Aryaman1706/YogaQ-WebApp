@@ -192,12 +192,12 @@ exports.authCallback = async (req, res) => {
     // ! Handle Blocked account
     if (user) {
       req.session.passport = null;
-      req.session.user = { id: user._id, role: user.role };
+      req.session.passport = { user: { id: user._id, role: user.role } };
       return res.redirect(`${process.env.CLIENT_URL}`);
     }
     const newUser = await User.create(profile);
     req.session.passport = null;
-    req.session.user = { id: newUser._id, role: newUser.role };
+    req.session.passport = { user: { id: user._id, role: user.role } };
     const query = newUser.phoneNumber ? "country" : "country-phoneNumber";
     return res.redirect(`${process.env.CLIENT_URL}/signup/?fields=${query}`);
   } catch (error) {
@@ -256,7 +256,7 @@ exports.getChatrooms = async (req, res) => {
     const promiseArray = [];
     chatrooms.forEach((doc) => {
       const pro = doc
-        .populate("partner.id", "username email")
+        .populate("partner.id", "username email role")
         .populate({
           path: "unreadMessages",
           match: { time: { $gt: doc.lastOpened.user } },
