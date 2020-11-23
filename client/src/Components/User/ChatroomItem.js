@@ -1,7 +1,7 @@
 import React from "react";
 import { Grid, Typography, Paper, Badge, makeStyles } from "@material-ui/core";
 import MailIcon from "@material-ui/icons/Mail";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { user as userActions } from "../../redux/actions/index";
 
 const useStyles = makeStyles((theme) => ({
@@ -16,10 +16,15 @@ const useStyles = makeStyles((theme) => ({
 const ChatroomItem = ({ chatroom }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
-
+  const { active_chatroom } = useSelector((state) => state.user);
   const clickHandler = async (e) => {
-    await dispatch(userActions.setLoading(true));
-    dispatch(userActions.getChatroom(chatroom._id));
+    if (
+      !active_chatroom ||
+      active_chatroom._id.toString() !== chatroom._id.toString()
+    ) {
+      await dispatch(userActions.setLoading(true));
+      dispatch(userActions.getChatroom(chatroom._id));
+    }
   };
   return (
     <>

@@ -87,8 +87,9 @@ const stateHandler = (state = defaultState, action) => {
     case USER_GET_MESSAGES:
       return {
         ...state,
-        user_messages: [...state.user_messages, ...action.payload.messages],
+        user_messages: [...action.payload.messages, ...state.user_messages],
         message_end: action.payload.end,
+        loading: false,
       };
     case CLEAR_USER_CHATROOM:
       return {
