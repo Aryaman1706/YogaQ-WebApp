@@ -1,17 +1,34 @@
-import React, { Fragment, useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { user as userActions } from "../redux/actions/index";
+import React from "react";
+import { Grid, makeStyles } from "@material-ui/core";
+import ChatroomList from "../Components/User/ChatroomList";
+import Chatroom from "../Components/User/Chatroom";
+
+const useStyles = makeStyles((theme) => ({
+  container: {
+    width: "100%",
+  },
+}));
 
 const Home = () => {
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(userActions.listChatrooms());
-    // eslint-disable-next-line
-  }, []);
+  const classes = useStyles();
   return (
-    <Fragment>
-      <h1>Home Page</h1>
-    </Fragment>
+    <>
+      <Grid
+        container
+        direction="row"
+        justify="flex-start"
+        alignItems="stretch"
+        spacing={3}
+        className={classes.container}
+      >
+        <Grid item xs={2}>
+          <ChatroomList />
+        </Grid>
+        <Grid item xs={10}>
+          <Chatroom />
+        </Grid>
+      </Grid>
+    </>
   );
 };
 

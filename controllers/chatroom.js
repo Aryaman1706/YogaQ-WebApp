@@ -73,10 +73,17 @@ exports.create = async (req, res) => {
 exports.get = async (req, res) => {
   try {
     const chatroom = await ChatRoom.findById(req.params.id).exec();
+    console.log(
+      chatroom.user.id.equals(req.user._id),
+      chatroom.partner.id.equals(req.user._id)
+    );
+    if (!chatroom) {
+      req.session.active_chatroom = null;
+      return res.status(404).json({ error: "Invalid Request", body: null });
+    }
     if (
-      !chatroom ||
-      (!chatroom.user.id.equals(req.user._id) &&
-        !chatroom.partner.id.equals(req.user._id))
+      !chatroom.user.id.equals(req.user._id) &&
+      !chatroom.partner.id.equals(req.user._id)
     ) {
       req.session.active_chatroom = null;
       return res.status(404).json({ error: "Invalid Request", body: null });
@@ -128,7 +135,7 @@ exports.messages = async (req, res) => {
         error: null,
         body: {
           messages,
-          end: false,
+          end: messages.length < 50,
         },
       });
     }
@@ -171,11 +178,12 @@ exports.edit = async (req, res) => {
 // * Modify Last Access
 exports.lastAccess = async (req, res) => {
   try {
-    const { error, value } = validation.edit(req.body);
+    const { error, value } = validation.lastAccess(req.body);
     if (error)
-      return res
-        .status(400)
-        .json({ error: error.details[0].message, body: null });
+      return res.status(400).json({
+        error: `Validation Error. ${error.details[0].message}`,
+        body: null,
+      });
 
     const obj =
       req.user.role === "user"
