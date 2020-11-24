@@ -11,6 +11,7 @@ import {
   USER_ERROR,
   USER_MESSAGE,
   USER_LOADING,
+  USER_CHATROOM_LOADING,
   CLEAR_USER_ERROR,
   CLEAR_USER_CHATROOM,
 } from "../types";
@@ -218,6 +219,14 @@ export const blockUser = ({ id, value }) => async (dispatch) => {
 export const setLoading = (value) => async (dispatch) => {
   dispatch({
     type: USER_LOADING,
+    payload: value,
+  });
+};
+
+// * Set Chatroom Loading
+export const setChatroomLoading = (value) => async (dispatch) => {
+  dispatch({
+    type: USER_CHATROOM_LOADING,
     payload: value,
   });
 };

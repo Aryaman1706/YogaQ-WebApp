@@ -10,6 +10,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import { AccountCircle } from "@material-ui/icons";
+import { useSelector } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   parent: {
@@ -52,6 +53,8 @@ const CharoomAppbar = ({ user }) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const { active_chatroom } = useSelector((state) => state.user);
   return (
     <>
       <Grid
@@ -113,7 +116,7 @@ const CharoomAppbar = ({ user }) => {
           >
             <Grid item xs={11} className={classes.title}>
               <Typography variant="h6" style={{ color: "white" }}>
-                Admin Name
+                {active_chatroom ? active_chatroom.partner.id.username : ""}
               </Typography>
             </Grid>
             <Grid item xs={1} className={classes.btnContainer}>

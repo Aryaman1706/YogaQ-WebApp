@@ -1,4 +1,4 @@
-import React, { useEffect, Fragment, useState } from "react";
+import React, { useEffect, Fragment, useState, useRef } from "react";
 import {
   Typography,
   Toolbar,
@@ -14,6 +14,7 @@ import Swal from "sweetalert2";
 import { useHistory, useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { user as userActions } from "../../../redux/actions/index";
+import Loader from "../../Loader";
 
 const useStyles = makeStyles((theme) => ({
   div2: {
@@ -26,22 +27,22 @@ const useStyles = makeStyles((theme) => ({
 const ViewUser = () => {
   const { id } = useParams();
   const history = useHistory();
-  const [compLoading, setCompLoading] = useState(true);
   const { selectUser, error, message } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
+  const [compLoading, setCompLoading] = useState(false);
+  const [loadingBlock, setLoadingBlock] = useState(false);
+  const callCount = useRef(0);
   const start = async () => {
-    // await dispatch(userActions.setLoading(true));
-    // setCompLoading(true);
     await dispatch(userActions.selectUser(id));
     setCompLoading(false);
   };
+
   useEffect(() => {
     if (!id) {
       history.push("/admin/users");
     } else {
       setCompLoading(true);
-      // start();
     }
 
     return () => {
@@ -107,28 +108,43 @@ const ViewUser = () => {
       showDenyButton: true,
       backdrop: true,
     }).then((result) => {
-      if (result.isConfirmed) {
-        const value = {
-          blocked: !selectUser.user.blocked,
-        };
-        dispatch(userActions.blockUser({ id, value }));
+      if (!result.isDenied) {
+        setLoadingBlock(true);
       }
     });
   };
 
-  let callCount = 0;
-  selectUser.chatrooms.forEach((chatroom) => {
-    callCount = callCount + chatroom.call.length;
-  });
+  const click = async () => {
+    const value = {
+      blocked: !selectUser.user.blocked,
+    };
+    await dispatch(userActions.blockUser({ id, value }));
+    setLoadingBlock(false);
+  };
+
+  useEffect(() => {
+    if (loadingBlock) {
+      click();
+    }
+    // eslint-disable-next-line
+  }, [loadingBlock]);
+
+  const getCallCount = () => {
+    let x = 0;
+    selectUser.chatrooms.forEach((chatroom) => {
+      x = x + chatroom.call.length;
+    });
+    callCount.current = x;
+  };
 
   const classes = useStyles();
   return (
     <>
       <Typography variant="h2" align="center">
-        Doctor
+        User
       </Typography>
       <Toolbar></Toolbar>
-      {!compLoading && selectUser ? (
+      {!compLoading && selectUser && !loadingBlock ? (
         <>
           <Grid container direction="row" justify="center" alignItems="stretch">
             <Grid item xs={1} lg={3}></Grid>
@@ -199,6 +215,7 @@ const ViewUser = () => {
                     value={selectUser.user.country}
                   />
                 </Grid>
+                {getCallCount()}
                 <Grid item>
                   <div className={classes.div}>
                     <Typography variant="subtitle1">
@@ -213,7 +230,7 @@ const ViewUser = () => {
                   <div className={classes.div}>
                     <Typography variant="subtitle1">Number of Calls</Typography>
                     <Typography variant="subtitle1" color="secondary">
-                      {callCount}
+                      {callCount.current}
                     </Typography>
                   </div>
                 </Grid>
@@ -268,7 +285,9 @@ const ViewUser = () => {
             <Grid item xs={1} lg={3}></Grid>
           </Grid>
         </>
-      ) : null}
+      ) : (
+        <Loader />
+      )}
     </>
   );
 };

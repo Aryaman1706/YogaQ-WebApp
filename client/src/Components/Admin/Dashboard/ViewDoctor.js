@@ -37,17 +37,14 @@ const ViewDoctor = () => {
   const [compLoading, setCompLoading] = useState(true);
 
   const start = async () => {
-    // await dispatch(doctorActions.setLoading(true));
-    // setCompLoading(true);
     await dispatch(doctorActions.selectDoctor(id));
     setCompLoading(false);
-    console.log("Start");
   };
+
   useEffect(() => {
     if (!id) {
       history.push("/admin/doctors");
     } else {
-      // start();
       setCompLoading(true);
     }
 
@@ -59,7 +56,6 @@ const ViewDoctor = () => {
   }, []);
 
   useEffect(() => {
-    console.log("Comp Loading", compLoading);
     if (compLoading) {
       start();
     }

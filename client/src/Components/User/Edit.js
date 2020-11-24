@@ -12,10 +12,12 @@ import {
 import Swal from "sweetalert2";
 import { useSelector, useDispatch } from "react-redux";
 import { user as userActions } from "../../redux/actions/index";
+import Loader from "../Loader";
 
 const Edit = () => {
   const { error, user, message } = useSelector((state) => state.user);
   const [state, setState] = useState(null);
+  const [compLoading, setCompLoading] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -68,6 +70,10 @@ const Edit = () => {
   };
 
   const submitHandler = (e) => {
+    setCompLoading(true);
+  };
+
+  const submit = async () => {
     const formData = {
       username: state.username,
       phoneNumber: state.phoneNumber,
@@ -75,8 +81,16 @@ const Edit = () => {
       gender: state.gender,
       country: state.country,
     };
-    dispatch(userActions.editProfile(formData));
+    await dispatch(userActions.editProfile(formData));
+    setCompLoading(false);
   };
+
+  useEffect(() => {
+    if (compLoading) {
+      submit();
+    }
+    // eslint-disable-next-line
+  }, [compLoading]);
 
   return (
     <>
@@ -95,7 +109,7 @@ const Edit = () => {
                 Edit Profile
               </Typography>
             </Grid>
-            {state ? (
+            {state && !compLoading ? (
               <>
                 <Grid item>
                   <TextField
@@ -172,7 +186,9 @@ const Edit = () => {
                   </Button>
                 </Grid>
               </>
-            ) : null}
+            ) : (
+              <Loader />
+            )}
           </Grid>
         </Grid>
         <Grid item xs={2} lg={4}></Grid>

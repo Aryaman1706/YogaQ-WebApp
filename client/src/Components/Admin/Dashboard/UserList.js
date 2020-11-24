@@ -7,6 +7,7 @@ import {
   Toolbar,
 } from "@material-ui/core";
 import { ArrowBackIos, ArrowForwardIos } from "@material-ui/icons";
+import Loader from "../../Loader";
 import { useSelector, useDispatch } from "react-redux";
 import { user as userActions } from "../../../redux/actions/index";
 import UserItem from "./UserItem";
@@ -20,7 +21,7 @@ const UserList = () => {
     users: [],
     end: false,
   });
-  const [compLoading, setCompLoading] = useState(true);
+  const [compLoading, setCompLoading] = useState(false);
   const {
     loadedPages,
     currentPage,
@@ -41,7 +42,7 @@ const UserList = () => {
   }, []);
 
   const load = async () => {
-    // await dispatch(userActions.setLoading(true));
+    console.log("Load");
     await dispatch(userActions.listUser(loadedPages));
     setCompLoading(false);
   };
@@ -52,6 +53,7 @@ const UserList = () => {
   }, [loadedPages]);
 
   useEffect(() => {
+    console.log("Comp Loading", compLoading);
     if (compLoading) {
       load();
     }
@@ -126,7 +128,9 @@ const UserList = () => {
       <Grid container direction="row" justify="center" alignItems="stretch">
         <Grid item xs={2} lg={4}></Grid>
         <Grid item xs={8} lg={4}>
-          {compLoading ? null : (
+          {compLoading ? (
+            <Loader />
+          ) : (
             <>
               <Grid
                 container

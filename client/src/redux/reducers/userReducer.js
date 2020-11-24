@@ -12,6 +12,7 @@ import {
   USER_ERROR,
   USER_MESSAGE,
   USER_LOADING,
+  USER_CHATROOM_LOADING,
   CLEAR_USER_ERROR,
 } from "../types";
 
@@ -29,6 +30,7 @@ const defaultState = {
   error: null,
   message: null,
   loading: true,
+  chatroomLoading: false,
 };
 
 const stateHandler = (state = defaultState, action) => {
@@ -78,11 +80,12 @@ const stateHandler = (state = defaultState, action) => {
       return {
         ...state,
         active_chatroom: action.payload,
+        chatroomLoading: false,
       };
     case USER_GET_MESSAGES:
       return {
         ...state,
-        active_chatroom: { ...state, unreadMessages: 0 },
+        active_chatroom: { ...state.active_chatroom, unreadMessages: 0 },
         user_messages: [...action.payload.messages, ...state.user_messages],
         message_end: action.payload.end,
       };
@@ -107,6 +110,11 @@ const stateHandler = (state = defaultState, action) => {
       return {
         ...state,
         loading: action.payload,
+      };
+    case USER_CHATROOM_LOADING:
+      return {
+        ...state,
+        chatroomLoading: action.payload,
       };
     case CLEAR_USER_ERROR:
       return {

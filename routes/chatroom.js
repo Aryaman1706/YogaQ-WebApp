@@ -21,10 +21,10 @@ router.get("/get/:id", chatroom.canGet, controller.get);
 
 // * Get Messages
 // * /messages/:id/?page=1
-router.get("/messages/:id", [chatroom.auth], controller.messages);
+router.get("/messages/:id", chatroom.auth, controller.messages);
 
 // * Modify Last Access
-router.put("/lastAccess/:id", [chatroom.auth], controller.lastAccess);
+router.put("/lastAccess/:id", chatroom.auth, controller.lastAccess);
 
 // * Delete a chatroom
 // Will delete chatroom and its messages and also remove doctor from user.doctors

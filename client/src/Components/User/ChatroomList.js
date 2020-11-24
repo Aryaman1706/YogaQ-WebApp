@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Grid, Typography, makeStyles } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import { user as userActions } from "../../redux/actions/index";
@@ -13,17 +13,26 @@ const useStyles = makeStyles((theme) => ({
 
 const ChatroomList = () => {
   const classes = useStyles();
-  const { chatrooms, loading } = useSelector((state) => state.user);
+  const { chatrooms } = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  const [compLoading, setCompLoading] = useState(false);
 
+  const start = async () => {
+    await dispatch(userActions.listChatrooms());
+    setCompLoading(false);
+  };
   useEffect(() => {
-    const start = async () => {
-      await dispatch(userActions.setLoading(true));
-      dispatch(userActions.listChatrooms());
-    };
-    start();
+    setCompLoading(true);
     // eslint-disable-next-line
   }, []);
+
+  useEffect(() => {
+    if (compLoading) {
+      start();
+    }
+    // eslint-disable-next-line
+  }, [compLoading]);
+
   return (
     <>
       <Grid
@@ -39,7 +48,7 @@ const ChatroomList = () => {
             My ChatRooms
           </Typography>
         </Grid>
-        {!loading ? (
+        {!compLoading ? (
           <>
             {chatrooms.map((item, index) => (
               <ChatroomItem chatroom={item} key={index} />

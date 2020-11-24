@@ -26,8 +26,9 @@ const ChatroomItem = ({ chatroom }) => {
       !active_chatroom ||
       active_chatroom._id.toString() !== chatroom._id.toString()
     ) {
-      await dispatch(userActions.setLoading(true));
-      dispatch(userActions.getChatroom(chatroom._id));
+      await dispatch(userActions.setChatroomLoading(true));
+      await dispatch(userActions.getChatroom(chatroom._id));
+      await dispatch(userActions.setChatroomLoading(false));
     }
   };
   return (
