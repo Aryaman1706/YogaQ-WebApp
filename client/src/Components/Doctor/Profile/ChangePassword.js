@@ -21,6 +21,8 @@ const ChangePassword = () => {
   const [showOld, setShowOld] = useState(false);
   const [showNew, setShowNew] = useState(false);
 
+  const [compLoading, setCompLoading] = useState(false);
+
   const changeHandler = (event) => {
     setState((prev) => {
       return { ...prev, [event.target.id]: event.target.value };
@@ -43,7 +45,14 @@ const ChangePassword = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (error) {
+    return () => {
+      dispatch(doctor.clearError());
+    };
+    // eslint-disable-next-line
+  }, []);
+
+  useEffect(() => {
+    if (/^Validation Error*/i.test(error)) {
       Swal.fire({
         position: "center",
         icon: "error",
@@ -53,7 +62,7 @@ const ChangePassword = () => {
         timer: 1500,
       });
     }
-    if (message) {
+    if (/Password changed successfully*/i.test(message)) {
       Swal.fire({
         position: "center",
         icon: "success",
@@ -63,10 +72,6 @@ const ChangePassword = () => {
         timer: 1500,
       });
     }
-    return () => {
-      dispatch(doctor.clearError());
-    };
-
     // eslint-disable-next-line
   }, [error, message]);
 
@@ -83,7 +88,7 @@ const ChangePassword = () => {
       state.confirmPassword.length <= 20
     ) {
       if (state.newPassword.trim() === state.confirmPassword.trim()) {
-        dispatch(doctor.changePassword(state));
+        setCompLoading(true);
       } else {
         Swal.fire({
           position: "center",
@@ -105,6 +110,18 @@ const ChangePassword = () => {
       });
     }
   };
+
+  const submit = async () => {
+    await dispatch(doctor.changePassword(state));
+    setCompLoading(false);
+  };
+
+  useEffect(() => {
+    if (compLoading) {
+      submit();
+    }
+    // eslint-disable-next-line
+  }, [compLoading]);
 
   return (
     <>

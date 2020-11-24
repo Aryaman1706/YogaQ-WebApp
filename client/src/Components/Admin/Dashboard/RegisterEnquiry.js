@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Typography, Grid, TextField, Button } from "@material-ui/core";
+import Loader from "../../Loader";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { enquiry as enquiryAction } from "../../../redux/actions/index";
@@ -7,6 +8,7 @@ import Swal from "sweetalert2";
 
 const RegisterEnquiry = () => {
   const [password, setPassword] = useState("");
+  const [compLoading, setCompLoading] = useState(false);
   const { enquiry, message, error } = useSelector((state) => state.enquiry);
   const history = useHistory();
   const dispatch = useDispatch();
@@ -64,12 +66,24 @@ const RegisterEnquiry = () => {
       backdrop: false,
     }).then((result) => {
       if (!result.isDenied) {
-        dispatch(
-          enquiryAction.registerEnquiry({ enquiry: enquiry._id, password })
-        );
+        setCompLoading(true);
       }
     });
   };
+
+  const submit = async () => {
+    await dispatch(
+      enquiryAction.registerEnquiry({ enquiry: enquiry._id, password })
+    );
+    setCompLoading(false);
+  };
+
+  useEffect(() => {
+    if (compLoading) {
+      submit();
+    }
+    // eslint-disable-next-line
+  }, [compLoading]);
 
   return (
     <>
@@ -90,35 +104,41 @@ const RegisterEnquiry = () => {
                     Register Enquiry
                   </Typography>
                 </Grid>
-                <Grid item>
-                  <TextField
-                    fullWidth
-                    variant="outlined"
-                    label="Email"
-                    value={enquiry.email}
-                  />
-                </Grid>
-                <Grid item>
-                  <TextField
-                    fullWidth
-                    variant="outlined"
-                    label="Password"
-                    id="password"
-                    type="text"
-                    value={password}
-                    onChange={(event) => changeHandler(event)}
-                  />
-                </Grid>
-                <Grid item>
-                  <Button
-                    fullWidth
-                    variant="contained"
-                    color="primary"
-                    onClick={(event) => submitHandler(event)}
-                  >
-                    Create
-                  </Button>
-                </Grid>
+                {compLoading ? (
+                  <Loader />
+                ) : (
+                  <>
+                    <Grid item>
+                      <TextField
+                        fullWidth
+                        variant="outlined"
+                        label="Email"
+                        value={enquiry.email}
+                      />
+                    </Grid>
+                    <Grid item>
+                      <TextField
+                        fullWidth
+                        variant="outlined"
+                        label="Password"
+                        id="password"
+                        type="text"
+                        value={password}
+                        onChange={(event) => changeHandler(event)}
+                      />
+                    </Grid>
+                    <Grid item>
+                      <Button
+                        fullWidth
+                        variant="contained"
+                        color="primary"
+                        onClick={(event) => submitHandler(event)}
+                      >
+                        Create
+                      </Button>
+                    </Grid>
+                  </>
+                )}
               </Grid>
             </Grid>
             <Grid item xs={3} lg={4}></Grid>

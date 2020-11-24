@@ -6,9 +6,6 @@ const useStyles = makeStyles((theme) => ({
     top: "0",
     backgroundColor: `${theme.palette.primary.main}`,
     position: "sticky",
-    // [theme.breakpoints.only("xs")]: {
-    //   backgroundColor: "black",
-    // },
   },
   appbar: {
     height: "50px",

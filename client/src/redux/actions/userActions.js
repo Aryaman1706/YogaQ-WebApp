@@ -110,7 +110,7 @@ export const getMessages = ({ id, page }) => async (dispatch) => {
 // * Modify Last access
 export const modfiyLastAccess = ({ id, formData }) => async (dispatch) => {
   try {
-    await axios.put(`/lastAccess/${id}`, formData);
+    await axios.put(`/chatroom/lastAccess/${id}`, formData);
     dispatch({
       type: CLEAR_USER_CHATROOM,
       payload: null,

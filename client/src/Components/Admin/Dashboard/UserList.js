@@ -20,6 +20,7 @@ const UserList = () => {
     users: [],
     end: false,
   });
+  const [compLoading, setCompLoading] = useState(true);
   const {
     loadedPages,
     currentPage,
@@ -39,14 +40,23 @@ const UserList = () => {
     // eslint-disable-next-line
   }, []);
 
+  const load = async () => {
+    // await dispatch(userActions.setLoading(true));
+    await dispatch(userActions.listUser(loadedPages));
+    setCompLoading(false);
+  };
   useEffect(() => {
-    const load = async () => {
-      await dispatch(userActions.setLoading(true));
-      await dispatch(userActions.listUser(loadedPages));
-    };
-    load();
+    setCompLoading(true);
+    // load();
     // eslint-disable-next-line
   }, [loadedPages]);
+
+  useEffect(() => {
+    if (compLoading) {
+      load();
+    }
+    // eslint-disable-next-line
+  }, [compLoading]);
 
   useEffect(() => {
     setPagination((prev) => {
@@ -116,7 +126,7 @@ const UserList = () => {
       <Grid container direction="row" justify="center" alignItems="stretch">
         <Grid item xs={2} lg={4}></Grid>
         <Grid item xs={8} lg={4}>
-          {userState.loading ? null : (
+          {compLoading ? null : (
             <>
               <Grid
                 container

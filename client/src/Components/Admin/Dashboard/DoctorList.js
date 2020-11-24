@@ -20,6 +20,7 @@ const DoctorList = () => {
     doctors: [],
     end: false,
   });
+  const [compLoading, setCompLoading] = useState(true);
   const {
     loadedPages,
     currentPage,
@@ -39,14 +40,25 @@ const DoctorList = () => {
     // eslint-disable-next-line
   }, []);
 
+  const load = async () => {
+    // await dispatch(doctorActions.setLoading(true));
+    console.log("Load function");
+    await dispatch(doctorActions.listDoctor(loadedPages));
+    setCompLoading(false);
+  };
   useEffect(() => {
-    const load = async () => {
-      await dispatch(doctorActions.setLoading(true));
-      await dispatch(doctorActions.listDoctor(loadedPages));
-    };
-    load();
+    setCompLoading(true);
+    // load();
     // eslint-disable-next-line
   }, [loadedPages]);
+
+  useEffect(() => {
+    console.log("Comp Loading ", compLoading);
+    if (compLoading) {
+      load();
+    }
+    // eslint-disable-next-line
+  }, [compLoading]);
 
   useEffect(() => {
     setPagination((prev) => {
@@ -116,7 +128,7 @@ const DoctorList = () => {
       <Grid container direction="row" justify="center" alignItems="stretch">
         <Grid item xs={2} lg={4}></Grid>
         <Grid item xs={8} lg={4}>
-          {doctorState.loading ? null : (
+          {compLoading ? null : (
             <>
               <Grid
                 container

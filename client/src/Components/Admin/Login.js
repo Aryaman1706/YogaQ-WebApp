@@ -10,6 +10,7 @@ import {
   IconButton,
 } from "@material-ui/core";
 import { Visibility, VisibilityOff } from "@material-ui/icons";
+import Loader from "../Loader";
 import Swal from "sweetalert2";
 import { admin } from "../../redux/actions";
 
@@ -19,6 +20,7 @@ const Login = () => {
     password: "",
   });
   const [show, setShow] = useState(false);
+  const [compLoading, setCompLoading] = useState(false);
   const { error, isAuthenticated } = useSelector((state) => state.admin);
   const dispatch = useDispatch();
   const history = useHistory();
@@ -70,12 +72,7 @@ const Login = () => {
       user.password.length >= 8 &&
       user.password.length <= 20
     ) {
-      const formData = {
-        username: user.email,
-        password: user.password,
-      };
-      dispatch(admin.loginAdmin(formData));
-      dispatch(admin.setLoading(false)); //? Not Sure
+      setCompLoading(true);
     } else {
       Swal.fire({
         position: "center",
@@ -87,6 +84,22 @@ const Login = () => {
       });
     }
   };
+
+  const submit = async () => {
+    const formData = {
+      username: user.email,
+      password: user.password,
+    };
+    await dispatch(admin.loginAdmin(formData));
+    setCompLoading(false);
+  };
+
+  useEffect(() => {
+    if (compLoading) {
+      submit();
+    }
+    // eslint-disable-next-line
+  }, [compLoading]);
 
   return (
     <>
@@ -105,66 +118,74 @@ const Login = () => {
                 Login as Admin
               </Typography>
             </Grid>
-            <Grid item>
-              <TextField
-                fullWidth
-                label="Email Address"
-                id="email"
-                variant="outlined"
-                value={user.email}
-                onChange={(event) => changeHandler(event)}
-                error={
-                  user.email.length > 0 &&
-                  (user.email.length > 150 || !emailRegex.test(user.email))
-                }
-                helperText={
-                  user.email.length > 0 &&
-                  (user.email.length > 150 || !emailRegex.test(user.email))
-                    ? "Enter Valid Email Address"
-                    : null
-                }
-              />
-            </Grid>
-            <Grid item>
-              <TextField
-                fullWidth
-                type={show ? "text" : "password"}
-                label="Password"
-                id="password"
-                variant="outlined"
-                value={user.password}
-                onChange={(event) => changeHandler(event)}
-                error={
-                  user.password.length > 0 &&
-                  (user.password.length > 20 || user.password.length < 8)
-                }
-                helperText={
-                  user.password.length > 0 &&
-                  (user.password.length > 20 || user.password.length < 8)
-                    ? "Password must be between 8 to 20 characters long."
-                    : null
-                }
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton onClick={(event) => passwordToggle(event)}>
-                        {show ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-              />
-            </Grid>
-            <Grid item>
-              <Button
-                fullWidth
-                variant="contained"
-                color="primary"
-                onClick={(event) => submitHandler(event)}
-              >
-                Login
-              </Button>
-            </Grid>
+            {compLoading ? (
+              <Loader />
+            ) : (
+              <>
+                <Grid item>
+                  <TextField
+                    fullWidth
+                    label="Email Address"
+                    id="email"
+                    variant="outlined"
+                    value={user.email}
+                    onChange={(event) => changeHandler(event)}
+                    error={
+                      user.email.length > 0 &&
+                      (user.email.length > 150 || !emailRegex.test(user.email))
+                    }
+                    helperText={
+                      user.email.length > 0 &&
+                      (user.email.length > 150 || !emailRegex.test(user.email))
+                        ? "Enter Valid Email Address"
+                        : null
+                    }
+                  />
+                </Grid>
+                <Grid item>
+                  <TextField
+                    fullWidth
+                    type={show ? "text" : "password"}
+                    label="Password"
+                    id="password"
+                    variant="outlined"
+                    value={user.password}
+                    onChange={(event) => changeHandler(event)}
+                    error={
+                      user.password.length > 0 &&
+                      (user.password.length > 20 || user.password.length < 8)
+                    }
+                    helperText={
+                      user.password.length > 0 &&
+                      (user.password.length > 20 || user.password.length < 8)
+                        ? "Password must be between 8 to 20 characters long."
+                        : null
+                    }
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            onClick={(event) => passwordToggle(event)}
+                          >
+                            {show ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                </Grid>
+                <Grid item>
+                  <Button
+                    fullWidth
+                    variant="contained"
+                    color="primary"
+                    onClick={(event) => submitHandler(event)}
+                  >
+                    Login
+                  </Button>
+                </Grid>
+              </>
+            )}
           </Grid>
         </Grid>
         <Grid item xs={2} lg={4}></Grid>

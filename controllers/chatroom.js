@@ -92,8 +92,8 @@ exports.get = async (req, res) => {
     // * Set Cookies for subsequent requests
     req.session.active_chatroom = {
       chatroomId: chatroom._id,
-      userId: chatroom.user._id,
-      partnerId: chatroom.partner._id,
+      userId: chatroom.user.id,
+      partnerId: chatroom.partner.id,
     };
 
     const lastAccess =
@@ -123,25 +123,28 @@ exports.get = async (req, res) => {
 // * Get Messages
 exports.messages = async (req, res) => {
   try {
-    const totalMessages = await Message.count({ chatroomId: req.params.id });
-    if ((parseInt(req.query.page, 10) - 1) * 50 < totalMessages) {
-      const messages = await Message.find({ chatroomId: req.params.id })
-        .sort("-time")
-        .skip((parseInt(req.query.page, 10) - 1) * 50)
-        .limit(50)
+    const limit = 5;
+    const totalMessages = await Message.countDocuments({
+      chatroomId: req.params.id,
+    });
+    if ((parseInt(req.query.page, 10) - 1) * limit < totalMessages) {
+      let messages = await Message.find({ chatroomId: req.params.id })
+        .sort("time")
+        .skip((parseInt(req.query.page, 10) - 1) * limit)
+        .limit(limit)
         .exec();
-
+      messages = messages.reverse();
       return res.status(200).json({
         error: null,
         body: {
           messages,
-          end: messages.length < 50,
+          end: messages.length < limit,
         },
       });
     }
-    return res.status(400).json({
+    return res.status(200).json({
       error: null,
-      body: { messages: "No More Messages Found.", end: true },
+      body: { messages: [], end: true },
     });
   } catch (error) {
     console.log("Error occured here\n", error);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   AppBar,
   Toolbar,
@@ -12,8 +12,6 @@ import {
 } from "@material-ui/core";
 import { AccountCircle } from "@material-ui/icons";
 import { useHistory } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { admin as adminActions } from "../../redux/actions";
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -25,12 +23,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Appbar = () => {
+const UserAppbar = ({ isAuthenticated, user }) => {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
   const history = useHistory();
-  const { isAuthenticated, admin } = useSelector((state) => state.admin);
-  const dispatch = useDispatch();
 
   const handleClick = (e) => {
     setAnchorEl(e.currentTarget);
@@ -39,16 +35,6 @@ const Appbar = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const load = async () => {
-    await dispatch(adminActions.setLoading(true));
-    await dispatch(adminActions.loadAdmin());
-    dispatch(adminActions.setLoading(false));
-  };
-  useEffect(() => {
-    load();
-    // eslint-disable-next-line
-  }, []);
-
   return (
     <>
       <AppBar className={classes.appbar}>
@@ -61,9 +47,9 @@ const Appbar = () => {
               history.push("/");
             }}
           >
-            <Typography variant="h6">Admin Panel</Typography>
+            <Typography variant="h6">YogaQ</Typography>
           </Link>
-          {isAuthenticated && admin ? (
+          {isAuthenticated && user ? (
             <>
               <IconButton
                 aria-controls="menu"
@@ -81,24 +67,12 @@ const Appbar = () => {
                 onClose={handleClose}
               >
                 <MenuItem>
-                  <Link
-                    underline="none"
-                    color="inherit"
-                    onClick={(event) => {
-                      history.push("/admin/profile");
-                    }}
-                  >
+                  <Link underline="none" color="inherit">
                     Profile
                   </Link>
                 </MenuItem>
                 <MenuItem>
-                  <Link
-                    underline="none"
-                    color="inherit"
-                    onClick={(event) => {
-                      history.push("/");
-                    }}
-                  >
+                  <Link underline="none" color="inherit">
                     LogOut
                   </Link>
                 </MenuItem>
@@ -107,11 +81,9 @@ const Appbar = () => {
           ) : (
             <Button
               color="inherit"
-              onClick={(event) => {
-                history.push("/");
-              }}
+              href={`${process.env.REACT_APP_SERVER_URL}/api/user/auth`}
             >
-              Login
+              Login with Google
             </Button>
           )}
         </Toolbar>
@@ -121,4 +93,4 @@ const Appbar = () => {
   );
 };
 
-export default Appbar;
+export default UserAppbar;

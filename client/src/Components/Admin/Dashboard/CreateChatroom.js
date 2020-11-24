@@ -9,6 +9,7 @@ import {
   Button,
   Typography,
 } from "@material-ui/core";
+import Loader from "../../Loader";
 import Swal from "sweetalert2";
 import { useSelector, useDispatch } from "react-redux";
 import { admin as adminActions } from "../../../redux/actions/index";
@@ -20,6 +21,7 @@ const CreateChatroom = () => {
     partnerModel: "Doctor",
   });
   const { error, message } = useSelector((state) => state.admin);
+  const [compLoading, setCompLoading] = useState(false);
   const dispatch = useDispatch();
 
   const changeHandler = (e) => {
@@ -84,11 +86,24 @@ const CreateChatroom = () => {
       showDenyButton: true,
       backdrop: true,
     }).then((result) => {
-      if (result.isConfirmed) {
-        dispatch(adminActions.createChatroom({ ...details, blocked: false }));
+      if (!result.isDenied) {
+        setCompLoading(true);
       }
     });
   };
+
+  const submit = async () => {
+    await dispatch(adminActions.createChatroom({ ...details, blocked: false }));
+    setCompLoading(false);
+  };
+
+  useEffect(() => {
+    if (compLoading) {
+      submit();
+    }
+    // eslint-disable-next-line
+  }, [compLoading]);
+
   return (
     <>
       <Grid container direction="row" justify="center" alignItems="stretch">
@@ -106,60 +121,66 @@ const CreateChatroom = () => {
                 Create Chatroom
               </Typography>
             </Grid>
-            <Grid item>
-              <Typography variant="h6" align="left">
-                User Details
-              </Typography>
-            </Grid>
-            <Grid item>
-              <TextField
-                fullWidth
-                variant="outlined"
-                label="User Email Id"
-                id="user"
-                value={details.user}
-                onChange={(event) => changeHandler(event)}
-              />
-            </Grid>
-            <Grid item>
-              <Typography variant="h6" align="left">
-                Partner Details
-              </Typography>
-            </Grid>
-            <Grid item>
-              <TextField
-                fullWidth
-                variant="outlined"
-                label="Partner Email Id"
-                id="partner"
-                value={details.partner}
-                onChange={(event) => changeHandler(event)}
-              />
-            </Grid>
-            <Grid item>
-              <FormControl variant="outlined" fullWidth>
-                <InputLabel id="partnerModel">Role</InputLabel>
-                <Select
-                  labelId="partnerModel"
-                  id="partnerModel"
-                  value={details.partnerModel}
-                  onChange={(event) => selectHandler(event)}
-                >
-                  <MenuItem value="Doctor">Doctor</MenuItem>
-                  <MenuItem value="Admin">Admin</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item>
-              <Button
-                fullWidth
-                variant="contained"
-                color="primary"
-                onClick={(event) => submitHandler(event)}
-              >
-                Create
-              </Button>
-            </Grid>
+            {compLoading ? (
+              <Loader />
+            ) : (
+              <>
+                <Grid item>
+                  <Typography variant="h6" align="left">
+                    User Details
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <TextField
+                    fullWidth
+                    variant="outlined"
+                    label="User Email Id"
+                    id="user"
+                    value={details.user}
+                    onChange={(event) => changeHandler(event)}
+                  />
+                </Grid>
+                <Grid item>
+                  <Typography variant="h6" align="left">
+                    Partner Details
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <TextField
+                    fullWidth
+                    variant="outlined"
+                    label="Partner Email Id"
+                    id="partner"
+                    value={details.partner}
+                    onChange={(event) => changeHandler(event)}
+                  />
+                </Grid>
+                <Grid item>
+                  <FormControl variant="outlined" fullWidth>
+                    <InputLabel id="partnerModel">Role</InputLabel>
+                    <Select
+                      labelId="partnerModel"
+                      id="partnerModel"
+                      value={details.partnerModel}
+                      onChange={(event) => selectHandler(event)}
+                    >
+                      <MenuItem value="Doctor">Doctor</MenuItem>
+                      <MenuItem value="Admin">Admin</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item>
+                  <Button
+                    fullWidth
+                    variant="contained"
+                    color="primary"
+                    onClick={(event) => submitHandler(event)}
+                  >
+                    Create
+                  </Button>
+                </Grid>
+              </>
+            )}
           </Grid>
         </Grid>
         <Grid item xs={2} lg={4}></Grid>

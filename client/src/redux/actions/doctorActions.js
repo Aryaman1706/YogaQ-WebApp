@@ -22,10 +22,9 @@ export const loginDoctor = (formData) => async (dispatch) => {
       payload: res.data.body,
     });
   } catch (error) {
-    console.log(error);
     dispatch({
       type: DOCTOR_ERROR,
-      payload: error.response.data.error,
+      payload: error.response.data?.error,
     });
   }
 };
