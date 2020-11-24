@@ -24,20 +24,17 @@ const stateHandler = (state = defaultState, action) => {
         ...state,
         list: [...state.list, ...action.payload.enquiries],
         end: action.payload.end,
-        loading: false,
       };
     case SELECT_ENQUIRY:
       return {
         ...state,
         enquiry: action.payload,
-        loading: action.payload ? false : true,
       };
     case CLEAR_ENQUIRY_LIST:
       return {
         ...state,
         list: [],
         end: false,
-        loading: true,
       };
     case ENQUIRY_ERROR:
       return {

@@ -218,7 +218,9 @@ exports.editProfile = async (req, res) => {
       req.user._id,
       { ...value },
       { new: true }
-    );
+    )
+      .select("username email restricted role")
+      .exec();
     if (!doctor)
       return res.status(400).json({ error: "Invalid Account.", body: null });
 

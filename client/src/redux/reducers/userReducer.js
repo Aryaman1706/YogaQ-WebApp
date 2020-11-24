@@ -56,40 +56,35 @@ const stateHandler = (state = defaultState, action) => {
       return {
         ...state,
         chatrooms: action.payload,
-        loading: false,
       };
     case LIST_USER:
       return {
         ...state,
         list: [...state.list, ...action.payload.users],
         end: action.payload.end,
-        loading: false,
       };
     case CLEAR_USER_LIST:
       return {
         ...state,
         list: [],
         end: false,
-        loading: true,
       };
     case SELECT_USER:
       return {
         ...state,
         selectUser: action.payload,
-        loading: action.payload ? false : true,
       };
     case SELECT_CHATROOM_USER:
       return {
         ...state,
         active_chatroom: action.payload,
-        loading: false,
       };
     case USER_GET_MESSAGES:
       return {
         ...state,
+        active_chatroom: { ...state, unreadMessages: 0 },
         user_messages: [...action.payload.messages, ...state.user_messages],
         message_end: action.payload.end,
-        loading: false,
       };
     case CLEAR_USER_CHATROOM:
       return {

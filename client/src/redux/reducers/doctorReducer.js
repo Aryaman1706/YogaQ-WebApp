@@ -46,7 +46,6 @@ const stateHandler = (state = defaultState, action) => {
         ]),
         completeProfile: action.payload,
         isAuthenticated: true,
-        loading: false,
       };
     case EDIT_DOCTOR:
       return {
@@ -59,20 +58,17 @@ const stateHandler = (state = defaultState, action) => {
         ...state,
         list: [...state.list, ...action.payload.doctors],
         end: action.payload.end,
-        loading: false,
       };
     case CLEAR_DOCTOR_LIST:
       return {
         ...state,
         list: [],
         end: false,
-        loading: true,
       };
     case SELECT_DOCTOR:
       return {
         ...state,
         selectDoctor: action.payload,
-        loading: action.payload ? false : true,
       };
     case DOCTOR_ERROR:
       return {
