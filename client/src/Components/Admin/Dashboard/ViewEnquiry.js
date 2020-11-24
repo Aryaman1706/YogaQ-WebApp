@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import {
   Grid,
   Toolbar,
@@ -30,26 +30,36 @@ const ViewEnquiry = () => {
   const history = useHistory();
   const classes = useStyles();
   const dispatch = useDispatch();
-  const { loading, enquiry, error, message } = useSelector(
-    (state) => state.enquiry
-  );
+  const { enquiry, error, message } = useSelector((state) => state.enquiry);
+  const [compLoading, setCompLoading] = useState(true);
 
+  const start = async () => {
+    // await dispatch(enquiryActions.setLoading(true));
+    // setCompLoading(true);
+    await dispatch(enquiryActions.selectEnquiry(id));
+    setCompLoading(false);
+
+    // await dispatch(enquiryActions.setLoading(false));
+  };
   useEffect(() => {
-    const start = async () => {
-      await dispatch(enquiryActions.setLoading(true));
-      await dispatch(enquiryActions.selectEnquiry(id));
-      await dispatch(enquiryActions.setLoading(false));
-    };
     if (!id) {
       history.push("/admin/enquiries");
     } else {
-      start();
+      setCompLoading(true);
+      // start();
     }
     return () => {
       dispatch(enquiryActions.clear());
     };
     // eslint-disable-next-line
   }, []);
+
+  useEffect(() => {
+    if (compLoading) {
+      start();
+    }
+    // eslint-disable-next-line
+  }, [compLoading]);
 
   useEffect(() => {
     if (/Enquiry not found*/i.test(error)) {
@@ -106,7 +116,7 @@ const ViewEnquiry = () => {
         Enquiry
       </Typography>
       <Toolbar></Toolbar>
-      {!loading && enquiry ? (
+      {!compLoading && enquiry ? (
         <>
           <Grid container direction="row" justify="center" alignItems="stretch">
             <Grid item xs={1} lg={3}></Grid>

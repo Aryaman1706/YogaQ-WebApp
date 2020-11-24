@@ -1,4 +1,4 @@
-import React, { useEffect, Fragment } from "react";
+import React, { useEffect, Fragment, useState } from "react";
 import {
   Typography,
   Toolbar,
@@ -26,20 +26,22 @@ const useStyles = makeStyles((theme) => ({
 const ViewUser = () => {
   const { id } = useParams();
   const history = useHistory();
-  const { loading, selectUser, error, message } = useSelector(
-    (state) => state.user
-  );
+  const [compLoading, setCompLoading] = useState(true);
+  const { selectUser, error, message } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
+  const start = async () => {
+    // await dispatch(userActions.setLoading(true));
+    // setCompLoading(true);
+    await dispatch(userActions.selectUser(id));
+    setCompLoading(false);
+  };
   useEffect(() => {
-    const start = async () => {
-      await dispatch(userActions.setLoading(true));
-      await dispatch(userActions.selectUser(id));
-    };
     if (!id) {
       history.push("/admin/users");
     } else {
-      start();
+      setCompLoading(true);
+      // start();
     }
 
     return () => {
@@ -48,6 +50,13 @@ const ViewUser = () => {
     };
     // eslint-disable-next-line
   }, []);
+
+  useEffect(() => {
+    if (compLoading) {
+      start();
+    }
+    // eslint-disable-next-line
+  }, [compLoading]);
 
   useEffect(() => {
     if (/^User not found*/i.test(error)) {
@@ -119,7 +128,7 @@ const ViewUser = () => {
         Doctor
       </Typography>
       <Toolbar></Toolbar>
-      {!loading && selectUser ? (
+      {!compLoading && selectUser ? (
         <>
           <Grid container direction="row" justify="center" alignItems="stretch">
             <Grid item xs={1} lg={3}></Grid>

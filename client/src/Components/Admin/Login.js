@@ -61,6 +61,12 @@ const Login = () => {
     });
   };
 
+  const submit = async (formData) => {
+    await dispatch(admin.setLoading(true));
+    await dispatch(admin.loginAdmin(formData));
+    dispatch(admin.setLoading(false));
+  };
+
   const submitHandler = (event) => {
     if (
       user.email.length > 0 &&
@@ -74,8 +80,7 @@ const Login = () => {
         username: user.email,
         password: user.password,
       };
-      dispatch(admin.loginAdmin(formData));
-      dispatch(admin.setLoading(false)); //? Not Sure
+      submit(formData);
     } else {
       Swal.fire({
         position: "center",

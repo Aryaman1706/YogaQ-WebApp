@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
-import { makeStyles } from "@material-ui/core";
+import { Box, makeStyles, Grid, CircularProgress } from "@material-ui/core";
 import { useSelector } from "react-redux";
 import MessageList from "./MessageList";
 
 const useStyles = makeStyles((theme) => ({
   container: {
-    padding: "10px 15px 10px 15px",
+    height: "100%",
   },
 }));
 
@@ -24,21 +24,30 @@ const Chatroom = () => {
     if (!loading && active_chatroom) {
       return (
         <>
-          <h1>Open Chatroom is {active_chatroom._id}</h1>
           <MessageList />
         </>
       );
     }
     if (loading && !active_chatroom) {
-      return <h1>Loading...</h1>;
+      return (
+        <>
+          <Grid
+            container
+            direction="column"
+            alignItems="center"
+            justify="center"
+            className={classes.container}
+          >
+            <Grid item xs={3}>
+              <CircularProgress />
+            </Grid>
+          </Grid>
+        </>
+      );
     }
   };
 
-  return (
-    <>
-      <div className={classes.container}>{render()}</div>
-    </>
-  );
+  return <>{render()}</>;
 };
 
 export default Chatroom;

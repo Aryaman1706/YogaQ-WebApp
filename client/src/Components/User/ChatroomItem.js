@@ -11,6 +11,10 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "space-between",
   },
+  item: {
+    paddingLeft: "0px",
+    paddingRight: "0px",
+  },
 }));
 
 const ChatroomItem = ({ chatroom }) => {

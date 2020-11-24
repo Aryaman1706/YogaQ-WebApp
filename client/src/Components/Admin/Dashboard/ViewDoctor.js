@@ -31,19 +31,24 @@ const useStyles = makeStyles((theme) => ({
 const ViewDoctor = () => {
   const { id } = useParams();
   const history = useHistory();
-  const { loading, selectDoctor, error } = useSelector((state) => state.doctor);
+  const { selectDoctor, error } = useSelector((state) => state.doctor);
   const dispatch = useDispatch();
   const [full, setFull] = useState(false);
+  const [compLoading, setCompLoading] = useState(true);
 
+  const start = async () => {
+    // await dispatch(doctorActions.setLoading(true));
+    // setCompLoading(true);
+    await dispatch(doctorActions.selectDoctor(id));
+    setCompLoading(false);
+    console.log("Start");
+  };
   useEffect(() => {
-    const start = async () => {
-      await dispatch(doctorActions.setLoading(true));
-      await dispatch(doctorActions.selectDoctor(id));
-    };
     if (!id) {
       history.push("/admin/doctors");
     } else {
-      start();
+      // start();
+      setCompLoading(true);
     }
 
     return () => {
@@ -52,6 +57,14 @@ const ViewDoctor = () => {
     };
     // eslint-disable-next-line
   }, []);
+
+  useEffect(() => {
+    console.log("Comp Loading", compLoading);
+    if (compLoading) {
+      start();
+    }
+    // eslint-disable-next-line
+  }, [compLoading]);
 
   useEffect(() => {
     if (/^Doctor not found*/i.test(error)) {
@@ -82,7 +95,7 @@ const ViewDoctor = () => {
         Doctor
       </Typography>
       <Toolbar></Toolbar>
-      {!loading && selectDoctor ? (
+      {!compLoading && selectDoctor ? (
         <>
           <Grid container direction="row" justify="center" alignItems="stretch">
             <Grid item xs={1} lg={3}></Grid>

@@ -29,6 +29,7 @@ import DoctorLogin from "../Pages/Doctor/LoginPage";
 
 // * User
 import Home from "../Pages/Home";
+import Room from "../Pages/Room";
 import Signup from "../Pages/Signup";
 import EditUser from "../Components/User/Edit";
 import Chat from "../Components/User/Chat";
@@ -100,6 +101,7 @@ const Routes = () => {
         <Route exact path="/signup" component={Signup} />
         <Route userComplete exact path="/edit" component={EditUser} />
         <Route exact path="/chat/:id" component={Chat} />
+        <Route exact path="/room" component={Room} />
       </Switch>
     </>
   );

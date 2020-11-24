@@ -1,49 +1,24 @@
-import React, { useState, useEffect } from "react";
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  Button,
-  IconButton,
-  makeStyles,
-  Menu,
-  MenuItem,
-  Link,
-} from "@material-ui/core";
-import { AccountCircle } from "@material-ui/icons";
+import React, { useEffect } from "react";
+import ChatroomAppbar from "./CharoomAppbar";
 import { useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { user as userAction } from "../../redux/actions";
-
-const useStyles = makeStyles((theme) => ({
-  title: {
-    flexGrow: 1,
-  },
-  appbar: {
-    top: "0",
-    position: "sticky",
-  },
-}));
+import UserAppbar from "./UserAppbar";
 
 const Appbar = () => {
-  const classes = useStyles();
-  const [anchorEl, setAnchorEl] = useState(null);
   const history = useHistory();
   const { isAuthenticated, user, error, query } = useSelector(
     (state) => state.user
   );
   const dispatch = useDispatch();
-
-  const handleClick = (e) => {
-    setAnchorEl(e.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
+  const load = async () => {
+    await dispatch(userAction.setLoading(true));
+    await dispatch(userAction.loadUser());
+    await dispatch(userAction.setLoading(false));
   };
 
   useEffect(() => {
-    dispatch(userAction.loadUser());
+    load();
     // eslint-disable-next-line
   }, []);
 
@@ -56,63 +31,17 @@ const Appbar = () => {
     }
     // eslint-disable-next-line
   }, [error, query]);
+  const x = history.location.pathname;
 
-  return (
-    <>
-      <AppBar className={classes.appbar}>
-        <Toolbar>
-          <Link
-            underline="none"
-            color="inherit"
-            className={classes.title}
-            onClick={(event) => {
-              history.push("/");
-            }}
-          >
-            <Typography variant="h6">YogaQ</Typography>
-          </Link>
-          {isAuthenticated && user ? (
-            <>
-              <IconButton
-                aria-controls="menu"
-                aria-haspopup="true"
-                onClick={handleClick}
-                color="inherit"
-              >
-                <AccountCircle />
-              </IconButton>
-              <Menu
-                id="menu"
-                keepMounted
-                anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
-                onClose={handleClose}
-              >
-                <MenuItem>
-                  <Link underline="none" color="inherit">
-                    Profile
-                  </Link>
-                </MenuItem>
-                <MenuItem>
-                  <Link underline="none" color="inherit">
-                    LogOut
-                  </Link>
-                </MenuItem>
-              </Menu>
-            </>
-          ) : (
-            <Button
-              color="inherit"
-              href={`${process.env.REACT_APP_SERVER_URL}/api/user/auth`}
-            >
-              Login with Google
-            </Button>
-          )}
-        </Toolbar>
-      </AppBar>
-      <Toolbar></Toolbar>
-    </>
-  );
+  const render = () => {
+    if (!/\/user*/.test(x) && isAuthenticated && user) {
+      return <ChatroomAppbar user={user} />;
+    } else {
+      return <UserAppbar isAuthenticated={isAuthenticated} user={user} />;
+    }
+  };
+
+  return <>{render()}</>;
 };
 
 export default Appbar;

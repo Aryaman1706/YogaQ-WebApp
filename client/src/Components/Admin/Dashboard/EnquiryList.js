@@ -20,6 +20,7 @@ const EnquiryList = () => {
     enquiries: [],
     end: false,
   });
+  const [compLoading, setCompLoading] = useState(true);
   const {
     loadedPages,
     currentPage,
@@ -38,14 +39,23 @@ const EnquiryList = () => {
     // eslint-disable-next-line
   }, []);
 
+  const load = async () => {
+    // setCompLoading(true);
+    await dispatch(enquiryActions.listEnquiries(loadedPages));
+    setCompLoading(false);
+  };
   useEffect(() => {
-    const load = async () => {
-      await dispatch(enquiryActions.setLoading(true));
-      dispatch(enquiryActions.listEnquiries(loadedPages));
-    };
-    load();
+    setCompLoading(true);
+    // load();
     // eslint-disable-next-line
   }, [loadedPages]);
+
+  useEffect(() => {
+    if (compLoading) {
+      load();
+    }
+    // eslint-disable-next-line
+  }, [compLoading]);
 
   useEffect(() => {
     setPagination((prev) => {
@@ -115,7 +125,7 @@ const EnquiryList = () => {
       <Grid container direction="row" justify="center" alignItems="stretch">
         <Grid item xs={2} lg={4}></Grid>
         <Grid item xs={8} lg={4}>
-          {enquiryState.loading ? null : (
+          {compLoading ? null : (
             <>
               <Grid
                 container

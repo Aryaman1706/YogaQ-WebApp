@@ -1,10 +1,18 @@
 import React, { useEffect } from "react";
-import { Grid, Typography } from "@material-ui/core";
+import { Grid, Typography, makeStyles } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import { user as userActions } from "../../redux/actions/index";
 import ChatroomItem from "./ChatroomItem";
 
+const useStyles = makeStyles((theme) => ({
+  container: {
+    width: "100%",
+    margin: "auto",
+  },
+}));
+
 const ChatroomList = () => {
+  const classes = useStyles();
   const { chatrooms, loading } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
@@ -23,7 +31,8 @@ const ChatroomList = () => {
         direction="column"
         justify="flex-start"
         alignItems="stretch"
-        spacing={3}
+        spacing={4}
+        className={classes.container}
       >
         <Grid item>
           <Typography variant="h5" align="left">
