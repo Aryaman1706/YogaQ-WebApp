@@ -8,6 +8,7 @@ import {
   SELECT_USER,
   SELECT_CHATROOM_USER,
   USER_GET_MESSAGES,
+  APPEND_USER_MESSAGE,
   USER_ERROR,
   USER_MESSAGE,
   USER_LOADING,
@@ -106,6 +107,14 @@ export const getMessages = ({ id, page }) => async (dispatch) => {
       payload: error.response.data.error,
     });
   }
+};
+
+// * Send/Recieve Message
+export const appendMessage = (data) => async (dispatch) => {
+  dispatch({
+    type: APPEND_USER_MESSAGE,
+    payload: data,
+  });
 };
 
 // * Modify Last access

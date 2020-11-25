@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
     borderLeft: "0px",
     padding: "15px 10px 15px 10px",
     height: "calc(100vh - 50px)",
-    overflow: "auto",
+    overflowY: "auto",
   },
   itemB: {
     padding: "15px 10px 15px 10px",

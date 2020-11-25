@@ -1,5 +1,4 @@
 exports.auth = async (req, res, next) => {
-  console.log(req.user, req.user._id.toString());
   if (
     req.session.active_chatroom &&
     req.session.active_chatroom.chatroomId.toString() ===
@@ -12,15 +11,11 @@ exports.auth = async (req, res, next) => {
     return next();
   }
 
-  // return res.redirect(
-  //   `${process.env.SERVER_URL}/api/chatroom/get/${req.params.id}`
-  // );
   return res.status(400).json({ error: "Get chatroom first.", body: null });
 };
 
 exports.canGet = async (req, res, next) => {
   try {
-    console.log(req.user);
     if (req.user) {
       return next();
     }

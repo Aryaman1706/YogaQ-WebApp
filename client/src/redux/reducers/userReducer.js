@@ -8,6 +8,7 @@ import {
   SELECT_USER,
   SELECT_CHATROOM_USER,
   USER_GET_MESSAGES,
+  APPEND_USER_MESSAGE,
   CLEAR_USER_CHATROOM,
   USER_ERROR,
   USER_MESSAGE,
@@ -86,8 +87,13 @@ const stateHandler = (state = defaultState, action) => {
       return {
         ...state,
         active_chatroom: { ...state.active_chatroom, unreadMessages: 0 },
-        user_messages: [...action.payload.messages, ...state.user_messages],
+        user_messages: [...state.user_messages, ...action.payload.messages],
         message_end: action.payload.end,
+      };
+    case APPEND_USER_MESSAGE:
+      return {
+        ...state,
+        user_messages: [action.payload, ...state.user_messages],
       };
     case CLEAR_USER_CHATROOM:
       return {

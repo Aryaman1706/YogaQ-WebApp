@@ -128,12 +128,11 @@ exports.messages = async (req, res) => {
       chatroomId: req.params.id,
     });
     if ((parseInt(req.query.page, 10) - 1) * limit < totalMessages) {
-      let messages = await Message.find({ chatroomId: req.params.id })
-        .sort("time")
+      const messages = await Message.find({ chatroomId: req.params.id })
+        .sort("-time")
         .skip((parseInt(req.query.page, 10) - 1) * limit)
         .limit(limit)
         .exec();
-      messages = messages.reverse();
       return res.status(200).json({
         error: null,
         body: {

@@ -4,9 +4,21 @@ import Linkify from "react-linkify";
 
 const useStyles = makeStyles((theme) => ({
   sent: {
-    backgroundColor: "green",
+    backgroundColor: "lightgreen",
+    padding: "10px 15px 10px 15px",
+    borderRadius: "20px",
+    height: "100%",
+    display: "flex",
+    placeItems: "center",
   },
-  recieve: {},
+  recieve: {
+    backgroundColor: "lightblue",
+    padding: "10px 15px 10px 15px",
+    borderRadius: "20px",
+    height: "100%",
+    display: "flex",
+    placeItems: "center",
+  },
 }));
 
 const MessageItem = ({ message, id }) => {
@@ -19,14 +31,39 @@ const MessageItem = ({ message, id }) => {
       message.urlEmbeds.description
     ) {
       return (
-        <Grid container direction="row">
-          <Grid item>
-            <Grid container direction="column">
-              <Grid item>Title</Grid>
-              <Grid item>Description</Grid>
+        <Grid item>
+          <Grid
+            container
+            direction="row"
+            justify="space-around"
+            alignItems="stretch"
+          >
+            <Grid item xs={6}>
+              <Grid
+                container
+                direction="column"
+                justify="center"
+                alignItems="stretch"
+                spacing={1}
+              >
+                <Grid item>{message.urlEmbeds.title}</Grid>
+                <Grid item>{message.urlEmbeds.description}</Grid>
+              </Grid>
+            </Grid>
+            <Grid item xs={4} style={{ display: "flex", placeItems: "center" }}>
+              <img
+                src={message.urlEmbeds.image}
+                style={{
+                  display: "block",
+                  height: "100px",
+                  objectFit: "cover",
+                  maxWidth: "100%",
+                  margin: "auto",
+                }}
+                alt=""
+              />
             </Grid>
           </Grid>
-          <Grid item>Image</Grid>
         </Grid>
       );
     } else {
@@ -37,18 +74,17 @@ const MessageItem = ({ message, id }) => {
   return (
     <>
       <Grid item>
-        <p>hey</p>
-        {/* <Grid
+        <Grid
           container
-          spacing={2}
+          spacing={0}
           justify={
             message.sender.id.toString() === id.toString()
               ? "flex-end"
               : "flex-start"
           }
-          style={{ width: "100%" }}
+          style={{ width: "100%", height: "100%" }}
         >
-          <Grid item>
+          <Grid item xs={8}>
             <Paper
               elevation={0}
               className={
@@ -57,17 +93,31 @@ const MessageItem = ({ message, id }) => {
                   : classes.recieve
               }
             >
-              {embeds()}
-              <Linkify>{message.text}</Linkify>
-              <p>Hey</p>
-              <p>Hey</p>
-              <p>Hey</p>
-              <Typography variant="caption" align="right">
-                {new Date(message.time).toLocaleString()}
-              </Typography>
+              <Grid
+                container
+                direction="column"
+                justify="center"
+                alignItems="stretch"
+                spacing={1}
+              >
+                {embeds()}
+                <Grid item>
+                  <Linkify>
+                    <Typography variant="body1" align="left">
+                      {message.text}
+                    </Typography>
+                  </Linkify>
+                </Grid>
+                <Grid item>
+                  <Typography variant="caption" display="block" align="right">
+                    {new Date(message.time).toLocaleString()}
+                  </Typography>
+                </Grid>
+              </Grid>
             </Paper>
           </Grid>
-        </Grid> */}
+          <Grid item xs={4}></Grid>
+        </Grid>
       </Grid>
     </>
   );

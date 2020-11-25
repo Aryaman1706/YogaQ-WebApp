@@ -1,28 +1,35 @@
-import React, { useState, useEffect, useRef, Fragment } from "react";
-import { TextField, Grid, makeStyles } from "@material-ui/core";
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import { TextField, Grid, makeStyles, Button } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import { user as userActions } from "../../redux/actions/index";
-import InfiniteScroll from "react-infinite-scroll-component";
 import MessageItem from "./MessageItem";
 import Loader from "../Loader";
+import getUrls from "get-urls";
+import io from "socket.io-client";
 
 const useStyles = makeStyles((theme) => ({
-  parent: {
-    bottom: "5px",
-    position: "sticky",
-    width: "100%",
-  },
-  test: {
-    height: "calc(100% - 65px)",
-    overflow: "auto",
-    "&>div": {
-      height: "100%",
-    },
+  scrollDiv: {
+    height: "calc(100vh - 140px)",
+    overflowY: "auto",
   },
 }));
 
 const MessageList = () => {
   const classes = useStyles();
+
+  // * Socket Setup
+  const ENDPOINT = "http://localhost:5000";
+  const socket = useRef();
+  useEffect(() => {
+    socket.current = io(ENDPOINT);
+    socket.current.emit("join", active_chatroom._id);
+
+    socket.current.on("toClient", (message) => {
+      dispatch(userActions.appendMessage(message));
+    });
+    // eslint-disable-next-line
+  }, []);
+
   const {
     user_messages,
     message_end,
@@ -32,37 +39,28 @@ const MessageList = () => {
     chatroomLoading,
   } = useSelector((state) => state.user);
   const dispatch = useDispatch();
-  const [page, setPage] = useState(1);
-  const ref = useRef(null);
 
-  const loadMore = async () => {
-    await dispatch(userActions.getMessages({ id: active_chatroom._id, page }));
-  };
+  const [page, setPage] = useState(0);
+  const [messageLoading, setMessageLoading] = useState(false);
+  const [message, setMessage] = useState("");
 
-  useEffect(() => {
-    loadMore();
-    // eslint-disable-next-line
-  }, [page]);
+  const observer = useRef();
+  const lastMessage = useRef(null);
+  const firstMessage = useCallback(
+    (node) => {
+      if (messageLoading) return;
+      if (observer.current) observer.current.disconnect();
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && !message_end) {
+          nextHandler();
+        }
+      });
+      if (node) observer.current.observe(node);
+    },
+    [messageLoading, message_end]
+  );
 
-  useEffect(() => {
-    return () => {
-      dispatch(
-        userActions.modfiyLastAccess({
-          id: active_chatroom._id,
-          formData: { lastAccess: new Date() },
-        })
-      );
-    };
-    // eslint-disable-next-line
-  }, []);
-
-  useEffect(() => {
-    if (user_messages.length === 5) {
-      ref.current && ref.current.scrollIntoView({ behavior: "smooth" });
-    }
-    // eslint-disable-next-line
-  }, [user_messages]);
-
+  // * Load Chatroom if error
   const loadChatroom = async () => {
     await dispatch(userActions.setChatroomLoading(true));
     await dispatch(userActions.getChatroom(active_chatroom._id));
@@ -76,15 +74,100 @@ const MessageList = () => {
     // eslint-disable-next-line
   }, [error]);
 
+  // * Clear
+  useEffect(() => {
+    return () => {
+      dispatch(
+        userActions.modfiyLastAccess({
+          id: active_chatroom._id,
+          formData: { lastAccess: new Date() },
+        })
+      );
+    };
+    // eslint-disable-next-line
+  }, []);
+
+  // * Scroll to bottom
+  useEffect(() => {
+    lastMessage.current && lastMessage.current.scrollIntoView();
+  }, [user_messages]);
+
+  // * Load More Messages
   const nextHandler = () => {
-    setPage((prev) => {
-      return prev + 1;
-    });
+    console.log("next");
+    setMessageLoading(true);
+  };
+
+  useEffect(() => {
+    if (messageLoading) {
+      setPage((prev) => prev + 1);
+    }
+    // eslint-disable-next-line
+  }, [messageLoading]);
+
+  const loadMore = async () => {
+    if (page > 0) {
+      await dispatch(
+        userActions.getMessages({ id: active_chatroom._id, page })
+      );
+      setMessageLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!message_end) {
+      loadMore();
+    }
+    // eslint-disable-next-line
+  }, [page]);
+
+  const typing = (e) => {
+    setMessage(e.target.value);
+  };
+
+  function lastLink(set) {
+    let value;
+    for (value of set);
+    return value;
+  }
+
+  const sendMessage = () => {
+    if (/\S/.test(message.trim())) {
+      const data = {
+        sender: {
+          id: user._id,
+          model: user.role.trim().replace(/^\w/, (char) => char.toUpperCase()),
+        },
+        message: {
+          text: message.trim(),
+          link: lastLink(getUrls(message.trim()))
+            ? lastLink(getUrls(message.trim()))
+            : null,
+        },
+      };
+      setMessage("");
+      dispatch(
+        userActions.appendMessage({
+          chatroomId: active_chatroom._id,
+          sender: data.sender,
+          text: data.message.text,
+          link: data.message.link,
+          file: null,
+          urlEmbeds: {
+            title: null,
+            description: null,
+            image: null,
+          },
+          time: new Date(),
+        })
+      );
+      socket.current.emit("toServer", data);
+    }
   };
 
   return (
     <>
-      {chatroomLoading ? (
+      {chatroomLoading && !active_chatroom ? (
         <Loader />
       ) : (
         <Grid
@@ -92,43 +175,44 @@ const MessageList = () => {
           direction="column"
           justify="flex-start"
           alignItems="stretch"
-          spacing={1}
-          style={{ height: "100%" }}
+          spacing={2}
+          style={{ overflow: "hidden" }}
         >
-          <Grid item className={classes.test}>
-            <InfiniteScroll
-              dataLength={1}
-              next={nextHandler}
-              hasMore={!message_end}
-              // loader={<h2>Loading...</h2>}
-              // endMessage={<h2>No more Messages</h2>}
-              height="100%"
-              inverse
+          <Grid item className={classes.scrollDiv}>
+            <Grid
+              container
+              direction="column-reverse"
+              justify="center"
+              alignItems="stretch"
+              spacing={2}
             >
-              <Grid
-                container
-                direction="column"
-                justify="flex-end"
-                alignItems="stretch"
-                style={{ height: "100%" }}
-              >
-                {user_messages.length > 0 &&
-                  user_messages.reverse().map((item) => {
-                    return <MessageItem message={item} id={user._id} />;
-                  })}
-              </Grid>
-            </InfiniteScroll>
+              <div ref={lastMessage}></div>
+              {user_messages.length > 0 &&
+                user_messages.map((item) => {
+                  return <MessageItem message={item} id={user._id} />;
+                })}
+              <div ref={firstMessage}></div>
+            </Grid>
           </Grid>
-          <Grid
-            item
-            style={{ position: "sticky", bottom: "0px", width: "100%" }}
-            ref={ref}
-          >
+          <Grid item>
             <Grid container>
               <Grid item xs={10}>
-                <TextField fullWidth variant="filled" />
+                <TextField
+                  fullWidth
+                  variant="filled"
+                  value={message}
+                  onChange={(event) => typing(event)}
+                />
               </Grid>
-              <Grid item xs={2}></Grid>
+              <Grid item xs={2}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={(event) => sendMessage()}
+                >
+                  Send
+                </Button>
+              </Grid>
             </Grid>
           </Grid>
         </Grid>

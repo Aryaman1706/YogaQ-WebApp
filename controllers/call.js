@@ -9,6 +9,34 @@ const validation = require("../validationSchemas/call");
 
 // * Controllers -->
 
+// * List all Calls
+exports.list = async (req, res) => {
+  try {
+    const total = await Call.countDocuments({ chatroomId: req.params.id });
+    const limit = 5;
+    if ((parseInt(req.query.page, 10) - 1) * limit < total) {
+      const calls = await Call.find({ chatroomId: req.params.id })
+        .sort("time")
+        .skip((parseInt(req.query.page, 10) - 1) * limit)
+        .limit(limit)
+        .exec();
+
+      return res.status(200).json({
+        error: null,
+        body: { calls, end: calls.length < limit },
+      });
+    }
+
+    return res.status(200).json({
+      error: null,
+      body: { calls: [], end: true },
+    });
+  } catch (error) {
+    console.log("Error occured here\n", error);
+    return res.status(500).json({ error: "Server Error.", body: null });
+  }
+};
+
 // * Request a Call
 exports.request = async (req, res) => {
   try {
