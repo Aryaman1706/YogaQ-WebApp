@@ -197,7 +197,7 @@ exports.authCallback = async (req, res) => {
     }
     const newUser = await User.create(profile);
     req.session.passport = null;
-    req.session.passport = { user: { id: user._id, role: user.role } };
+    req.session.passport = { user: { id: newUser._id, role: newUser.role } };
     const query = newUser.phoneNumber ? "country" : "country-phoneNumber";
     return res.redirect(`${process.env.CLIENT_URL}/signup/?fields=${query}`);
   } catch (error) {

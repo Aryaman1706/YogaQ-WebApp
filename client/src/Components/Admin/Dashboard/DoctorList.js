@@ -20,7 +20,7 @@ const DoctorList = () => {
     doctors: [],
     end: false,
   });
-  const [compLoading, setCompLoading] = useState(true);
+  const [compLoading, setCompLoading] = useState(false);
   const {
     loadedPages,
     currentPage,
