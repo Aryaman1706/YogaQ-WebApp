@@ -12,7 +12,7 @@ const Appbar = () => {
   const load = async () => {
     await dispatch(adminActions.setLoading(true));
     await dispatch(adminActions.loadAdmin());
-    dispatch(adminActions.setLoading(false));
+    await dispatch(adminActions.setLoading(false));
   };
   useEffect(() => {
     load();
