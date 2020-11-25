@@ -9,7 +9,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "format": "prettier --write \"./**/*.{js, jsx}\"",
-    "lint": "eslint \"./**/*.{js, jsx}\" --quiet"
+    "lint": "eslint \"./**/*.{js, jsx}\" --quiet",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
   },
   "repository": {
     "type": "git",

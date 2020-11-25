@@ -7,6 +7,7 @@ const session = require("express-session");
 const cors = require("cors");
 // TODO See Documentation Once for Optimization of connect-mongo
 const MongoStore = require("connect-mongo")(session);
+const path = require("path");
 
 const app = express();
 
@@ -72,3 +73,14 @@ app.use("/api/admin", admin);
 app.use("/api/doctor", doctor);
 app.use("/api/chatroom", chatroom);
 app.use("/api/call", call);
+
+// * Deployment
+if (process.env.NODE_ENV === "production") {
+  // * Set Static Files
+  app.use(express.static("client/build"));
+
+  // * Serve Frontend
+  app.use("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
+  });
+}
