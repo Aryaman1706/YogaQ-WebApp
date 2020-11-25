@@ -7,6 +7,7 @@ const Profile = () => {
   const { loading } = useSelector((state) => state.admin);
   return (
     <>
+      <h1>Edit</h1>
       {loading ? null : (
         <>
           <Edit />

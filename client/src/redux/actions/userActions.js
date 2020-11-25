@@ -27,6 +27,7 @@ export const loadUser = () => async (dispatch) => {
       payload: res.data.body,
     });
   } catch (error) {
+    console.log(error);
     if (error.response.status === 401) {
       dispatch({
         type: INCOMPLETE_PROFILE,

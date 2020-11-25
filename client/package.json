@@ -64,6 +64,6 @@
     "eslint-plugin-react-hooks": "^4.2.0",
     "typescript": "^4.0.5"
   },
-  "proxy": "https://yogaq.herokuapp.com/",
+  "proxy": "https://localhost:5000",
   "homepage": "."
 }
