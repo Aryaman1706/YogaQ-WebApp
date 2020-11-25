@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { TextField, Grid, makeStyles, Button } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
-import { user as userActions } from "../../redux/actions/index";
+import { admin as adminActions } from "../../redux/actions/index";
 import MessageItem from "./MessageItem";
 import Loader from "../Loader";
 import getUrls from "get-urls";
@@ -25,19 +25,19 @@ const MessageList = () => {
     socket.current.emit("join", active_chatroom._id);
 
     socket.current.on("toClient", (message) => {
-      dispatch(userActions.appendMessage(message));
+      dispatch(adminActions.appendMessage(message));
     });
     // eslint-disable-next-line
   }, []);
 
   const {
-    user_messages,
+    admin_messages,
     message_end,
     active_chatroom,
-    user,
+    admin,
     error,
     chatroomLoading,
-  } = useSelector((state) => state.user);
+  } = useSelector((state) => state.admin);
   const dispatch = useDispatch();
 
   const [page, setPage] = useState(0);
@@ -64,9 +64,9 @@ const MessageList = () => {
 
   // * Load Chatroom if error
   const loadChatroom = async () => {
-    await dispatch(userActions.setChatroomLoading(true));
-    await dispatch(userActions.getChatroom(active_chatroom._id));
-    await dispatch(userActions.setChatroomLoading(false));
+    await dispatch(adminActions.setChatroomLoading(true));
+    await dispatch(adminActions.getChatroom(active_chatroom._id));
+    await dispatch(adminActions.setChatroomLoading(false));
   };
 
   useEffect(() => {
@@ -80,7 +80,7 @@ const MessageList = () => {
   useEffect(() => {
     return () => {
       dispatch(
-        userActions.modfiyLastAccess({
+        adminActions.modfiyLastAccess({
           id: active_chatroom._id,
           formData: { lastAccess: new Date() },
         })
@@ -94,7 +94,7 @@ const MessageList = () => {
     scroller.current.scrollTop = scroller.current.scrollHeight - height;
     // lastMessage.current && lastMessage.current.scrollIntoView();
     // eslint-disable-next-line
-  }, [user_messages]);
+  }, [admin_messages]);
 
   // * Load More Messages
   const nextHandler = () => {
@@ -113,7 +113,7 @@ const MessageList = () => {
   const loadMore = async () => {
     if (page > 0) {
       await dispatch(
-        userActions.getMessages({ id: active_chatroom._id, page })
+        adminActions.getMessages({ id: active_chatroom._id, page })
       );
       setMessageLoading(false);
     }
@@ -140,8 +140,8 @@ const MessageList = () => {
     if (/\S/.test(message.trim())) {
       const data = {
         sender: {
-          id: user._id,
-          model: user.role.trim().replace(/^\w/, (char) => char.toUpperCase()),
+          id: admin._id,
+          model: "Admin",
         },
         message: {
           text: message.trim(),
@@ -152,7 +152,7 @@ const MessageList = () => {
       };
       setMessage("");
       dispatch(
-        userActions.appendMessage({
+        adminActions.appendMessage({
           chatroomId: active_chatroom._id,
           sender: data.sender,
           text: data.message.text,
@@ -192,9 +192,9 @@ const MessageList = () => {
               spacing={2}
             >
               <div ref={lastMessage}></div>
-              {user_messages.length > 0 &&
-                user_messages.map((item) => {
-                  return <MessageItem message={item} id={user._id} />;
+              {admin_messages.length > 0 &&
+                admin_messages.map((item) => {
+                  return <MessageItem message={item} id={admin._id} />;
                 })}
               <div ref={firstMessage}></div>
             </Grid>

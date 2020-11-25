@@ -86,7 +86,6 @@ const stateHandler = (state = defaultState, action) => {
     case USER_GET_MESSAGES:
       return {
         ...state,
-        active_chatroom: { ...state.active_chatroom, unreadMessages: 0 },
         user_messages: [...state.user_messages, ...action.payload.messages],
         message_end: action.payload.end,
       };

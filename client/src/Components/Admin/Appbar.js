@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { admin as adminActions } from "../../redux/actions";
 import AdminAppbar from "./AdminAppbar";
+import ChatroomAppbar from "./ChatroomAppbar";
 
 const Appbar = () => {
   const history = useHistory();
@@ -20,9 +21,9 @@ const Appbar = () => {
   const x = history.location.pathname;
   const render = () => {
     if (/^\/admin$/.test(x)) {
-      return <AdminAppbar isAuthenticated={isAuthenticated} admin={admin} />;
+      return <ChatroomAppbar />;
     } else {
-      //
+      return <AdminAppbar isAuthenticated={isAuthenticated} admin={admin} />;
     }
   };
 
