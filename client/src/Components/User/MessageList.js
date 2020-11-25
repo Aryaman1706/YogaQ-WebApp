@@ -18,7 +18,7 @@ const MessageList = () => {
   const classes = useStyles();
 
   // * Socket Setup
-  const ENDPOINT = "http://localhost:5000";
+  const ENDPOINT = process.env.REACT_APP_SERVER_URL;
   const socket = useRef();
   useEffect(() => {
     socket.current = io(ENDPOINT);
