@@ -179,6 +179,7 @@ exports.authCallback = async (req, res) => {
     const accessToken = await getAccessToken(req.query.code);
     const data = await getProfile(accessToken);
 
+    // ! Handle if permissions are not given
     const profile = {
       username: data.names[0].displayName,
       phoneNumber: data.phoneNumbers ? data.phoneNumbers[0].value : null,
