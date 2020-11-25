@@ -17,6 +17,7 @@ import { useParams, useHistory } from "react-router-dom";
 import Swal from "sweetalert2";
 import { useDispatch, useSelector } from "react-redux";
 import { enquiry as enquiryActions } from "../../../redux/actions/index";
+import Loader from "../../Loader";
 
 const useStyles = makeStyles((theme) => ({
   div: {
@@ -31,22 +32,18 @@ const ViewEnquiry = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const { enquiry, error, message } = useSelector((state) => state.enquiry);
-  const [compLoading, setCompLoading] = useState(true);
+  const [compLoading, setCompLoading] = useState(false);
+  const [loadingDelete, setLoadingDelete] = useState(false);
 
   const start = async () => {
-    // await dispatch(enquiryActions.setLoading(true));
-    // setCompLoading(true);
     await dispatch(enquiryActions.selectEnquiry(id));
     setCompLoading(false);
-
-    // await dispatch(enquiryActions.setLoading(false));
   };
   useEffect(() => {
     if (!id) {
       history.push("/admin/enquiries");
     } else {
       setCompLoading(true);
-      // start();
     }
     return () => {
       dispatch(enquiryActions.clear());
@@ -101,11 +98,31 @@ const ViewEnquiry = () => {
       backdrop: false,
     }).then((result) => {
       if (!result.isDenied) {
-        dispatch(enquiryActions.deleteEnquiry(id));
-        history.push("/admin/enquiries");
+        setLoadingDelete(true);
       }
     });
   };
+
+  const deleteHandler = async () => {
+    await dispatch(enquiryActions.deleteEnquiry(id));
+    await Swal.fire({
+      position: "center",
+      icon: "success",
+      title: "Success!",
+      text: "Enquiry Deleted Successfully!",
+      showConfirmButton: true,
+      timer: 1000,
+    });
+    setLoadingDelete(false);
+    history.push("/admin/enquiries");
+  };
+
+  useEffect(() => {
+    if (loadingDelete) {
+      deleteHandler();
+    }
+    // eslint-disable-next-line
+  }, [loadingDelete]);
 
   const acceptEnquiry = (e) => {
     history.push("/admin/accept/enquiry");
@@ -116,7 +133,7 @@ const ViewEnquiry = () => {
         Enquiry
       </Typography>
       <Toolbar></Toolbar>
-      {!compLoading && enquiry ? (
+      {!compLoading && !loadingDelete && enquiry ? (
         <>
           <Grid container direction="row" justify="center" alignItems="stretch">
             <Grid item xs={1} lg={3}></Grid>
@@ -390,7 +407,9 @@ const ViewEnquiry = () => {
             <Grid item xs={1} lg={3}></Grid>
           </Grid>
         </>
-      ) : null}
+      ) : (
+        <Loader />
+      )}
     </>
   );
 };

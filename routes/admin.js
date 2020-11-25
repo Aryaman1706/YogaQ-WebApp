@@ -70,7 +70,7 @@ router.post("/forgotPassword", controller.forgotPassword1);
 router.post("/forgotPassword/:resetToken", controller.forgotPassword2);
 
 // * Get My Chatrooms
-router.get("/mychatrooms", loginAdmin, controller.myChatrooms);
+router.get("/chatrooms", loginAdmin, controller.myChatrooms);
 
 // * Test
 router.get("/del", async (req, res) => {

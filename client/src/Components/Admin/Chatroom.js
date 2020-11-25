@@ -5,7 +5,7 @@ import Loader from "../Loader";
 
 const Chatroom = () => {
   const { chatroomLoading, active_chatroom } = useSelector(
-    (state) => state.user
+    (state) => state.admin
   );
 
   useEffect(() => {

@@ -23,15 +23,17 @@ const chat = async (server) => {
           embeds = await getEmbeds(message.link);
           console.log(embeds);
         }
-        const newMessage = await Message.create({
+        const data = {
           chatroomId,
           sender,
           text: message.text,
           link: message.link ? message.link : null,
           urlEmbeds: embeds,
-        });
-        socket.to(chatroomId).emit("toClient", newMessage);
+          time: new Date(),
+        };
+        socket.to(chatroomId).emit("toClient", data);
         console.log("Message sent");
+        Message.create(data);
       });
     });
 

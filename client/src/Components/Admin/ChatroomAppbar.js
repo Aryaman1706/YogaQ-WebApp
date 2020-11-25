@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
     height: "50px",
     placeItems: "center",
     width: "100%",
-    border: "2px solid rgb(104, 118, 141)",
+    border: "1px solid rgb(104, 118, 141)",
     borderTop: "0px",
     borderLeft: "0px",
   },
@@ -54,7 +54,7 @@ const CharoomAppbar = ({ user }) => {
     setAnchorEl(null);
   };
 
-  const { active_chatroom } = useSelector((state) => state.user);
+  const { active_chatroom } = useSelector((state) => state.admin);
   return (
     <>
       <Grid
@@ -116,7 +116,7 @@ const CharoomAppbar = ({ user }) => {
           >
             <Grid item xs={11} className={classes.title}>
               <Typography variant="h6" style={{ color: "white" }}>
-                {active_chatroom ? active_chatroom.partner.id.username : ""}
+                {active_chatroom ? active_chatroom.user.id.username : ""}
               </Typography>
             </Grid>
             <Grid item xs={1} className={classes.btnContainer}>

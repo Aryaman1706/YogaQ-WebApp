@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Grid, Typography, makeStyles } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
-import { user as userActions } from "../../redux/actions/index";
+import { admin as adminActions } from "../../redux/actions/index";
 import ChatroomItem from "./ChatroomItem";
 
 const useStyles = makeStyles((theme) => ({
@@ -13,12 +13,12 @@ const useStyles = makeStyles((theme) => ({
 
 const ChatroomList = () => {
   const classes = useStyles();
-  const { chatrooms } = useSelector((state) => state.user);
+  const { chatrooms } = useSelector((state) => state.admin);
   const dispatch = useDispatch();
   const [compLoading, setCompLoading] = useState(false);
 
   const start = async () => {
-    await dispatch(userActions.listChatrooms());
+    await dispatch(adminActions.listChatrooms());
     setCompLoading(false);
   };
   useEffect(() => {

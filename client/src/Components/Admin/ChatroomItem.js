@@ -2,7 +2,7 @@ import React from "react";
 import { Grid, Typography, Paper, Badge, makeStyles } from "@material-ui/core";
 import MailIcon from "@material-ui/icons/Mail";
 import { useDispatch, useSelector } from "react-redux";
-import { user as userActions } from "../../redux/actions/index";
+import { admin as adminActions } from "../../redux/actions/index";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -26,9 +26,9 @@ const ChatroomItem = ({ chatroom }) => {
       !active_chatroom ||
       active_chatroom._id.toString() !== chatroom._id.toString()
     ) {
-      await dispatch(userActions.setChatroomLoading(true));
-      await dispatch(userActions.getChatroom(chatroom._id));
-      await dispatch(userActions.setChatroomLoading(false));
+      await dispatch(adminActions.setChatroomLoading(true));
+      await dispatch(adminActions.getChatroom(chatroom._id));
+      await dispatch(adminActions.setChatroomLoading(false));
     }
   };
   return (
@@ -37,10 +37,7 @@ const ChatroomItem = ({ chatroom }) => {
         <Paper elevation={4} className={classes.paper}>
           <div>
             <Typography variant="h6" align="left">
-              {chatroom.partner.id.username}
-            </Typography>
-            <Typography variant="subtitle1" align="left">
-              {chatroom.partner.id.role.toUpperCase()}
+              {chatroom.user.id.username}
             </Typography>
           </div>
           <div>

@@ -8,9 +8,11 @@ import {
   SELECT_USER,
   SELECT_CHATROOM_USER,
   USER_GET_MESSAGES,
+  APPEND_USER_MESSAGE,
   USER_ERROR,
   USER_MESSAGE,
   USER_LOADING,
+  USER_CHATROOM_LOADING,
   CLEAR_USER_ERROR,
   CLEAR_USER_CHATROOM,
 } from "../types";
@@ -105,6 +107,14 @@ export const getMessages = ({ id, page }) => async (dispatch) => {
       payload: error.response.data.error,
     });
   }
+};
+
+// * Send/Recieve Message
+export const appendMessage = (data) => async (dispatch) => {
+  dispatch({
+    type: APPEND_USER_MESSAGE,
+    payload: data,
+  });
 };
 
 // * Modify Last access
@@ -218,6 +228,14 @@ export const blockUser = ({ id, value }) => async (dispatch) => {
 export const setLoading = (value) => async (dispatch) => {
   dispatch({
     type: USER_LOADING,
+    payload: value,
+  });
+};
+
+// * Set Chatroom Loading
+export const setChatroomLoading = (value) => async (dispatch) => {
+  dispatch({
+    type: USER_CHATROOM_LOADING,
     payload: value,
   });
 };

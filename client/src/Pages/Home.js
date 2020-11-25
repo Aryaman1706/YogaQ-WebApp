@@ -1,7 +1,9 @@
 import React from "react";
-import { Grid, makeStyles, Toolbar } from "@material-ui/core";
+import { Grid, makeStyles } from "@material-ui/core";
+import { useSelector } from "react-redux";
 import ChatroomList from "../Components/User/ChatroomList";
 import Chatroom from "../Components/User/Chatroom";
+import Loader from "../Components/Loader";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -13,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
     borderLeft: "0px",
     padding: "15px 10px 15px 10px",
     height: "calc(100vh - 50px)",
-    overflow: "auto",
+    overflowY: "auto",
   },
   itemB: {
     padding: "15px 10px 15px 10px",
@@ -23,22 +25,29 @@ const useStyles = makeStyles((theme) => ({
 
 const Home = () => {
   const classes = useStyles();
+  const { loading } = useSelector((state) => state.user);
   return (
     <>
-      <Grid
-        container
-        direction="row"
-        justify="center"
-        alignItems="stretch"
-        className={classes.container}
-      >
-        <Grid item xs={2} className={classes.item}>
-          <ChatroomList />
-        </Grid>
-        <Grid item xs={10} className={classes.itemB}>
-          <Chatroom />
-        </Grid>
-      </Grid>
+      {loading ? (
+        <Loader />
+      ) : (
+        <>
+          <Grid
+            container
+            direction="row"
+            justify="center"
+            alignItems="stretch"
+            className={classes.container}
+          >
+            <Grid item xs={2} className={classes.item}>
+              <ChatroomList />
+            </Grid>
+            <Grid item xs={10} className={classes.itemB}>
+              <Chatroom />
+            </Grid>
+          </Grid>
+        </>
+      )}
     </>
   );
 };

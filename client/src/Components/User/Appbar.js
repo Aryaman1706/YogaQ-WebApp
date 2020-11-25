@@ -7,7 +7,7 @@ import UserAppbar from "./UserAppbar";
 
 const Appbar = () => {
   const history = useHistory();
-  const { isAuthenticated, user, error, query } = useSelector(
+  const { isAuthenticated, user, error, query, loading } = useSelector(
     (state) => state.user
   );
   const dispatch = useDispatch();
@@ -32,9 +32,10 @@ const Appbar = () => {
     // eslint-disable-next-line
   }, [error, query]);
   const x = history.location.pathname;
-
+  console.log("User app bar", x);
   const render = () => {
-    if (!/\/user*/.test(x) && isAuthenticated && user) {
+    if (loading) return <></>;
+    if (/^\/$/i.test(x) && isAuthenticated && user) {
       return <ChatroomAppbar user={user} />;
     } else {
       return <UserAppbar isAuthenticated={isAuthenticated} user={user} />;
