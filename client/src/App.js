@@ -12,7 +12,7 @@ const App = () => {
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
           <CssBaseline>
-            <Router>
+            <Router basename="/">
               <Routes />
             </Router>
           </CssBaseline>
