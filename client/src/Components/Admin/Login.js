@@ -43,7 +43,7 @@ const Login = () => {
         timer: 1500,
       });
     }
-    if (!error && isAuthenticated) {
+    if (isAuthenticated) {
       history.push("/admin");
     }
     // eslint-disable-next-line
