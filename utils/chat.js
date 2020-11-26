@@ -9,28 +9,36 @@ const chat = async (server) => {
     },
   });
   io.on("connection", (socket) => {
+    console.log("Connection ", socket.id);
     socket.on("join", (chatroomId) => {
+      socket.rooms.forEach((room) => {
+        if (room !== socket.id) {
+          console.log("I will call modify last access.");
+          socket.leave(room);
+        }
+      });
       socket.join(chatroomId);
       console.log("joined!");
+      console.log(socket.rooms);
       socket.on("toServer", async ({ sender, message }) => {
         console.log("Message Recieved");
-        let embeds = {
-          title: null,
-          description: null,
-          image: null,
-        };
-        if (message.link) {
-          embeds = await getEmbeds(message.link);
-          console.log(embeds);
-        }
         const data = {
           chatroomId,
           sender,
           text: message.text,
           link: message.link ? message.link : null,
-          urlEmbeds: embeds,
+          urlEmbeds: {
+            title: null,
+            description: null,
+            image: null,
+          },
           time: new Date(),
         };
+        if (message.link) {
+          const embeds = await getEmbeds(message.link);
+          console.log(embeds);
+          data.urlEmbeds = embeds;
+        }
         socket.to(chatroomId).emit("toClient", data);
         console.log("Message sent");
         Message.create(data);

@@ -260,7 +260,10 @@ exports.getChatrooms = async (req, res) => {
         .populate("partner.id", "username email role")
         .populate({
           path: "unreadMessages",
-          match: { time: { $gt: doc.lastOpened.user } },
+          match: {
+            time: { $gt: doc.lastOpened.user },
+            "sender.id": { $ne: req.user._id },
+          },
         })
         .execPopulate();
 

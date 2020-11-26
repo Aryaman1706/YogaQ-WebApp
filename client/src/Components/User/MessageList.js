@@ -5,7 +5,7 @@ import { user as userActions } from "../../redux/actions/index";
 import MessageItem from "./MessageItem";
 import Loader from "../Loader";
 import getUrls from "get-urls";
-import io from "socket.io-client";
+// import io from "socket.io-client";
 
 const useStyles = makeStyles((theme) => ({
   scrollDiv: {
@@ -14,14 +14,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const MessageList = () => {
+const MessageList = ({ socket }) => {
   const classes = useStyles();
 
   // * Socket Setup
-  const ENDPOINT = process.env.REACT_APP_SERVER_URL;
-  const socket = useRef();
+  // const ENDPOINT = process.env.REACT_APP_SERVER_URL;
+  // const socket = useRef();
   useEffect(() => {
-    socket.current = io(ENDPOINT);
+    // socket.current = io(ENDPOINT);
     socket.current.emit("join", active_chatroom._id);
 
     socket.current.on("toClient", (message) => {
@@ -136,6 +136,13 @@ const MessageList = () => {
     return value;
   }
 
+  const enterSend = (e) => {
+    console.log(e);
+    if (e.code && /^enter$/i.test(e.code)) {
+      sendMessage();
+    }
+  };
+
   const sendMessage = () => {
     if (/\S/.test(message.trim())) {
       const data = {
@@ -207,6 +214,7 @@ const MessageList = () => {
                   variant="filled"
                   value={message}
                   onChange={(event) => typing(event)}
+                  onKeyDown={(event) => enterSend(event)}
                 />
               </Grid>
               <Grid item xs={2}>

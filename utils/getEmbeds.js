@@ -6,9 +6,9 @@ const getEmbeds = async (link) => {
     const page = await browser.newPage();
     await page.goto(link, { waitUntil: "domcontentloaded" });
     await page.setRequestInterception(true);
-    page.on("request", (request) => {
-      request.abort();
-    });
+    // page.on("request", (request) => {
+    //   request.abort();
+    // });
     const [title, description, image] = await Promise.all([
       await page.$eval(
         "meta[name=title], meta[property='og:title'], meta[name='twitter:title']",

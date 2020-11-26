@@ -40,7 +40,7 @@ app.use(
   })
 );
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "https://yogaq.herokuapp.com");
+  res.header("Access-Control-Allow-Origin", process.env.CLIENT_URL);
   res.header("Access-Control-Allow-Credentials", true);
   res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE");
   res.header(
@@ -49,7 +49,7 @@ app.use((req, res, next) => {
   );
   next();
 });
-app.use(cors({ origin: `${process.env.CLIENT_URL}`, credentials: true }));
+app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
 app.use(passport.initialize());
 app.use(passport.session());
 

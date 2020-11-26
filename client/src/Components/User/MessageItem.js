@@ -76,6 +76,8 @@ const MessageItem = ({ message, id }) => {
       <Grid item>
         <Grid
           container
+          direction="row"
+          alignItems="stretch"
           spacing={0}
           justify={
             message.sender.id.toString() === id.toString()
@@ -84,7 +86,7 @@ const MessageItem = ({ message, id }) => {
           }
           style={{ width: "100%", height: "100%" }}
         >
-          <Grid item xs={8}>
+          <Grid item xs={6}>
             <Paper
               elevation={0}
               className={
@@ -116,7 +118,6 @@ const MessageItem = ({ message, id }) => {
               </Grid>
             </Paper>
           </Grid>
-          <Grid item xs={4}></Grid>
         </Grid>
       </Grid>
     </>
