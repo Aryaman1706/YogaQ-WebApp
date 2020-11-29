@@ -103,7 +103,7 @@ exports.get = async (req, res) => {
 
     await chatroom
       .populate("user.id", "username email")
-      .populate("partner.id", "username email")
+      .populate("partner.id", "username email profilePicture role description")
       .populate({
         path: "unreadMessages",
         match: { time: { $gt: lastAccess } },

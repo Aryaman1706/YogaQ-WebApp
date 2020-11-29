@@ -1,9 +1,10 @@
-import React from "react";
-import { Grid, makeStyles } from "@material-ui/core";
+import React, { useState, useEffect } from "react";
+import { Grid, makeStyles, Hidden } from "@material-ui/core";
 import { useSelector } from "react-redux";
 import ChatroomList from "../Components/User/ChatroomList";
 import Chatroom from "../Components/User/Chatroom";
 import Loader from "../Components/Loader";
+import ChatroomDrawer from "../Components/User/ChatroomDrawer";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -21,11 +22,42 @@ const useStyles = makeStyles((theme) => ({
     padding: "15px 10px 15px 10px",
     height: "calc(100vh - 50px)",
   },
+  itemC: {
+    border: "2px solid rgb(104, 118, 141)",
+    borderTop: "0px",
+    borderRight: "0px",
+    padding: "15px 10px 15px 10px",
+    height: "calc(100vh - 50px)",
+    overflowY: "auto",
+  },
 }));
 
 const Home = () => {
   const classes = useStyles();
-  const { loading } = useSelector((state) => state.user);
+  const { loading, active_chatroom } = useSelector((state) => state.user);
+  const { showDrawer } = useSelector((state) => state.chatroom);
+
+  const [widths, setWidths] = useState({
+    chatroomList: 2,
+    chatroom: 10,
+    drawer: 0,
+  });
+
+  useEffect(() => {
+    if (showDrawer && active_chatroom) {
+      setWidths({
+        chatroomList: 2,
+        chatroom: 8,
+        drawer: 2,
+      });
+    } else {
+      setWidths({
+        chatroomList: 2,
+        chatroom: 10,
+        drawer: 0,
+      });
+    }
+  }, [showDrawer, active_chatroom]);
   return (
     <>
       {loading ? (
@@ -39,12 +71,19 @@ const Home = () => {
             alignItems="stretch"
             className={classes.container}
           >
-            <Grid item xs={2} className={classes.item}>
+            <Grid item xs={widths.chatroomList} className={classes.item}>
               <ChatroomList />
             </Grid>
-            <Grid item xs={10} className={classes.itemB}>
+            <Grid item xs={widths.chatroom} className={classes.itemB}>
               <Chatroom />
             </Grid>
+            {active_chatroom ? (
+              <Hidden xsUp={!showDrawer}>
+                <Grid item xs={widths.drawer} className={classes.itemC}>
+                  <ChatroomDrawer />
+                </Grid>
+              </Hidden>
+            ) : null}
           </Grid>
         </>
       )}

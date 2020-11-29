@@ -2,15 +2,16 @@ import React, { useState } from "react";
 import {
   Grid,
   makeStyles,
-  Button,
   IconButton,
   Menu,
   MenuItem,
   Link,
   Typography,
+  Avatar,
 } from "@material-ui/core";
-import { AccountCircle } from "@material-ui/icons";
-import { useSelector } from "react-redux";
+import { AccountCircle, Menu as MenuIcon } from "@material-ui/icons";
+import { useSelector, useDispatch } from "react-redux";
+import { chatroom as chatroomActions } from "../../redux/actions/index";
 
 const useStyles = makeStyles((theme) => ({
   parent: {
@@ -46,6 +47,10 @@ const useStyles = makeStyles((theme) => ({
 const CharoomAppbar = ({ user }) => {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
+  const { active_chatroom } = useSelector((state) => state.user);
+  const { showDrawer } = useSelector((state) => state.chatroom);
+  const dispatch = useDispatch();
+
   const handleClick = (e) => {
     setAnchorEl(e.currentTarget);
   };
@@ -54,7 +59,10 @@ const CharoomAppbar = ({ user }) => {
     setAnchorEl(null);
   };
 
-  const { active_chatroom } = useSelector((state) => state.user);
+  const drawerHandler = () => {
+    dispatch(chatroomActions.setDrawer(!showDrawer));
+  };
+
   return (
     <>
       <Grid
@@ -115,12 +123,26 @@ const CharoomAppbar = ({ user }) => {
             className={classes.appbar}
           >
             <Grid item xs={11} className={classes.title}>
-              <Typography variant="h6" style={{ color: "white" }}>
-                {active_chatroom ? active_chatroom.partner.id.username : ""}
-              </Typography>
+              {active_chatroom ? (
+                <div style={{ display: "flex", placeItems: "center" }}>
+                  <Avatar
+                    alt={active_chatroom.partner.id.username}
+                    src={active_chatroom.partner.id.profilePicture}
+                    style={{ marginRight: "15px" }}
+                  />
+                  <Typography variant="h6" style={{ color: "white" }}>
+                    {active_chatroom ? active_chatroom.partner.id.username : ""}
+                  </Typography>
+                </div>
+              ) : null}
             </Grid>
             <Grid item xs={1} className={classes.btnContainer}>
-              <Button>1</Button>
+              <IconButton
+                style={{ color: "white" }}
+                onClick={(event) => drawerHandler()}
+              >
+                <MenuIcon />
+              </IconButton>
             </Grid>
           </Grid>
         </Grid>

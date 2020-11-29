@@ -52,3 +52,6 @@ export const USER_MESSAGE = "USER_MESSAGE";
 export const USER_LOADING = "USER_LOADING";
 export const USER_CHATROOM_LOADING = "USER_CHATROOM_LOADING";
 export const CLEAR_USER_ERROR = "CLEAR_USER_ERROR";
+
+// * Chatroom
+export const SHOW_DRAWER = "SHOW_DRAWER";

@@ -40,12 +40,12 @@ const ChatroomList = () => {
         direction="column"
         justify="flex-start"
         alignItems="stretch"
-        spacing={4}
+        spacing={3}
         className={classes.container}
       >
         <Grid item>
           <Typography variant="h5" align="left">
-            My ChatRooms
+            Rooms
           </Typography>
         </Grid>
         {!compLoading ? (

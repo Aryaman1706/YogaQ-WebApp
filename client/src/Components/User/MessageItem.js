@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { Grid, Typography, makeStyles, Paper } from "@material-ui/core";
 import Linkify from "react-linkify";
 
@@ -19,6 +20,13 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     placeItems: "center",
   },
+  embed: {
+    padding: "5px 5px 5px 5px",
+    borderRadius: "20px",
+    "&:hover": {
+      backgroundColor: "lightblue",
+    },
+  },
 }));
 
 const MessageItem = ({ message, id }) => {
@@ -32,38 +40,50 @@ const MessageItem = ({ message, id }) => {
     ) {
       return (
         <Grid item>
-          <Grid
-            container
-            direction="row"
-            justify="space-around"
-            alignItems="stretch"
+          <a
+            href={message.link}
+            rel="noreferrer"
+            target="_blank"
+            style={{ textDecoration: "none", color: "inherit" }}
           >
-            <Grid item xs={6}>
+            <Grid
+              container
+              direction="row"
+              justify="space-around"
+              alignItems="stretch"
+              className={classes.embed}
+            >
+              <Grid item xs={6}>
+                <Grid
+                  container
+                  direction="column"
+                  justify="center"
+                  alignItems="stretch"
+                  spacing={1}
+                >
+                  <Grid item>{message.urlEmbeds.title}</Grid>
+                  <Grid item>{message.urlEmbeds.description}</Grid>
+                </Grid>
+              </Grid>
               <Grid
-                container
-                direction="column"
-                justify="center"
-                alignItems="stretch"
-                spacing={1}
+                item
+                xs={4}
+                style={{ display: "flex", placeItems: "center" }}
               >
-                <Grid item>{message.urlEmbeds.title}</Grid>
-                <Grid item>{message.urlEmbeds.description}</Grid>
+                <img
+                  src={message.urlEmbeds.image}
+                  style={{
+                    display: "block",
+                    height: "100px",
+                    objectFit: "cover",
+                    maxWidth: "100%",
+                    margin: "auto",
+                  }}
+                  alt=""
+                />
               </Grid>
             </Grid>
-            <Grid item xs={4} style={{ display: "flex", placeItems: "center" }}>
-              <img
-                src={message.urlEmbeds.image}
-                style={{
-                  display: "block",
-                  height: "100px",
-                  objectFit: "cover",
-                  maxWidth: "100%",
-                  margin: "auto",
-                }}
-                alt=""
-              />
-            </Grid>
-          </Grid>
+          </a>
         </Grid>
       );
     } else {
@@ -73,7 +93,7 @@ const MessageItem = ({ message, id }) => {
 
   return (
     <>
-      <Grid item>
+      <Grid item xs={12} style={{ height: "fit-content" }}>
         <Grid
           container
           direction="row"
@@ -84,9 +104,8 @@ const MessageItem = ({ message, id }) => {
               ? "flex-end"
               : "flex-start"
           }
-          style={{ width: "100%", height: "100%" }}
         >
-          <Grid item xs={6}>
+          <Grid item xs={5}>
             <Paper
               elevation={0}
               className={

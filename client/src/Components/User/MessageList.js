@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { TextField, Grid, makeStyles, Button } from "@material-ui/core";
+import { Send } from "@material-ui/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { user as userActions } from "../../redux/actions/index";
 import MessageItem from "./MessageItem";
 import Loader from "../Loader";
 import getUrls from "get-urls";
-// import io from "socket.io-client";
 
 const useStyles = makeStyles((theme) => ({
   scrollDiv: {
@@ -18,10 +18,7 @@ const MessageList = ({ socket }) => {
   const classes = useStyles();
 
   // * Socket Setup
-  // const ENDPOINT = process.env.REACT_APP_SERVER_URL;
-  // const socket = useRef();
   useEffect(() => {
-    // socket.current = io(ENDPOINT);
     socket.current.emit("join", active_chatroom._id);
 
     socket.current.on("toClient", (message) => {
@@ -44,6 +41,7 @@ const MessageList = ({ socket }) => {
   const [messageLoading, setMessageLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [height, setHeight] = useState(null);
+  const [top, setTop] = useState(false);
 
   const scroller = useRef();
   const observer = useRef();
@@ -54,6 +52,7 @@ const MessageList = ({ socket }) => {
       if (observer.current) observer.current.disconnect();
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting && !message_end) {
+          setTop(true);
           nextHandler();
         }
       });
@@ -71,7 +70,7 @@ const MessageList = ({ socket }) => {
 
   useEffect(() => {
     if (/Get chatroom first*/i.test(error)) {
-      loadChatroom();
+      // loadChatroom();
     }
     // eslint-disable-next-line
   }, [error]);
@@ -91,8 +90,12 @@ const MessageList = ({ socket }) => {
 
   // * Scroll to bottom
   useEffect(() => {
-    scroller.current.scrollTop = scroller.current.scrollHeight - height;
-    // lastMessage.current && lastMessage.current.scrollIntoView();
+    if (top) {
+      scroller.current.scrollTop = scroller.current.scrollHeight - height;
+      setTop(false);
+    } else {
+      lastMessage.current.scrollIntoView();
+    }
     // eslint-disable-next-line
   }, [user_messages]);
 
@@ -184,34 +187,44 @@ const MessageList = ({ socket }) => {
       ) : (
         <Grid
           container
-          direction="column"
+          direction="row"
           justify="flex-start"
           alignItems="stretch"
           spacing={2}
           style={{ overflow: "hidden" }}
         >
-          <Grid item className={classes.scrollDiv} ref={scroller}>
+          <Grid item xs={12} className={classes.scrollDiv} ref={scroller}>
             <Grid
               container
-              direction="column-reverse"
+              direction="row"
               justify="center"
               alignItems="stretch"
               spacing={2}
             >
-              <div ref={lastMessage}></div>
-              {user_messages.length > 0 &&
-                user_messages.map((item) => {
-                  return <MessageItem message={item} id={user._id} />;
-                })}
               <div ref={firstMessage}></div>
+              {user_messages.length > 0 &&
+                user_messages
+                  .slice(0)
+                  .reverse()
+                  .map((item) => {
+                    return <MessageItem message={item} id={user._id} />;
+                  })}
+              <div ref={lastMessage}></div>
             </Grid>
           </Grid>
-          <Grid item>
-            <Grid container>
+          <Grid item xs={12}>
+            <Grid
+              container
+              direction="row"
+              justify="space-between"
+              alignItems="center"
+              spacing={2}
+            >
               <Grid item xs={10}>
                 <TextField
                   fullWidth
-                  variant="filled"
+                  variant="outlined"
+                  placeholder={`Message ${active_chatroom.partner.id.username} .  ..`}
                   value={message}
                   onChange={(event) => typing(event)}
                   onKeyDown={(event) => enterSend(event)}
@@ -219,8 +232,12 @@ const MessageList = ({ socket }) => {
               </Grid>
               <Grid item xs={2}>
                 <Button
+                  fullWidth
+                  style={{ float: "right" }}
                   variant="contained"
                   color="primary"
+                  endIcon={<Send />}
+                  disabled={!/\S/.test(message.trim())}
                   onClick={(event) => sendMessage()}
                 >
                   Send
