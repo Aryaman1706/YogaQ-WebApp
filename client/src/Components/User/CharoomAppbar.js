@@ -9,27 +9,32 @@ import {
   Typography,
   Avatar,
 } from "@material-ui/core";
-import { AccountCircle, Menu as MenuIcon } from "@material-ui/icons";
+import { Menu as MenuIcon } from "@material-ui/icons";
 import { useSelector, useDispatch } from "react-redux";
 import { chatroom as chatroomActions } from "../../redux/actions/index";
+import AccountCircleOutlinedIcon from "@material-ui/icons/AccountCircleOutlined";
+import CloseIcon from "@material-ui/icons/Close";
 
 const useStyles = makeStyles((theme) => ({
   parent: {
     top: "0",
-    backgroundColor: `${theme.palette.primary.main}`,
+    backgroundColor: "#FFFFFF",
     position: "sticky",
     width: "100%",
   },
   appbar: {
-    height: "50px",
+    height: "70px",
     placeItems: "center",
     width: "100%",
+    border: "1px solid rgb(216, 216, 224)",
+    borderTop: "0px",
+    borderLeft: "0px",
   },
   appbarB: {
-    height: "50px",
+    height: "70px",
     placeItems: "center",
     width: "100%",
-    border: "2px solid rgb(104, 118, 141)",
+    border: "1px solid rgb(216, 216, 224)",
     borderTop: "0px",
     borderLeft: "0px",
   },
@@ -41,6 +46,17 @@ const useStyles = makeStyles((theme) => ({
     "&>button": {
       paddingRight: "15px",
     },
+  },
+  logo: {
+    color: "#0FC1A7",
+    fontWeight: "bolder",
+    letterSpacing: "1px",
+  },
+  profile: {
+    color: "rgb(92, 132, 251)",
+  },
+  drawer: {
+    color: "rgb(92, 132, 251)",
   },
 }));
 
@@ -81,7 +97,7 @@ const CharoomAppbar = ({ user }) => {
             className={classes.appbarB}
           >
             <Grid item xs={3} className={classes.title}>
-              <Typography variant="h6" style={{ color: "white" }}>
+              <Typography variant="h5" className={classes.logo}>
                 YogaQ
               </Typography>
             </Grid>
@@ -90,9 +106,9 @@ const CharoomAppbar = ({ user }) => {
                 aria-controls="menu"
                 aria-haspopup="true"
                 onClick={handleClick}
-                style={{ color: "white" }}
+                className={classes.profile}
               >
-                <AccountCircle />
+                <AccountCircleOutlinedIcon />
               </IconButton>
               <Menu
                 id="menu"
@@ -130,20 +146,22 @@ const CharoomAppbar = ({ user }) => {
                     src={active_chatroom.partner.id.profilePicture}
                     style={{ marginRight: "15px" }}
                   />
-                  <Typography variant="h6" style={{ color: "white" }}>
+                  <Typography variant="h6" style={{ color: "#000000" }}>
                     {active_chatroom ? active_chatroom.partner.id.username : ""}
                   </Typography>
                 </div>
               ) : null}
             </Grid>
-            <Grid item xs={1} className={classes.btnContainer}>
-              <IconButton
-                style={{ color: "white" }}
-                onClick={(event) => drawerHandler()}
-              >
-                <MenuIcon />
-              </IconButton>
-            </Grid>
+            {active_chatroom && (
+              <Grid item xs={1} className={classes.btnContainer}>
+                <IconButton
+                  className={classes.drawer}
+                  onClick={() => drawerHandler()}
+                >
+                  {showDrawer ? <CloseIcon /> : <MenuIcon />}
+                </IconButton>
+              </Grid>
+            )}
           </Grid>
         </Grid>
       </Grid>

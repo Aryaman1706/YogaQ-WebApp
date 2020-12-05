@@ -10,7 +10,8 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: "20px",
     height: "100%",
     display: "flex",
-    placeItems: "center",
+    width: "fit-content",
+    maxWidth: "60%",
   },
   recieve: {
     backgroundColor: "lightblue",
@@ -18,7 +19,8 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: "20px",
     height: "100%",
     display: "flex",
-    placeItems: "center",
+    width: "fit-content",
+    maxWidth: "60%",
   },
   embed: {
     padding: "5px 5px 5px 5px",
@@ -49,7 +51,7 @@ const MessageItem = ({ message, id }) => {
             <Grid
               container
               direction="row"
-              justify="space-around"
+              justify="space-between"
               alignItems="stretch"
               className={classes.embed}
             >
@@ -94,18 +96,17 @@ const MessageItem = ({ message, id }) => {
   return (
     <>
       <Grid item xs={12} style={{ height: "fit-content" }}>
-        <Grid
-          container
-          direction="row"
-          alignItems="stretch"
-          spacing={0}
-          justify={
-            message.sender.id.toString() === id.toString()
-              ? "flex-end"
-              : "flex-start"
-          }
-        >
-          <Grid item xs={5}>
+        <Grid container direction="row" alignItems="stretch" spacing={0}>
+          <Grid
+            container
+            item
+            xs={12}
+            justify={
+              message.sender.id.toString() === id.toString()
+                ? "flex-end"
+                : "flex-start"
+            }
+          >
             <Paper
               elevation={0}
               className={
