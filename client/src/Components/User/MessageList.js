@@ -188,8 +188,8 @@ const MessageList = ({ socket }) => {
         <Grid
           container
           direction="row"
-          justify="flex-start"
-          alignItems="stretch"
+          justify="stretch"
+          alignItems="flex-end"
           spacing={2}
           style={{ overflow: "hidden" }}
         >
