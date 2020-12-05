@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import MessageList from "./MessageList";
 import Loader from "../Loader";
 import io from "socket.io-client";
+import ChatroomWaiting from "./ChatroomWaiting";
 
 const Chatroom = () => {
   const { chatroomLoading, active_chatroom } = useSelector(
@@ -23,7 +24,7 @@ const Chatroom = () => {
       return <Loader />;
     }
     if (!chatroomLoading && !active_chatroom) {
-      return <h1>No Open Chatroom</h1>;
+      return <ChatroomWaiting />;
     }
     if (active_chatroom && !chatroomLoading) {
       return <MessageList socket={socket} />;

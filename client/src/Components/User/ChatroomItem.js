@@ -1,13 +1,5 @@
 import React from "react";
-import {
-  Grid,
-  Typography,
-  Paper,
-  Badge,
-  makeStyles,
-  Avatar,
-} from "@material-ui/core";
-import MailIcon from "@material-ui/icons/Mail";
+import { Grid, Paper, makeStyles, Avatar } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import { user as userActions } from "../../redux/actions/index";
 import Profile from "../../assets/user.svg";
@@ -15,9 +7,7 @@ import Profile from "../../assets/user.svg";
 const useStyles = makeStyles((theme) => ({
   paper: {
     padding: "15px 10px 15px 10px",
-    // placeItems: "center",
     display: "flex",
-    // justifyContent: "space-between",
     "&:hover": {
       backgroundColor: "rgb(211,211,211, 0.2)",
     },
@@ -43,7 +33,6 @@ const useStyles = makeStyles((theme) => ({
   unreadCounter: {
     backgroundColor: "#0FC1A7",
     color: "#fff",
-    // padding: "1rem",
     borderRadius: "50%",
     height: "20px",
     width: "20px",
@@ -86,13 +75,6 @@ const ChatroomItem = ({ chatroom }) => {
               <span className={classes.roleText}>
                 {chatroom.partner.id.role.toUpperCase()}
               </span>
-              {/* <Badge
-              badgeContent={chatroom.unreadMessages}
-              max={100}
-              color="secondary"
-            >
-              <MailIcon />
-            </Badge> */}
             </div>
           </div>
           {chatroom.unreadMessages !== 0 && (
