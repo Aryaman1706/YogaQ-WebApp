@@ -8,6 +8,7 @@ const useStyles = makeStyles((theme) => ({
   container: {
     width: "100%",
     margin: "auto",
+    marginTop: "1rem",
   },
 }));
 
@@ -40,14 +41,21 @@ const ChatroomList = () => {
         direction="column"
         justify="flex-start"
         alignItems="stretch"
-        spacing={3}
+        spacing={2}
         className={classes.container}
       >
         <Grid item>
-          <Typography variant="h5" align="left">
-            Rooms
-          </Typography>
+          <span style={{ fontSize: "1.2rem", fontWeight: "bold" }}>Rooms</span>
         </Grid>
+      </Grid>
+      <Grid
+        container
+        direction="column"
+        justify="flex-start"
+        alignItems="stretch"
+        spacing={1}
+        className={classes.container}
+      >
         {!compLoading ? (
           <>
             {chatrooms.map((item, index) => (
