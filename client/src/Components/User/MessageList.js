@@ -1,16 +1,27 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { TextField, Grid, makeStyles, Button } from "@material-ui/core";
-import { Send } from "@material-ui/icons";
+import { TextField, Grid, makeStyles, IconButton } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import { user as userActions } from "../../redux/actions/index";
 import MessageItem from "./MessageItem";
 import Loader from "../Loader";
 import getUrls from "get-urls";
+import SendIcon from "@material-ui/icons/Send";
 
 const useStyles = makeStyles((theme) => ({
   scrollDiv: {
     height: "calc(100vh - 140px)",
     overflowY: "auto",
+  },
+  chatInputContainer: {
+    borderTop: "1px solid rgb(216, 216, 224)",
+  },
+  input: {
+    borderRadius: 20,
+  },
+  chatFlexContainer: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
 }));
 
@@ -212,15 +223,9 @@ const MessageList = ({ socket }) => {
               <div ref={lastMessage}></div>
             </Grid>
           </Grid>
-          <Grid item xs={12}>
-            <Grid
-              container
-              direction="row"
-              justify="space-between"
-              alignItems="center"
-              spacing={2}
-            >
-              <Grid item xs={10}>
+          <Grid item xs={12} className={classes.chatInputContainer}>
+            <div className={classes.chatFlexContainer}>
+              <div style={{ width: "95%" }}>
                 <TextField
                   fullWidth
                   variant="outlined"
@@ -228,22 +233,19 @@ const MessageList = ({ socket }) => {
                   value={message}
                   onChange={(event) => typing(event)}
                   onKeyDown={(event) => enterSend(event)}
+                  InputProps={{ className: classes.input }}
                 />
-              </Grid>
-              <Grid item xs={2}>
-                <Button
-                  fullWidth
-                  style={{ float: "right" }}
-                  variant="contained"
-                  color="primary"
-                  endIcon={<Send />}
+              </div>
+              <div style={{ margin: "auto" }}>
+                <IconButton
                   disabled={!/\S/.test(message.trim())}
                   onClick={(event) => sendMessage()}
+                  color="primary"
                 >
-                  Send
-                </Button>
-              </Grid>
-            </Grid>
+                  <SendIcon />
+                </IconButton>
+              </div>
+            </div>
           </Grid>
         </Grid>
       )}

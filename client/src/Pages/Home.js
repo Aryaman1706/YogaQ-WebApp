@@ -17,6 +17,7 @@ const useStyles = makeStyles((theme) => ({
     padding: "0px 10px 0px 10px",
     height: "calc(100vh - 70px)",
     overflowY: "auto",
+    backgroundColor: "#fff",
   },
   itemB: {
     padding: "0px 10px 0px 10px",
