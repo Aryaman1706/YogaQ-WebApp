@@ -7,7 +7,6 @@ const ChatroomWaiting = () => {
       style={{
         display: "grid",
         placeItems: "center",
-        // height: "70vh",
       }}
     >
       <h1>No Open Chatroom</h1>
