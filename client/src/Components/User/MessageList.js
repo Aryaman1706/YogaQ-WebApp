@@ -1,12 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import {
-  TextField,
-  Grid,
-  makeStyles,
-  Button,
-  IconButton,
-} from "@material-ui/core";
-import { Send } from "@material-ui/icons";
+import { TextField, Grid, makeStyles, IconButton } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import { user as userActions } from "../../redux/actions/index";
 import MessageItem from "./MessageItem";
