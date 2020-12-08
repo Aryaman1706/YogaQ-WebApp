@@ -65,7 +65,7 @@ const ChatroomItem = ({ chatroom }) => {
       >
         <Paper elevation={0} className={classes.paper}>
           <div style={{ margin: "auto 0 auto 0", padding: "0 1rem 0 0" }}>
-            <Avatar alt="Remy Sharp" src={Profile} />
+            <Avatar alt={chatroom.partner.id.username} src={Profile} />
           </div>
           <div>
             <div className={classes.chatDetailsContainer}>

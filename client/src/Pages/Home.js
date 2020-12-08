@@ -26,10 +26,10 @@ const useStyles = makeStyles((theme) => ({
   itemC: {
     border: "1px solid rgb(216, 216, 224)",
     borderTop: "0px",
-    borderLeft: "0px",
     padding: "15px 10px 15px 10px",
     height: "calc(100vh - 70px)",
     overflowY: "auto",
+    backgroundColor: "#fff",
   },
 }));
 
