@@ -1,19 +1,24 @@
 import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
 import {
   Grid,
   makeStyles,
+  withStyles,
   IconButton,
   Menu,
-  MenuItem,
-  Link,
   Typography,
   Avatar,
+  Divider,
 } from "@material-ui/core";
 import { Menu as MenuIcon } from "@material-ui/icons";
 import { useSelector, useDispatch } from "react-redux";
 import { chatroom as chatroomActions } from "../../redux/actions/index";
 import AccountCircleOutlinedIcon from "@material-ui/icons/AccountCircleOutlined";
 import CloseIcon from "@material-ui/icons/Close";
+import Profile from "../../assets/user.svg";
+import { format } from "date-fns";
+import ProfileIcon from "../../assets/profile.svg";
+import LogoutIcon from "../../assets/log-out.svg";
 
 const useStyles = makeStyles((theme) => ({
   parent: {
@@ -58,13 +63,84 @@ const useStyles = makeStyles((theme) => ({
   drawer: {
     color: "rgb(92, 132, 251)",
   },
+  menuFlex: {
+    display: "flex",
+    flexDirection: "column",
+    padding: "20px 10px 20px 10px",
+    width: "300px",
+    justifyContent: "stretch",
+    "&:focus": {
+      outline: "none",
+    },
+  },
+  flexRow: {
+    display: "flex",
+    flexDirection: "row",
+  },
+  profileFlex: {
+    display: "flex",
+    flexDirection: "column",
+    padding: "0 0 0 1rem",
+  },
+  profileName: {
+    fontWeight: "bolder",
+    fontSize: "1.2rem",
+  },
+  profileJoin: {
+    fontWeight: "300",
+    fontSize: "0.8rem",
+    color: "rgb(104, 118, 141)",
+  },
+  menuitem: {
+    alignSelf: "center",
+    fontWeight: "500",
+    paddingLeft: "0.5rem",
+    fontSize: "1rem",
+  },
+  profileIcon: {
+    height: "2rem",
+    width: "auto",
+    objectFit: "contain",
+  },
+  paddingMenuItem: {
+    padding: "0.5rem 0 0.5rem 0",
+    "&:hover": {
+      backgroundColor: "rgb(211,211,211, 0.4)",
+      borderRadius: 6,
+    },
+  },
 }));
+
+const StyledMenu = withStyles({
+  paper: {
+    border: "1px solid #d3d4d5",
+    borderRadius: 10,
+  },
+  "&:focus": {
+    outline: "none",
+  },
+})((props) => (
+  <Menu
+    elevation={1}
+    getContentAnchorEl={null}
+    anchorOrigin={{
+      vertical: "bottom",
+      horizontal: "right",
+    }}
+    transformOrigin={{
+      vertical: "bottom",
+      horizontal: "right",
+    }}
+    {...props}
+  />
+));
 
 const CharoomAppbar = ({ user }) => {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
   const { active_chatroom } = useSelector((state) => state.user);
   const { showDrawer } = useSelector((state) => state.chatroom);
+  const history = useHistory();
   const dispatch = useDispatch();
 
   const handleClick = (e) => {
@@ -81,6 +157,7 @@ const CharoomAppbar = ({ user }) => {
 
   return (
     <>
+      {console.log(user)}
       <Grid
         container
         direction="row"
@@ -110,24 +187,67 @@ const CharoomAppbar = ({ user }) => {
               >
                 <AccountCircleOutlinedIcon />
               </IconButton>
-              <Menu
+              <StyledMenu
                 id="menu"
                 keepMounted
                 anchorEl={anchorEl}
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
+                className={classes.menu}
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "right",
+                }}
+                transformOrigin={{
+                  vertical: "bottom",
+                  horizontal: "right",
+                }}
               >
-                <MenuItem>
-                  <Link underline="none" color="inherit">
-                    Profile
-                  </Link>
-                </MenuItem>
-                <MenuItem>
-                  <Link underline="none" color="inherit">
-                    LogOut
-                  </Link>
-                </MenuItem>
-              </Menu>
+                <div className={classes.menuFlex}>
+                  <div
+                    className={classes.flexRow}
+                    style={{ paddingBottom: "1rem" }}
+                  >
+                    <Avatar alt="Profile" src={Profile} />
+                    <div className={classes.profileFlex}>
+                      <div className={classes.profileName}>{user.username}</div>
+                      <div className={classes.profileJoin}>
+                        Joined{" "}
+                        {format(new Date(user.createdAt), "MMM dd, yyyy")}
+                      </div>
+                    </div>
+                  </div>
+                  <Divider />
+                  <br />
+                  <div
+                    className={`${classes.flexRow} ${classes.paddingMenuItem}`}
+                    onClick={() => {
+                      history.push("/edit");
+                    }}
+                  >
+                    <div>
+                      <img
+                        src={ProfileIcon}
+                        alt="profile-icon"
+                        className={classes.profileIcon}
+                      />
+                    </div>
+                    <div className={classes.menuitem}>Profile</div>
+                  </div>
+                  <div
+                    className={`${classes.flexRow} ${classes.paddingMenuItem}`}
+                  >
+                    <div>
+                      <img
+                        src={LogoutIcon}
+                        alt="profile-icon"
+                        className={classes.profileIcon}
+                      />
+                    </div>
+                    <div className={classes.menuitem}>Log out</div>
+                  </div>
+                </div>
+              </StyledMenu>
             </Grid>
           </Grid>
         </Grid>
