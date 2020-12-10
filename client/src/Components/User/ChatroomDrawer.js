@@ -9,7 +9,6 @@ import {
 import { useSelector } from "react-redux";
 import Profile from "../../assets/user.svg";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import ExpandLessIcon from "@material-ui/icons/ExpandLess";
 import { ExpandLess } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
