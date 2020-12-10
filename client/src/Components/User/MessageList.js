@@ -191,6 +191,34 @@ const MessageList = ({ socket }) => {
     }
   };
 
+  const newMessageIndicator = () => {
+    return (
+      <>
+        <div style={{ display: "flex", flexDirection: "row", width: "100%" }}>
+          <span
+            style={{
+              width: "100%",
+              height: "1px",
+              backgroundColor: "red",
+              margin: "auto",
+            }}
+          />
+          <p style={{ color: "red", fontWeight: "bold", padding: "1rem" }}>
+            Unread Messages
+          </p>
+          <span
+            style={{
+              width: "100%",
+              height: "1px",
+              backgroundColor: "red",
+              margin: "auto",
+            }}
+          />
+        </div>
+      </>
+    );
+  };
+
   return (
     <>
       {chatroomLoading && !active_chatroom ? (
@@ -217,7 +245,19 @@ const MessageList = ({ socket }) => {
                 user_messages
                   .slice(0)
                   .reverse()
-                  .map((item) => {
+                  .map((item, index) => {
+                    if (
+                      active_chatroom.unreadMessages > 0 &&
+                      user_messages.length - index ===
+                        active_chatroom.unreadMessages
+                    ) {
+                      return (
+                        <>
+                          {newMessageIndicator()}
+                          <MessageItem message={item} id={user._id} />
+                        </>
+                      );
+                    }
                     return <MessageItem message={item} id={user._id} />;
                   })}
               <div ref={lastMessage}></div>

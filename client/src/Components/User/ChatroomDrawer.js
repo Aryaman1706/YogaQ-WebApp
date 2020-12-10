@@ -6,8 +6,10 @@ import {
   IconButton,
   Button,
 } from "@material-ui/core";
-import { ArrowBackIos, ArrowForwardIos } from "@material-ui/icons";
 import { useSelector } from "react-redux";
+import Profile from "../../assets/user.svg";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import { ExpandLess } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
   profile: {
@@ -18,6 +20,27 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: "100%",
     margin: "auto",
     borderRadius: "50%",
+  },
+  btn: {
+    border: "2px solid #0FC1A7",
+    padding: "0.5rem",
+    color: "#0FC1A7",
+    cursor: "pointer",
+    position: "relative",
+    overflow: "hidden",
+    fontSize: "1rem",
+    fontFamily: "sans-serif",
+    transition: "ease-out 0.5s",
+    "&:before": {
+      width: "0%",
+      height: "100%",
+      top: "0",
+      left: "0",
+    },
+    "&:hover": {
+      boxShadow: "inset 400px 0 0 0 #0FC1A7",
+      color: "#fff",
+    },
   },
 }));
 
@@ -37,7 +60,11 @@ const ChatroomDrawer = () => {
       <Grid container direction="row" justify="center" alignItems="stretch">
         <Grid item xs={12}>
           <img
-            src={active_chatroom.partner.id.profilePicture}
+            src={
+              active_chatroom.partner.id.profilePicture
+                ? active_chatroom.partner.id.profilePicture
+                : Profile
+            }
             alt={active_chatroom.partner.id.username}
             className={classes.profile}
           />
@@ -56,9 +83,9 @@ const ChatroomDrawer = () => {
             {active_chatroom.partner.id.description ? (
               <IconButton size="small" onClick={() => handleShow()}>
                 {show ? (
-                  <ArrowBackIos fontSize="small" />
+                  <ExpandLess fontSize="small" />
                 ) : (
-                  <ArrowForwardIos fontSize="small" />
+                  <ExpandMoreIcon fontSize="small" />
                 )}
               </IconButton>
             ) : null}
@@ -77,12 +104,10 @@ const ChatroomDrawer = () => {
             </Typography>
           </Grid>
         ) : null}
-        <Grid item xs={12}>
+        <Grid item xs={12} style={{ textAlign: "center" }}>
           <br />
           <Button
-            fullWidth
-            variant="contained"
-            color="primary"
+            className={classes.btn}
             disabled={active_chatroom.partner.id.role !== "doctor"}
           >
             Book a Session
