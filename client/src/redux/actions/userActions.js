@@ -257,9 +257,9 @@ export const clearUnreadMessages = (id) => async (dispatch) => {
   console.log(storeState.user.chatrooms);
   const newChatrooms = storeState.user.chatrooms.map((item) => {
     if (item._id === id) {
-      item.unreadMessages = 0;
+      const newItem = { ...item, unreadMessages: 0 };
       console.log(item, "gotcha!");
-      return item;
+      return newItem;
     } else {
       console.log(item);
       return item;
