@@ -19,6 +19,8 @@ import Profile from "../../assets/user.svg";
 import { format } from "date-fns";
 import ProfileIcon from "../../assets/profile.svg";
 import LogoutIcon from "../../assets/log-out.svg";
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+import { modfiyLastAccess } from "../../redux/actions/adminActions";
 
 const useStyles = makeStyles((theme) => ({
   parent: {
@@ -109,6 +111,17 @@ const useStyles = makeStyles((theme) => ({
       borderRadius: 6,
     },
   },
+  hide: {
+    [theme.breakpoints.only("xs")]: {
+      display: "none",
+    },
+  },
+  backIcon: {
+    display: "none",
+    [theme.breakpoints.only("xs")]: {
+      display: "block",
+    },
+  },
 }));
 
 const StyledMenu = withStyles({
@@ -157,7 +170,6 @@ const CharoomAppbar = ({ user }) => {
 
   return (
     <>
-      {console.log(user)}
       <Grid
         container
         direction="row"
@@ -165,7 +177,7 @@ const CharoomAppbar = ({ user }) => {
         alignItems="stretch"
         className={classes.parent}
       >
-        <Grid item xs={2}>
+        <Grid item xs={12} lg={2} className={active_chatroom && classes.hide}>
           <Grid
             container
             direction="row"
@@ -251,14 +263,18 @@ const CharoomAppbar = ({ user }) => {
             </Grid>
           </Grid>
         </Grid>
-        <Grid item xs={10}>
+        <Grid item xs={12} lg={10} className={!active_chatroom && classes.hide}>
           <Grid
             container
             justify="center"
             alignItems="flex-start"
             className={classes.appbar}
           >
-            <Grid item xs={11} className={classes.title}>
+            {/* TODO Add modify last Access here  */}
+            <Grid item xs={1} className={classes.backIcon} onClick={() => {}}>
+              <ArrowBackIcon />
+            </Grid>
+            <Grid item xs={8} lg={11} className={classes.title}>
               {active_chatroom ? (
                 <div style={{ display: "flex", placeItems: "center" }}>
                   <Avatar
