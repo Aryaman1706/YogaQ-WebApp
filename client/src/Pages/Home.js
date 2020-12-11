@@ -31,6 +31,11 @@ const useStyles = makeStyles((theme) => ({
     overflowY: "auto",
     backgroundColor: "#fff",
   },
+  hide: {
+    [theme.breakpoints.only("xs")]: {
+      display: "none",
+    },
+  },
 }));
 
 const Home = () => {
@@ -72,10 +77,28 @@ const Home = () => {
             alignItems="stretch"
             className={classes.container}
           >
-            <Grid item xs={widths.chatroomList} className={classes.item}>
+            <Grid
+              item
+              xs={12}
+              lg={widths.chatroomList}
+              className={
+                active_chatroom
+                  ? `${classes.item} ${classes.hide}`
+                  : classes.item
+              }
+            >
               <ChatroomList />
             </Grid>
-            <Grid item xs={widths.chatroom} className={classes.itemB}>
+            <Grid
+              item
+              xs={12}
+              lg={widths.chatroom}
+              className={
+                !active_chatroom
+                  ? `${classes.itemB} ${classes.hide}`
+                  : classes.itemB
+              }
+            >
               <Chatroom />
             </Grid>
             {active_chatroom ? (
