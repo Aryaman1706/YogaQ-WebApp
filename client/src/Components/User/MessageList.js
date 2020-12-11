@@ -188,6 +188,7 @@ const MessageList = ({ socket }) => {
         })
       );
       socket.current.emit("toServer", data);
+      dispatch(userActions.clearUnreadMessagesActive());
     }
   };
 
@@ -203,7 +204,14 @@ const MessageList = ({ socket }) => {
               margin: "auto",
             }}
           />
-          <p style={{ color: "red", fontWeight: "bold", padding: "1rem" }}>
+          <p
+            style={{
+              color: "red",
+              fontWeight: "bold",
+              padding: "1rem",
+              whiteSpace: "nowrap",
+            }}
+          >
             Unread Messages
           </p>
           <span
