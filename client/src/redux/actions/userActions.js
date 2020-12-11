@@ -16,6 +16,7 @@ import {
   CLEAR_USER_ERROR,
   CLEAR_USER_CHATROOM,
   CLEAR_UNREAD_MESSAGES,
+  CLEAR_UNREAD_MESSAGES_ACTIVE,
 } from "../types";
 import axios from "../../utils/axios";
 import store from "../store";
@@ -254,20 +255,29 @@ export const clear = () => async (dispatch) => {
 // * Set unread messages to 0
 export const clearUnreadMessages = (id) => async (dispatch) => {
   const storeState = store.getState();
-  console.log(storeState.user.chatrooms);
   const newChatrooms = storeState.user.chatrooms.map((item) => {
     if (item._id === id) {
       const newItem = { ...item, unreadMessages: 0 };
-      console.log(item, "gotcha!");
       return newItem;
     } else {
-      console.log(item);
       return item;
     }
   });
-  console.log(newChatrooms, "hehe");
   dispatch({
     type: CLEAR_UNREAD_MESSAGES,
     payload: newChatrooms,
+  });
+};
+
+// * Set unread messages to 0 of active chatroom
+export const clearUnreadMessagesActive = () => async (dispatch) => {
+  const storeState = store.getState();
+  const activeChatroom = {
+    ...storeState.user.active_chatroom,
+    unreadMessages: 0,
+  };
+  dispatch({
+    type: CLEAR_UNREAD_MESSAGES_ACTIVE,
+    payload: activeChatroom,
   });
 };

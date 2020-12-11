@@ -1,4 +1,3 @@
-import { chatroom } from "../actions";
 import {
   LOAD_USER,
   INCOMPLETE_PROFILE,
@@ -17,6 +16,7 @@ import {
   USER_CHATROOM_LOADING,
   CLEAR_USER_ERROR,
   CLEAR_UNREAD_MESSAGES,
+  CLEAR_UNREAD_MESSAGES_ACTIVE,
 } from "../types";
 
 const defaultState = {
@@ -134,6 +134,11 @@ const stateHandler = (state = defaultState, action) => {
       return {
         ...state,
         chatrooms: action.payload,
+      };
+    case CLEAR_UNREAD_MESSAGES_ACTIVE:
+      return {
+        ...state,
+        active_chatroom: action.payload,
       };
     default:
       return state;
