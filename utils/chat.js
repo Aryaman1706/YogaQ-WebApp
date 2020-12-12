@@ -15,12 +15,13 @@ const chat = async (server) => {
         if (room !== socket.id) {
           console.log("I will call modify last access.");
           socket.leave(room);
+          socket.removeAllListeners("toServer");
         }
       });
       socket.join(chatroomId);
       console.log("joined!");
       console.log(socket.rooms);
-      socket.on("toServer", async ({ sender, message }) => {
+      socket.once("toServer", async ({ sender, message }) => {
         console.log("Message Recieved");
         const data = {
           chatroomId,

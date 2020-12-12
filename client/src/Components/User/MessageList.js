@@ -188,7 +188,7 @@ const MessageList = ({ socket }) => {
         })
       );
       socket.current.emit("toServer", data);
-      dispatch(userActions.clearUnreadMessagesActive());
+      // dispatch(userActions.clearUnreadMessagesActive());
     }
   };
 
