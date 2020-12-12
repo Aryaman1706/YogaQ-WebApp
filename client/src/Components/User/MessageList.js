@@ -89,6 +89,7 @@ const MessageList = ({ socket }) => {
   // * Clear
   useEffect(() => {
     return () => {
+      socket.current.removeAllListeners("toClient");
       dispatch(
         userActions.modfiyLastAccess({
           id: active_chatroom._id,
@@ -188,7 +189,7 @@ const MessageList = ({ socket }) => {
         })
       );
       socket.current.emit("toServer", data);
-      dispatch(userActions.clearUnreadMessagesActive());
+      // dispatch(userActions.clearUnreadMessagesActive());
     }
   };
 
