@@ -89,6 +89,7 @@ const MessageList = ({ socket }) => {
   // * Clear
   useEffect(() => {
     return () => {
+      socket.current.removeAllListeners("toClient");
       dispatch(
         userActions.modfiyLastAccess({
           id: active_chatroom._id,
