@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Grid, makeStyles, Hidden } from "@material-ui/core";
+import { Grid, makeStyles } from "@material-ui/core";
 import { useSelector } from "react-redux";
 import ChatroomList from "../Components/User/ChatroomList";
 import Chatroom from "../Components/User/Chatroom";
@@ -32,9 +32,12 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "#fff",
   },
   hide: {
-    [theme.breakpoints.only("xs")]: {
+    [theme.breakpoints.down("md")]: {
       display: "none",
     },
+  },
+  hideDrawer: {
+    display: "none",
   },
 }));
 
@@ -64,6 +67,15 @@ const Home = () => {
       });
     }
   }, [showDrawer, active_chatroom]);
+
+  const renderClassname = () => {
+    if (!active_chatroom || showDrawer) {
+      return `${classes.itemB} ${classes.hide}`;
+    } else if (active_chatroom) {
+      return classes.itemB;
+    }
+  };
+
   return (
     <>
       {loading ? (
@@ -92,21 +104,26 @@ const Home = () => {
             <Grid
               item
               xs={12}
+              sm={12}
+              md={12}
               lg={widths.chatroom}
-              className={
-                !active_chatroom
-                  ? `${classes.itemB} ${classes.hide}`
-                  : classes.itemB
-              }
+              xl={widths.chatroom}
+              className={renderClassname()}
             >
               <Chatroom />
             </Grid>
             {active_chatroom ? (
-              <Hidden xsUp={!showDrawer}>
-                <Grid item xs={widths.drawer} className={classes.itemC}>
-                  <ChatroomDrawer />
-                </Grid>
-              </Hidden>
+              <Grid
+                item
+                xs={12}
+                sm={12}
+                md={12}
+                lg={widths.drawer}
+                xl={widths.drawer}
+                className={showDrawer ? classes.itemC : classes.hideDrawer}
+              >
+                <ChatroomDrawer />
+              </Grid>
             ) : null}
           </Grid>
         </>
