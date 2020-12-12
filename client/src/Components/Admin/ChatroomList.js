@@ -40,21 +40,28 @@ const ChatroomList = () => {
         direction="column"
         justify="flex-start"
         alignItems="stretch"
-        spacing={4}
+        spacing={2}
         className={classes.container}
       >
         <Grid item>
-          <Typography variant="h5" align="left">
-            My ChatRooms
-          </Typography>
+          <span style={{ fontSize: "1.2rem", fontWeight: "bold" }}>Rooms</span>
         </Grid>
-        {!compLoading ? (
-          <>
-            {chatrooms.map((item, index) => (
-              <ChatroomItem chatroom={item} key={index} />
-            ))}
-          </>
-        ) : null}
+        <Grid
+          container
+          direction="column"
+          justify="flex-start"
+          alignItems="stretch"
+          spacing={1}
+          className={classes.container}
+        >
+          {!compLoading ? (
+            <>
+              {chatrooms.map((item, index) => (
+                <ChatroomItem chatroom={item} key={index} />
+              ))}
+            </>
+          ) : null}
+        </Grid>
       </Grid>
     </>
   );

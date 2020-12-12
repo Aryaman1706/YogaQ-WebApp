@@ -1,19 +1,52 @@
 import React from "react";
-import { Grid, Typography, Paper, Badge, makeStyles } from "@material-ui/core";
+import {
+  Grid,
+  Typography,
+  Paper,
+  Badge,
+  makeStyles,
+  Avatar,
+} from "@material-ui/core";
 import MailIcon from "@material-ui/icons/Mail";
 import { useDispatch, useSelector } from "react-redux";
 import { admin as adminActions } from "../../redux/actions/index";
+import Profile from "../../assets/user.svg";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
-    padding: "5px 10px 5px 10px",
-    placeItems: "center",
+    padding: "15px 10px 15px 10px",
     display: "flex",
-    justifyContent: "space-between",
+    "&:hover": {
+      backgroundColor: "rgb(211,211,211, 0.2)",
+    },
   },
   item: {
     paddingLeft: "0px",
     paddingRight: "0px",
+  },
+  chatItem: {
+    // borderBottom: "1px solid black",
+  },
+  chatHeader: {
+    fontWeight: "bold",
+    fontSize: "1.2rem",
+  },
+  chatDetailsContainer: {
+    display: "flex",
+    flexDirection: "column",
+  },
+  roleText: {
+    fontSize: "0.6rem",
+  },
+  unreadCounter: {
+    backgroundColor: "#0FC1A7",
+    color: "#fff",
+    borderRadius: "50%",
+    height: "20px",
+    width: "20px",
+    display: "grid",
+    placeItems: "center",
+    fontSize: "0.8rem",
   },
 }));
 
@@ -33,21 +66,22 @@ const ChatroomItem = ({ chatroom }) => {
   };
   return (
     <>
-      <Grid item onClick={(event) => clickHandler(event)}>
-        <Paper elevation={4} className={classes.paper}>
-          <div>
-            <Typography variant="h6" align="left">
-              {chatroom.user.id.username}
-            </Typography>
+      <Grid
+        item
+        className={classes.chatItem}
+        onClick={(event) => clickHandler(event)}
+      >
+        <Paper elevation={0} className={classes.paper}>
+          <div style={{ margin: "auto 0 auto 0", padding: "0 1rem 0 0" }}>
+            <Avatar alt={chatroom.user.id.username} src={Profile} />
           </div>
           <div>
-            <Badge
-              badgeContent={chatroom.unreadMessages}
-              max={100}
-              color="secondary"
-            >
-              <MailIcon />
-            </Badge>
+            <div className={classes.chatDetailsContainer}>
+              <span className={classes.chatHeader}>
+                {chatroom.user.id.username}
+              </span>
+              <span className={classes.roleText}>User</span>
+            </div>
           </div>
         </Paper>
       </Grid>

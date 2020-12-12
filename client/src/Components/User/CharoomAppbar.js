@@ -20,7 +20,6 @@ import { format } from "date-fns";
 import ProfileIcon from "../../assets/profile.svg";
 import LogoutIcon from "../../assets/log-out.svg";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
-import { modfiyLastAccess } from "../../redux/actions/adminActions";
 import { clearActiveChatroom } from "../../redux/actions/userActions";
 
 const useStyles = makeStyles((theme) => ({

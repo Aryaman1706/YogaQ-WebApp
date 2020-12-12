@@ -1,16 +1,34 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { TextField, Grid, makeStyles, Button } from "@material-ui/core";
+import {
+  TextField,
+  Grid,
+  makeStyles,
+  Button,
+  IconButton,
+} from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import { admin as adminActions } from "../../redux/actions/index";
 import MessageItem from "./MessageItem";
 import Loader from "../Loader";
 import getUrls from "get-urls";
 import io from "socket.io-client";
+import SendIcon from "@material-ui/icons/Send";
 
 const useStyles = makeStyles((theme) => ({
   scrollDiv: {
     height: "calc(100vh - 140px)",
     overflowY: "auto",
+  },
+  chatInputContainer: {
+    borderTop: "1px solid rgb(216, 216, 224)",
+  },
+  input: {
+    borderRadius: 20,
+  },
+  chatFlexContainer: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
 }));
 
@@ -136,6 +154,13 @@ const MessageList = () => {
     return value;
   }
 
+  const enterSend = (e) => {
+    console.log(e);
+    if (e.code && /^enter$/i.test(e.code)) {
+      sendMessage();
+    }
+  };
+
   const sendMessage = () => {
     if (/\S/.test(message.trim())) {
       const data = {
@@ -170,6 +195,41 @@ const MessageList = () => {
     }
   };
 
+  const newMessageIndicator = () => {
+    return (
+      <>
+        <div style={{ display: "flex", flexDirection: "row", width: "100%" }}>
+          <span
+            style={{
+              width: "100%",
+              height: "1px",
+              backgroundColor: "red",
+              margin: "auto",
+            }}
+          />
+          <p
+            style={{
+              color: "red",
+              fontWeight: "bold",
+              padding: "1rem",
+              whiteSpace: "nowrap",
+            }}
+          >
+            Unread Messages
+          </p>
+          <span
+            style={{
+              width: "100%",
+              height: "1px",
+              backgroundColor: "red",
+              margin: "auto",
+            }}
+          />
+        </div>
+      </>
+    );
+  };
+
   return (
     <>
       {chatroomLoading && !active_chatroom ? (
@@ -177,48 +237,66 @@ const MessageList = () => {
       ) : (
         <Grid
           container
-          direction="column"
-          justify="flex-start"
-          alignItems="stretch"
+          direction="row"
+          justify="stretch"
+          alignItems="flex-end"
           spacing={2}
           style={{ overflow: "hidden" }}
         >
-          <Grid item className={classes.scrollDiv} ref={scroller}>
+          <Grid item xs={12} className={classes.scrollDiv} ref={scroller}>
             <Grid
               container
-              direction="column-reverse"
+              direction="row"
               justify="center"
               alignItems="stretch"
               spacing={2}
             >
               <div ref={lastMessage}></div>
               {admin_messages.length > 0 &&
-                admin_messages.map((item) => {
-                  return <MessageItem message={item} id={admin._id} />;
-                })}
+                admin_messages
+                  .slice(0)
+                  .reverse()
+                  .map((item, index) => {
+                    if (
+                      active_chatroom.unreadMessages > 0 &&
+                      admin_messages.length - index ===
+                        active_chatroom.unreadMessages
+                    ) {
+                      return (
+                        <>
+                          {newMessageIndicator()}
+                          <MessageItem message={item} id={admin._id} />
+                        </>
+                      );
+                    }
+                    return <MessageItem message={item} id={admin._id} />;
+                  })}
               <div ref={firstMessage}></div>
             </Grid>
           </Grid>
-          <Grid item>
-            <Grid container>
-              <Grid item xs={10}>
+          <Grid item xs={12} className={classes.chatInputContainer}>
+            <div className={classes.chatFlexContainer}>
+              <div style={{ width: "95%" }}>
                 <TextField
                   fullWidth
-                  variant="filled"
+                  variant="outlined"
+                  placeholder={`Message ${active_chatroom.partner.id.username} .  ..`}
                   value={message}
                   onChange={(event) => typing(event)}
+                  onKeyDown={(event) => enterSend(event)}
+                  InputProps={{ className: classes.input }}
                 />
-              </Grid>
-              <Grid item xs={2}>
-                <Button
-                  variant="contained"
+              </div>
+              <div style={{ margin: "auto" }}>
+                <IconButton
+                  disabled={!/\S/.test(message.trim())}
+                  onClick={() => sendMessage()}
                   color="primary"
-                  onClick={(event) => sendMessage()}
                 >
-                  Send
-                </Button>
-              </Grid>
-            </Grid>
+                  <SendIcon />
+                </IconButton>
+              </div>
+            </div>
           </Grid>
         </Grid>
       )}
