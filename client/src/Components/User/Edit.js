@@ -15,18 +15,22 @@ import { user as userActions } from "../../redux/actions/index";
 import Loader from "../Loader";
 
 const Edit = () => {
-  const { error, user, message } = useSelector((state) => state.user);
+  const { error, user, message, loading } = useSelector((state) => state.user);
   const [state, setState] = useState(null);
   const [compLoading, setCompLoading] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    setState(user);
     return () => {
       dispatch(userActions.clear());
     };
     // eslint-disable-next-line
   }, []);
+
+  useEffect(() => {
+    console.log(user);
+    setState(user);
+  }, [user]);
 
   useEffect(() => {
     if (/^Validation Error*/i.test(error)) {
@@ -109,7 +113,8 @@ const Edit = () => {
                 Edit Profile
               </Typography>
             </Grid>
-            {state && !compLoading ? (
+            {console.log(state)}
+            {state ? (
               <>
                 <Grid item>
                   <TextField

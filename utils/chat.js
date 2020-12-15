@@ -21,7 +21,7 @@ const chat = async (server) => {
       socket.join(chatroomId);
       console.log("joined!");
       console.log(socket.rooms);
-      socket.once("toServer", async ({ sender, message }) => {
+      socket.on("toServer", async ({ sender, message }) => {
         console.log("Message Recieved");
         const data = {
           chatroomId,

@@ -186,7 +186,7 @@ export const modfiyLastAccess = ({ id, formData }) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: ADMIN_ERROR,
-      payload: error.response.data.error,
+      payload: error.response?.data?.error,
     });
   }
 };
