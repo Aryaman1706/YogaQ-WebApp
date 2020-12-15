@@ -251,7 +251,7 @@ const MessageList = () => {
               alignItems="stretch"
               spacing={2}
             >
-              <div ref={lastMessage}></div>
+              <div ref={firstMessage}></div>
               {admin_messages.length > 0 &&
                 admin_messages
                   .slice(0)
@@ -271,7 +271,7 @@ const MessageList = () => {
                     }
                     return <MessageItem message={item} id={admin._id} />;
                   })}
-              <div ref={firstMessage}></div>
+              <div ref={lastMessage}></div>
             </Grid>
           </Grid>
           <Grid item xs={12} className={classes.chatInputContainer}>
