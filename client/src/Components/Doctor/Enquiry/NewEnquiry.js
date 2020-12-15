@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Grid, Typography } from "@material-ui/core";
+import { Button, Grid, Paper, Typography } from "@material-ui/core";
 import Loader from "../../Loader";
 import Swal from "sweetalert2";
 import { v4 as uuidV4 } from "uuid";
@@ -9,6 +9,8 @@ import { enquiry } from "../../../redux/actions";
 import BasicInfo from "./BasicInfo";
 import QualificationalInfo from "./QualificationalInfo";
 import Professional from "./Professional";
+import background from "../../../assets/background.svg";
+import { clearUnreadMessages } from "../../../redux/actions/userActions";
 
 const NewEnquiry = () => {
   // Basic Info
@@ -129,78 +131,99 @@ const NewEnquiry = () => {
 
   return (
     <>
-      <Grid container direction="row" justify="center" alignItems="stretch">
-        <Grid item xs={2} lg={4}></Grid>
-        <Grid item xs={8} lg={4}>
-          <Grid
-            container
-            direction="column"
-            justify="space-around"
-            alignItems="stretch"
-            spacing={2}
-          >
-            <Grid item>
-              <Typography variant="h4" align="center">
-                Be a Partner
-              </Typography>
-            </Grid>
-            {compLoading ? (
-              <Loader />
-            ) : (
-              <>
+      <div
+        style={{
+          backgroundImage: `url(${background})`,
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "contain",
+          backgroundAttachment: "fixed",
+        }}
+      >
+        <Grid
+          container
+          direction="row"
+          justify="space-around"
+          alignItems="stretch"
+        >
+          {/* <Grid item xs={2} lg={4}></Grid> */}
+          <Grid item xs={8} lg={6}>
+            <Paper elevation={8} style={{ padding: 50, marginTop: "6rem" }}>
+              <Grid
+                container
+                direction="column"
+                justify="space-around"
+                alignItems="stretch"
+                spacing={2}
+              >
                 <Grid item>
-                  <Typography variant="h5" align="center">
-                    Personal Details
+                  <Typography variant="h4" align="center">
+                    Be a Partner
                   </Typography>
                 </Grid>
-                <BasicInfo
-                  langs={langs}
-                  state={state}
-                  setLangs={setLangs}
-                  setState={setState}
-                />
-                <Grid item>
-                  <Typography variant="h5" align="center">
-                    Qualificational Details
-                  </Typography>
-                </Grid>
-                <QualificationalInfo
-                  edu={edu}
-                  docs={docs}
-                  files={files}
-                  setEdu={setEdu}
-                  setDocs={setDocs}
-                  setFiles={setFiles}
-                />
-                <Grid item>
-                  <Typography variant="h5" align="center">
-                    Professional Details
-                  </Typography>
-                </Grid>
-                <Professional
-                  prof={prof}
-                  files={files}
-                  expertise={expertise}
-                  setProf={setProf}
-                  setFiles={setFiles}
-                  setExpertise={setExpertise}
-                />
-                <Grid item>
-                  <Button
-                    fullWidth
-                    variant="contained"
-                    color="primary"
-                    onClick={(event) => submitHandler()}
-                  >
-                    Submit
-                  </Button>
-                </Grid>
-              </>
-            )}
+                {compLoading ? (
+                  <Loader />
+                ) : (
+                  <>
+                    <Grid item>
+                      <Typography variant="h5" align="center">
+                        Personal Details
+                      </Typography>
+                    </Grid>
+                    <BasicInfo
+                      langs={langs}
+                      state={state}
+                      setLangs={setLangs}
+                      setState={setState}
+                    />
+                    <Grid item>
+                      <Typography variant="h5" align="center">
+                        Qualificational Details
+                      </Typography>
+                    </Grid>
+                    <QualificationalInfo
+                      edu={edu}
+                      docs={docs}
+                      files={files}
+                      setEdu={setEdu}
+                      setDocs={setDocs}
+                      setFiles={setFiles}
+                    />
+                    <Grid item>
+                      <Typography variant="h5" align="center">
+                        Professional Details
+                      </Typography>
+                    </Grid>
+                    <Professional
+                      prof={prof}
+                      files={files}
+                      expertise={expertise}
+                      setProf={setProf}
+                      setFiles={setFiles}
+                      setExpertise={setExpertise}
+                    />
+                    <Grid item>
+                      <Button
+                        fullWidth
+                        variant="contained"
+                        style={{
+                          backgroundColor: "#0FC1A7",
+                          height: "50px",
+                          backgroundImage:
+                            "linear-gradient(315deg, #abe9cd 0%, #3eadcf 74%)",
+                        }}
+                        color="primary"
+                        onClick={() => submitHandler()}
+                      >
+                        Submit
+                      </Button>
+                    </Grid>
+                  </>
+                )}
+              </Grid>
+            </Paper>
           </Grid>
         </Grid>
-        <Grid item xs={2} lg={4}></Grid>
-      </Grid>
+      </div>
     </>
   );
 };
