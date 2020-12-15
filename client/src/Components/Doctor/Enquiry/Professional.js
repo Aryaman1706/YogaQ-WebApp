@@ -13,6 +13,9 @@ const useStyles = makeStyles((theme) => ({
   input: {
     display: "none",
   },
+  active: {
+    color: "blue",
+  },
 }));
 
 const Professional = ({
@@ -132,7 +135,10 @@ const Professional = ({
                       <Tooltip title="Add Document" placement="top" arrow>
                         {/*  */}
                         <label htmlFor={obj.doc}>
-                          <IconButton component="span">
+                          <IconButton
+                            component="span"
+                            className={files[obj.doc] && classes.active}
+                          >
                             <AttachFile />
                           </IconButton>
                         </label>
