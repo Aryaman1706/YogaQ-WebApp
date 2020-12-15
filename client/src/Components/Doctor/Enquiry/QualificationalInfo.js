@@ -18,6 +18,9 @@ const useStyles = makeStyles((theme) => ({
   input: {
     display: "none",
   },
+  active: {
+    color: "blue",
+  },
 }));
 
 const QualificationalInfo = ({
@@ -148,7 +151,7 @@ const QualificationalInfo = ({
                     justify="flex-start"
                     alignItems="stretch"
                   >
-                    <Grid item xs={5}>
+                    <Grid item xs={10} lg={5}>
                       <TextField
                         fullWidth
                         variant="outlined"
@@ -158,7 +161,7 @@ const QualificationalInfo = ({
                         onChange={(event) => docChange(event, index)}
                       />
                     </Grid>
-                    <Grid item xs={5}>
+                    <Grid item xs={10} lg={5}>
                       <TextField
                         fullWidth
                         variant="outlined"
@@ -178,6 +181,7 @@ const QualificationalInfo = ({
                       <Tooltip title="Add Document" placement="top" arrow>
                         <IconButton
                           onClick={(event) => attachFile(event, obj.doc)}
+                          className={files[obj.doc] && classes.active}
                         >
                           <AttachFile />
                         </IconButton>
@@ -185,7 +189,7 @@ const QualificationalInfo = ({
                     </Grid>
                   </Grid>
                 </Grid>
-                <Grid item xs={1}>
+                <Grid item xs={12} lg={1}>
                   {index === docs.length - 1 ? (
                     <IconButton onClick={(event) => addRow(event)}>
                       <Add />
