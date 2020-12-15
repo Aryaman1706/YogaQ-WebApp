@@ -73,18 +73,18 @@ const MessageItem = ({ message, id }) => {
 
   return (
     <>
-      <Grid item>
-        <Grid
-          container
-          spacing={0}
-          justify={
-            message.sender.id.toString() === id.toString()
-              ? "flex-end"
-              : "flex-start"
-          }
-          style={{ width: "100%", height: "100%" }}
-        >
-          <Grid item xs={8}>
+      <Grid item xs={12} style={{ height: "fit-content" }}>
+        <Grid container direction="row" alignItems="stretch" spacing={0}>
+          <Grid
+            container
+            item
+            xs={12}
+            justify={
+              message.sender.id.toString() === id.toString()
+                ? "flex-end"
+                : "flex-start"
+            }
+          >
             <Paper
               elevation={0}
               className={
@@ -116,7 +116,6 @@ const MessageItem = ({ message, id }) => {
               </Grid>
             </Paper>
           </Grid>
-          <Grid item xs={4}></Grid>
         </Grid>
       </Grid>
     </>

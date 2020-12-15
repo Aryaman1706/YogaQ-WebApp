@@ -10,16 +10,17 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
   },
   item: {
-    border: "2px solid rgb(104, 118, 141)",
+    border: "1px solid rgb(216, 216, 224)",
     borderTop: "0px",
     borderLeft: "0px",
-    padding: "15px 10px 15px 10px",
-    height: "calc(100vh - 50px)",
+    padding: "0px 10px 0px 10px",
+    height: "calc(100vh - 70px)",
     overflowY: "auto",
+    backgroundColor: "#fff",
   },
   itemB: {
-    padding: "15px 10px 15px 10px",
-    height: "calc(100vh - 50px)",
+    padding: "0px 10px 0px 10px",
+    height: "calc(100vh - 70px)",
   },
 }));
 

@@ -42,7 +42,7 @@ const chat = async (server) => {
         }
         socket.to(chatroomId).emit("toClient", data);
         console.log("Message sent");
-        Message.create(data);
+        await Message.create(data);
       });
     });
 

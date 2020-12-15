@@ -288,7 +288,7 @@ const MessageList = ({ socket }) => {
               <div style={{ margin: "auto" }}>
                 <IconButton
                   disabled={!/\S/.test(message.trim())}
-                  onClick={(event) => sendMessage()}
+                  onClick={() => sendMessage()}
                   color="primary"
                 >
                   <SendIcon />

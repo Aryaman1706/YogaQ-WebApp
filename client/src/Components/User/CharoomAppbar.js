@@ -19,6 +19,8 @@ import Profile from "../../assets/user.svg";
 import { format } from "date-fns";
 import ProfileIcon from "../../assets/profile.svg";
 import LogoutIcon from "../../assets/log-out.svg";
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+import { clearActiveChatroom } from "../../redux/actions/userActions";
 
 const useStyles = makeStyles((theme) => ({
   parent: {
@@ -109,6 +111,17 @@ const useStyles = makeStyles((theme) => ({
       borderRadius: 6,
     },
   },
+  hide: {
+    [theme.breakpoints.down("md")]: {
+      display: "none",
+    },
+  },
+  backIcon: {
+    display: "none",
+    [theme.breakpoints.down("md")]: {
+      display: "block",
+    },
+  },
 }));
 
 const StyledMenu = withStyles({
@@ -157,7 +170,6 @@ const CharoomAppbar = ({ user }) => {
 
   return (
     <>
-      {console.log(user)}
       <Grid
         container
         direction="row"
@@ -165,7 +177,15 @@ const CharoomAppbar = ({ user }) => {
         alignItems="stretch"
         className={classes.parent}
       >
-        <Grid item xs={2}>
+        <Grid
+          item
+          xs={12}
+          sm={12}
+          md={12}
+          lg={2}
+          xl={2}
+          className={active_chatroom && classes.hide}
+        >
           <Grid
             container
             direction="row"
@@ -251,14 +271,32 @@ const CharoomAppbar = ({ user }) => {
             </Grid>
           </Grid>
         </Grid>
-        <Grid item xs={10}>
+        <Grid
+          item
+          xs={12}
+          sm={12}
+          md={12}
+          lg={10}
+          xl={10}
+          className={!active_chatroom && classes.hide}
+        >
           <Grid
             container
             justify="center"
             alignItems="flex-start"
             className={classes.appbar}
           >
-            <Grid item xs={11} className={classes.title}>
+            <Grid
+              item
+              xs={1}
+              className={classes.backIcon}
+              onClick={() => {
+                dispatch(clearActiveChatroom());
+              }}
+            >
+              <ArrowBackIcon />
+            </Grid>
+            <Grid item xs={8} sm={10} md={10} lg={11} className={classes.title}>
               {active_chatroom ? (
                 <div style={{ display: "flex", placeItems: "center" }}>
                   <Avatar

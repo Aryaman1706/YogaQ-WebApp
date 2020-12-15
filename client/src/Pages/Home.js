@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Grid, makeStyles, Hidden } from "@material-ui/core";
+import { Grid, makeStyles } from "@material-ui/core";
 import { useSelector } from "react-redux";
 import ChatroomList from "../Components/User/ChatroomList";
 import Chatroom from "../Components/User/Chatroom";
@@ -31,6 +31,14 @@ const useStyles = makeStyles((theme) => ({
     overflowY: "auto",
     backgroundColor: "#fff",
   },
+  hide: {
+    [theme.breakpoints.down("md")]: {
+      display: "none",
+    },
+  },
+  hideDrawer: {
+    display: "none",
+  },
 }));
 
 const Home = () => {
@@ -59,6 +67,15 @@ const Home = () => {
       });
     }
   }, [showDrawer, active_chatroom]);
+
+  const renderClassname = () => {
+    if (!active_chatroom || showDrawer) {
+      return `${classes.itemB} ${classes.hide}`;
+    } else if (active_chatroom) {
+      return classes.itemB;
+    }
+  };
+
   return (
     <>
       {loading ? (
@@ -72,18 +89,41 @@ const Home = () => {
             alignItems="stretch"
             className={classes.container}
           >
-            <Grid item xs={widths.chatroomList} className={classes.item}>
+            <Grid
+              item
+              xs={12}
+              lg={widths.chatroomList}
+              className={
+                active_chatroom
+                  ? `${classes.item} ${classes.hide}`
+                  : classes.item
+              }
+            >
               <ChatroomList />
             </Grid>
-            <Grid item xs={widths.chatroom} className={classes.itemB}>
+            <Grid
+              item
+              xs={12}
+              sm={12}
+              md={12}
+              lg={widths.chatroom}
+              xl={widths.chatroom}
+              className={renderClassname()}
+            >
               <Chatroom />
             </Grid>
             {active_chatroom ? (
-              <Hidden xsUp={!showDrawer}>
-                <Grid item xs={widths.drawer} className={classes.itemC}>
-                  <ChatroomDrawer />
-                </Grid>
-              </Hidden>
+              <Grid
+                item
+                xs={12}
+                sm={12}
+                md={12}
+                lg={widths.drawer}
+                xl={widths.drawer}
+                className={showDrawer ? classes.itemC : classes.hideDrawer}
+              >
+                <ChatroomDrawer />
+              </Grid>
             ) : null}
           </Grid>
         </>

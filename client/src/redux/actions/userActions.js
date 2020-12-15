@@ -17,6 +17,7 @@ import {
   CLEAR_USER_CHATROOM,
   CLEAR_UNREAD_MESSAGES,
   CLEAR_UNREAD_MESSAGES_ACTIVE,
+  CLEAR_ACTIVE_CHATROOM,
 } from "../types";
 import axios from "../../utils/axios";
 import store from "../store";
@@ -279,5 +280,12 @@ export const clearUnreadMessagesActive = () => async (dispatch) => {
   dispatch({
     type: CLEAR_UNREAD_MESSAGES_ACTIVE,
     payload: activeChatroom,
+  });
+};
+
+// * Set active chatroom to null
+export const clearActiveChatroom = () => async (dispatch) => {
+  dispatch({
+    type: CLEAR_ACTIVE_CHATROOM,
   });
 };
