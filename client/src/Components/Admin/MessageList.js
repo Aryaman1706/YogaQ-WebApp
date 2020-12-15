@@ -5,7 +5,6 @@ import { admin as adminActions } from "../../redux/actions/index";
 import MessageItem from "./MessageItem";
 import Loader from "../Loader";
 import getUrls from "get-urls";
-import io from "socket.io-client";
 
 const useStyles = makeStyles((theme) => ({
   scrollDiv: {
@@ -14,14 +13,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const MessageList = () => {
+const MessageList = ({ socket }) => {
   const classes = useStyles();
 
   // * Socket Setup
-  const ENDPOINT = process.env.REACT_APP_SERVER_URL;
-  const socket = useRef();
   useEffect(() => {
-    socket.current = io(ENDPOINT);
     socket.current.emit("join", active_chatroom._id);
 
     socket.current.on("toClient", (message) => {
@@ -44,6 +40,7 @@ const MessageList = () => {
   const [messageLoading, setMessageLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [height, setHeight] = useState(null);
+  const [top, setTop] = useState(false);
 
   const scroller = useRef();
   const observer = useRef();
@@ -54,6 +51,7 @@ const MessageList = () => {
       if (observer.current) observer.current.disconnect();
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting && !message_end) {
+          setTop(true);
           nextHandler();
         }
       });
@@ -71,7 +69,7 @@ const MessageList = () => {
 
   useEffect(() => {
     if (/Get chatroom first*/i.test(error)) {
-      loadChatroom();
+      // loadChatroom();
     }
     // eslint-disable-next-line
   }, [error]);
@@ -79,6 +77,7 @@ const MessageList = () => {
   // * Clear
   useEffect(() => {
     return () => {
+      socket.current.removeAllListeners("toClient");
       dispatch(
         adminActions.modfiyLastAccess({
           id: active_chatroom._id,
@@ -91,8 +90,12 @@ const MessageList = () => {
 
   // * Scroll to bottom
   useEffect(() => {
-    scroller.current.scrollTop = scroller.current.scrollHeight - height;
-    // lastMessage.current && lastMessage.current.scrollIntoView();
+    if (top) {
+      scroller.current.scrollTop = scroller.current.scrollHeight - height;
+      setTop(false);
+    } else {
+      lastMessage.current.scrollIntoView();
+    }
     // eslint-disable-next-line
   }, [admin_messages]);
 
@@ -141,7 +144,7 @@ const MessageList = () => {
       const data = {
         sender: {
           id: admin._id,
-          model: "Admin",
+          model: admin.role.trim().replace(/^\w/, (char) => char.toUpperCase()),
         },
         message: {
           text: message.trim(),
@@ -167,6 +170,7 @@ const MessageList = () => {
         })
       );
       socket.current.emit("toServer", data);
+      // dispatch(userActions.clearUnreadMessagesActive());
     }
   };
 

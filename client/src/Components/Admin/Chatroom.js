@@ -1,15 +1,22 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import MessageList from "./MessageList";
 import Loader from "../Loader";
+import io from "socket.io-client";
+import ChatroomWaiting from "../User/ChatroomWaiting";
 
 const Chatroom = () => {
   const { chatroomLoading, active_chatroom } = useSelector(
     (state) => state.admin
   );
 
+  // * Socket Setup
+  const ENDPOINT = process.env.REACT_APP_SERVER_URL;
+  const socket = useRef();
+
   useEffect(() => {
-    console.log("Loaded Chatroom");
+    socket.current = io(ENDPOINT);
+    // eslint-disable-next-line
   }, []);
 
   const render = () => {
@@ -17,10 +24,10 @@ const Chatroom = () => {
       return <Loader />;
     }
     if (!chatroomLoading && !active_chatroom) {
-      return <h1>No Open Chatroom</h1>;
+      return <ChatroomWaiting />;
     }
     if (active_chatroom && !chatroomLoading) {
-      return <MessageList />;
+      return <MessageList socket={socket} />;
     }
   };
 
