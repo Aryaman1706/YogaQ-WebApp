@@ -114,7 +114,7 @@ const BasicInfo = ({ langs, setLangs, state, setState }) => {
           {langs.map((item, index) => {
             return (
               <Fragment key={index}>
-                <Grid item xs={4}>
+                <Grid item xs={10} lg={4}>
                   <TextField
                     fullWidth
                     variant="outlined"
@@ -138,7 +138,7 @@ const BasicInfo = ({ langs, setLangs, state, setState }) => {
               </Fragment>
             );
           })}
-          <Grid item xs={4}>
+          <Grid item xs={1} lg={4}>
             <IconButton onClick={(event) => addLang(event)}>
               <Add />
             </IconButton>

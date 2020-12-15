@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Grid, Paper, Typography } from "@material-ui/core";
+import { Button, Grid, Paper, Typography, makeStyles } from "@material-ui/core";
 import Loader from "../../Loader";
 import Swal from "sweetalert2";
 import { v4 as uuidV4 } from "uuid";
@@ -10,7 +10,28 @@ import BasicInfo from "./BasicInfo";
 import QualificationalInfo from "./QualificationalInfo";
 import Professional from "./Professional";
 import background from "../../../assets/background.svg";
-import { clearUnreadMessages } from "../../../redux/actions/userActions";
+
+const useStyles = makeStyles((theme) => ({
+  container: {
+    backgroundImage: `url(${background})`,
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "contain",
+    backgroundAttachment: "fixed",
+  },
+  btn: {
+    backgroundColor: "#0FC1A7",
+    height: "50px",
+    backgroundImage: "linear-gradient(315deg, #abe9cd 0%, #3eadcf 74%)",
+  },
+  paper: {
+    padding: 50,
+    marginTop: "6rem",
+    [theme.breakpoints.only("xs")]: {
+      padding: 10,
+      marginTop: "1rem",
+    },
+  },
+}));
 
 const NewEnquiry = () => {
   // Basic Info
@@ -24,7 +45,7 @@ const NewEnquiry = () => {
     description: "",
     email: "",
   });
-
+  const classes = useStyles();
   // Qualificational Info
   const [edu, setEdu] = useState({
     certificate: false,
@@ -107,7 +128,7 @@ const NewEnquiry = () => {
     };
     formData.append("qualificational", JSON.stringify(qualificational));
 
-    // * Appending Professional
+    // * Appending 8Professional
     formData.append("professional", JSON.stringify(prof));
 
     // * Appending Expertise
@@ -131,23 +152,15 @@ const NewEnquiry = () => {
 
   return (
     <>
-      <div
-        style={{
-          backgroundImage: `url(${background})`,
-          backgroundRepeat: "no-repeat",
-          backgroundSize: "contain",
-          backgroundAttachment: "fixed",
-        }}
-      >
+      <div className={classes.container}>
         <Grid
           container
           direction="row"
           justify="space-around"
           alignItems="stretch"
         >
-          {/* <Grid item xs={2} lg={4}></Grid> */}
-          <Grid item xs={8} lg={6}>
-            <Paper elevation={8} style={{ padding: 50, marginTop: "6rem" }}>
+          <Grid item xs={11} sm={10} lg={6}>
+            <Paper elevation={8} className={classes.paper}>
               <Grid
                 container
                 direction="column"
@@ -156,7 +169,11 @@ const NewEnquiry = () => {
                 spacing={2}
               >
                 <Grid item>
-                  <Typography variant="h4" align="center">
+                  <Typography
+                    variant="h4"
+                    align="center"
+                    style={{ fontWeight: "600" }}
+                  >
                     Be a Partner
                   </Typography>
                 </Grid>
@@ -205,12 +222,7 @@ const NewEnquiry = () => {
                       <Button
                         fullWidth
                         variant="contained"
-                        style={{
-                          backgroundColor: "#0FC1A7",
-                          height: "50px",
-                          backgroundImage:
-                            "linear-gradient(315deg, #abe9cd 0%, #3eadcf 74%)",
-                        }}
+                        className={classes.btn}
                         color="primary"
                         onClick={() => submitHandler()}
                       >
