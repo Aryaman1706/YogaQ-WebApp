@@ -112,7 +112,6 @@ const Appbar = () => {
           )}
         </Toolbar>
       </AppBar>
-      <Toolbar></Toolbar>
     </>
   );
 };
