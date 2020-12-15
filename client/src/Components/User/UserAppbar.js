@@ -1,26 +1,20 @@
 import React, { useState } from "react";
 import {
-  AppBar,
-  Toolbar,
   Typography,
   Button,
   IconButton,
   makeStyles,
   Menu,
-  MenuItem,
-  Link,
   Grid,
   Divider,
   Avatar,
   withStyles,
 } from "@material-ui/core";
-import { AccountCircle } from "@material-ui/icons";
 import { useHistory } from "react-router-dom";
 import { format } from "date-fns";
 import ProfileIcon from "../../assets/profile.svg";
 import Profile from "../../assets/user.svg";
 import LogoutIcon from "../../assets/log-out.svg";
-import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import AccountCircleOutlinedIcon from "@material-ui/icons/AccountCircleOutlined";
 
 const useStyles = makeStyles((theme) => ({
@@ -167,58 +161,6 @@ const UserAppbar = ({ isAuthenticated, user }) => {
   ));
   return (
     <>
-      {/* <AppBar className={classes.appbar}>
-        <Toolbar>
-          <Link
-            underline="none"
-            color="inherit"
-            className={classes.title}
-            onClick={(event) => {
-              history.push("/");
-            }}
-          >
-            <Typography variant="h6">YogaQ</Typography>
-          </Link>
-          {isAuthenticated && user ? (
-            <>
-              <IconButton
-                aria-controls="menu"
-                aria-haspopup="true"
-                onClick={handleClick}
-                color="inherit"
-              >
-                <AccountCircle />
-              </IconButton>
-              <Menu
-                id="menu"
-                keepMounted
-                anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
-                onClose={handleClose}
-              >
-                <MenuItem>
-                  <Link underline="none" color="inherit">
-                    Profile
-                  </Link>
-                </MenuItem>
-                <MenuItem>
-                  <Link underline="none" color="inherit">
-                    LogOut
-                  </Link>
-                </MenuItem>
-              </Menu>
-            </>
-          ) : (
-            <Button
-              color="inherit"
-              href={`${process.env.REACT_APP_SERVER_URL}/api/user/auth`}
-            >
-              Login with Google
-            </Button>
-          )}
-        </Toolbar>
-      </AppBar>
-      <Toolbar></Toolbar> */}
       <Grid
         container
         direction="row"
