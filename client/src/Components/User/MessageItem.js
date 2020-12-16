@@ -1,6 +1,7 @@
 import React from "react";
 import { Grid, Typography, makeStyles, Paper } from "@material-ui/core";
 import Linkify from "react-linkify";
+import { format } from "date-fns";
 
 const useStyles = makeStyles((theme) => ({
   sent: {
@@ -11,6 +12,9 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     width: "fit-content",
     maxWidth: "60%",
+    [theme.breakpoints.only("xs")]: {
+      maxWidth: "90%",
+    },
   },
   recieve: {
     backgroundColor: "lightblue",
@@ -20,12 +24,30 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     width: "fit-content",
     maxWidth: "60%",
+    [theme.breakpoints.only("xs")]: {
+      maxWidth: "90%",
+    },
   },
   embed: {
     padding: "5px 5px 5px 5px",
     borderRadius: "20px",
+    maxWidth: "fit-content",
     "&:hover": {
       backgroundColor: "lightblue",
+    },
+    [theme.breakpoints.only("xs")]: {
+      padding: 0,
+    },
+  },
+  embedImg: {
+    display: "block",
+    height: "100px",
+    objectFit: "cover",
+    maxWidth: "100%",
+    margin: "auto",
+    [theme.breakpoints.only("xs")]: {
+      height: "80px",
+      margin: 0,
     },
   },
 }));
@@ -40,7 +62,7 @@ const MessageItem = ({ message, id }) => {
       message.urlEmbeds.description
     ) {
       return (
-        <Grid item>
+        <Grid item xs={12}>
           <a
             href={message.link}
             rel="noreferrer"
@@ -54,7 +76,7 @@ const MessageItem = ({ message, id }) => {
               alignItems="stretch"
               className={classes.embed}
             >
-              <Grid item xs={6}>
+              <Grid item xs={6} lg={7}>
                 <Grid
                   container
                   direction="column"
@@ -62,24 +84,33 @@ const MessageItem = ({ message, id }) => {
                   alignItems="stretch"
                   spacing={1}
                 >
-                  <Grid item>{message.urlEmbeds.title}</Grid>
-                  <Grid item>{message.urlEmbeds.description}</Grid>
+                  <Grid
+                    item
+                    xs={12}
+                    lg={12}
+                    style={{ overflowWrap: "break-word" }}
+                  >
+                    {message.urlEmbeds.title}
+                  </Grid>
+                  <Grid
+                    item
+                    xs={12}
+                    lg={12}
+                    style={{ overflowWrap: "break-word" }}
+                  >
+                    {message.urlEmbeds.description}
+                  </Grid>
                 </Grid>
               </Grid>
               <Grid
                 item
-                xs={4}
+                xs={6}
+                lg={4}
                 style={{ display: "flex", placeItems: "center" }}
               >
                 <img
                   src={message.urlEmbeds.image}
-                  style={{
-                    display: "block",
-                    height: "100px",
-                    objectFit: "cover",
-                    maxWidth: "100%",
-                    margin: "auto",
-                  }}
+                  className={classes.embedImg}
                   alt=""
                 />
               </Grid>
@@ -129,10 +160,10 @@ const MessageItem = ({ message, id }) => {
                     </Typography>
                   </Linkify>
                 </Grid>
-                <Grid item>
-                  <Typography variant="caption" display="block" align="right">
-                    {new Date(message.time).toLocaleString()}
-                  </Typography>
+                <Grid item lg={12} style={{ textAlign: "right" }}>
+                  <span style={{ fontSize: "0.7rem" }}>
+                    {format(new Date(message.time), "p")}
+                  </span>
                 </Grid>
               </Grid>
             </Paper>

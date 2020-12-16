@@ -5,6 +5,7 @@ import { admin as adminActions } from "../../redux/actions/index";
 import MessageItem from "./MessageItem";
 import Loader from "../Loader";
 import getUrls from "get-urls";
+import SendIcon from "@material-ui/icons/Send";
 
 const useStyles = makeStyles((theme) => ({
   scrollDiv: {

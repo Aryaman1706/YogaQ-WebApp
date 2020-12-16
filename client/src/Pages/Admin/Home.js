@@ -22,11 +22,36 @@ const useStyles = makeStyles((theme) => ({
     padding: "0px 10px 0px 10px",
     height: "calc(100vh - 70px)",
   },
+  itemC: {
+    border: "1px solid rgb(216, 216, 224)",
+    borderTop: "0px",
+    padding: "15px 10px 15px 10px",
+    height: "calc(100vh - 70px)",
+    overflowY: "auto",
+    backgroundColor: "#fff",
+  },
+  hide: {
+    [theme.breakpoints.down("md")]: {
+      display: "none",
+    },
+  },
+  hideDrawer: {
+    display: "none",
+  },
 }));
 
 const Home = () => {
   const classes = useStyles();
-  const { loading } = useSelector((state) => state.admin);
+  const { loading, active_chatroom } = useSelector((state) => state.admin);
+
+  const renderClassname = () => {
+    if (!active_chatroom) {
+      return `${classes.itemB} ${classes.hide}`;
+    } else if (active_chatroom) {
+      return classes.itemB;
+    }
+  };
+
   return (
     <>
       {loading ? (
@@ -40,10 +65,27 @@ const Home = () => {
             alignItems="stretch"
             className={classes.container}
           >
-            <Grid item xs={2} className={classes.item}>
+            <Grid
+              item
+              xs={12}
+              lg={2}
+              className={
+                active_chatroom
+                  ? `${classes.item} ${classes.hide}`
+                  : classes.item
+              }
+            >
               <ChatroomList />
             </Grid>
-            <Grid item xs={10} className={classes.itemB}>
+            <Grid
+              item
+              xs={12}
+              sm={12}
+              md={12}
+              lg={10}
+              xl={10}
+              className={renderClassname()}
+            >
               <Chatroom />
             </Grid>
           </Grid>
