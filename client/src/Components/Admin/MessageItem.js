@@ -1,6 +1,7 @@
 import React from "react";
 import { Grid, Typography, makeStyles, Paper } from "@material-ui/core";
 import Linkify from "react-linkify";
+import { format } from "date-fns";
 
 const useStyles = makeStyles((theme) => ({
   sent: {
@@ -9,7 +10,11 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: "20px",
     height: "100%",
     display: "flex",
-    placeItems: "center",
+    width: "fit-content",
+    maxWidth: "60%",
+    [theme.breakpoints.only("xs")]: {
+      maxWidth: "90%",
+    },
   },
   recieve: {
     backgroundColor: "lightblue",
@@ -17,7 +22,32 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: "20px",
     height: "100%",
     display: "flex",
-    placeItems: "center",
+    width: "fit-content",
+    maxWidth: "60%",
+    [theme.breakpoints.only("xs")]: {
+      maxWidth: "90%",
+    },
+  },
+  embed: {
+    padding: "5px 5px 5px 5px",
+    borderRadius: "20px",
+    "&:hover": {
+      backgroundColor: "lightblue",
+    },
+    [theme.breakpoints.only("xs")]: {
+      padding: 0,
+    },
+  },
+  embedImg: {
+    display: "block",
+    height: "100px",
+    objectFit: "cover",
+    maxWidth: "100%",
+    margin: "auto",
+    [theme.breakpoints.only("xs")]: {
+      height: "60px",
+      margin: 0,
+    },
   },
 }));
 
@@ -32,38 +62,59 @@ const MessageItem = ({ message, id }) => {
     ) {
       return (
         <Grid item>
-          <Grid
-            container
-            direction="row"
-            justify="space-around"
-            alignItems="stretch"
+          <a
+            href={message.link}
+            rel="noreferrer"
+            target="_blank"
+            style={{ textDecoration: "none", color: "inherit" }}
           >
-            <Grid item xs={6}>
+            <Grid
+              container
+              direction="row"
+              justify="space-between"
+              alignItems="stretch"
+              className={classes.embed}
+            >
+              <Grid item xs={6} lg={6}>
+                <Grid
+                  container
+                  direction="column"
+                  justify="center"
+                  alignItems="stretch"
+                  spacing={1}
+                >
+                  <Grid
+                    item
+                    xs={12}
+                    lg={12}
+                    style={{ overflowWrap: "break-word" }}
+                  >
+                    {message.urlEmbeds.title}
+                  </Grid>
+                  <Grid
+                    item
+                    xs={12}
+                    lg={12}
+                    style={{ overflowWrap: "break-word" }}
+                  >
+                    {message.urlEmbeds.description}
+                  </Grid>
+                </Grid>
+              </Grid>
               <Grid
-                container
-                direction="column"
-                justify="center"
-                alignItems="stretch"
-                spacing={1}
+                item
+                xs={6}
+                lg={4}
+                style={{ display: "flex", placeItems: "center" }}
               >
-                <Grid item>{message.urlEmbeds.title}</Grid>
-                <Grid item>{message.urlEmbeds.description}</Grid>
+                <img
+                  src={message.urlEmbeds.image}
+                  className={classes.embedImg}
+                  alt=""
+                />
               </Grid>
             </Grid>
-            <Grid item xs={4} style={{ display: "flex", placeItems: "center" }}>
-              <img
-                src={message.urlEmbeds.image}
-                style={{
-                  display: "block",
-                  height: "100px",
-                  objectFit: "cover",
-                  maxWidth: "100%",
-                  margin: "auto",
-                }}
-                alt=""
-              />
-            </Grid>
-          </Grid>
+          </a>
         </Grid>
       );
     } else {
@@ -108,10 +159,10 @@ const MessageItem = ({ message, id }) => {
                     </Typography>
                   </Linkify>
                 </Grid>
-                <Grid item>
-                  <Typography variant="caption" display="block" align="right">
-                    {new Date(message.time).toLocaleString()}
-                  </Typography>
+                <Grid item lg={12} style={{ textAlign: "right" }}>
+                  <span style={{ fontSize: "0.7rem" }}>
+                    {format(new Date(message.time), "p")}
+                  </span>
                 </Grid>
               </Grid>
             </Paper>

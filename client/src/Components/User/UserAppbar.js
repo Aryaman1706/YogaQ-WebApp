@@ -39,9 +39,10 @@ const useStyles = makeStyles((theme) => ({
 
   btnContainer: {
     textAlign: "right",
-    "&>button": {
-      paddingRight: "15px",
-    },
+    paddingRight: "10px",
+    // "&>button": {
+    //   paddingRight: "15px",
+    // },
   },
   logo: {
     color: "#0FC1A7",
