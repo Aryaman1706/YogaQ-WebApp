@@ -12,6 +12,8 @@ import {
   ADMIN_LOADING,
   ADMIN_CHATROOM_LOADING,
   CLEAR_ADMIN_ERROR,
+  CLEAR_ADMIN_ACTIVE_CHATROOM,
+  CLEAR_UNREAD_MESSAGES_ACTIVE_ADMIN,
 } from "../types";
 
 const defaultState = {
@@ -98,6 +100,16 @@ const stateHandler = (state = defaultState, action) => {
         ...state,
         error: null,
         message: null,
+      };
+    case CLEAR_ADMIN_ACTIVE_CHATROOM:
+      return {
+        ...state,
+        active_chatroom: null,
+      };
+    case CLEAR_UNREAD_MESSAGES_ACTIVE_ADMIN:
+      return {
+        ...state,
+        active_chatroom: action.payload,
       };
     default:
       return state;

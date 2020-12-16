@@ -62,6 +62,7 @@ const ChatroomItem = ({ chatroom }) => {
       await dispatch(adminActions.setChatroomLoading(true));
       await dispatch(adminActions.getChatroom(chatroom._id));
       await dispatch(adminActions.setChatroomLoading(false));
+      await dispatch(adminActions.clearUnreadMessages(chatroom._id));
     }
   };
   return (

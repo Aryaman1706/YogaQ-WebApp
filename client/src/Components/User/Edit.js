@@ -8,16 +8,42 @@ import {
   Select,
   MenuItem,
   Button,
+  makeStyles,
+  Paper,
 } from "@material-ui/core";
 import Swal from "sweetalert2";
 import { useSelector, useDispatch } from "react-redux";
 import { user as userActions } from "../../redux/actions/index";
 import Loader from "../Loader";
+import background from "../../assets/background.svg";
+
+const useStyles = makeStyles((theme) => ({
+  container: {
+    backgroundImage: `url(${background})`,
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "contain",
+    backgroundAttachment: "fixed",
+  },
+  btn: {
+    backgroundColor: "#0FC1A7",
+    height: "50px",
+    backgroundImage: "linear-gradient(315deg, #abe9cd 0%, #3eadcf 74%)",
+  },
+  paper: {
+    padding: 50,
+    marginTop: "6rem",
+    [theme.breakpoints.only("xs")]: {
+      padding: 10,
+      marginTop: "1rem",
+    },
+  },
+}));
 
 const Edit = () => {
   const { error, user, message, loading } = useSelector((state) => state.user);
   const [state, setState] = useState(null);
   const [compLoading, setCompLoading] = useState(false);
+  const classes = useStyles();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -98,106 +124,113 @@ const Edit = () => {
 
   return (
     <>
-      <Grid container direction="row" justify="center" alignItems="stretch">
-        <Grid item xs={2} lg={4}></Grid>
-        <Grid item xs={8} lg={4}>
-          <Grid
-            container
-            direction="column"
-            justify="space-around"
-            alignItems="stretch"
-            spacing={2}
-          >
-            <Grid item>
-              <Typography variant="h5" align="center">
-                Edit Profile
-              </Typography>
-            </Grid>
-            {console.log(state)}
-            {state ? (
-              <>
+      <div className={classes.container}>
+        <Grid container direction="row" justify="center" alignItems="stretch">
+          <Grid item xs={11} sm={10} lg={6}>
+            <Paper elevation={8} className={classes.paper}>
+              <Grid
+                container
+                direction="column"
+                justify="space-around"
+                alignItems="stretch"
+                spacing={2}
+              >
                 <Grid item>
-                  <TextField
-                    fullWidth
-                    variant="outlined"
-                    label="Email Address"
-                    value={state.email}
-                  />
-                </Grid>
-                <Grid item>
-                  <TextField
-                    fullWidth
-                    variant="outlined"
-                    label="User Name"
-                    id="username"
-                    value={state.username}
-                    onChange={(event) => changeHandler(event)}
-                  />
-                </Grid>
-                <Grid item>
-                  <TextField
-                    fullWidth
-                    variant="outlined"
-                    label="Phone Number"
-                    id="phoneNumber"
-                    value={state.phoneNumber}
-                    onChange={(event) => changeHandler(event)}
-                  />
-                </Grid>
-                <Grid item>
-                  <TextField
-                    fullWidth
-                    type="number"
-                    variant="outlined"
-                    label="Age"
-                    id="age"
-                    value={state.age}
-                    onChange={(event) => changeHandler(event)}
-                  />
-                </Grid>
-                <Grid item>
-                  <FormControl variant="outlined" fullWidth>
-                    <InputLabel id="genderSelect">Gender</InputLabel>
-                    <Select
-                      labelId="genderSelect"
-                      label="Gender"
-                      value={state.gender}
-                      onChange={(event) => genderHandler(event)}
-                    >
-                      <MenuItem value="male">Male</MenuItem>
-                      <MenuItem value="female">Female</MenuItem>
-                      <MenuItem value="other">Other</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid item>
-                  <TextField
-                    fullWidth
-                    variant="outlined"
-                    label="Country"
-                    id="country"
-                    value={state.country}
-                    onChange={(event) => changeHandler(event)}
-                  />
-                </Grid>
-                <Grid item>
-                  <Button
-                    fullWidth
-                    variant="contained"
-                    color="primary"
-                    onClick={(event) => submitHandler(event)}
+                  <Typography
+                    variant="h4"
+                    align="center"
+                    style={{ fontWeight: "600" }}
                   >
-                    Submit
-                  </Button>
+                    Edit Profile
+                  </Typography>
                 </Grid>
-              </>
-            ) : (
-              <Loader />
-            )}
+                {console.log(state)}
+                {state ? (
+                  <>
+                    <Grid item>
+                      <TextField
+                        fullWidth
+                        variant="outlined"
+                        label="Email Address"
+                        value={state.email}
+                      />
+                    </Grid>
+                    <Grid item>
+                      <TextField
+                        fullWidth
+                        variant="outlined"
+                        label="User Name"
+                        id="username"
+                        value={state.username}
+                        onChange={(event) => changeHandler(event)}
+                      />
+                    </Grid>
+                    <Grid item>
+                      <TextField
+                        fullWidth
+                        variant="outlined"
+                        label="Phone Number"
+                        id="phoneNumber"
+                        value={state.phoneNumber}
+                        onChange={(event) => changeHandler(event)}
+                      />
+                    </Grid>
+                    <Grid item>
+                      <TextField
+                        fullWidth
+                        type="number"
+                        variant="outlined"
+                        label="Age"
+                        id="age"
+                        value={state.age}
+                        onChange={(event) => changeHandler(event)}
+                      />
+                    </Grid>
+                    <Grid item>
+                      <FormControl variant="outlined" fullWidth>
+                        <InputLabel id="genderSelect">Gender</InputLabel>
+                        <Select
+                          labelId="genderSelect"
+                          label="Gender"
+                          value={state.gender}
+                          onChange={(event) => genderHandler(event)}
+                        >
+                          <MenuItem value="male">Male</MenuItem>
+                          <MenuItem value="female">Female</MenuItem>
+                          <MenuItem value="other">Other</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                    <Grid item>
+                      <TextField
+                        fullWidth
+                        variant="outlined"
+                        label="Country"
+                        id="country"
+                        value={state.country}
+                        onChange={(event) => changeHandler(event)}
+                      />
+                    </Grid>
+                    <Grid item>
+                      <Button
+                        fullWidth
+                        variant="contained"
+                        color="primary"
+                        className={classes.btn}
+                        onClick={(event) => submitHandler(event)}
+                      >
+                        Submit
+                      </Button>
+                    </Grid>
+                  </>
+                ) : (
+                  <Loader />
+                )}
+              </Grid>
+            </Paper>
           </Grid>
         </Grid>
-        <Grid item xs={2} lg={4}></Grid>
-      </Grid>
+      </div>
     </>
   );
 };
