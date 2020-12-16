@@ -263,9 +263,11 @@ const AdminAppbar = ({ isAuthenticated, admin }) => {
             ) : (
               <Button
                 className={classes.btn}
-                href={`${process.env.REACT_APP_SERVER_URL}/api/user/auth`}
+                onClick={() => {
+                  history.push("/admin/login");
+                }}
               >
-                Login with Google
+                Login as Admin
               </Button>
             )}
           </Grid>
