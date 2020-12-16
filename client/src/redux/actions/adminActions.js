@@ -12,8 +12,11 @@ import {
   ADMIN_LOADING,
   ADMIN_CHATROOM_LOADING,
   CLEAR_ADMIN_ERROR,
+  CLEAR_UNREAD_MESSAGES_ACTIVE_ADMIN,
+  CLEAR_ADMIN_ACTIVE_CHATROOM,
 } from "../types";
 import axios from "../../utils/axios";
+import store from "../store";
 
 // * Login as Admin
 export const loginAdmin = (formData) => async (dispatch) => {
@@ -211,5 +214,25 @@ export const setChatroomLoading = (value) => async (dispatch) => {
 export const clear = () => async (dispatch) => {
   dispatch({
     type: CLEAR_ADMIN_ERROR,
+  });
+};
+
+// * Set unread messages to 0 of active chatroom
+export const clearUnreadMessagesActive = () => async (dispatch) => {
+  const storeState = store.getState();
+  const activeChatroom = {
+    ...storeState.admin.active_chatroom,
+    unreadMessages: 0,
+  };
+  dispatch({
+    type: CLEAR_UNREAD_MESSAGES_ACTIVE_ADMIN,
+    payload: activeChatroom,
+  });
+};
+
+// * Set active chatroom to null
+export const clearActiveChatroom = () => async (dispatch) => {
+  dispatch({
+    type: CLEAR_ADMIN_ACTIVE_CHATROOM,
   });
 };
