@@ -31,11 +31,22 @@ const useStyles = makeStyles((theme) => ({
   embed: {
     padding: "5px 5px 5px 5px",
     borderRadius: "20px",
+    maxWidth: "fit-content",
     "&:hover": {
       backgroundColor: "lightblue",
     },
     [theme.breakpoints.only("xs")]: {
-      height: "60px",
+      padding: 0,
+    },
+  },
+  embedImg: {
+    display: "block",
+    height: "100px",
+    objectFit: "cover",
+    maxWidth: "100%",
+    margin: "auto",
+    [theme.breakpoints.only("xs")]: {
+      height: "80px",
       margin: 0,
     },
   },
@@ -51,7 +62,7 @@ const MessageItem = ({ message, id }) => {
       message.urlEmbeds.description
     ) {
       return (
-        <Grid item>
+        <Grid item xs={12}>
           <a
             href={message.link}
             rel="noreferrer"
@@ -65,7 +76,7 @@ const MessageItem = ({ message, id }) => {
               alignItems="stretch"
               className={classes.embed}
             >
-              <Grid item xs={6}>
+              <Grid item xs={6} lg={7}>
                 <Grid
                   container
                   direction="column"
@@ -93,7 +104,8 @@ const MessageItem = ({ message, id }) => {
               </Grid>
               <Grid
                 item
-                xs={4}
+                xs={6}
+                lg={4}
                 style={{ display: "flex", placeItems: "center" }}
               >
                 <img
