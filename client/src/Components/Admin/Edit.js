@@ -134,8 +134,7 @@ const Edit = () => {
   return (
     <>
       <Grid container direction="row" justify="center" alignItems="stretch">
-        <Grid item xs={2} lg={4}></Grid>
-        <Grid item xs={8} lg={4}>
+        <Grid item xs={8} lg={12}>
           <Grid
             container
             direction="column"
@@ -244,7 +243,6 @@ const Edit = () => {
             )}
           </Grid>
         </Grid>
-        <Grid item xs={2} lg={4}></Grid>
       </Grid>
     </>
   );

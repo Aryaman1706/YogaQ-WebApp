@@ -15,6 +15,13 @@ const useStyles = makeStyles((theme) => ({
     placeItems: "center",
     display: "flex",
     justifyContent: "space-between",
+    boxShadow: "rgba(0, 0, 0, 0.05) 0px 5px 16px 0px",
+    borderRadius: "3px",
+    "&:hover": {
+      transform: "scale(1.02)",
+      transition: "all 0.16s ease-in 0s",
+      cursor: "pointer",
+    },
   },
 }));
 
@@ -29,15 +36,14 @@ const EnquiryItem = ({ username, email, id }) => {
   return (
     <>
       <Grid item>
-        <Paper elevation={3} className={classes.paper}>
+        <Paper
+          elevation={0}
+          className={classes.paper}
+          onClick={(event) => viewEnquiry(event)}
+        >
           <div>
             <Typography variant="h6">{username}</Typography>
             <Typography variant="subtitle2">{email}</Typography>
-          </div>
-          <div>
-            <IconButton onClick={(event) => viewEnquiry(event)}>
-              <Visibility color="primary" />
-            </IconButton>
           </div>
         </Paper>
       </Grid>

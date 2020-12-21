@@ -14,6 +14,7 @@ import {
   CLEAR_ADMIN_ERROR,
   CLEAR_UNREAD_MESSAGES_ACTIVE_ADMIN,
   CLEAR_ADMIN_ACTIVE_CHATROOM,
+  CLEAR_UNREAD_MESSAGES_ADMIN,
 } from "../types";
 import axios from "../../utils/axios";
 import store from "../store";
@@ -214,6 +215,23 @@ export const setChatroomLoading = (value) => async (dispatch) => {
 export const clear = () => async (dispatch) => {
   dispatch({
     type: CLEAR_ADMIN_ERROR,
+  });
+};
+
+// * Set unread messages to 0
+export const clearUnreadMessages = (id) => async (dispatch) => {
+  const storeState = store.getState();
+  const newChatrooms = storeState.admin.chatrooms.map((item) => {
+    if (item._id === id) {
+      const newItem = { ...item, unreadMessages: 0 };
+      return newItem;
+    } else {
+      return item;
+    }
+  });
+  dispatch({
+    type: CLEAR_UNREAD_MESSAGES_ADMIN,
+    payload: newChatrooms,
   });
 };
 

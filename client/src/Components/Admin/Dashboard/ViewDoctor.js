@@ -15,6 +15,7 @@ import Swal from "sweetalert2";
 import { useHistory, useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { doctor as doctorActions } from "../../../redux/actions/index";
+import background from "../../../assets/background.svg";
 
 const useStyles = makeStyles((theme) => ({
   div: {
@@ -25,6 +26,20 @@ const useStyles = makeStyles((theme) => ({
     padding: "5px 10px 5px 10px",
     display: "flex",
     justifyContent: "space-between",
+  },
+  container: {
+    backgroundImage: `url(${background})`,
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "contain",
+    backgroundAttachment: "fixed",
+  },
+  paper: {
+    padding: 50,
+    marginTop: "6rem",
+    [theme.breakpoints.only("xs")]: {
+      padding: 10,
+      marginTop: "1rem",
+    },
   },
 }));
 
@@ -87,79 +102,91 @@ const ViewDoctor = () => {
   const classes = useStyles();
   return (
     <>
-      <Typography variant="h2" align="center">
-        Doctor
-      </Typography>
-      <Toolbar></Toolbar>
       {!compLoading && selectDoctor ? (
         <>
-          <Grid container direction="row" justify="center" alignItems="stretch">
-            <Grid item xs={1} lg={3}></Grid>
-            <Grid item xs={10} lg={6}>
-              <Grid
-                container
-                direction="column"
-                justify="space-around"
-                alignItems="stretch"
-                spacing={2}
-              >
-                <Grid item>
-                  <div className={classes.div}>
-                    <Button
-                      variant="contained"
-                      onClick={(event) => toggle(event)}
+          <div className={classes.container}>
+            <Grid container item xs={12} sm={12} lg={12} justify="center">
+              <Paper elevation={8} className={classes.paper}>
+                <Typography variant="h2" align="center">
+                  Doctor
+                </Typography>
+                <Grid
+                  container
+                  direction="row"
+                  justify="center"
+                  alignItems="stretch"
+                >
+                  <Grid item xs={12} lg={12}>
+                    <Grid
+                      container
+                      direction="column"
+                      justify="space-around"
+                      alignItems="stretch"
+                      spacing={2}
                     >
-                      Toggle View
-                    </Button>
-                  </div>
-                </Grid>
-                {full ? (
-                  <DoctorProfileComplete doctor={selectDoctor.doctor} />
-                ) : (
-                  <DoctorProfile
-                    doctor={selectDoctor.doctor}
-                    chatrooms={selectDoctor.chatrooms}
-                  />
-                )}
-              </Grid>
-              <Toolbar></Toolbar>
-              <Typography variant="h3" align="center">
-                Chat Rooms
-              </Typography>
-              <Grid
-                container
-                direction="column"
-                justify="space-around"
-                alignItems="stretch"
-                spacing={2}
-              >
-                {selectDoctor.chatrooms.map((obj, index) => {
-                  return (
-                    <Fragment key={index}>
                       <Grid item>
-                        <Paper>
-                          <div className={classes.div2}>
-                            <div>
-                              <Typography variant="subtitle1">
-                                Username:- {obj.user.id.username}
-                              </Typography>
-                              <Typography variant="subtitle1">
-                                Email Address:- {obj.user.id.email}
-                              </Typography>
-                            </div>
-                            <IconButton>
-                              <VisibilityIcon />
-                            </IconButton>
-                          </div>
-                        </Paper>
+                        <div className={classes.div}>
+                          <Button
+                            variant="contained"
+                            onClick={(event) => toggle(event)}
+                          >
+                            {!full ? (
+                              <span>View More</span>
+                            ) : (
+                              <span>View Less</span>
+                            )}
+                          </Button>
+                        </div>
                       </Grid>
-                    </Fragment>
-                  );
-                })}
-              </Grid>
+                      {full ? (
+                        <DoctorProfileComplete doctor={selectDoctor.doctor} />
+                      ) : (
+                        <DoctorProfile
+                          doctor={selectDoctor.doctor}
+                          chatrooms={selectDoctor.chatrooms}
+                        />
+                      )}
+                    </Grid>
+
+                    <Typography variant="h3" align="center">
+                      Chat Rooms
+                    </Typography>
+                    <Grid
+                      container
+                      direction="column"
+                      justify="space-around"
+                      alignItems="stretch"
+                      spacing={2}
+                    >
+                      {selectDoctor.chatrooms.map((obj, index) => {
+                        return (
+                          <Fragment key={index}>
+                            <Grid item>
+                              <Paper>
+                                <div className={classes.div2}>
+                                  <div>
+                                    <Typography variant="subtitle1">
+                                      Username:- {obj.user.id.username}
+                                    </Typography>
+                                    <Typography variant="subtitle1">
+                                      Email Address:- {obj.user.id.email}
+                                    </Typography>
+                                  </div>
+                                  <IconButton>
+                                    <VisibilityIcon />
+                                  </IconButton>
+                                </div>
+                              </Paper>
+                            </Grid>
+                          </Fragment>
+                        );
+                      })}
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Paper>
             </Grid>
-            <Grid item xs={1} lg={3}></Grid>
-          </Grid>
+          </div>
         </>
       ) : null}
     </>
