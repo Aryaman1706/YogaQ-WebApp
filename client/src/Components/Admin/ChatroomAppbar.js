@@ -160,7 +160,7 @@ const CharoomAppbar = ({ user }) => {
 
   const adminLogout = async () => {
     await dispatch(logoutAdmin());
-    history.push("/login");
+    history.push("/admin/login");
   };
 
   const { active_chatroom, admin } = useSelector((state) => state.admin);

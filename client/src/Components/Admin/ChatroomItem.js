@@ -84,6 +84,20 @@ const ChatroomItem = ({ chatroom }) => {
               <span className={classes.roleText}>User</span>
             </div>
           </div>
+          {chatroom.unreadMessages !== 0 && (
+            <div
+              style={{
+                alignSelf: "center",
+                flexGrow: 3,
+                display: "flex",
+                justifyContent: "flex-end",
+              }}
+            >
+              <Paper elevation={0} className={classes.unreadCounter}>
+                {chatroom.unreadMessages}
+              </Paper>
+            </div>
+          )}
         </Paper>
       </Grid>
     </>
