@@ -1,6 +1,7 @@
 import {
   LOGIN_ADMIN,
   LOAD_ADMIN,
+  LOGOUT_ADMIN,
   EDIT_ADMIN,
   ADMIN_GET_CHATROOMS,
   SELECT_CHATROOM_ADMIN,
@@ -39,6 +40,15 @@ const stateHandler = (state = defaultState, action) => {
         admin: action.payload,
         isAuthenticated: true,
         loading: false,
+      };
+    case LOGOUT_ADMIN:
+      return {
+        ...state,
+        admin: null,
+        isAuthenticated: false,
+        chatrooms: [],
+        active_chatroom: null,
+        admin_messages: [],
       };
     case EDIT_ADMIN:
       return {

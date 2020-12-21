@@ -91,7 +91,7 @@ const MessageList = ({ socket }) => {
     return () => {
       socket.current.removeAllListeners("toClient");
       dispatch(
-        adminActions.modfiyLastAccess({
+        adminActions.modifyLastAccess({
           id: active_chatroom._id,
           formData: { lastAccess: new Date() },
         })

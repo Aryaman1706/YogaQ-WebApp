@@ -83,7 +83,7 @@ exports.getProfile = async (req, res) => {
 
     return res.status(200).json({ error: null, body: user });
   } catch (error) {
-    console.log("Error occured here\n", error);
+    console.error("Error occured here\n", error);
     return res.status(500).json({ error: "Server Error.", body: null });
   }
 };
@@ -110,7 +110,7 @@ exports.editProfile = async (req, res) => {
       body: { user: updatedUser, message: "Profile Updated Successfully." },
     });
   } catch (error) {
-    console.log("Error occured here\n", error);
+    console.error("Error occured here\n", error);
     return res.status(500).json({ error: "Server Error.", body: null });
   }
 };
@@ -137,7 +137,7 @@ exports.blockUser = async (req, res) => {
       body: `User ${value.blocked ? "Blocked" : "Unblocked"} Successfully.`,
     });
   } catch (error) {
-    console.log("Error occured here\n", error);
+    console.error("Error occured here\n", error);
     return res.status(500).json({ error: "Server Error.", body: null });
   }
 };
@@ -163,7 +163,7 @@ exports.auth = async (req, res) => {
     const googleLoginUrl = `https://accounts.google.com/o/oauth2/v2/auth?${params}`;
     return res.redirect(googleLoginUrl);
   } catch (error) {
-    console.log("Error occured here\n", error);
+    console.error("Error occured here\n", error);
     return res.status(500).json({ error: "Server Error.", body: null });
   }
 };
@@ -202,7 +202,7 @@ exports.authCallback = async (req, res) => {
     const query = newUser.phoneNumber ? "country" : "country-phoneNumber";
     return res.redirect(`${process.env.CLIENT_URL}/signup/?fields=${query}`);
   } catch (error) {
-    console.log("Error occured here\n", error);
+    console.error("Error occured here\n", error);
     return res
       .status(401)
       .json({ error: "Login/Signup failed. Try Again.", body: null });
@@ -245,7 +245,18 @@ exports.signup = async (req, res) => {
       body: { user, message: "Congratulations! SignUp process is complete." },
     });
   } catch (error) {
-    console.log("Error occured here\n", error);
+    console.error("Error occured here\n", error);
+    return res.status(500).json({ error: "Server Error.", body: null });
+  }
+};
+
+// * Logout User
+exports.logoutUser = async (req, res) => {
+  try {
+    req.logout();
+    return res.status(200).json({ error: null, body: "User Logged Out" });
+  } catch (error) {
+    console.error("Error occured here\n", error);
     return res.status(500).json({ error: "Server Error.", body: null });
   }
 };
@@ -273,7 +284,7 @@ exports.getChatrooms = async (req, res) => {
 
     return res.status(200).json({ error: null, body: chatrooms });
   } catch (error) {
-    console.log("Error occured here\n", error);
+    console.error("Error occured here\n", error);
     return res.status(500).json({ error: "Server Error.", body: null });
   }
 };

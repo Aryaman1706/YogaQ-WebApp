@@ -1,6 +1,7 @@
 import {
   LOGIN_ADMIN,
   LOAD_ADMIN,
+  LOGOUT_ADMIN,
   EDIT_ADMIN,
   ADMIN_GET_CHATROOMS,
   SELECT_CHATROOM_ADMIN,
@@ -43,6 +44,23 @@ export const loadAdmin = () => async (dispatch) => {
     dispatch({
       type: LOAD_ADMIN,
       payload: res.data.body,
+    });
+  } catch (error) {
+    console.log(error);
+    dispatch({
+      type: ADMIN_ERROR,
+      payload: error.response?.data.error,
+    });
+  }
+};
+
+// * Logout Admin
+export const logoutAdmin = () => async (dispatch) => {
+  try {
+    await axios.get("/admin/logout");
+    dispatch({
+      type: LOGOUT_ADMIN,
+      payload: null,
     });
   } catch (error) {
     console.log(error);
@@ -180,7 +198,7 @@ export const appendMessage = (data) => async (dispatch) => {
 };
 
 // * Modify Last access
-export const modfiyLastAccess = ({ id, formData }) => async (dispatch) => {
+export const modifyLastAccess = ({ id, formData }) => async (dispatch) => {
   try {
     await axios.put(`/chatroom/lastAccess/${id}`, formData);
     dispatch({

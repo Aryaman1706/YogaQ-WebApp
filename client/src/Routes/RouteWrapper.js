@@ -15,13 +15,13 @@ const RouteWrapper = ({
 
   if (adminLogin && !adminState.loading && !adminState.isAuthenticated) {
     return <Redirect to="/admin/login" />;
-  }
-
-  if (doctorLogin && !doctorState.loading && !doctorState.isAuthenticated) {
+  } else if (
+    doctorLogin &&
+    !doctorState.loading &&
+    !doctorState.isAuthenticated
+  ) {
     return <Redirect to="/doctor/login" />;
-  }
-
-  if (
+  } else if (
     userComplete &&
     !userState.loading &&
     !userState.isAuthenticated &&
