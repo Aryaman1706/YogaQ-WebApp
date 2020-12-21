@@ -10,6 +10,7 @@ import { ArrowBackIos, ArrowForwardIos } from "@material-ui/icons";
 import { useSelector, useDispatch } from "react-redux";
 import { doctor as doctorActions } from "../../../redux/actions/index";
 import DoctorItem from "./DoctorItem";
+import AdminLayout from "../../../layout/AdminLayout";
 
 const DoctorList = () => {
   const [pagination, setPagination] = useState({
@@ -121,58 +122,70 @@ const DoctorList = () => {
 
   return (
     <>
-      <Typography variant="h2" align="center">
-        All Doctors
-      </Typography>
-      <Toolbar></Toolbar>
-      <Grid container direction="row" justify="center" alignItems="stretch">
-        <Grid item xs={2} lg={4}></Grid>
-        <Grid item xs={8} lg={4}>
-          {compLoading ? null : (
-            <>
-              <Grid
-                container
-                direction="column"
-                justify="space-around"
-                alignItems="stretch"
-                spacing={2}
-              >
-                {doctors.slice(startIndex, endIndex).map((doctor) => {
-                  return (
-                    <Fragment key={doctor._id}>
-                      <DoctorItem
-                        username={doctor.username}
-                        email={doctor.email}
-                        id={doctor._id}
-                      />
-                    </Fragment>
-                  );
-                })}
-              </Grid>
-              <Toolbar></Toolbar>
-              <ButtonGroup variant="contained" color="primary" fullWidth>
-                {currentPage !== 1 ? (
-                  <Button
-                    startIcon={<ArrowBackIos />}
-                    onClick={(event) => prevHandler(event)}
-                  >
-                    Previous
-                  </Button>
-                ) : null}
-                {end && currentPage === loadedPages ? null : (
-                  <Button
-                    endIcon={<ArrowForwardIos />}
-                    onClick={(event) => nextHandler(event)}
-                  >
-                    Next
-                  </Button>
-                )}
-              </ButtonGroup>
-            </>
-          )}
+      <AdminLayout>
+        <Typography variant="h2" style={{ padding: "1rem" }}>
+          All Doctors
+        </Typography>
+        <Grid container direction="row" justify="center" alignItems="stretch">
+          <Grid item xs={12} lg={12}>
+            {compLoading ? null : (
+              <>
+                <Grid
+                  container
+                  direction="column"
+                  justify="space-around"
+                  alignItems="stretch"
+                  spacing={2}
+                  style={{ padding: "1rem" }}
+                >
+                  {doctors.slice(startIndex, endIndex).map((doctor) => {
+                    return (
+                      <Fragment key={doctor._id}>
+                        <DoctorItem
+                          username={doctor.username}
+                          email={doctor.email}
+                          id={doctor._id}
+                        />
+                      </Fragment>
+                    );
+                  })}
+                </Grid>
+                <Toolbar></Toolbar>
+                <ButtonGroup variant="contained" color="primary" fullWidth>
+                  {currentPage !== 1 ? (
+                    <Button
+                      startIcon={<ArrowBackIos />}
+                      onClick={(event) => prevHandler(event)}
+                      style={{
+                        backgroundColor: "#0FC1A7",
+                        height: "50px",
+                        backgroundImage:
+                          "linear-gradient(315deg, #abe9cd 0%, #3eadcf 74%)",
+                      }}
+                    >
+                      Previous
+                    </Button>
+                  ) : null}
+                  {end && currentPage === loadedPages ? null : (
+                    <Button
+                      endIcon={<ArrowForwardIos />}
+                      onClick={(event) => nextHandler(event)}
+                      style={{
+                        backgroundColor: "#0FC1A7",
+                        height: "50px",
+                        backgroundImage:
+                          "linear-gradient(315deg, #abe9cd 0%, #3eadcf 74%)",
+                      }}
+                    >
+                      Next
+                    </Button>
+                  )}
+                </ButtonGroup>
+              </>
+            )}
+          </Grid>
         </Grid>
-        <Grid item xs={2} lg={4}></Grid>
-      </Grid>
+      </AdminLayout>
     </>
   );
 };
