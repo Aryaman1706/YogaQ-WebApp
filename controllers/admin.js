@@ -42,7 +42,7 @@ exports.create = async (req, res) => {
       body: "New admin registered successfully.",
     });
   } catch (error) {
-    console.log("Error occured here\n", error);
+    console.error("Error occured here\n", error);
     return res.status(500).json({ error: "Server Error.", body: null });
   }
 };
@@ -58,7 +58,18 @@ exports.myProfile = async (req, res) => {
 
     return res.status(200).json({ error: null, body: admin });
   } catch (error) {
-    console.log("Error occured here\n", error);
+    console.error("Error occured here\n", error);
+    return res.status(500).json({ error: "Server Error.", body: null });
+  }
+};
+
+// * Logout admin
+exports.logoutAdmin = async (req, res) => {
+  try {
+    req.logout();
+    return res.status(200).json({ error: null, body: "Admin Logged Out" });
+  } catch (error) {
+    console.error("Error occured here\n", error);
     return res.status(500).json({ error: "Server Error.", body: null });
   }
 };
@@ -93,7 +104,7 @@ exports.edit = async (req, res) => {
       },
     });
   } catch (error) {
-    console.log("Error occured here\n", error);
+    console.error("Error occured here\n", error);
     return res.status(500).json({ error: "Server Error.", body: null });
   }
 };
@@ -134,7 +145,7 @@ exports.changePassword = async (req, res) => {
       .status(200)
       .json({ error: null, body: "Password changed successfully." });
   } catch (error) {
-    console.log("Error occured here\n", error);
+    console.error("Error occured here\n", error);
     return res.status(500).json({ error: "Server Error.", body: null });
   }
 };
@@ -164,7 +175,7 @@ exports.forgotPassword1 = async (req, res) => {
       body: `Email has been send to ${value.email} with further instructions.`,
     });
   } catch (error) {
-    console.log("Error occured here\n", error);
+    console.error("Error occured here\n", error);
     return res.status(500).json({ error: "Server Error.", body: null });
   }
 };
@@ -206,7 +217,7 @@ exports.forgotPassword2 = async (req, res) => {
       .status(200)
       .json({ error: null, body: "Password reset successfull." });
   } catch (error) {
-    console.log("Error occured here\n", error);
+    console.error("Error occured here\n", error);
     return res.status(500).json({ error: "Server Error.", body: null });
   }
 };
@@ -235,7 +246,7 @@ exports.myChatrooms = async (req, res) => {
     await Promise.all(promiseArray);
     return res.status(200).json({ error: null, body: chatrooms });
   } catch (error) {
-    console.log("Error occured here\n", error);
+    console.error("Error occured here\n", error);
     return res.status(500).json({ error: "Server Error.", body: null });
   }
 };

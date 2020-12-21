@@ -1,5 +1,6 @@
 import {
   LOAD_USER,
+  LOGOUT_USER,
   INCOMPLETE_PROFILE,
   EDIT_USER,
   GET_CHATROOMS,
@@ -45,6 +46,15 @@ const stateHandler = (state = defaultState, action) => {
         user: action.payload,
         isAuthenticated: true,
         loading: false,
+      };
+    case LOGOUT_USER:
+      return {
+        ...state,
+        user: null,
+        isAuthenticated: false,
+        chatrooms: [],
+        active_chatroom: null,
+        user_messages: [],
       };
     case INCOMPLETE_PROFILE:
       return {

@@ -1,5 +1,6 @@
 import {
   LOAD_USER,
+  LOGOUT_USER,
   INCOMPLETE_PROFILE,
   EDIT_USER,
   GET_CHATROOMS,
@@ -46,6 +47,22 @@ export const loadUser = () => async (dispatch) => {
         payload: error.response.data.error,
       });
     }
+  }
+};
+
+// * Logout User
+export const logoutUser = () => async (dispatch) => {
+  try {
+    await axios.get("/user/auth/logout");
+    dispatch({
+      type: LOGOUT_USER,
+      payload: null,
+    });
+  } catch (error) {
+    dispatch({
+      type: USER_ERROR,
+      error: error.response.data.error,
+    });
   }
 };
 
@@ -123,7 +140,7 @@ export const appendMessage = (data) => async (dispatch) => {
 };
 
 // * Modify Last access
-export const modfiyLastAccess = ({ id, formData }) => async (dispatch) => {
+export const modifyLastAccess = ({ id, formData }) => async (dispatch) => {
   try {
     await axios.put(`/chatroom/lastAccess/${id}`, formData);
     dispatch({

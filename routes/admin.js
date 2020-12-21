@@ -53,6 +53,9 @@ router.post("/register", controller.create);
 // * Get my profile
 router.get("/profile", loginAdmin, controller.myProfile);
 
+// * Logout Admin
+router.get("/logout", loginAdmin, controller.logoutAdmin);
+
 // * Edit profile of admin
 router.put(
   "/profile",

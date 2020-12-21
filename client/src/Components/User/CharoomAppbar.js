@@ -23,7 +23,10 @@ import StarIcon from "../../assets/star.svg";
 import FileIcon from "../../assets/file-sharing.svg";
 import PrivacyIcon from "../../assets/privacy-policy.svg";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
-import { clearActiveChatroom } from "../../redux/actions/userActions";
+import {
+  clearActiveChatroom,
+  logoutUser,
+} from "../../redux/actions/userActions";
 
 const useStyles = makeStyles((theme) => ({
   parent: {
@@ -172,6 +175,11 @@ const CharoomAppbar = ({ user }) => {
     dispatch(chatroomActions.setDrawer(!showDrawer));
   };
 
+  const userLogOut = async () => {
+    await dispatch(logoutUser());
+    history.push("/");
+  };
+
   return (
     <>
       <Grid
@@ -305,6 +313,9 @@ const CharoomAppbar = ({ user }) => {
                   </div>
                   <div
                     className={`${classes.flexRow} ${classes.paddingMenuItem}`}
+                    onClick={() => {
+                      userLogOut();
+                    }}
                   >
                     <div>
                       <img

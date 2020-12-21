@@ -1,6 +1,7 @@
 // * Admin
 export const LOGIN_ADMIN = "LOGIN_ADMIN";
 export const LOAD_ADMIN = "LOAD_ADMIN";
+export const LOGOUT_ADMIN = "LOGOUT_ADMIN";
 export const EDIT_ADMIN = "EDIT_ADMIN";
 export const ADMIN_GET_CHATROOMS = "ADMIN_GET_CHATROOMS";
 export const SELECT_CHATROOM_ADMIN = "SELECT_CHATROOM_ADMIN";
@@ -41,6 +42,7 @@ export const CLEAR_DOCTOR_ERROR = "CLEAR_DOCTOR_ERROR";
 
 // * User
 export const LOAD_USER = "LOAD_USER";
+export const LOGOUT_USER = "LOGOUT_USER";
 export const INCOMPLETE_PROFILE = "INCOMPLETE_PROFILE";
 export const EDIT_USER = "EDIT_USER";
 export const GET_CHATROOMS = "GET_CHATROOMS";

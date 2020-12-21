@@ -38,6 +38,9 @@ router.get("/auth/callback", controllers.authCallback);
 // * Post Request for signup
 router.put("/signup", middleware.login, controllers.signup);
 
+// * Logout User
+router.get("/auth/logout", middleware.login, controllers.logoutUser);
+
 // * Get my chatrooms
 router.get("/chatrooms", middleware.login, controllers.getChatrooms);
 

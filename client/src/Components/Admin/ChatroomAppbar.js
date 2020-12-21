@@ -3,7 +3,6 @@ import { useHistory } from "react-router-dom";
 import {
   Grid,
   makeStyles,
-  Button,
   IconButton,
   Menu,
   Typography,
@@ -12,12 +11,13 @@ import {
   Avatar,
 } from "@material-ui/core";
 import AccountCircleOutlinedIcon from "@material-ui/icons/AccountCircleOutlined";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import ProfileIcon from "../../assets/profile.svg";
 import LogoutIcon from "../../assets/log-out.svg";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import { format } from "date-fns";
 import Profile from "../../assets/user.svg";
+import { logoutAdmin } from "../../redux/actions/adminActions";
 
 const useStyles = makeStyles((theme) => ({
   parent: {
@@ -149,12 +149,18 @@ const CharoomAppbar = ({ user }) => {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
   const history = useHistory();
+  const dispatch = useDispatch();
   const handleClick = (e) => {
     setAnchorEl(e.currentTarget);
   };
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const adminLogout = async () => {
+    await dispatch(logoutAdmin());
+    history.push("/login");
   };
 
   const { active_chatroom, admin } = useSelector((state) => state.admin);
@@ -235,7 +241,7 @@ const CharoomAppbar = ({ user }) => {
                     <div
                       className={`${classes.flexRow} ${classes.paddingMenuItem}`}
                       onClick={() => {
-                        history.push("/edit");
+                        history.push("/admin/profile");
                       }}
                     >
                       <div>
@@ -249,6 +255,7 @@ const CharoomAppbar = ({ user }) => {
                     </div>
                     <div
                       className={`${classes.flexRow} ${classes.paddingMenuItem}`}
+                      onClick={() => adminLogout()}
                     >
                       <div>
                         <img
