@@ -5,6 +5,7 @@ import ChatroomList from "../Components/User/ChatroomList";
 import Chatroom from "../Components/User/Chatroom";
 import Loader from "../Components/Loader";
 import ChatroomDrawer from "../Components/User/ChatroomDrawer";
+import Landing from "../Components/Landing/Landing";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -43,7 +44,9 @@ const useStyles = makeStyles((theme) => ({
 
 const Home = () => {
   const classes = useStyles();
-  const { loading, active_chatroom } = useSelector((state) => state.user);
+  const { loading, active_chatroom, isAuthenticated } = useSelector(
+    (state) => state.user
+  );
   const { showDrawer } = useSelector((state) => state.chatroom);
 
   const [widths, setWidths] = useState({
@@ -76,60 +79,64 @@ const Home = () => {
     }
   };
 
-  return (
-    <>
-      {loading ? (
-        <Loader />
-      ) : (
-        <>
+  const chatComponent = () => {
+    return (
+      <>
+        <Grid
+          container
+          direction="row"
+          justify="center"
+          alignItems="stretch"
+          className={classes.container}
+        >
           <Grid
-            container
-            direction="row"
-            justify="center"
-            alignItems="stretch"
-            className={classes.container}
+            item
+            xs={12}
+            lg={widths.chatroomList}
+            className={
+              active_chatroom ? `${classes.item} ${classes.hide}` : classes.item
+            }
           >
-            <Grid
-              item
-              xs={12}
-              lg={widths.chatroomList}
-              className={
-                active_chatroom
-                  ? `${classes.item} ${classes.hide}`
-                  : classes.item
-              }
-            >
-              <ChatroomList />
-            </Grid>
+            <ChatroomList />
+          </Grid>
+          <Grid
+            item
+            xs={12}
+            sm={12}
+            md={12}
+            lg={widths.chatroom}
+            xl={widths.chatroom}
+            className={renderClassname()}
+          >
+            <Chatroom />
+          </Grid>
+          {active_chatroom ? (
             <Grid
               item
               xs={12}
               sm={12}
               md={12}
-              lg={widths.chatroom}
-              xl={widths.chatroom}
-              className={renderClassname()}
+              lg={widths.drawer}
+              xl={widths.drawer}
+              className={showDrawer ? classes.itemC : classes.hideDrawer}
             >
-              <Chatroom />
+              <ChatroomDrawer />
             </Grid>
-            {active_chatroom ? (
-              <Grid
-                item
-                xs={12}
-                sm={12}
-                md={12}
-                lg={widths.drawer}
-                xl={widths.drawer}
-                className={showDrawer ? classes.itemC : classes.hideDrawer}
-              >
-                <ChatroomDrawer />
-              </Grid>
-            ) : null}
-          </Grid>
-        </>
-      )}
-    </>
-  );
+          ) : null}
+        </Grid>
+      </>
+    );
+  };
+
+  const renderMainContent = () => {
+    if (isAuthenticated) {
+      return chatComponent();
+    } else {
+      return <Landing />;
+    }
+  };
+
+  return <>{loading ? <Loader /> : renderMainContent()}</>;
 };
 
 export default Home;
