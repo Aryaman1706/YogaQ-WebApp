@@ -56,25 +56,6 @@ const useStyles = makeStyles((theme) => ({
       paddingLeft: "1rem",
     },
   },
-  btn1: {
-    padding: "0.5rem 2rem 0.5rem 2rem",
-    backgroundColor: "#0FC1A7",
-    color: "#fff",
-    cursor: "pointer",
-    borderRadius: 10,
-    transition: "ease-out 0.2s",
-
-    "&:hover": {
-      opacity: 0.8,
-      backgroundColor: "#0FC1A7",
-    },
-    "&:hover arrowIcon": {
-      display: "block",
-    },
-  },
-  arrowIcon: {
-    display: "none",
-  },
   btn2: {
     marginLeft: "0.5rem",
     padding: "0.5rem",
