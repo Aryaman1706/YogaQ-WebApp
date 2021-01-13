@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import {
   Typography,
-  Button,
   IconButton,
   makeStyles,
   Menu,
@@ -16,6 +15,8 @@ import ProfileIcon from "../../assets/profile.svg";
 import Profile from "../../assets/user.svg";
 import LogoutIcon from "../../assets/log-out.svg";
 import AccountCircleOutlinedIcon from "@material-ui/icons/AccountCircleOutlined";
+import SideDrawer from "../Landing/SideDrawer";
+import MenuIcon from "@material-ui/icons/Menu";
 
 const useStyles = makeStyles((theme) => ({
   appbar: {
@@ -122,11 +123,15 @@ const useStyles = makeStyles((theme) => ({
       borderRadius: 6,
     },
   },
+  menuIcon: {
+    color: "rgb(92, 132, 251)",
+  },
 }));
 
 const UserAppbar = ({ isAuthenticated, user }) => {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
+  const [sideDrawer, setSideDrawer] = useState(false);
   const history = useHistory();
 
   const handleClick = (e) => {
@@ -260,12 +265,28 @@ const UserAppbar = ({ isAuthenticated, user }) => {
                 </StyledMenu>
               </>
             ) : (
-              <Button
-                className={classes.btn}
-                href={`${process.env.REACT_APP_SERVER_URL}/api/user/auth`}
-              >
-                Login with Google
-              </Button>
+              // <Button
+              //   className={classes.btn}
+              //   href={`${process.env.REACT_APP_SERVER_URL}/api/user/auth`}
+              // >
+              //   Login with Google
+              // </Button>
+              <>
+                <IconButton
+                  aria-controls="menu"
+                  aria-haspopup="true"
+                  onClick={() => {
+                    setSideDrawer(true);
+                  }}
+                  className={classes.menuIcon}
+                >
+                  <MenuIcon />
+                </IconButton>
+                <SideDrawer
+                  sideDrawer={sideDrawer}
+                  setSideDrawer={setSideDrawer}
+                />
+              </>
             )}
           </Grid>
         </Grid>

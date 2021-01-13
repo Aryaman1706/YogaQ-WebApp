@@ -1,5 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
+import styled, { keyframes } from "styled-components";
+import AOS from "aos";
+import "aos/dist/aos.css";
 import { Button, Grid, makeStyles } from "@material-ui/core";
+import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight";
 import LandingImg from "../../assets/landing.jpg";
 
 const useStyles = makeStyles((theme) => ({
@@ -27,11 +31,13 @@ const useStyles = makeStyles((theme) => ({
     // alignItems: "center",
   },
   primaryText: {
+    fontFamily: "Quarto, sans-serif",
     fontSize: "4rem",
-    fontWeight: "bolder",
+    fontWeight: "900",
     lineHeight: "3.6rem",
     whiteSpace: "pre-line",
     letterSpacing: "-3px",
+    color: "#27325a",
     [theme.breakpoints.down("md")]: {
       fontSize: "2.6rem",
       textAlign: "center",
@@ -46,16 +52,8 @@ const useStyles = makeStyles((theme) => ({
   flexColumn: {
     display: "flex",
     flexDirection: "column",
-  },
-  btn1: {
-    padding: "0.5rem",
-    backgroundColor: "#0FC1A7",
-    color: "#fff",
-    cursor: "pointer",
-    transition: "ease-out 0.2s",
-    "&:hover": {
-      opacity: 0.8,
-      backgroundColor: "#0FC1A7",
+    [theme.breakpoints.only("lg")]: {
+      paddingLeft: "1rem",
     },
   },
   btn2: {
@@ -87,30 +85,68 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const fadeRight = keyframes`
+    from {
+        transform: translate3d(-20px,0,0);
+        display: none;
+    }
+    to {
+        transform: translate3d(0,0,0);
+    }
+`;
+
+const StyledButton = styled(Button)`
+  padding: 0.5rem 2rem 0.5rem 2rem;
+  background-color: #0fc1a7;
+  color: #fff;
+  cursor: pointer;
+  border-radius: 10px;
+  transition: all 0.2s ease-out;
+  svg {
+    display: none;
+  }
+  &:hover {
+    opacity: 0.8;
+    background-color: #0fc1a7;
+    svg {
+      display: block;
+      animation: ${fadeRight};
+      animation-duration: 0.2s;
+      animation-fill-mode: both;
+      animation-timing-function: ease-in-out;
+    }
+  }
+`;
+
 const Landing = () => {
   const classes = useStyles();
+  useEffect(() => {
+    AOS.init();
+  }, []);
   return (
     <div className={classes.container}>
       <Grid container spacing={2}>
-        <Grid item xs={12} lg={7} className={classes.primaryContainer}>
+        <Grid item xs={12} lg={7} xl={7} className={classes.primaryContainer}>
           <div className={classes.flexColumn}>
-            <span className={classes.primaryText}>
+            <span className={classes.primaryText} data-aos="fade-left">
               A Happier, Healthier you with{" "}
               <span className={classes.gradientText}>YogaQ</span>.
             </span>
             <div className={classes.btnContainer}>
-              <Button
+              <StyledButton
                 variant="contained"
-                className={classes.btn1}
                 href={`${process.env.REACT_APP_SERVER_URL}/api/user/auth`}
+                data-aos="zoom-out-up"
+                data-aos-delay="200"
               >
-                Sign in with Google
-              </Button>
-              <Button className={classes.btn2}>Sign in as Therapist</Button>
+                Get Started&nbsp;
+                <KeyboardArrowRightIcon />
+              </StyledButton>
+              {/* <Button className={classes.btn2}>Sign in as Therapist</Button> */}
             </div>
           </div>
         </Grid>
-        <Grid item lg={5}>
+        <Grid item lg={5} xl={5}>
           <img src={LandingImg} alt="main-img" className={classes.img} />
         </Grid>
       </Grid>
