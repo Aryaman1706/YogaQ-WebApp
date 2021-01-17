@@ -5,8 +5,8 @@ const { validate: uuidValidate } = require("uuid");
 const omit = require("lodash/omit");
 
 // * Models
-const Doctor = require("../models/Doctor");
-const Enquiry = require("../models/Enquiry");
+const Doctor = require("./models/doctor");
+const Enquiry = require("./models/enquiry");
 const ChatRoom = require("../chatroom/models");
 
 // * Utils

@@ -1,12 +1,12 @@
 // * NPM Packages
 
 // * Models
-const QuestionSet = require("../models/QuestionSet");
+const QuestionSet = require("./models/questionSet");
 const Question = require("../models/Question");
-const Response = require("../models/Response");
+const Response = require("./models/response");
 
 // * Utils
-const validation = require("../validationSchemas/questionSet");
+const validation = require("./validators");
 
 // * Controllers -->
 

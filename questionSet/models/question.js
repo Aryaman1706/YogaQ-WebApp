@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const QuestionSet = require("./QuestionSet");
+const QuestionSet = require("./questionSet");
 
 const questionSchema = new mongoose.Schema({
   questionSetId: {

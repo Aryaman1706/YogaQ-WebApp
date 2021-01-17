@@ -1,7 +1,7 @@
 // * NPM Packages
 
 // * Models
-const Call = require("../models/Call");
+const Call = require("./models");
 const ChatRoom = require("../chatroom/models");
 
 // * Utils

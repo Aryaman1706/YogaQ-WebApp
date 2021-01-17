@@ -10,7 +10,7 @@ const upload = multer({
 });
 
 // * Middleware
-const { login: loginDoctor } = require("../middleware/doctor");
+const { login: loginDoctor } = require("./middlewares");
 const { login: loginAdmin } = require("../admin/middlewares");
 
 // * Controllers
