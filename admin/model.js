@@ -40,7 +40,6 @@ const adminSchema = new mongoose.Schema(
       type: String,
       enum: ["admin", "doctor", "user"],
       default: "admin",
-      immutable: true,
     },
   },
   { timestamps: true }

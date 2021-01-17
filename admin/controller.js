@@ -3,18 +3,18 @@ const { genSalt, hash, compare } = require("bcryptjs");
 const { randomBytes } = require("crypto");
 
 // * Models
-const Admin = require("../models/Admin");
+const Admin = require("./model");
 const ChatRoom = require("../models/ChatRoom");
 
 // * Utils
-const validation = require("../validationSchemas/admin");
+const validator = require("./validator");
 
 // * Controllers -->
 
 // * Create a new admin
 exports.create = async (req, res) => {
   try {
-    const { error, value } = validation.create(req.body);
+    const { error, value } = validator.create(req.body);
     if (error)
       return res.status(400).json({
         error: `Validation Error. ${error.details[0].message}`,
@@ -77,7 +77,7 @@ exports.logoutAdmin = async (req, res) => {
 // * Edit profile of admin
 exports.edit = async (req, res) => {
   try {
-    const { error, value } = validation.edit(req.body);
+    const { error, value } = validator.edit(req.body);
     if (error)
       return res.status(400).json({
         error: `Validation Error ${error.details[0].message}`,
@@ -112,7 +112,7 @@ exports.edit = async (req, res) => {
 // * Change Password
 exports.changePassword = async (req, res) => {
   try {
-    const { error, value } = validation.changePassword(req.body);
+    const { error, value } = validator.changePassword(req.body);
     if (error)
       return res.status(400).json({
         error: `Validation Error ${error.details[0].message}`,
@@ -153,7 +153,7 @@ exports.changePassword = async (req, res) => {
 // * Forgot password 1 (Enter email to send reset link on)
 exports.forgotPassword1 = async (req, res) => {
   try {
-    const { error, value } = validation.forgotPassword1(req.body);
+    const { error, value } = validator.forgotPassword1(req.body);
     if (error)
       return res
         .status(400)
@@ -183,7 +183,7 @@ exports.forgotPassword1 = async (req, res) => {
 // * Forgot password 2 (Enter a new password)
 exports.forgotPassword2 = async (req, res) => {
   try {
-    const { error, value } = validation.forgotPassword2(req.body);
+    const { error, value } = validator.forgotPassword2(req.body);
     if (error)
       return res
         .status(400)

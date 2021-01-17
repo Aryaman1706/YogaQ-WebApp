@@ -4,11 +4,11 @@ const LocalStrategy = require("passport-local").Strategy;
 const { compare } = require("bcryptjs");
 
 // * Models
-const Admin = require("../models/Admin");
+const Admin = require("../admin/model");
 const Doctor = require("../models/Doctor");
 
 // * Utils
-const { login: adminLogin } = require("../validationSchemas/admin");
+const { login: adminLogin } = require("../admin/validator");
 const { login: doctorLogin } = require("../validationSchemas/doctor");
 const User = require("../models/User");
 
