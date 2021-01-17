@@ -1,7 +1,7 @@
 const express = require("express");
 
 // * Middleware
-const { complete: userComplete } = require("../middleware/user");
+const { complete: userComplete } = require("../user/middleware");
 const { login: doctorLogin } = require("../middleware/doctor");
 const { canGet, auth } = require("../middleware/chatroom");
 

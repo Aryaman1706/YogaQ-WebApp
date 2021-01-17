@@ -1,4 +1,4 @@
-const Admin = require("./model");
+const Admin = require("./models");
 
 // * Admin is logged in
 exports.login = async (req, res, next) => {
