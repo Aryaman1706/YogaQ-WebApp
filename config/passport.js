@@ -10,7 +10,7 @@ const Doctor = require("../models/Doctor");
 // * Utils
 const { login: adminLogin } = require("../admin/validators");
 const { login: doctorLogin } = require("../validationSchemas/doctor");
-const User = require("../user/model");
+const User = require("../user/models");
 
 passport.use(
   "admin",

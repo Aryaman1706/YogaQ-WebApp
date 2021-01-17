@@ -1,7 +1,7 @@
 const express = require("express");
 
 // * Middlewares
-const { canGet, auth } = require("./middlewares");
+const { loggedIn, auth } = require("./middlewares");
 const { login: loginAdmin } = require("../admin/middlewares");
 
 // * Controllers
@@ -17,14 +17,14 @@ router.post("/create", loginAdmin, controllers.create);
 router.put("/edit/:id", loginAdmin, controllers.edit);
 
 // * Get Chat Room
-router.get("/get/:id", canGet, controllers.get);
+router.get("/get/:id", loggedIn, controllers.get);
 
 // * Get Messages
 // * /messages/:id/?page=1
-router.get("/messages/:id", [canGet, auth], controllers.messages);
+router.get("/messages/:id", [loggedIn, auth], controllers.messages);
 
 // * Modify Last Access
-router.put("/lastAccess/:id", [canGet, auth], controllers.lastAccess);
+router.put("/lastAccess/:id", [loggedIn, auth], controllers.lastAccess);
 
 // * Delete a chatroom
 // Will delete chatroom and its messages and also remove doctor from user.doctors

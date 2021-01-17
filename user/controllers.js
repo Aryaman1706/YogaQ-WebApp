@@ -3,7 +3,7 @@ const queryString = require("query-string");
 
 // * Models
 const User = require("./models");
-const ChatRoom = require("../models/ChatRoom");
+const ChatRoom = require("../chatroom/models");
 
 // * Utils
 const validators = require("./validators");
