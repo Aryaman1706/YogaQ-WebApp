@@ -14,7 +14,8 @@ exports.auth = async (req, res, next) => {
   return res.status(400).json({ error: "Get chatroom first.", body: null });
 };
 
-exports.canGet = async (req, res, next) => {
+// * User/Partner is logined
+exports.loggedIn = async (req, res, next) => {
   try {
     if (req.user) {
       return next();

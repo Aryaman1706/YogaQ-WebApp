@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
 
 const questionSetSchema = new mongoose.Schema({
-  userId: {
+  chatroomId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
+    ref: "Chatroom",
     unique: true,
   },
   questions: [

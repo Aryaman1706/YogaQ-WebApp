@@ -1,3 +1,4 @@
+// * NPM Packages
 const express = require("express");
 const multer = require("multer");
 const passport = require("passport");
@@ -20,16 +21,17 @@ const uploadProfilePicture = multer({
 });
 
 // * Middleware
-const { login: loginAdmin } = require("../middleware/admin");
+const { login: loginAdmin } = require("./middleware");
 
 // * Controllers
-const controller = require("../controllers/admin");
+const controller = require("./controller");
 
 // * API Endpoints -->
 const router = express.Router();
 
 // * Login Admin
 router.post("/login", (req, res, next) => {
+  // eslint-disable-next-line
   passport.authenticate("admin", (err, user, info) => {
     if (err) return next(err);
     if (!user) return res.status(404).json({ error: info.message, body: null });
@@ -43,7 +45,6 @@ router.post("/login", (req, res, next) => {
         body: body,
       });
     });
-    // return next();
   })(req, res, next);
 });
 

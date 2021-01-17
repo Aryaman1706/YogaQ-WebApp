@@ -50,14 +50,14 @@ chatroomSchema.index(
 
 chatroomSchema.virtual("unreadMessages", {
   ref: "Message",
-  localField: "_id", // ! Might cause an error. Try switching
+  localField: "_id",
   foreignField: "chatroomId",
   count: true,
 });
 
 chatroomSchema.virtual("call", {
   ref: "Call",
-  localField: "_id", // ! Might cause an error. Try switching
+  localField: "_id",
   foreignField: "chatroomId",
 });
 
