@@ -1,12 +1,14 @@
-// * NPM Packages
 const express = require("express");
 
-// * Middleware
-const middleware = require("../middleware/user");
-const { login: loginAdmin } = require("../middleware/admin");
+// * Middlewares
+const {
+  login: loginUser,
+  complete: completeUserProfile,
+} = require("./middlewares");
+const { login: loginAdmin } = require("../admin/middlewares");
 
 // * Controllers
-const controllers = require("../controllers/user");
+const controllers = require("./controllers");
 
 // * API Endpoints -->
 const router = express.Router();
@@ -20,10 +22,10 @@ router.get("/list", loginAdmin, controllers.listUser);
 router.get("/view/:id", loginAdmin, controllers.viewUser);
 
 // * Get my profile
-router.get("/profile", middleware.login, controllers.getProfile);
+router.get("/profile", loginUser, controllers.getProfile);
 
 // * Edit profile
-router.put("/profile", middleware.login, controllers.editProfile);
+router.put("/profile", completeUserProfile, controllers.editProfile);
 
 // * Block/Unblock User (Admin)
 // id -> user._id
@@ -36,13 +38,13 @@ router.get("/auth", controllers.auth);
 router.get("/auth/callback", controllers.authCallback);
 
 // * Post Request for signup
-router.put("/signup", middleware.login, controllers.signup);
+router.put("/signup", loginUser, controllers.signup);
 
 // * Logout User
-router.get("/auth/logout", middleware.login, controllers.logoutUser);
+router.get("/auth/logout", loginUser, controllers.logoutUser);
 
 // * Get my chatrooms
-router.get("/chatrooms", middleware.login, controllers.getChatrooms);
+router.get("/chatrooms", completeUserProfile, controllers.getChatrooms);
 
 // * End of API Endpoints -->
 

@@ -2,7 +2,7 @@
 
 // * Models
 const Call = require("../models/Call");
-const ChatRoom = require("../models/ChatRoom");
+const ChatRoom = require("../chatroom/models");
 
 // * Utils
 const validation = require("../validationSchemas/call");

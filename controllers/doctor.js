@@ -7,7 +7,7 @@ const omit = require("lodash/omit");
 // * Models
 const Doctor = require("../models/Doctor");
 const Enquiry = require("../models/Enquiry");
-const ChatRoom = require("../models/ChatRoom");
+const ChatRoom = require("../chatroom/models");
 
 // * Utils
 const validation = require("../validationSchemas/doctor");

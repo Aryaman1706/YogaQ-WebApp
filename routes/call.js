@@ -1,9 +1,9 @@
 const express = require("express");
 
 // * Middleware
-const { complete: userComplete } = require("../middleware/user");
+const { complete: userComplete } = require("../user/middlewares");
 const { login: doctorLogin } = require("../middleware/doctor");
-const { canGet, auth } = require("../middleware/chatroom");
+const { loggedIn, auth } = require("../chatroom/middlewares");
 
 // * Controllers
 const controller = require("../controllers/call");
@@ -13,7 +13,7 @@ const router = express.Router();
 
 // * List all Calls
 // /call/list/id/?page=1
-router.get("/list/:id", [canGet, auth], controller.list);
+router.get("/list/:id", [loggedIn, auth], controller.list);
 
 // * Request a Call
 router.post("/request", userComplete, controller.request);

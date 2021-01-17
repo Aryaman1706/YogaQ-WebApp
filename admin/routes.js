@@ -1,8 +1,13 @@
-// * NPM Packages
 const express = require("express");
 const multer = require("multer");
 const passport = require("passport");
 const cloudinary = require("../config/cloudinaryConfig");
+
+// * Middlewares
+const { login: loginAdmin } = require("./middlewares");
+
+// * Controllers
+const controllers = require("./controllers");
 
 // * Config
 const customStorage = require("../config/multerStorage");
@@ -19,12 +24,6 @@ const uploadProfilePicture = multer({
     checkFileType(file, cb);
   },
 });
-
-// * Middleware
-const { login: loginAdmin } = require("./middleware");
-
-// * Controllers
-const controller = require("./controller");
 
 // * API Endpoints -->
 const router = express.Router();
@@ -49,32 +48,32 @@ router.post("/login", (req, res, next) => {
 });
 
 // * Create a new admin
-router.post("/register", controller.create);
+router.post("/register", loginAdmin, controllers.create);
 
 // * Get my profile
-router.get("/profile", loginAdmin, controller.myProfile);
+router.get("/profile", loginAdmin, controllers.myProfile);
 
 // * Logout Admin
-router.get("/logout", loginAdmin, controller.logoutAdmin);
+router.get("/logout", loginAdmin, controllers.logoutAdmin);
 
 // * Edit profile of admin
 router.put(
   "/profile",
   [loginAdmin, uploadProfilePicture.single("profilePicture")],
-  controller.edit
+  controllers.edit
 );
 
 // * Change Password
-router.put("/changePassword", loginAdmin, controller.changePassword);
+router.put("/changePassword", loginAdmin, controllers.changePassword);
 
 // * Forgot password 1 (Enter email to send reset link on)
-router.post("/forgotPassword", controller.forgotPassword1);
+router.post("/forgotPassword", controllers.forgotPassword1);
 
 // * Forgot password 2 (Enter a new password)
-router.post("/forgotPassword/:resetToken", controller.forgotPassword2);
+router.post("/forgotPassword/:resetToken", controllers.forgotPassword2);
 
 // * Get My Chatrooms
-router.get("/chatrooms", loginAdmin, controller.myChatrooms);
+router.get("/chatrooms", loginAdmin, controllers.myChatrooms);
 
 // * Test
 router.get("/del", async (req, res) => {

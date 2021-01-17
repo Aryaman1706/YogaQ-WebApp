@@ -1,14 +1,12 @@
-// * NPM Packages
-
 // * Models
-const ChatRoom = require("../models/ChatRoom");
+const ChatRoom = require("./models");
 const Message = require("../models/Message");
-const User = require("../models/User");
-const Admin = require("../models/Admin");
+const User = require("../user/models");
+const Admin = require("../admin/models");
 const Doctor = require("../models/Doctor");
 
 // * Utils
-const validation = require("../validationSchemas/chatroom");
+const validators = require("./validators");
 const { idIsPresent } = require("../utils/functions");
 
 // * Controllers -->
@@ -16,7 +14,7 @@ const { idIsPresent } = require("../utils/functions");
 // * Create a Chat Room
 exports.create = async (req, res) => {
   try {
-    const { error, value } = validation.create(req.body);
+    const { error, value } = validators.create(req.body);
     if (error)
       return res.status(400).json({
         error: `Validation Error. ${error.details[0].message}`,
@@ -154,7 +152,7 @@ exports.messages = async (req, res) => {
 // * Edit Chat Room
 exports.edit = async (req, res) => {
   try {
-    const { error, value } = validation.edit(req.body);
+    const { error, value } = validators.edit(req.body);
     if (error)
       return res
         .status(400)
@@ -180,7 +178,7 @@ exports.edit = async (req, res) => {
 // * Modify Last Access
 exports.lastAccess = async (req, res) => {
   try {
-    const { error, value } = validation.lastAccess(req.body);
+    const { error, value } = validators.lastAccess(req.body);
     if (error)
       return res.status(400).json({
         error: `Validation Error. ${error.details[0].message}`,

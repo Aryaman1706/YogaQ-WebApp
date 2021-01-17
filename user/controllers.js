@@ -2,12 +2,12 @@
 const queryString = require("query-string");
 
 // * Models
-const User = require("../models/User");
+const User = require("./models");
+const ChatRoom = require("../chatroom/models");
 
 // * Utils
-const validation = require("../validationSchemas/user");
+const validators = require("./validators");
 const { getAccessToken, getProfile } = require("../utils/oauth");
-const ChatRoom = require("../models/ChatRoom");
 
 // * Controllers -->
 
@@ -91,7 +91,7 @@ exports.getProfile = async (req, res) => {
 // * Edit profile
 exports.editProfile = async (req, res) => {
   try {
-    const { error, value } = validation.edit(req.body);
+    const { error, value } = validators.edit(req.body);
     if (error)
       return res
         .status(400)
@@ -118,7 +118,7 @@ exports.editProfile = async (req, res) => {
 // * Block/Unblock user
 exports.blockUser = async (req, res) => {
   try {
-    const { error, value } = validation.blockUser(req.body);
+    const { error, value } = validators.blockUser(req.body);
     if (error)
       return res
         .status(400)
@@ -217,8 +217,8 @@ exports.signup = async (req, res) => {
       return res.status(404).json({ error: "User not found.", body: null });
 
     const { error, value } = user.phoneNumber
-      ? validation.signup_country(req.body)
-      : validation.signup_country_phone(req.body);
+      ? validators.signup_country(req.body)
+      : validators.signup_country_phone(req.body);
     if (error)
       return res.status(400).json({
         error: `Validation Error. ${error.details[0].message}`,

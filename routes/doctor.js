@@ -11,7 +11,7 @@ const upload = multer({
 
 // * Middleware
 const { login: loginDoctor } = require("../middleware/doctor");
-const { login: loginAdmin } = require("../middleware/admin");
+const { login: loginAdmin } = require("../admin/middlewares");
 
 // * Controllers
 const controller = require("../controllers/doctor");

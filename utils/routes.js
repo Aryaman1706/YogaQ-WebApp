@@ -1,7 +1,7 @@
-const user = require("../routes/user");
-const admin = require("../routes/admin");
+const user = require("../user/routes");
+const admin = require("../admin/routes");
 const doctor = require("../routes/doctor");
-const chatroom = require("../routes/chatroom");
+const chatroom = require("../chatroom/routes");
 const call = require("../routes/call");
 
 /**

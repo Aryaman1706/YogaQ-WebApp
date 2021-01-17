@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const Message = require("./Message");
+const Message = require("../models/Message");
 
 const chatroomSchema = new mongoose.Schema(
   {
