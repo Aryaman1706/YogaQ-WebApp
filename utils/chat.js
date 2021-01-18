@@ -1,6 +1,6 @@
 const socketIO = require("socket.io");
 const getEmbeds = require("./getEmbeds");
-const Message = require("../models/Message");
+const Message = require("../chatroom/models/message");
 
 const chat = async (server) => {
   const io = socketIO(server, {

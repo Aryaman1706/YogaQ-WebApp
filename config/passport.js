@@ -5,11 +5,11 @@ const { compare } = require("bcryptjs");
 
 // * Models
 const Admin = require("../admin/models");
-const Doctor = require("../models/Doctor");
+const Doctor = require("../doctor/models/doctor");
 
 // * Utils
 const { login: adminLogin } = require("../admin/validators");
-const { login: doctorLogin } = require("../validationSchemas/doctor");
+const { login: doctorLogin } = require("../doctor/validators");
 const User = require("../user/models");
 
 passport.use(
