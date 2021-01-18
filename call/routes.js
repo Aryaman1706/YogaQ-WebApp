@@ -2,11 +2,11 @@ const express = require("express");
 
 // * Middleware
 const { complete: userComplete } = require("../user/middlewares");
-const { login: doctorLogin } = require("../middleware/doctor");
+const { login: doctorLogin } = require("../doctor/middlewares");
 const { loggedIn, auth } = require("../chatroom/middlewares");
 
 // * Controllers
-const controller = require("../controllers/call");
+const controller = require("./controllers");
 
 // * API Endpoints -->
 const router = express.Router();

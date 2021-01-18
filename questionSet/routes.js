@@ -2,7 +2,7 @@
 const express = require("express");
 
 // * Controllers
-const controller = require("../controllers/questionSet");
+const controller = require("./controllers");
 
 // * API Endpoints -->
 const router = express.Router();

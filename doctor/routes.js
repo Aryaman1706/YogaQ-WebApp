@@ -10,23 +10,23 @@ const upload = multer({
 });
 
 // * Middleware
-const { login: loginDoctor } = require("../middleware/doctor");
+const { login: loginDoctor } = require("./middlewares");
 const { login: loginAdmin } = require("../admin/middlewares");
 
 // * Controllers
-const controller = require("../controllers/doctor");
+const controllers = require("./controllers");
 
 // * API Endpoints -->
 const router = express.Router();
 
 // * Create a new enquiry
-router.post("/enquire", [upload.any()], controller.newEnquiry);
+router.post("/enquire", [upload.any()], controllers.newEnquiry);
 
 // * Create a doctor from enquiry
-router.post("/register", loginAdmin, controller.register);
+router.post("/register", loginAdmin, controllers.register);
 
 // * Deny an enquiry
-router.delete("/delete/:enquiryId", loginAdmin, controller.denyEnquiry);
+router.delete("/delete/:enquiryId", loginAdmin, controllers.denyEnquiry);
 
 // * Login as Doctor
 router.post("/login", (req, res, next) => {
@@ -49,34 +49,34 @@ router.post("/login", (req, res, next) => {
 
 // * Get my profile
 // /doctor/profile?complete=(true/false)
-router.get("/profile", loginDoctor, controller.myProfile);
+router.get("/profile", loginDoctor, controllers.myProfile);
 
 // * Edit my profile
-router.put("/profile", [loginDoctor, upload.any()], controller.editProfile);
+router.put("/profile", [loginDoctor, upload.any()], controllers.editProfile);
 
 // * Change Password
-router.put("/changePassword", loginDoctor, controller.changePassword);
+router.put("/changePassword", loginDoctor, controllers.changePassword);
 
 // * Forgot password 1 (Enter email to send reset token to)
-router.post("/forgotPassword", controller.forgotPassword1);
+router.post("/forgotPassword", controllers.forgotPassword1);
 
 // * Forgot password 2 (Enter new password)
-router.post("/forgotPassword/:token", controller.forgotPassword2);
+router.post("/forgotPassword/:token", controllers.forgotPassword2);
 
 // * List all enquiries
 // "/doctor/enquiry/list/?page=1"
-router.get("/enquiry/list", loginAdmin, controller.listEnquiries);
+router.get("/enquiry/list", loginAdmin, controllers.listEnquiries);
 
 // * View an enquiry
-router.get("/enquiry/view/:id", loginAdmin, controller.viewEnquiry);
+router.get("/enquiry/view/:id", loginAdmin, controllers.viewEnquiry);
 
 // * List all Doctors
 // "/doctor/list/?page=1"
-router.get("/list", loginAdmin, controller.listDoctors);
+router.get("/list", loginAdmin, controllers.listDoctors);
 
 // * View a Doctor
 // Chatrooms and details
-router.get("/view/:id", loginAdmin, controller.viewDoctor);
+router.get("/view/:id", loginAdmin, controllers.viewDoctor);
 
 // * End of API Endpoints -->
 

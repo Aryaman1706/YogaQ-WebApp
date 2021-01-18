@@ -5,12 +5,12 @@ const { validate: uuidValidate } = require("uuid");
 const omit = require("lodash/omit");
 
 // * Models
-const Doctor = require("../models/Doctor");
-const Enquiry = require("../models/Enquiry");
-const ChatRoom = require("../chatroom/models");
+const Doctor = require("./models/doctor");
+const Enquiry = require("./models/enquiry");
+const ChatRoom = require("../chatroom/models/chatroom");
 
 // * Utils
-const validation = require("../validationSchemas/doctor");
+const validators = require("./validators");
 
 // * Controllers -->
 
@@ -24,7 +24,7 @@ exports.newEnquiryCheck = async (req, res, next) => {
       qualificational: JSON.parse(req.body.qualificational),
       professional: JSON.parse(req.body.qualificational),
     };
-    const { error, value } = validation.enquiry(body);
+    const { error, value } = validators.enquiry(body);
     if (error) return res.json({ error: error.details[0].message, body: null });
 
     if (await Enquiry.findOne({ email: value.email }))
@@ -52,7 +52,7 @@ exports.newEnquiry = async (req, res) => {
       qualificational: JSON.parse(req.body.qualificational),
       professional: JSON.parse(req.body.professional),
     };
-    const { error, value } = validation.enquiry(body);
+    const { error, value } = validators.enquiry(body);
     if (error)
       return res.status(400).json({
         error: `Validation Error. ${error.details[0].message}`,
@@ -109,7 +109,7 @@ exports.newEnquiry = async (req, res) => {
 // * Create a doctor from enquiry
 exports.register = async (req, res) => {
   try {
-    const { error, value } = validation.register(req.body);
+    const { error, value } = validators.register(req.body);
     if (error)
       return res.status(400).json({
         error: `Validation Error. ${error.details[0].message}`,
@@ -177,7 +177,7 @@ exports.myProfile = async (req, res) => {
 // * Edit my profile
 exports.editProfile = async (req, res) => {
   try {
-    const { error, value } = validation.edit(req.body);
+    const { error, value } = validators.edit(req.body);
     if (error)
       return res.status(400).json({
         error: `Validation Error. ${error.details[0].message}`,
@@ -237,7 +237,7 @@ exports.editProfile = async (req, res) => {
 // * Change Password
 exports.changePassword = async (req, res) => {
   try {
-    const { error, value } = validation.changePassword(req.body);
+    const { error, value } = validators.changePassword(req.body);
     if (error)
       return res.status(400).json({
         error: `Validation Error. ${error.details[0].message}`,
@@ -278,7 +278,7 @@ exports.changePassword = async (req, res) => {
 // * Forgot password 1 (Enter email to send reset link on)
 exports.forgotPassword1 = async (req, res) => {
   try {
-    const { error, value } = validation.forgotPassword1(req.body);
+    const { error, value } = validators.forgotPassword1(req.body);
     if (error)
       return res
         .status(400)
@@ -308,7 +308,7 @@ exports.forgotPassword1 = async (req, res) => {
 // * Forgot password 2 (Enter a new password)
 exports.forgotPassword2 = async (req, res) => {
   try {
-    const { error, value } = validation.forgotPassword2(req.body);
+    const { error, value } = validators.forgotPassword2(req.body);
     if (error)
       return res
         .status(400)
