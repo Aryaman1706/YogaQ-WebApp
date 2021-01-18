@@ -1,8 +1,8 @@
 const user = require("../user/routes");
 const admin = require("../admin/routes");
-const doctor = require("../routes/doctor");
+const doctor = require("../doctor/routes");
 const chatroom = require("../chatroom/routes");
-const call = require("../routes/call");
+const call = require("../call/routes");
 
 /**
  * @param {Object} app - Express App

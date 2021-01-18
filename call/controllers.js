@@ -1,11 +1,9 @@
-// * NPM Packages
-
 // * Models
 const Call = require("./models");
-const ChatRoom = require("../chatroom/models");
+const ChatRoom = require("../chatroom/models/chatroom");
 
 // * Utils
-const validation = require("../validationSchemas/call");
+const validators = require("./validators");
 
 // * Controllers -->
 
@@ -40,7 +38,7 @@ exports.list = async (req, res) => {
 // * Request a Call
 exports.request = async (req, res) => {
   try {
-    const { error, value } = validation.request(req.body);
+    const { error, value } = validators.request(req.body);
     if (error)
       return res
         .status(400)
@@ -61,7 +59,7 @@ exports.request = async (req, res) => {
 // * Edit Call (Change Time)
 exports.edit = async (req, res) => {
   try {
-    const { error, value } = validation.edit(req.body);
+    const { error, value } = validators.edit(req.body);
     if (error)
       return res
         .status(400)
@@ -89,7 +87,7 @@ exports.edit = async (req, res) => {
 // * Accept Call Request
 exports.accept = async (req, res) => {
   try {
-    const { error, value } = validation.accept(req.body);
+    const { error, value } = validators.accept(req.body);
     if (error)
       return res
         .status(400)
@@ -122,7 +120,7 @@ exports.accept = async (req, res) => {
 // * Mark Call As Complete
 exports.complete = async (req, res) => {
   try {
-    const { error, value } = validation.complete(req.body);
+    const { error, value } = validators.complete(req.body);
     if (error)
       return res
         .status(400)

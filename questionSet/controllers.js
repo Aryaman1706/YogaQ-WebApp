@@ -1,19 +1,17 @@
-// * NPM Packages
-
 // * Models
 const QuestionSet = require("./models/questionSet");
-const Question = require("../models/Question");
+const Question = require("./models/question");
 const Response = require("./models/response");
 
 // * Utils
-const validation = require("./validators");
+const validators = require("./validators");
 
 // * Controllers -->
 
 // * Toggle Active status of Question Set
 exports.toggleActive = async (req, res) => {
   try {
-    const { error, value } = validation.toggleActive(req.body);
+    const { error, value } = validators.toggleActive(req.body);
     if (error)
       return res
         .status(404)
@@ -39,7 +37,7 @@ exports.toggleActive = async (req, res) => {
 // * Add Question to question set (Doctor)
 exports.addQues = async (req, res) => {
   try {
-    const { error, value } = validation.addQuestion(req.body);
+    const { error, value } = validators.addQuestion(req.body);
     if (error)
       return res
         .status(404)
@@ -100,7 +98,7 @@ exports.userGet = async (req, res) => {
 // * Fill Question Set (User)
 exports.userFill = async (req, res) => {
   try {
-    const { error, value } = validation.fillSet(req.body);
+    const { error, value } = validators.fillSet(req.body);
     if (error)
       return res
         .status(400)

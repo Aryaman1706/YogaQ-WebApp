@@ -1,9 +1,8 @@
-// * NPM Packages
 const queryString = require("query-string");
 
 // * Models
 const User = require("./models");
-const ChatRoom = require("../chatroom/models");
+const ChatRoom = require("../chatroom/models/chatroom");
 
 // * Utils
 const validators = require("./validators");
