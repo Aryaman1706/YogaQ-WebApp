@@ -10,7 +10,7 @@ exports.login = async (req, res, next) => {
       if (!admin) {
         return res
           .status(404)
-          .json({ error: "Invalid Admin account.", body: null });
+          .json({ error: "Invalid Credentials.", body: null });
       }
       if (admin.role === "admin") {
         return next();
