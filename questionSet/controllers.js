@@ -1,7 +1,5 @@
 // * Models
-const QuestionSet = require("./models/questionSet");
-const Question = require("./models/question");
-const Response = require("./models/response");
+const { QuestionSet, Question, Response } = require("./models");
 
 // * Utils
 const validators = require("./validators");

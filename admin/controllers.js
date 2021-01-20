@@ -3,7 +3,9 @@ const { randomBytes } = require("crypto");
 
 // * Models
 const Admin = require("./models");
-const ChatRoom = require("../chatroom/models/chatroom");
+const {
+  models: { Chatroom },
+} = require("../chatroom");
 
 // * Utils
 const validators = require("./validators");
@@ -224,7 +226,7 @@ exports.forgotPassword2 = async (req, res) => {
 // * Get My chatrooms
 exports.myChatrooms = async (req, res) => {
   try {
-    const chatrooms = await ChatRoom.find({
+    const chatrooms = await Chatroom.find({
       "partner.id": req.user._id,
       "partner.model": "Admin",
     });
