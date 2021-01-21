@@ -5,7 +5,9 @@ const {
   login: loginUser,
   complete: completeUserProfile,
 } = require("./middlewares");
-const { login: loginAdmin } = require("../admin/middlewares");
+const {
+  middlewares: { login: loginAdmin },
+} = require("../admin");
 
 // * Controllers
 const controllers = require("./controllers");

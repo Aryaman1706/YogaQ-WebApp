@@ -1,4 +1,4 @@
-const Doctor = require("./models/doctor");
+const { Doctor } = require("./models");
 
 // * Doctor is logged in
 exports.login = async (req, res, next) => {

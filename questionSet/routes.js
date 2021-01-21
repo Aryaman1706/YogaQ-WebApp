@@ -1,4 +1,3 @@
-// * NPM Packages
 const express = require("express");
 
 // * Controllers

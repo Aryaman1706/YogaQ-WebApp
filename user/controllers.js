@@ -2,7 +2,9 @@ const queryString = require("query-string");
 
 // * Models
 const User = require("./models");
-const ChatRoom = require("../chatroom/models/chatroom");
+const {
+  models: { Chatroom },
+} = require("../chatroom");
 
 // * Utils
 const validators = require("./validators");
@@ -48,7 +50,7 @@ exports.viewUser = async (req, res) => {
     if (!user)
       return res.status(400).json({ error: "User not found.", body: null });
 
-    const chatrooms = await ChatRoom.find({
+    const chatrooms = await Chatroom.find({
       "user.id": user._id,
     })
       .select("user partner blocked")
@@ -238,7 +240,7 @@ exports.signup = async (req, res) => {
         model: "Admin",
       },
     };
-    await Promise.all([user.save(), ChatRoom.create(chatroom)]);
+    await Promise.all([user.save(), Chatroom.create(chatroom)]);
     return res.status(200).json({
       error: null,
       body: { user, message: "Congratulations! SignUp process is complete." },
@@ -260,10 +262,10 @@ exports.logoutUser = async (req, res) => {
   }
 };
 
-// * Get my ChatRooms
+// * Get my Chatrooms
 exports.getChatrooms = async (req, res) => {
   try {
-    const chatrooms = await ChatRoom.find({ "user.id": req.user._id }).exec();
+    const chatrooms = await Chatroom.find({ "user.id": req.user._id }).exec();
     const promiseArray = [];
     chatrooms.forEach((doc) => {
       const pro = doc

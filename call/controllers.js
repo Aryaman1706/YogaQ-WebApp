@@ -1,6 +1,8 @@
 // * Models
 const Call = require("./models");
-const ChatRoom = require("../chatroom/models/chatroom");
+const {
+  models: { Chatroom },
+} = require("../chatroom");
 
 // * Utils
 const validators = require("./validators");
@@ -44,7 +46,7 @@ exports.request = async (req, res) => {
         .status(400)
         .json({ error: error.details[0].message, body: null });
 
-    const chatroom = await ChatRoom.findById(value.chatroomId).exec();
+    const chatroom = await Chatroom.findById(value.chatroomId).exec();
     if (!chatroom || !chatroom.user.id.equals(req.user._id))
       return res.status(400).json({ error: "Invalid Request.", body: null });
 

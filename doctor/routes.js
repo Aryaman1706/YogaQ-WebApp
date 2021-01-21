@@ -2,19 +2,21 @@ const express = require("express");
 const multer = require("multer");
 const passport = require("passport");
 
+// * Middleware
+const { login: loginDoctor } = require("./middlewares");
+const {
+  middlewares: { login: loginAdmin },
+} = require("../admin");
+
+// * Controllers
+const controllers = require("./controllers");
+
 // * Config
 const customStorage = require("../config/multerStorage");
 
 const upload = multer({
   storage: customStorage(),
 });
-
-// * Middleware
-const { login: loginDoctor } = require("./middlewares");
-const { login: loginAdmin } = require("../admin/middlewares");
-
-// * Controllers
-const controllers = require("./controllers");
 
 // * API Endpoints -->
 const router = express.Router();

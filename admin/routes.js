@@ -1,7 +1,6 @@
 const express = require("express");
 const multer = require("multer");
 const passport = require("passport");
-const cloudinary = require("../config/cloudinaryConfig");
 
 // * Middlewares
 const { login: loginAdmin } = require("./middlewares");
@@ -10,6 +9,7 @@ const { login: loginAdmin } = require("./middlewares");
 const controllers = require("./controllers");
 
 // * Config
+const cloudinary = require("../config/cloudinaryConfig");
 const customStorage = require("../config/multerStorage");
 
 const checkFileType = (file, cb) => {

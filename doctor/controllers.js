@@ -5,9 +5,10 @@ const { validate: uuidValidate } = require("uuid");
 const omit = require("lodash/omit");
 
 // * Models
-const Doctor = require("./models/doctor");
-const Enquiry = require("./models/enquiry");
-const ChatRoom = require("../chatroom/models/chatroom");
+const { Doctor, Enquiry } = require("./models");
+const {
+  models: { Chatroom },
+} = require("../chatroom");
 
 // * Utils
 const validators = require("./validators");
@@ -428,7 +429,7 @@ exports.viewDoctor = async (req, res) => {
     if (!doctor)
       return res.status(400).json({ error: "Doctor not found.", body: null });
 
-    const chatrooms = await ChatRoom.find({
+    const chatrooms = await Chatroom.find({
       "partner.id": doctor._id,
       "partner.model": "Doctor",
     })
