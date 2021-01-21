@@ -13,7 +13,7 @@ exports.login = async (req, res, next) => {
           .json({ error: "Invalid Credentials.", body: null });
       }
       if (admin.role === "admin") {
-        return next();
+        next();
       }
       return res.status(550).json({ error: "Permission Denied.", body: null });
     }
