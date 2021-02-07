@@ -10,6 +10,19 @@ const useStyles = makeStyles((theme) => ({
     margin: "auto",
     marginTop: "1rem",
   },
+  videoContainer: {
+    display: "flex",
+    flexDirection: "row",
+    flexWrap: "no-wrap",
+    overflowX: "auto",
+  },
+  img: {
+    height: "150px",
+    width: "215px",
+    borderRadius: "10px",
+    margin: "1rem",
+    cursor: "pointer",
+  },
 }));
 
 const ChatroomList = () => {
@@ -63,6 +76,36 @@ const ChatroomList = () => {
             ))}
           </>
         ) : null}
+        <Grid item xs={12}>
+          <span style={{ fontSize: "1.2rem", fontWeight: "bold" }}>
+            Helpful Tips
+          </span>
+        </Grid>
+        <Grid item xs={12} className={classes.videoContainer}>
+          <img
+            src={"https://picsum.photos/200"}
+            alt="video"
+            className={classes.img}
+            onClick={() => {
+              window.open("https://youtube.com/");
+            }}
+          />
+          <img
+            src={"https://picsum.photos/200"}
+            alt="video"
+            className={classes.img}
+          />
+          <img
+            src={"https://picsum.photos/200"}
+            alt="video"
+            className={classes.img}
+          />
+          <img
+            src={"https://picsum.photos/200"}
+            alt="video"
+            className={classes.img}
+          />
+        </Grid>
       </Grid>
     </>
   );

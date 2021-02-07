@@ -255,6 +255,7 @@ const CharoomAppbar = ({ user }) => {
                     className={`${classes.flexRow} ${classes.paddingMenuItem}`}
                     onClick={() => {
                       history.push("/edit");
+                      setAnchorEl(null);
                     }}
                   >
                     <div>
@@ -270,6 +271,7 @@ const CharoomAppbar = ({ user }) => {
                     className={`${classes.flexRow} ${classes.paddingMenuItem}`}
                     onClick={() => {
                       history.push("/edit");
+                      setAnchorEl(null);
                     }}
                   >
                     <div>
@@ -285,6 +287,7 @@ const CharoomAppbar = ({ user }) => {
                     className={`${classes.flexRow} ${classes.paddingMenuItem}`}
                     onClick={() => {
                       history.push("/edit");
+                      setAnchorEl(null);
                     }}
                   >
                     <div>
@@ -300,6 +303,7 @@ const CharoomAppbar = ({ user }) => {
                     className={`${classes.flexRow} ${classes.paddingMenuItem}`}
                     onClick={() => {
                       window.open("https://www.yogaqtherapy.com/privacy");
+                      setAnchorEl(null);
                     }}
                   >
                     <div>
@@ -315,6 +319,7 @@ const CharoomAppbar = ({ user }) => {
                     className={`${classes.flexRow} ${classes.paddingMenuItem}`}
                     onClick={() => {
                       userLogOut();
+                      setAnchorEl(null);
                     }}
                   >
                     <div>

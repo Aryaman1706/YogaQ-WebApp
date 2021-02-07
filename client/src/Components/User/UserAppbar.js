@@ -17,6 +17,8 @@ import LogoutIcon from "../../assets/log-out.svg";
 import AccountCircleOutlinedIcon from "@material-ui/icons/AccountCircleOutlined";
 import SideDrawer from "../Landing/SideDrawer";
 import MenuIcon from "@material-ui/icons/Menu";
+import { useDispatch } from "react-redux";
+import { logoutUser } from "../../redux/actions/userActions";
 
 const useStyles = makeStyles((theme) => ({
   appbar: {
@@ -121,6 +123,7 @@ const useStyles = makeStyles((theme) => ({
     "&:hover": {
       backgroundColor: "rgb(211,211,211, 0.4)",
       borderRadius: 6,
+      cursor: "pointer",
     },
   },
   menuIcon: {
@@ -133,6 +136,7 @@ const UserAppbar = ({ isAuthenticated, user }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [sideDrawer, setSideDrawer] = useState(false);
   const history = useHistory();
+  const dispatch = useDispatch();
 
   const handleClick = (e) => {
     setAnchorEl(e.currentTarget);
@@ -140,6 +144,11 @@ const UserAppbar = ({ isAuthenticated, user }) => {
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const userLogOut = async () => {
+    await dispatch(logoutUser());
+    history.push("/");
   };
 
   const StyledMenu = withStyles({
@@ -238,6 +247,7 @@ const UserAppbar = ({ isAuthenticated, user }) => {
                       className={`${classes.flexRow} ${classes.paddingMenuItem}`}
                       onClick={() => {
                         history.push("/edit");
+                        setAnchorEl(null);
                       }}
                     >
                       <div>
@@ -251,6 +261,10 @@ const UserAppbar = ({ isAuthenticated, user }) => {
                     </div>
                     <div
                       className={`${classes.flexRow} ${classes.paddingMenuItem}`}
+                      onClick={() => {
+                        userLogOut();
+                        setAnchorEl(null);
+                      }}
                     >
                       <div>
                         <img

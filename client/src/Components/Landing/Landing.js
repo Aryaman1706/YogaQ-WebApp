@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
     fontFamily: "Quarto, sans-serif",
     fontSize: "4rem",
     fontWeight: "900",
-    lineHeight: "3.6rem",
+    lineHeight: "4rem",
     whiteSpace: "pre-line",
     letterSpacing: "-3px",
     color: "#27325a",
@@ -52,9 +52,7 @@ const useStyles = makeStyles((theme) => ({
   flexColumn: {
     display: "flex",
     flexDirection: "column",
-    [theme.breakpoints.only("lg")]: {
-      paddingLeft: "1rem",
-    },
+    paddingLeft: "1rem",
   },
   btn2: {
     marginLeft: "0.5rem",
