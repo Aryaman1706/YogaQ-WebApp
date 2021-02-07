@@ -8,13 +8,14 @@ const {
 
 // * Utils
 const validators = require("./validators");
-const { idIsPresent } = require("../utils/functions");
+const { objectIdToStringArray } = require("../utils/functions");
 
 // * Controllers -->
 
 // * Create a Chat Room
 exports.create = async (req, res) => {
   try {
+    // Validating input data
     const { error, value } = validators.create(req.body);
     if (error)
       return res.status(400).json({
@@ -22,6 +23,7 @@ exports.create = async (req, res) => {
         body: null,
       });
 
+    // Verifying user and partner accounts
     const userPromise = User.findOne({ email: value.user }).exec();
     const partnerPromise =
       value.partnerModel === "Admin"
@@ -35,18 +37,29 @@ exports.create = async (req, res) => {
         body: null,
       });
 
+    // Checking for existing chatroom if any
     const existingChatroom = await ChatRoom.findOne({
       "user.id": user._id,
       "partner.id": partner._id,
       "partner.model": value.partnerModel,
     }).exec();
-    if (existingChatroom || idIsPresent(user.doctors, partner._id))
+    if (
+      existingChatroom ||
+      objectIdToStringArray(user.doctors).includes(partner._id)
+    )
       return res.status(400).json({
         error: "Validation Error. Chatroom between these two already exists.",
         body: null,
       });
-    user.doctors.push(partner._id);
-    await Promise.all([
+
+    // Adding partner (if doctor) to user.doctors array
+    if (value.partnerModel === "Doctor") {
+      user.doctors.push(partner._id);
+      user.markModified("doctors");
+    }
+
+    // Creating new chatroom and saving user
+    const [newChatroom] = await Promise.all([
       ChatRoom.create({
         user: {
           id: user._id,
@@ -59,6 +72,18 @@ exports.create = async (req, res) => {
       }),
       user.save(),
     ]);
+
+    // Creating a welcome message
+    Message.create({
+      chatroomId: newChatroom._id,
+      sender: {
+        id: partner._id,
+        model: value.partnerModel,
+      },
+      text: partner.welcomeMessage,
+      time: new Date(),
+    });
+
     return res
       .status(200)
       .json({ error: null, body: "ChatRoom created succesfully." });
