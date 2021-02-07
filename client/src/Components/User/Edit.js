@@ -16,6 +16,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { user as userActions } from "../../redux/actions/index";
 import Loader from "../Loader";
 import background from "../../assets/background.svg";
+import homeIcon from "../../assets/home.svg";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -37,6 +39,30 @@ const useStyles = makeStyles((theme) => ({
       marginTop: "1rem",
     },
   },
+  homeIcon: {
+    height: "1.5rem",
+    width: "auto",
+    objectFit: "contain",
+    margin: "auto 0 auto 0",
+    paddingRight: "0.5rem",
+  },
+  flexRow: {
+    display: "flex",
+    flexDirection: "row",
+    width: "fit-content",
+    padding: "0.5rem",
+    "&:hover": {
+      backgroundColor: "rgb(211,211,211, 0.4)",
+      cursor: "pointer",
+      borderRadius: "10px",
+      transition: "all 0.2s ease-in-out",
+    },
+  },
+  homeText: {
+    fontSize: "1rem",
+    lineHeight: "1.5rem",
+    margin: "auto 0 auto 0",
+  },
 }));
 
 const Edit = () => {
@@ -45,6 +71,7 @@ const Edit = () => {
   const [compLoading, setCompLoading] = useState(false);
   const classes = useStyles();
   const dispatch = useDispatch();
+  const history = useHistory();
 
   useEffect(() => {
     return () => {
@@ -135,6 +162,21 @@ const Edit = () => {
                 alignItems="stretch"
                 spacing={2}
               >
+                <Grid item xs={12}>
+                  <div
+                    className={classes.flexRow}
+                    onClick={() => {
+                      history.push("/");
+                    }}
+                  >
+                    <img
+                      src={homeIcon}
+                      alt="home"
+                      className={classes.homeIcon}
+                    />
+                    <span className={classes.homeText}>Back to home</span>
+                  </div>
+                </Grid>
                 <Grid item>
                   <Typography
                     variant="h4"
