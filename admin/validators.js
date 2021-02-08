@@ -4,9 +4,9 @@ Joi.objectId = require("joi-objectid")(Joi);
 // * Create an Admin
 /**
  * {
- *  username: "testUsername",
- *  email: "testEmail@mail.com",
- *  password: "testPassword"
+ *  "username": "testUsername",
+ *  "email": "testEmail@mail.com",
+ *  "password": "testPassword"
  * }
  */
 exports.create = (body) => {
@@ -22,8 +22,8 @@ exports.create = (body) => {
 // * Login as Admin
 /**
  * {
- *  username: "testUsername",
- *  password: "testPassword"
+ *  "username": "testUsername",
+ *  "password": "testPassword"
  * }
  */
 exports.login = (body) => {
@@ -38,9 +38,9 @@ exports.login = (body) => {
 // * Edit profile of currently logined in Admin
 /**
  * {
- *  username: "testUsername",
- *  email: "testEmail@mail.com",
- *  welcomeMessage: "Hello!"
+ *  "username": "testUsername",
+ *  "email": "testEmail@mail.com",
+ *  "welcomeMessage": "Hello!"
  * }
  */
 exports.edit = (body) => {
@@ -56,9 +56,9 @@ exports.edit = (body) => {
 // * Change Password of currently logined Admin
 /**
  * {
- *  oldPassword: "testOldPassword",
- *  newPassword: "testNewPassword",
- *  confirmPassword: "testNewPassword"
+ *  "oldPassword": "testOldPassword",
+ *  "newPassword": "testNewPassword",
+ *  "confirmPassword": "testNewPassword"
  * }
  */
 exports.changePassword = (body) => {
@@ -74,7 +74,7 @@ exports.changePassword = (body) => {
 // * Enter email to get reset token
 /**
  * {
- *  email: "testEmail@mail.com"
+ *  "email": "testEmail@mail.com"
  * }
  */
 exports.forgotPassword1 = (body) => {
@@ -88,8 +88,8 @@ exports.forgotPassword1 = (body) => {
 // * Enter new password to reset
 /**
  * {
- *  newPassword: "testNewPassword",
- *  confirmPassword: "testNewPassword"
+ *  "newPassword": "testNewPassword",
+ *  "confirmPassword": "testNewPassword"
  * }
  */
 exports.forgotPassword2 = (body) => {

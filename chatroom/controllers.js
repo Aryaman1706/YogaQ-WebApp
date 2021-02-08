@@ -1,5 +1,5 @@
 // * Models
-const { ChatRoom, Message } = require("./models");
+const { Chatroom, Message } = require("./models");
 const { models: User } = require("../user");
 const { models: Admin } = require("../admin");
 const {
@@ -12,10 +12,10 @@ const { objectIdToStringArray } = require("../utils/functions");
 
 // * Controllers -->
 
-// * Create a Chat Room
+// * Create a new chatroom
 exports.create = async (req, res) => {
   try {
-    // Validating input data
+    // Validating request body
     const { error, value } = validators.create(req.body);
     if (error)
       return res.status(400).json({
@@ -38,7 +38,7 @@ exports.create = async (req, res) => {
       });
 
     // Checking for existing chatroom if any
-    const existingChatroom = await ChatRoom.findOne({
+    const existingChatroom = await Chatroom.findOne({
       "user.id": user._id,
       "partner.id": partner._id,
       "partner.model": value.partnerModel,
@@ -60,7 +60,7 @@ exports.create = async (req, res) => {
 
     // Creating new chatroom and saving user
     const [newChatroom] = await Promise.all([
-      ChatRoom.create({
+      Chatroom.create({
         user: {
           id: user._id,
         },
@@ -69,12 +69,16 @@ exports.create = async (req, res) => {
           model: value.partnerModel,
         },
         blocked: value.blocked,
+        lastOpened: {
+          partner: new Date(),
+          user: new Date(),
+        },
       }),
       user.save(),
     ]);
 
     // Creating a welcome message
-    Message.create({
+    await Message.create({
       chatroomId: newChatroom._id,
       sender: {
         id: partner._id,
@@ -86,7 +90,7 @@ exports.create = async (req, res) => {
 
     return res
       .status(200)
-      .json({ error: null, body: "ChatRoom created succesfully." });
+      .json({ error: null, body: "Chatroom created succesfully." });
   } catch (error) {
     console.log("Error occured here\n", error);
     return res.status(500).json({ error: "Server Error.", body: null });
@@ -96,24 +100,26 @@ exports.create = async (req, res) => {
 // * Get a Chat Room
 exports.get = async (req, res) => {
   try {
-    const chatroom = await ChatRoom.findById(req.params.id).exec();
-    console.log(
-      chatroom.user.id.equals(req.user._id),
-      chatroom.partner.id.equals(req.user._id)
-    );
+    const chatroom = await Chatroom.findById(req.params.id).exec();
+
+    // Checking for valid chatroom id
     if (!chatroom) {
-      req.session.active_chatroom = null;
-      return res.status(404).json({ error: "Invalid Request", body: null });
-    }
-    if (
-      !chatroom.user.id.equals(req.user._id) &&
-      !chatroom.partner.id.equals(req.user._id)
-    ) {
+      // Clearing session
       req.session.active_chatroom = null;
       return res.status(404).json({ error: "Invalid Request", body: null });
     }
 
-    // * Set Cookies for subsequent requests
+    // Checking for autherized user/partner
+    if (
+      !chatroom.user.id.equals(req.user._id) &&
+      !chatroom.partner.id.equals(req.user._id)
+    ) {
+      // Clearing session
+      req.session.active_chatroom = null;
+      return res.status(404).json({ error: "Invalid Request", body: null });
+    }
+
+    // Set Cookies for subsequent requests
     req.session.active_chatroom = {
       chatroomId: chatroom._id,
       userId: chatroom.user.id,
@@ -125,6 +131,7 @@ exports.get = async (req, res) => {
         ? chatroom.lastOpened.user
         : chatroom.lastOpened.partner;
 
+    // Populating required data in existing chatroom
     await chatroom
       .populate("user.id", "username email")
       .populate("partner.id", "username email profilePicture role description")
@@ -139,22 +146,32 @@ exports.get = async (req, res) => {
       body: chatroom,
     });
   } catch (error) {
+    // Clearing session
+    req.session.active_chatroom = null;
     console.log("Error occured here\n", error);
     return res.status(500).json({ error: "Server Error.", body: null });
   }
 };
 
-// * Get Messages
+// * Get messages of active chatroom
 exports.messages = async (req, res) => {
   try {
+    // Validating query parameters
+    const { error, value } = validators.getMessages(req.query);
+    if (error)
+      return res
+        .status(400)
+        .json({ error: error.details[0].message, body: null });
+
+    // Paginating messages
     const limit = 5;
     const totalMessages = await Message.countDocuments({
       chatroomId: req.params.id,
     });
-    if ((parseInt(req.query.page, 10) - 1) * limit < totalMessages) {
+    if ((parseInt(value.page, 10) - 1) * limit < totalMessages) {
       const messages = await Message.find({ chatroomId: req.params.id })
         .sort("-time")
-        .skip((parseInt(req.query.page, 10) - 1) * limit)
+        .skip((parseInt(value.page, 10) - 1) * limit)
         .limit(limit)
         .exec();
       return res.status(200).json({
@@ -175,24 +192,28 @@ exports.messages = async (req, res) => {
   }
 };
 
-// * Edit Chat Room
+// * Edit existing chatroom
 exports.edit = async (req, res) => {
   try {
+    // Validating request body
     const { error, value } = validators.edit(req.body);
     if (error)
       return res
         .status(400)
         .json({ error: error.details[0].message, body: null });
 
-    const chatroom = await ChatRoom.findByIdAndUpdate(
+    // Finding and updating chatroom
+    const chatroom = await Chatroom.findByIdAndUpdate(
       req.params.id,
       { ...value },
       {
         new: true,
       }
     ).exec();
+
+    // Checking for valid chatroom
     if (!chatroom)
-      return res.status(404).json({ error: "ChatRoom Not Found.", body: null });
+      return res.status(404).json({ error: "Chatroom Not Found.", body: null });
 
     return res.status(200).json({ error: null, body: "Updated Successfully." });
   } catch (error) {
@@ -201,9 +222,10 @@ exports.edit = async (req, res) => {
   }
 };
 
-// * Modify Last Access
+// * Change the last access of chatroom
 exports.lastAccess = async (req, res) => {
   try {
+    // Validating request body
     const { error, value } = validators.lastAccess(req.body);
     if (error)
       return res.status(400).json({
@@ -216,19 +238,23 @@ exports.lastAccess = async (req, res) => {
         ? { "lastOpened.user": value.lastAccess }
         : { "lastOpened.partner": value.lastAccess };
 
-    const chatroom = await ChatRoom.findByIdAndUpdate(
+    // Finding and updating chatroom
+    const chatroom = await Chatroom.findByIdAndUpdate(
       req.params.id,
       { ...obj },
       { new: true }
     ).exec();
     if (!chatroom)
-      return res.status(404).json({ error: "ChatRoom Not Found.", body: null });
+      return res.status(404).json({ error: "Chatroom Not Found.", body: null });
 
+    // Clearing session
     req.session.active_chatroom = null;
     return res
       .status(200)
       .json({ error: null, body: "Last Opended Updated Successfully." });
   } catch (error) {
+    // Clearing session
+    req.session.active_chatroom = null;
     console.log("Error occured here\n", error);
     return res.status(500).json({ error: "Server Error.", body: null });
   }

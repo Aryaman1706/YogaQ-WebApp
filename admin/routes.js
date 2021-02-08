@@ -23,8 +23,8 @@ const router = express.Router();
  * Route:- {{server_url}}/admin/login
  * Middlewares:- None
  * Request Body:- {
- *   username: "testUsername",
- *   password: "testPassword"
+ *   "username": "testUsername",
+ *   "password": "testPassword"
  * }
  */
 router.post("/login", (req, res, next) => {
@@ -51,9 +51,9 @@ router.post("/login", (req, res, next) => {
  * Route:- {{server_url}}/admin/register
  * Middlewares:- Admin login
  * Request Body:- {
- *  username: "testUsername",
- *  email: "testEmail@mail.com",
- *  password: "testPassword"
+ *  "username": "testUsername",
+ *  "email": "testEmail@mail.com",
+ *  "password": "testPassword"
  * }
  */
 router.post("/register", loginAdmin, controllers.create);
@@ -82,9 +82,9 @@ router.get("/logout", loginAdmin, controllers.logoutAdmin);
  * Route:- {{server_url}}/admin/profile
  * Middlewares:- Admin login, multer file upload
  * Request Body:- {
- *  username: "testUsername",
- *  email: "testEmail@mail.com",
- *  welcomeMessage: "Hello!"
+ *  "username": "testUsername",
+ *  "email": "testEmail@mail.com",
+ *  "welcomeMessage": "Hello!"
  * }
  */
 router.put("/profile", [loginAdmin], controllers.edit);
@@ -95,9 +95,9 @@ router.put("/profile", [loginAdmin], controllers.edit);
  * Route:- {{server_url}}/admin/changePassword
  * Middlewares:- Admin login
  * Request Body:- {
- *  oldPassword: "testOldPassword",
- *  newPassword: "testNewPassword",
- *  confirmPassword: "testNewPassword"
+ *  "oldPassword": "testOldPassword",
+ *  "newPassword": "testNewPassword",
+ *  "confirmPassword": "testNewPassword"
  * }
  */
 router.put("/changePassword", loginAdmin, controllers.changePassword);
@@ -108,7 +108,7 @@ router.put("/changePassword", loginAdmin, controllers.changePassword);
  * Route:- {{server_url}}/admin
  * Middlewares:- None
  * Request Body:- {
- *  email: "testEmail@mail.com"
+ *  "email": "testEmail@mail.com"
  * }
  */
 router.post("/forgotPassword", controllers.forgotPassword1);
@@ -119,8 +119,8 @@ router.post("/forgotPassword", controllers.forgotPassword1);
  * Route:- {{server_url}}/admin
  * Middlewares:- None
  * Request Body:- {
- *  newPassword: "testNewPassword",
- *  confirmPassword: "testNewPassword"
+ *  "newPassword": "testNewPassword",
+ *  "confirmPassword": "testNewPassword"
  * }
  */
 router.post("/forgotPassword/:resetToken", controllers.forgotPassword2);
