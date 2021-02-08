@@ -1,35 +1,30 @@
 // * User is logged in
+// eslint-disable-next-line
 exports.login = async (req, res, next) => {
-  try {
-    if (req.user && req.user.role === "user") {
-      return next();
-    }
+  if (req.user && req.user.role === "user") {
+    next();
+  } else {
     return res
       .status(401)
       .json({ error: "Permission Error. Login to continue", body: null });
-  } catch (error) {
-    console.log("Error occured here\n", error);
-    return res.status(500).json({ error: "Server Error.", body: null });
   }
 };
 
 // * User is logged is and profile is complete
+// eslint-disable-next-line
 exports.complete = async (req, res, next) => {
-  try {
-    if (req.user && req.user.role === "user") {
-      if (req.user.complete) {
-        return next();
-      }
+  if (req.user && req.user.role === "user") {
+    if (req.user.complete) {
+      next();
+    } else {
       return res.status(401).json({
         error: "Permission Error. Complete the profile to continue.",
         body: null,
       });
     }
+  } else {
     return res
       .status(401)
       .json({ error: "Permission Error. Login to continue", body: null });
-  } catch (error) {
-    console.log("Error occured here\n", error);
-    return res.status(500).json({ error: "Server Error.", body: null });
   }
 };
