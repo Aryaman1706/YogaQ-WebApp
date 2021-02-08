@@ -40,6 +40,7 @@ const chatroomSchema = new mongoose.Schema(
   { timestamps: true, toJSON: { virtuals: true } }
 );
 
+// Indexes
 chatroomSchema.index(
   {
     "partner.id": 1,
@@ -48,6 +49,7 @@ chatroomSchema.index(
   { unique: true }
 );
 
+// Unread Messages count virtual
 chatroomSchema.virtual("unreadMessages", {
   ref: "Message",
   localField: "_id",
@@ -55,12 +57,14 @@ chatroomSchema.virtual("unreadMessages", {
   count: true,
 });
 
+// Calls associated with chatroom virtual
 chatroomSchema.virtual("call", {
   ref: "Call",
   localField: "_id",
   foreignField: "chatroomId",
 });
 
+// Deleting messages if chatroom is deleted
 chatroomSchema.post("remove", async (doc, next) => {
   await Message.remove({ chatroomId: doc._id });
   next();

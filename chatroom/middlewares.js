@@ -1,3 +1,17 @@
+// * User/Partner is logined
+// eslint-disable-next-line
+exports.loggedIn = async (req, res, next) => {
+  if (req.user) {
+    next();
+  } else {
+    return res
+      .status(401)
+      .json({ error: "Permission Error. Login to continue.", body: null });
+  }
+};
+
+// * Valid user/partner are accessing the chatroom
+// eslint-disable-next-line
 exports.auth = async (req, res, next) => {
   if (
     req.session.active_chatroom &&
@@ -8,23 +22,8 @@ exports.auth = async (req, res, next) => {
       req.session.active_chatroom.partnerId.toString() ===
         req.user._id.toString())
   ) {
-    return next();
-  }
-
-  return res.status(400).json({ error: "Get chatroom first.", body: null });
-};
-
-// * User/Partner is logined
-exports.loggedIn = async (req, res, next) => {
-  try {
-    if (req.user) {
-      return next();
-    }
-    return res
-      .status(401)
-      .json({ error: "Permission Error. Login to continue.", body: null });
-  } catch (error) {
-    console.log("Error occured here\n", error);
-    return res.status(500).json({ error: "Server Error.", body: null });
+    next();
+  } else {
+    return res.status(400).json({ error: "Get chatroom first.", body: null });
   }
 };

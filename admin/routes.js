@@ -1,5 +1,11 @@
+/**
+ * ! TODOS
+ * ! File upload for admin profile picture
+ * ! Setup email for password reset
+ * ! Test forgot password routes
+ */
+
 const express = require("express");
-const multer = require("multer");
 const passport = require("passport");
 
 // * Middlewares
@@ -8,27 +14,19 @@ const { login: loginAdmin } = require("./middlewares");
 // * Controllers
 const controllers = require("./controllers");
 
-// * Config
-const cloudinary = require("../config/cloudinaryConfig");
-const customStorage = require("../config/multerStorage");
-
-const checkFileType = (file, cb) => {
-  if (!file.mimetype.startsWith("image")) return cb("Invalid File Type.");
-  if (file.size > 4000000) return cb("File limit exceded");
-  return cb(null, true);
-};
-
-const uploadProfilePicture = multer({
-  storage: customStorage(),
-  fileFilter: function (req, file, cb) {
-    checkFileType(file, cb);
-  },
-});
-
 // * API Endpoints -->
 const router = express.Router();
 
-// * Login Admin
+/**
+ * Type:- POST
+ * Desc:- Login as Admin
+ * Route:- {{server_url}}/admin/login
+ * Middlewares:- None
+ * Request Body:- {
+ *   "username": "testUsername",
+ *   "password": "testPassword"
+ * }
+ */
 router.post("/login", (req, res, next) => {
   // eslint-disable-next-line
   passport.authenticate("admin", (err, user, info) => {
@@ -47,39 +45,94 @@ router.post("/login", (req, res, next) => {
   })(req, res, next);
 });
 
-// * Create a new admin
+/**
+ * Type:- POST
+ * Desc:- Create a new admin
+ * Route:- {{server_url}}/admin/register
+ * Middlewares:- Admin login
+ * Request Body:- {
+ *  "username": "testUsername",
+ *  "email": "testEmail@mail.com",
+ *  "password": "testPassword"
+ * }
+ */
 router.post("/register", loginAdmin, controllers.create);
 
-// * Get my profile
+/**
+ * Type:- GET
+ * Desc:- Get profile of logged in admin
+ * Route:- {{server_url}}/admin/profile
+ * Middlewares:- Admin login
+ * Request Body:- None
+ */
 router.get("/profile", loginAdmin, controllers.myProfile);
 
-// * Logout Admin
+/**
+ * Type:- GET
+ * Desc:- Log out admin
+ * Route:- {{server_url}}/admin/logout
+ * Middlewares:- Admin login
+ * Request Body:- None
+ */
 router.get("/logout", loginAdmin, controllers.logoutAdmin);
 
-// * Edit profile of admin
-router.put(
-  "/profile",
-  [loginAdmin, uploadProfilePicture.single("profilePicture")],
-  controllers.edit
-);
+/**
+ * Type:- PUT
+ * Desc:- Edit profile of logged in admin
+ * Route:- {{server_url}}/admin/profile
+ * Middlewares:- Admin login, multer file upload
+ * Request Body:- {
+ *  "username": "testUsername",
+ *  "email": "testEmail@mail.com",
+ *  "welcomeMessage": "Hello!"
+ * }
+ */
+router.put("/profile", [loginAdmin], controllers.edit);
 
-// * Change Password
+/**
+ * Type:- PUT
+ * Desc:- Change Password of logged in admin
+ * Route:- {{server_url}}/admin/changePassword
+ * Middlewares:- Admin login
+ * Request Body:- {
+ *  "oldPassword": "testOldPassword",
+ *  "newPassword": "testNewPassword",
+ *  "confirmPassword": "testNewPassword"
+ * }
+ */
 router.put("/changePassword", loginAdmin, controllers.changePassword);
 
-// * Forgot password 1 (Enter email to send reset link on)
+/**
+ * Type:- POST
+ * Desc:- Enter email to get password reset token
+ * Route:- {{server_url}}/admin
+ * Middlewares:- None
+ * Request Body:- {
+ *  "email": "testEmail@mail.com"
+ * }
+ */
 router.post("/forgotPassword", controllers.forgotPassword1);
 
-// * Forgot password 2 (Enter a new password)
+/**
+ * Type:- POST
+ * Desc:- Enter new password
+ * Route:- {{server_url}}/admin
+ * Middlewares:- None
+ * Request Body:- {
+ *  "newPassword": "testNewPassword",
+ *  "confirmPassword": "testNewPassword"
+ * }
+ */
 router.post("/forgotPassword/:resetToken", controllers.forgotPassword2);
 
-// * Get My Chatrooms
+/**
+ * Type:- GET
+ * Desc:- Get chatrooms of logged in admin
+ * Route:- {{server_url}}/admin/chatrooms
+ * Middlewares:- Admin Login
+ * Request Body:- None
+ */
 router.get("/chatrooms", loginAdmin, controllers.myChatrooms);
-
-// * Test
-router.get("/del", async (req, res) => {
-  const result = await cloudinary.uploader.destroy("690259_vw4hbg");
-  res.send(result);
-});
 
 // * End of API Endpoints -->
 
