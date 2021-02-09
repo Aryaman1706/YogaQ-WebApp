@@ -93,7 +93,7 @@ const CreateChatroom = () => {
   };
 
   const submit = async () => {
-    await dispatch(adminActions.createChatroom({ ...details, blocked: false }));
+    await dispatch(adminActions.createChatroom({ ...details }));
     setCompLoading(false);
   };
 
