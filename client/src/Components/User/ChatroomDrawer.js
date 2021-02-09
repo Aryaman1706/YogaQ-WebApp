@@ -10,6 +10,7 @@ import { useSelector } from "react-redux";
 import Profile from "../../assets/user.svg";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { ExpandLess } from "@material-ui/icons";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   profile: {
@@ -46,6 +47,7 @@ const useStyles = makeStyles((theme) => ({
 
 const ChatroomDrawer = () => {
   const classes = useStyles();
+  const history = useHistory();
   const { active_chatroom } = useSelector((state) => state.user);
   const [show, setShow] = useState(false);
 
@@ -109,6 +111,9 @@ const ChatroomDrawer = () => {
           <Button
             className={classes.btn}
             disabled={active_chatroom.partner.id.role !== "doctor"}
+            onClick={() => {
+              history.push(`/book-call/${active_chatroom._id}`);
+            }}
           >
             Book a Session
           </Button>
