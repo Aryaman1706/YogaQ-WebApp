@@ -137,7 +137,7 @@ const BookCall = () => {
                   <div
                     className={classes.flexRow}
                     onClick={() => {
-                      history.push("/");
+                      history.push(`/call-history/${chatroomId}`);
                     }}
                   >
                     <img
