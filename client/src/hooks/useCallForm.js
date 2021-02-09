@@ -72,11 +72,7 @@ const useCallForm = (callData) => {
     }
   };
 
-  const resetError = () => {
-    setError(false);
-  };
-
-  return [error, validate, resetError];
+  return [validate];
 };
 
 export default useCallForm;
