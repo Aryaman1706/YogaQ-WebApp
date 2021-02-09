@@ -4,6 +4,7 @@ import enquiryReducer from "./enquiryReducer";
 import doctorReducer from "./doctorReducer";
 import userReducer from "./userReducer";
 import chatroomReducer from "./chatroomReducer";
+import callHistoryReducer from "./callHistoryReducer";
 
 export default combineReducers({
   user: userReducer,
@@ -11,4 +12,5 @@ export default combineReducers({
   doctor: doctorReducer,
   enquiry: enquiryReducer,
   chatroom: chatroomReducer,
+  callHistory: callHistoryReducer,
 });
