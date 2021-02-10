@@ -56,8 +56,7 @@ router.put("/edit/:id", userComplete, controller.edit);
  * Middlewares:- User Profile Complete
  * Request Body:- None
  */
-// ! Fix this
-// router.put("/cancel/:id", userComplete, controller.cancel);
+router.delete("/cancel/:id", userComplete, controller.cancel);
 
 /**
  * Type:- PUT

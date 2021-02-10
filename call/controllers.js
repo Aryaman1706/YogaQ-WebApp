@@ -12,12 +12,20 @@ const validators = require("./validators");
 // * List all Calls
 exports.list = async (req, res) => {
   try {
+    // Validating request query
+    const { error, value } = validators.page(req.query);
+    if (error)
+      return res
+        .status(400)
+        .json({ error: error.details[0].message, body: null });
+
+    // Paginating calls
     const total = await Call.countDocuments({ chatroomId: req.params.id });
     const limit = 5;
-    if ((parseInt(req.query.page, 10) - 1) * limit < total) {
+    if ((parseInt(value.page, 10) - 1) * limit < total) {
       const calls = await Call.find({ chatroomId: req.params.id })
         .sort("time")
-        .skip((parseInt(req.query.page, 10) - 1) * limit)
+        .skip((parseInt(value.page, 10) - 1) * limit)
         .limit(limit)
         .exec();
 
@@ -37,19 +45,22 @@ exports.list = async (req, res) => {
   }
 };
 
-// * Request a Call
+// * Request a call for chatroom
 exports.request = async (req, res) => {
   try {
+    // Validating request body
     const { error, value } = validators.request(req.body);
     if (error)
       return res
         .status(400)
         .json({ error: error.details[0].message, body: null });
 
+    // Finding valid chatroom for active user
     const chatroom = await Chatroom.findById(value.chatroomId).exec();
     if (!chatroom || !chatroom.user.id.equals(req.user._id))
       return res.status(400).json({ error: "Invalid Request.", body: null });
 
+    // Creating new call
     const call = await Call.create(value);
     return res.status(200).json({ error: null, body: call });
   } catch (error) {
@@ -58,18 +69,22 @@ exports.request = async (req, res) => {
   }
 };
 
-// * Edit Call (Change Time)
+// * Edit call time
 exports.edit = async (req, res) => {
   try {
+    // Validating request body
     const { error, value } = validators.edit(req.body);
     if (error)
       return res
         .status(400)
         .json({ error: error.details[0].message, body: null });
 
+    // Finding valid call by req.params.id
     let call = await Call.findById(req.params.id)
       .populate("chatroomId", "user")
       .exec();
+
+    // Validating call details
     if (!call || !call.chatroomId.user.id.equals(req.user._id))
       return res.status(400).json({ error: "Invalid Request.", body: null });
     if (call.accepted || call.completed)
@@ -77,6 +92,8 @@ exports.edit = async (req, res) => {
         error: "Call has already been accepted/completed.",
         body: null,
       });
+
+    // Storing and saving new call time
     call.time = value.time;
     call = await call.save();
     return res.status(200).json({ error: null, body: call });
@@ -86,19 +103,53 @@ exports.edit = async (req, res) => {
   }
 };
 
-// * Accept Call Request
+// * Cancel the requested call
+exports.cancel = async (req, res) => {
+  try {
+    // Finding valid call
+    const call = await Call.findById(req.params.id)
+      .populate("chatroomId", "user")
+      .exec();
+
+    // Verifying call details
+    if (
+      !call ||
+      !call.chatroomId.user.id.equals(req.user._id) ||
+      call.completed
+    )
+      return res.status(400).json({
+        error: "Invalid request. Call does not exist or it is completed",
+        body: null,
+      });
+
+    // Deleting the call
+    await call.delete();
+
+    return res
+      .status(200)
+      .json({ error: null, body: "Call deleted successfully." });
+  } catch (error) {
+    console.log("Error occured here\n", error);
+    return res.status(500).json({ error: "Server Error.", body: null });
+  }
+};
+
+// * Accept the call request
 exports.accept = async (req, res) => {
   try {
+    // Validating request body
     const { error, value } = validators.accept(req.body);
     if (error)
       return res
         .status(400)
         .json({ error: error.details[0].message, body: null });
 
+    // Finding valid call
     let call = await Call.findById(req.params.id)
       .populate("chatroomId", "partner")
       .exec();
 
+    // Validating call details
     if (
       !call ||
       !call.chatroomId.partner.id.equals(req.user._id) ||
@@ -110,6 +161,8 @@ exports.accept = async (req, res) => {
           "Invalid Request. Either call has already been completed or you are attemting to accept it after the scheduled time.",
         body: null,
       });
+
+    // Storing and saving new call details
     call.accepted = value.accepted;
     call = await call.save();
     return res.status(200).json({ error: null, body: call });
@@ -119,18 +172,22 @@ exports.accept = async (req, res) => {
   }
 };
 
-// * Mark Call As Complete
+// * Mark the call as completed
 exports.complete = async (req, res) => {
   try {
+    // Validating request body
     const { error, value } = validators.complete(req.body);
     if (error)
       return res
         .status(400)
         .json({ error: error.details[0].message, body: null });
 
+    // Finding valid call
     let call = await Call.findById(req.params.id)
       .populate("chatroomId", "partner")
       .exec();
+
+    // Validating call details
     if (
       !call ||
       !call.chatroomId.partner.id.equals(req.user._id) ||
@@ -143,6 +200,7 @@ exports.complete = async (req, res) => {
         body: null,
       });
 
+    // Storing and saving new call details
     call.completed = value.completed;
     call = await call.save();
     return res.status(200).json({ error: null, body: call });

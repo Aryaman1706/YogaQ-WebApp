@@ -19,6 +19,19 @@ exports.create = (body) => {
 
 /**
  * {
+ *  populate: false
+ * }
+ */
+exports.populate = (body) => {
+  const schema = Joi.object({
+    populate: Joi.bool().default(true),
+  });
+
+  return schema.validate(body);
+};
+
+/**
+ * {
  *  "page": 1
  * }
  */

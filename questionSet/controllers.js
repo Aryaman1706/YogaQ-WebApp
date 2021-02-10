@@ -9,12 +9,14 @@ const validators = require("./validators");
 // * Toggle Active status of Question Set
 exports.toggleActive = async (req, res) => {
   try {
+    // Validating request body
     const { error, value } = validators.toggleActive(req.body);
     if (error)
       return res
         .status(404)
         .json({ error: error.details[0].message, body: null });
 
+    // Finding valid questionSet
     const questionSet = await QuestionSet.findByIdAndUpdate(
       req.params.id,
       { ...value },
@@ -32,7 +34,7 @@ exports.toggleActive = async (req, res) => {
   }
 };
 
-// * Add Question to question set (Doctor)
+// * Add Question to question set
 exports.addQues = async (req, res) => {
   try {
     const { error, value } = validators.addQuestion(req.body);
@@ -61,7 +63,7 @@ exports.addQues = async (req, res) => {
   }
 };
 
-// * Delete given Question (Doctor)
+// * Remove and delete question from questionSet
 exports.deleteQues = async (req, res) => {
   try {
     const question = await Question.findById(req.params._id).exec();
@@ -75,7 +77,7 @@ exports.deleteQues = async (req, res) => {
   }
 };
 
-// * Get Question Set (User)
+// * Get questionSet for user
 exports.userGet = async (req, res) => {
   try {
     const questionSet = await QuestionSet.findById(req.user.questionSet)
@@ -93,7 +95,7 @@ exports.userGet = async (req, res) => {
   }
 };
 
-// * Fill Question Set (User)
+// * User fill questionSet
 exports.userFill = async (req, res) => {
   try {
     const { error, value } = validators.fillSet(req.body);
@@ -120,7 +122,7 @@ exports.userFill = async (req, res) => {
   }
 };
 
-// * Get Question Set (Doctor)
+// * Get questionSet for doctor
 exports.docGet = async (req, res) => {
   try {
     const questionSet = await QuestionSet.findById(req.params.id)
@@ -138,7 +140,7 @@ exports.docGet = async (req, res) => {
   }
 };
 
-// * Get Question Set with responses datewise (Doctor)
+// * Get filled questionSet for doctor datewise
 exports.docFilled = async (req, res) => {
   try {
     const date = new Date(req.query.date);

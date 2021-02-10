@@ -39,7 +39,7 @@ router.put("/edit/:id", loginAdmin, controllers.edit);
 /**
  * Type:- GET
  * Desc:- Get a chatroom
- * Route:- {{server_url}}/chatroom/get/:id
+ * Route:- {{server_url}}/chatroom/get/:id/?populate=false
  * Middlewares:- User/Admin/Doctor Login
  */
 router.get("/get/:id", loggedIn, controllers.get);
