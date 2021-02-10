@@ -106,7 +106,6 @@ const BookCall = () => {
 
   return (
     <>
-      {console.log(date)}
       <div className={classes.container}>
         <Grid container direction="row" justify="center" alignItems="stretch">
           <Grid item xs={11} sm={10} lg={6}>
