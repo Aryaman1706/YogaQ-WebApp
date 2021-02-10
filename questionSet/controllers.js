@@ -162,18 +162,31 @@ exports.userFill = async (req, res) => {
         .status(400)
         .json({ error: error.details[0].message, body: null });
 
-    // ! TODO:- Verifying lastAnswered
+    // Finding valid questionSet
+    const questionSet = await QuestionSet.findById(
+      req.activeChatroom.chatroomId
+    ).exec();
+    if (!questionSet)
+      return res.status(400).json({ error: "Invalid request.", body: null });
+
+    // Getting lastAnswered
+    const lastAnswered = new Date(questionSet.lastAnswered);
+    // End of day
+    lastAnswered.setHours(23, 59, 59);
+    // Verifying that one day has passed
+    if (new Date() < lastAnswered)
+      return res.status(400).json({
+        error: "Response already submitted. Try again tomorrow.",
+        body: null,
+      });
+
+    // Storing new lastAnswered
+    questionSet.lastAnswered = new Date();
 
     // Creating responses and saving new details to questionSet
     await Promise.all([
       Response.create({ ...value, questionSet: req.user.questionSet }),
-      QuestionSet.findByIdAndUpdate(
-        req.activeChatroom.chatroomId,
-        {
-          lastAnswered: new Date(),
-        },
-        { new: true }
-      ),
+      questionSet.save(),
     ]);
 
     return res
