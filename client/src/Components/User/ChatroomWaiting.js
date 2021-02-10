@@ -12,7 +12,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const ChatroomWaiting = () => {
+const ChatroomWaiting = ({ type }) => {
   const classes = useStyles();
   return (
     <>
@@ -20,27 +20,56 @@ const ChatroomWaiting = () => {
         <Grid item xs={12} className={classes.textContainer}>
           <h1>No Open Chatroom</h1>
         </Grid>
-        <ChatroomWaitingCard
-          title={"Profile"}
-          description={"Customise your profile"}
-          btnText={"Edit Profile"}
-          link={"/edit"}
-          color={"#E1F0EE"}
-        />
-        <ChatroomWaitingCard
-          title={"Membership"}
-          description={"Upgrade Membership for a better experience"}
-          btnText={"Upgrade Membership"}
-          link={"/edit"}
-          color={"#F1DDDD"}
-        />
-        <ChatroomWaitingCard
-          title={"Contact Us"}
-          description={"Reach out to us for any queries"}
-          btnText={"Contact"}
-          link={"/edit"}
-          color={"#C5CBF1"}
-        />
+        {type === "user" && (
+          <>
+            <ChatroomWaitingCard
+              title={"Profile"}
+              description={"Customise your profile"}
+              btnText={"Edit Profile"}
+              link={"/edit"}
+              color={"#E1F0EE"}
+            />
+            <ChatroomWaitingCard
+              title={"Membership"}
+              description={"Upgrade Membership for a better experience"}
+              btnText={"Upgrade Membership"}
+              link={"/edit"}
+              color={"#F1DDDD"}
+            />
+            <ChatroomWaitingCard
+              title={"Contact Us"}
+              description={"Reach out to us for any queries"}
+              btnText={"Contact"}
+              link={"/edit"}
+              color={"#C5CBF1"}
+            />
+          </>
+        )}
+        {type === "admin" && (
+          <>
+            <ChatroomWaitingCard
+              title={"Enquires"}
+              description={"Detailed Analysis of enquiries"}
+              btnText={"Proceed"}
+              link={"/admin/enquiries"}
+              color={"#E1F0EE"}
+            />
+            <ChatroomWaitingCard
+              title={"Doctors"}
+              description={"Detailed Analysis of all the doctors"}
+              btnText={"Proceed"}
+              link={"/admin/doctors"}
+              color={"#F1DDDD"}
+            />
+            <ChatroomWaitingCard
+              title={"Profile"}
+              description={"Customise your profile"}
+              btnText={"Edit Profile"}
+              link={"/admin/profile"}
+              color={"#C5CBF1"}
+            />
+          </>
+        )}
       </Grid>
     </>
   );

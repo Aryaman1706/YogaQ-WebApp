@@ -64,6 +64,7 @@ const useStyles = makeStyles((theme) => ({
     color: "#0FC1A7",
     fontWeight: "bolder",
     letterSpacing: "1px",
+    cursor: "pointer",
   },
   profile: {
     color: "rgb(92, 132, 251)",
@@ -206,7 +207,13 @@ const CharoomAppbar = ({ user }) => {
             className={classes.appbarB}
           >
             <Grid item xs={3} className={classes.title}>
-              <Typography variant="h5" className={classes.logo}>
+              <Typography
+                variant="h5"
+                className={classes.logo}
+                onClick={() => {
+                  history.push("/");
+                }}
+              >
                 YogaQ
               </Typography>
             </Grid>
