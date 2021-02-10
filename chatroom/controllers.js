@@ -100,9 +100,16 @@ exports.create = async (req, res) => {
 // * Get a Chat Room
 exports.get = async (req, res) => {
   try {
-    const chatroom = await Chatroom.findById(req.params.id).exec();
+    // Validating request query
+    const { error, value } = validators.populate(req.query);
+    if (error)
+      return res.status(400).json({
+        error: `Validation Error. ${error.details[0].message}`,
+        body: null,
+      });
 
-    // Checking for valid chatroom id
+    // Finding valid chatroom
+    const chatroom = await Chatroom.findById(req.params.id).exec();
     if (!chatroom) {
       // Clearing session
       req.session.active_chatroom = null;
@@ -126,20 +133,26 @@ exports.get = async (req, res) => {
       partnerId: chatroom.partner.id,
     };
 
-    const lastAccess =
-      req.user.role === "user"
-        ? chatroom.lastOpened.user
-        : chatroom.lastOpened.partner;
+    // Populating if required
+    if (value.populate) {
+      const lastAccess =
+        req.user.role === "user"
+          ? chatroom.lastOpened.user
+          : chatroom.lastOpened.partner;
 
-    // Populating required data in existing chatroom
-    await chatroom
-      .populate("user.id", "username email")
-      .populate("partner.id", "username email profilePicture role description")
-      .populate({
-        path: "unreadMessages",
-        match: { time: { $gt: lastAccess } },
-      })
-      .execPopulate();
+      // Populating required data in existing chatroom
+      await chatroom
+        .populate("user.id", "username email")
+        .populate(
+          "partner.id",
+          "username email profilePicture role description"
+        )
+        .populate({
+          path: "unreadMessages",
+          match: { time: { $gt: lastAccess } },
+        })
+        .execPopulate();
+    }
 
     return res.status(200).json({
       error: null,

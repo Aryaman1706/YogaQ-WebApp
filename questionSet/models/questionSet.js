@@ -18,7 +18,7 @@ const questionSetSchema = new mongoose.Schema({
   },
   active: {
     type: Boolean,
-    default: false,
+    default: true,
   },
 });
 
@@ -26,7 +26,6 @@ questionSetSchema.virtual("responses", {
   ref: "Response",
   localField: "_id",
   foreignField: "questionSet",
-  justOne: true,
 });
 
 const QuestionSet = mongoose.model("QuestionSet", questionSetSchema);

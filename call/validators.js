@@ -18,6 +18,19 @@ exports.request = (body) => {
 
 /**
  * {
+ *  page: 1
+ * }
+ */
+exports.page = (body) => {
+  const schema = Joi.object({
+    page: Joi.number().integer().positive().required(),
+  });
+
+  return schema.validate(body);
+};
+
+/**
+ * {
  *  "time": new Date()
  * }
  */

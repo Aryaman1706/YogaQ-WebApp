@@ -1,20 +1,62 @@
 // * Models
 const { QuestionSet, Question, Response } = require("./models");
+const {
+  models: { Chatroom },
+} = require("../chatroom");
 
 // * Utils
 const validators = require("./validators");
 
 // * Controllers -->
 
+// * Create new questionSet for chatroom
+exports.create = async (req, res) => {
+  try {
+    // Validating request body
+    const { error, value } = validators.create(req.body);
+    if (error)
+      return res
+        .status(400)
+        .json({ error: error.details[0].message, body: null });
+
+    // Validating chatroom and questionSet
+    const [chatroom, questionSet] = await Promise.all([
+      Chatroom.findById(value.chatroomId).exec(),
+      QuestionSet.findOne(value.chatroomId).exec(),
+    ]);
+    if (!chatroom)
+      return res.status(400).json({ error: "Chatroom not found.", body: null });
+    if (questionSet)
+      return res
+        .status(400)
+        .json({ error: "Question set already exists.", body: null });
+
+    // Creating new questionSet
+    await QuestionSet.create({
+      chatroomId: chatroom._id,
+      active: true,
+    });
+
+    return res
+      .status(200)
+      .json({ error: null, body: "New Question Set created." });
+  } catch (error) {
+    console.error("Error occured here\n", error);
+    return res.status(500).json({ error: "Server Error.", body: null });
+  }
+};
+
 // * Toggle Active status of Question Set
 exports.toggleActive = async (req, res) => {
   try {
+    // Validating request body
     const { error, value } = validators.toggleActive(req.body);
     if (error)
       return res
-        .status(404)
+        .status(400)
         .json({ error: error.details[0].message, body: null });
 
+    // Finding valid questionSet
     const questionSet = await QuestionSet.findByIdAndUpdate(
       req.params.id,
       { ...value },
@@ -22,90 +64,111 @@ exports.toggleActive = async (req, res) => {
     );
     if (!questionSet)
       return res
-        .status(404)
+        .status(400)
         .json({ error: "Invalid Question Set.", body: null });
 
-    return res.json({ error: null, body: questionSet });
+    return res
+      .status(200)
+      .json({ error: null, body: "Changes saved successfully." });
   } catch (error) {
     console.error("Error occured here\n", error);
-    return res.json({ error: "Server Error.", body: null });
+    return res.status(500).json({ error: "Server Error.", body: null });
   }
 };
 
-// * Add Question to question set (Doctor)
+// * Add Question to question set
 exports.addQues = async (req, res) => {
   try {
+    // Validating request body
     const { error, value } = validators.addQuestion(req.body);
     if (error)
       return res
-        .status(404)
+        .status(400)
         .json({ error: error.details[0].message, body: null });
 
+    // Finding valid questionSet
     const questionSet = await QuestionSet.findById(req.params.id).exec();
     if (!questionSet)
       return res
-        .status(404)
+        .status(400)
         .json({ error: "Invalid Question Set.", body: null });
 
+    // Creating new question
     const newQuestion = await Question.create({
       questionSetId: questionSet._id,
       ...value,
     });
+
+    // Storing and saving new question
     questionSet.questions.push(newQuestion._id);
+    questionSet.markModified("questions");
     await questionSet.save();
 
-    return res.json({ error: null, body: "Question Added Successfully." });
+    return res
+      .status(200)
+      .json({ error: null, body: "Question Added Successfully." });
   } catch (error) {
     console.error("Error occured here\n", error);
-    return res.json({ error: "Server Error.", body: null });
+    return res.status(500).json({ error: "Server Error.", body: null });
   }
 };
 
-// * Delete given Question (Doctor)
+// * Remove and delete question from questionSet
 exports.deleteQues = async (req, res) => {
   try {
+    // Finding and deleting question
     const question = await Question.findById(req.params._id).exec();
-    if (!question) return res.json({ error: "Invalid Question.", body: null });
+    if (!question)
+      return res.status(400).json({ error: "Invalid Question.", body: null });
 
     await question.remove();
-    return res.json({ error: null, body: "Question Deleted Successfully." });
+    return res
+      .status(200)
+      .json({ error: null, body: "Question Deleted Successfully." });
   } catch (error) {
     console.error("Error occured here\n", error);
-    return res.json({ error: "Server Error.", body: null });
+    return res.status(500).json({ error: "Server Error.", body: null });
   }
 };
 
-// * Get Question Set (User)
+// * Get questionSet for user
 exports.userGet = async (req, res) => {
   try {
-    const questionSet = await QuestionSet.findById(req.user.questionSet)
+    // Finding and populating valid questionSet
+    const questionSet = await QuestionSet.findById(
+      req.activeChatroom.chatroomId
+    )
       .populate("questions")
       .exec();
     if (!questionSet)
       return res
-        .status(404)
+        .status(400)
         .json({ error: "Invalid Question Set.", body: null });
 
     return res.status(200).json({ error: null, body: questionSet });
   } catch (error) {
     console.error("Error occured here\n", error);
-    return res.json({ error: "Server Error.", body: null });
+    return res.status(500).json({ error: "Server Error.", body: null });
   }
 };
 
-// * Fill Question Set (User)
+// * User fill questionSet
 exports.userFill = async (req, res) => {
   try {
+    // Validating request body
     const { error, value } = validators.fillSet(req.body);
     if (error)
       return res
         .status(400)
         .json({ error: error.details[0].message, body: null });
 
+    // ! TODO:- Verifying lastAnswered
+
+    // Creating responses and saving new details to questionSet
     await Promise.all([
       Response.create({ ...value, questionSet: req.user.questionSet }),
       QuestionSet.findByIdAndUpdate(
-        req.user.questionSet,
+        req.activeChatroom.chatroomId,
         {
           lastAnswered: new Date(),
         },
@@ -113,38 +176,54 @@ exports.userFill = async (req, res) => {
       ),
     ]);
 
-    return res.json({ error: null, body: "Response Submitted Successfully." });
+    return res
+      .status(200)
+      .json({ error: null, body: "Response Submitted Successfully." });
   } catch (error) {
     console.error("Error occured here\n", error);
-    return res.json({ error: "Server Error.", body: null });
+    return res.status(500).json({ error: "Server Error.", body: null });
   }
 };
 
-// * Get Question Set (Doctor)
+// * Get questionSet for doctor
 exports.docGet = async (req, res) => {
   try {
-    const questionSet = await QuestionSet.findById(req.params.id)
+    // Finding valid questionSet
+    const questionSet = await QuestionSet.findById(
+      req.activeChatroom.chatroomId
+    )
       .populate("questions")
       .exec();
     if (!questionSet)
       return res
-        .status(404)
+        .status(400)
         .json({ error: "Invalid Question Set.", body: null });
 
     return res.status(200).json({ error: null, body: questionSet });
   } catch (error) {
     console.error("Error occured here\n", error);
-    return res.json({ error: "Server Error.", body: null });
+    return res.status(500).json({ error: "Server Error.", body: null });
   }
 };
 
-// * Get Question Set with responses datewise (Doctor)
+// * Get filled questionSet for doctor datewise
 exports.docFilled = async (req, res) => {
   try {
-    const date = new Date(req.query.date);
+    // Validating request query
+    const { error, value } = validators.date(req.query);
+    if (error)
+      return res
+        .status(400)
+        .json({ error: error.details[0].message, body: null });
+
+    // Create new date
+    const date = new Date(value.date);
+
+    // Finding valid questionSet
     const questionSet = await QuestionSet.findById(req.params.id).populate({
       path: "responses",
       match: {
+        // ! Verify this
         date: {
           $gte: new Date(date.setHours(0, 0, 0)),
           $lte: new Date(date.setDate(date.getDate() + 1)),
@@ -153,13 +232,13 @@ exports.docFilled = async (req, res) => {
     });
     if (!questionSet)
       return res
-        .status(404)
+        .status(400)
         .json({ error: "Invalid Question Set", body: null });
 
     return res.status(200).json({ error: null, body: questionSet });
   } catch (error) {
     console.error("Error occured here\n", error);
-    return res.json({ error: "Server Error.", body: null });
+    return res.status(500).json({ error: "Server Error.", body: null });
   }
 };
 
