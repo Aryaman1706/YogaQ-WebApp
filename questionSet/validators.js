@@ -3,6 +3,19 @@ Joi.objectId = require("joi-objectid")(Joi);
 
 /**
  * {
+ *  "chatroomId": ""
+ * }
+ */
+exports.create = (body) => {
+  const schema = Joi.object({
+    chatroomId: Joi.objectId().required(),
+  });
+
+  return schema.validate(body);
+};
+
+/**
+ * {
  *  "active": true
  * }
  */
@@ -53,7 +66,7 @@ exports.fillSet = (body) => {
  */
 exports.date = (body) => {
   const schema = Joi.object({
-    date: Joi.date().required(),
+    date: Joi.date().default("now").required(),
   });
 
   return schema.validate(body);

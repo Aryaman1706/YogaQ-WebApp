@@ -9,9 +9,11 @@ const router = express.Router();
 /**
  * Type:- POST
  * Desc:- Create a new questionSet for chatroom
- * Route:- {{server_url}}/questionSet/new/:chatroomId
+ * Route:- {{server_url}}/questionSet/new
  * Middlewares:- Admin login
- * Request Body:- None
+ * Request Body:- {
+ *  "chatroomId": ""
+ * }
  */
 router.post("/new/:id");
 

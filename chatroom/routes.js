@@ -41,14 +41,26 @@ router.put("/edit/:id", loginAdmin, controllers.edit);
  * Desc:- Get a chatroom
  * Route:- {{server_url}}/chatroom/get/:id/?populate=false
  * Middlewares:- User/Admin/Doctor Login
+ * Request Body:- None
  */
 router.get("/get/:id", loggedIn, controllers.get);
+
+/**
+ * Type:- GET
+ * Desc:- Clear active_chatroom session
+ * Route:- {{server_url}}/chatroom/clear
+ * Middlewares:- User/Admin/Doctor login
+ * Request Body:- None
+ */
+// ! TODO
+// router.get("/clear", controllers.clear);
 
 /**
  * Type:- GET
  * Desc:- Get messages of active chatroom
  * Route:- {{server_url}}/chatroom/messages/:id/?page=1
  * Middlewares:- User/Admin/Doctor Login, Active Chatroom
+ * Request Body:- None
  */
 router.get("/messages/:id", [loggedIn, auth], controllers.messages);
 
