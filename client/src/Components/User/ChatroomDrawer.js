@@ -118,6 +118,18 @@ const ChatroomDrawer = () => {
             Book a Session
           </Button>
         </Grid>
+        <Grid item xs={12} style={{ textAlign: "center" }}>
+          <br />
+          <Button
+            className={classes.btn}
+            disabled={active_chatroom.partner.id.role !== "doctor"}
+            onClick={() => {
+              history.push(`/question-bank/${active_chatroom._id}`);
+            }}
+          >
+            Evaluate
+          </Button>
+        </Grid>
       </Grid>
     </>
   );

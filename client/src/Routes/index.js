@@ -35,6 +35,7 @@ import EditUser from "../Components/User/Edit";
 import Chat from "../Components/User/Chat";
 import BookCall from "../Components/User/BookCall";
 import CallHistory from "../Components/User/CallHistory";
+import QuestionBank from "../Components/User/QuestionBank";
 
 const Routes = () => {
   return (
@@ -106,6 +107,11 @@ const Routes = () => {
         <Route exact path="/room" component={Room} />
         <Route exact path="/book-call/:chatroomId" component={BookCall} />
         <Route exact path="/call-history/:chatroomId" component={CallHistory} />
+        <Route
+          exact
+          path="/question-bank/:chatroomId"
+          component={QuestionBank}
+        />
       </Switch>
     </>
   );
