@@ -1,7 +1,7 @@
 const express = require("express");
 
 // * Controllers
-const controller = require("./controllers");
+const controllers = require("./controllers");
 
 // * API Endpoints -->
 const router = express.Router();
@@ -15,7 +15,7 @@ const router = express.Router();
  *  "chatroomId": ""
  * }
  */
-router.post("/new/:id");
+router.post("/new/:id", controllers.create);
 
 /**
  * Type:- PUT
@@ -26,7 +26,7 @@ router.post("/new/:id");
  *   "active": true
  * }
  */
-router.put("/active/:id", controller.toggleActive);
+router.put("/active/:id", controllers.toggleActive);
 
 /**
  * Type:- PUT
@@ -38,7 +38,7 @@ router.put("/active/:id", controller.toggleActive);
  *  "options": ["option1", "option2", "option3", "option4"]
  * }
  */
-router.put("/addQuestion/:id", controller.addQues);
+router.put("/addQuestion/:id", controllers.addQues);
 
 /**
  * Type:- DELETE
@@ -48,7 +48,7 @@ router.put("/addQuestion/:id", controller.addQues);
  * Request Body:- None
  */
 // id -> Question._id
-router.delete("/removeQuestion/:id", controller.deleteQues);
+router.delete("/removeQuestion/:id", controllers.deleteQues);
 
 /**
  * Type:- GET
@@ -57,7 +57,7 @@ router.delete("/removeQuestion/:id", controller.deleteQues);
  * Middlewares:- User Login, Chatroom Auth
  * Request Body:- None
  */
-router.get("/get", controller.userGet);
+router.get("/get", controllers.userGet);
 
 /**
  * Type:- POST
@@ -70,25 +70,25 @@ router.get("/get", controller.userGet);
  *  }
  * }
  */
-router.post("/fill", controller.userFill);
+router.post("/fill", controllers.userFill);
 
 /**
  * Type:- GET
  * Desc:- Get questionSet for doctor
  * Route:- {{server_url}}/questionSet/doctor/get
- * Middlewares:- Doctor/Admin Login, Chatroom Auth
+ * Middlewares:- Admin/Doctor Login, Chatroom Auth
  * Request Body:- None
  */
-router.get("/doctor/get", controller.docGet);
+router.get("/doctor/get", controllers.docGet);
 
 /**
  * Type:- GET
  * Desc:- Get filled questionSet for doctor datewise
  * Route:- {{server_url}}/questionSet/doctor/filled/?date=(JS date)
- * Middlewares:- Doctor/Admin Login, Chatroom Auth
+ * Middlewares:- Admin/Doctor Login, Chatroom Auth
  * Request Body:- None
  */
-router.get("/doctor/filled", controller.docFilled);
+router.get("/doctor/filled", controllers.docFilled);
 
 // * End API Endpoints -->
 
