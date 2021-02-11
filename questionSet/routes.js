@@ -43,22 +43,27 @@ router.put("/active/:id", adminLogin, controllers.toggleActive);
 /**
  * Type:- PUT
  * Desc:- Add Question to question set
- * Route:- {{server_url}}/questionSet/addQuestion/:questionSetId
- * Middlewares:- Admin/Doctor Login
+ * Route:- {{server_url}}/questionSet/addQuestion/:chatroomId
+ * Middlewares:- Admin/Doctor Login, Chatroom auth
  * Request Body:- {
  *  "statement": "test question statement",
  *  "options": ["option1", "option2", "option3", "option4"]
  * }
  */
-// ! TODO
-router.put("/addQuestion/:id", adminOrDoctorLogin, controllers.addQues);
+router.put(
+  "/addQuestion/:id",
+  [adminOrDoctorLogin, chatroomAuth],
+  controllers.addQues
+);
 
 /**
- * Type:- DELETE
+ * Type:- PUT
  * Desc:- Remove and delete question from questionSet
  * Route:- {{server_url}}/questionSet/removeQuestion/:questionId
  * Middlewares:- Admin/Doctor login
- * Request Body:- None
+ * Request Body:- {
+ *  "questionId": "ObjectId('...')"
+ * }
  */
 // ! TODO
 router.delete(
