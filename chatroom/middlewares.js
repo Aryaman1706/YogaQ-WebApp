@@ -17,7 +17,8 @@ exports.auth = async (req, res, next) => {
     req.activeChatroom &&
     req.activeChatroom.chatroomId.toString() === req.params.id.toString() &&
     (req.activeChatroom.userId.toString() === req.user._id.toString() ||
-      req.activeChatroom.partnerId.toString() === req.user._id.toString())
+      req.activeChatroom.partnerId.toString() === req.user._id.toString() ||
+      req.user.role.trim() === "admin")
   ) {
     next();
   } else {

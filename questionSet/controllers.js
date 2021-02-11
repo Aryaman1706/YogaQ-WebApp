@@ -120,7 +120,6 @@ exports.addQues = async (req, res) => {
     return res.status(500).json({ error: "Server Error.", body: null });
   }
 };
-// ! TODO
 // * Remove and delete question from questionSet
 exports.deleteQues = async (req, res) => {
   try {
@@ -242,7 +241,9 @@ exports.docFilled = async (req, res) => {
     const date = new Date(value.date);
 
     // Finding valid questionSet
-    const questionSet = await QuestionSet.findById(req.params.id).populate({
+    const questionSet = await QuestionSet.findOne({
+      chatroomId: req.activeChatroom.chatroomId,
+    }).populate({
       path: "responses",
       match: {
         // ! Verify this
