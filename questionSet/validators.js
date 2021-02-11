@@ -44,6 +44,19 @@ exports.addQuestion = (body) => {
 
 /**
  * {
+ *  "questionId": "ObjectId('..')"
+ * }
+ */
+exports.removeQuestion = (body) => {
+  const schema = Joi.object({
+    questionId: Joi.objectId().trim().required(),
+  });
+
+  return schema.validate(body);
+};
+
+/**
+ * {
  *  "responses": {
  *    [questionId]: "response"
  *  }

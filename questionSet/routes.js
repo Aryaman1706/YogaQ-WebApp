@@ -59,7 +59,7 @@ router.put(
 /**
  * Type:- PUT
  * Desc:- Remove and delete question from questionSet
- * Route:- {{server_url}}/questionSet/removeQuestion/:questionId
+ * Route:- {{server_url}}/questionSet/removeQuestion/:chatroomId
  * Middlewares:- Admin/Doctor login
  * Request Body:- {
  *  "questionId": "ObjectId('...')"
@@ -68,7 +68,7 @@ router.put(
 // ! TODO
 router.delete(
   "/removeQuestion/:id",
-  adminOrDoctorLogin,
+  [adminOrDoctorLogin, chatroomAuth],
   controllers.deleteQues
 );
 
