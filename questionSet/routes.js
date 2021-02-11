@@ -1,5 +1,14 @@
 const express = require("express");
 
+// * Middlewares
+const {
+  middlewares: { login: adminLogin },
+} = require("../admin");
+const {
+  middlewares: { login: userLogin },
+} = require("../user");
+const { adminOrDoctorLogin } = require("./middlewares");
+
 // * Controllers
 const controllers = require("./controllers");
 
@@ -15,7 +24,7 @@ const router = express.Router();
  *  "chatroomId": ""
  * }
  */
-router.post("/new/:id", controllers.create);
+router.post("/new/:id", adminLogin, controllers.create);
 
 /**
  * Type:- PUT
@@ -26,19 +35,19 @@ router.post("/new/:id", controllers.create);
  *   "active": true
  * }
  */
-router.put("/active/:id", controllers.toggleActive);
+router.put("/active/:id", adminLogin, controllers.toggleActive);
 
 /**
  * Type:- PUT
  * Desc:- Add Question to question set
  * Route:- {{server_url}}/questionSet/addQuestion/:questionSetId
- * Middlewares:- Admin/Doctor login
+ * Middlewares:- Admin/Doctor Login
  * Request Body:- {
  *  "statement": "test question statement",
  *  "options": ["option1", "option2", "option3", "option4"]
  * }
  */
-router.put("/addQuestion/:id", controllers.addQues);
+router.put("/addQuestion/:id", adminOrDoctorLogin, controllers.addQues);
 
 /**
  * Type:- DELETE
@@ -47,8 +56,11 @@ router.put("/addQuestion/:id", controllers.addQues);
  * Middlewares:- Admin/Doctor login
  * Request Body:- None
  */
-// id -> Question._id
-router.delete("/removeQuestion/:id", controllers.deleteQues);
+router.delete(
+  "/removeQuestion/:id",
+  adminOrDoctorLogin,
+  controllers.deleteQues
+);
 
 /**
  * Type:- GET
@@ -57,7 +69,7 @@ router.delete("/removeQuestion/:id", controllers.deleteQues);
  * Middlewares:- User Login, Chatroom Auth
  * Request Body:- None
  */
-router.get("/get", controllers.userGet);
+router.get("/get", [userLogin], controllers.userGet);
 
 /**
  * Type:- POST
@@ -70,7 +82,7 @@ router.get("/get", controllers.userGet);
  *  }
  * }
  */
-router.post("/fill", controllers.userFill);
+router.post("/fill", [userLogin], controllers.userFill);
 
 /**
  * Type:- GET
