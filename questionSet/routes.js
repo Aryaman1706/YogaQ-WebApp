@@ -15,7 +15,7 @@ const router = express.Router();
  *  "chatroomId": ""
  * }
  */
-router.post("/new/:id");
+router.post("/new/:id", controller.create);
 
 /**
  * Type:- PUT
