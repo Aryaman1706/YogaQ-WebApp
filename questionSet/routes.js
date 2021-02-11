@@ -1,5 +1,17 @@
 const express = require("express");
 
+// * Middlewares
+const {
+  middlewares: { login: adminLogin },
+} = require("../admin");
+const {
+  middlewares: { login: userLogin },
+} = require("../user");
+const { adminOrDoctorLogin } = require("./middlewares");
+const {
+  middlewares: { auth: chatroomAuth },
+} = require("../chatroom");
+
 // * Controllers
 const controllers = require("./controllers");
 
@@ -15,7 +27,7 @@ const router = express.Router();
  *  "chatroomId": ""
  * }
  */
-router.post("/new/:id", controllers.create);
+router.post("/new/:id", adminLogin, controllers.create);
 
 /**
  * Type:- PUT
@@ -26,38 +38,48 @@ router.post("/new/:id", controllers.create);
  *   "active": true
  * }
  */
-router.put("/active/:id", controllers.toggleActive);
+router.put("/active/:id", adminLogin, controllers.toggleActive);
 
 /**
  * Type:- PUT
  * Desc:- Add Question to question set
- * Route:- {{server_url}}/questionSet/addQuestion/:questionSetId
- * Middlewares:- Admin/Doctor login
+ * Route:- {{server_url}}/questionSet/addQuestion/:chatroomId
+ * Middlewares:- Admin/Doctor Login, Chatroom auth
  * Request Body:- {
  *  "statement": "test question statement",
  *  "options": ["option1", "option2", "option3", "option4"]
  * }
  */
-router.put("/addQuestion/:id", controllers.addQues);
+router.put(
+  "/addQuestion/:id",
+  [adminOrDoctorLogin, chatroomAuth],
+  controllers.addQues
+);
 
 /**
- * Type:- DELETE
+ * Type:- PUT
  * Desc:- Remove and delete question from questionSet
  * Route:- {{server_url}}/questionSet/removeQuestion/:questionId
  * Middlewares:- Admin/Doctor login
- * Request Body:- None
+ * Request Body:- {
+ *  "questionId": "ObjectId('...')"
+ * }
  */
-// id -> Question._id
-router.delete("/removeQuestion/:id", controllers.deleteQues);
+// ! TODO
+router.delete(
+  "/removeQuestion/:id",
+  adminOrDoctorLogin,
+  controllers.deleteQues
+);
 
 /**
  * Type:- GET
  * Desc:- Get questionSet for user
- * Route:- {{server_url}}/questionSet/get
+ * Route:- {{server_url}}/questionSet/get/:chatroomId
  * Middlewares:- User Login, Chatroom Auth
  * Request Body:- None
  */
-router.get("/get", controllers.userGet);
+router.get("/get/:id", [userLogin, chatroomAuth], controllers.userGet);
 
 /**
  * Type:- POST
@@ -70,25 +92,33 @@ router.get("/get", controllers.userGet);
  *  }
  * }
  */
-router.post("/fill", controllers.userFill);
+router.post("/fill/:id", [userLogin, chatroomAuth], controllers.userFill);
 
 /**
  * Type:- GET
  * Desc:- Get questionSet for doctor
- * Route:- {{server_url}}/questionSet/doctor/get
+ * Route:- {{server_url}}/questionSet/doctor/get/:chatroomId
  * Middlewares:- Admin/Doctor Login, Chatroom Auth
  * Request Body:- None
  */
-router.get("/doctor/get", controllers.docGet);
+router.get(
+  "/doctor/get/:id",
+  [adminOrDoctorLogin, chatroomAuth],
+  controllers.docGet
+);
 
 /**
  * Type:- GET
  * Desc:- Get filled questionSet for doctor datewise
- * Route:- {{server_url}}/questionSet/doctor/filled/?date=(JS date)
+ * Route:- {{server_url}}/questionSet/doctor/filled/:chatroomId/?date=(JS date)
  * Middlewares:- Admin/Doctor Login, Chatroom Auth
  * Request Body:- None
  */
-router.get("/doctor/filled", controllers.docFilled);
+router.get(
+  "/doctor/filled/:id",
+  [adminOrDoctorLogin, chatroomAuth],
+  controllers.docFilled
+);
 
 // * End API Endpoints -->
 

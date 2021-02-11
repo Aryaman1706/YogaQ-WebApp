@@ -52,7 +52,7 @@ router.get("/get/:id", loggedIn, controllers.get);
  * Middlewares:- User/Admin/Doctor login
  * Request Body:- None
  */
-router.get("/clear", controllers.clear);
+router.get("/clear", loggedIn, controllers.clear);
 
 /**
  * Type:- GET

@@ -116,10 +116,11 @@ exports.get = async (req, res) => {
       return res.status(404).json({ error: "Invalid Request", body: null });
     }
 
-    // Checking for autherized user/partner
+    // Checking for autherized user/partner or admin
     if (
       !chatroom.user.id.equals(req.user._id) &&
-      !chatroom.partner.id.equals(req.user._id)
+      !chatroom.partner.id.equals(req.user._id) &&
+      !req.user.role.trim() === "admin"
     ) {
       // Clearing session
       req.session.active_chatroom = null;

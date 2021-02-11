@@ -22,7 +22,7 @@ exports.create = async (req, res) => {
     // Validating chatroom and questionSet
     const [chatroom, questionSet] = await Promise.all([
       Chatroom.findById(value.chatroomId).exec(),
-      QuestionSet.findOne(value.chatroomId).exec(),
+      QuestionSet.findOne({ chatroomId: value.chatroomId }).exec(),
     ]);
     if (!chatroom)
       return res.status(400).json({ error: "Chatroom not found.", body: null });
@@ -87,7 +87,9 @@ exports.addQues = async (req, res) => {
         .json({ error: error.details[0].message, body: null });
 
     // Finding valid questionSet
-    const questionSet = await QuestionSet.findById(req.params.id).exec();
+    const questionSet = await QuestionSet.findOne({
+      chatroomId: req.activeChatroom.chatroomId,
+    }).exec();
     if (!questionSet)
       return res
         .status(400)
@@ -112,16 +114,10 @@ exports.addQues = async (req, res) => {
     return res.status(500).json({ error: "Server Error.", body: null });
   }
 };
-
 // * Remove and delete question from questionSet
+// ! TODO
 exports.deleteQues = async (req, res) => {
   try {
-    // Finding and deleting question
-    const question = await Question.findById(req.params._id).exec();
-    if (!question)
-      return res.status(400).json({ error: "Invalid Question.", body: null });
-
-    await question.remove();
     return res
       .status(200)
       .json({ error: null, body: "Question Deleted Successfully." });
@@ -135,9 +131,9 @@ exports.deleteQues = async (req, res) => {
 exports.userGet = async (req, res) => {
   try {
     // Finding and populating valid questionSet
-    const questionSet = await QuestionSet.findById(
-      req.activeChatroom.chatroomId
-    )
+    const questionSet = await QuestionSet.findOne({
+      chatroomId: req.activeChatroom.chatroomId,
+    })
       .populate("questions")
       .exec();
     if (!questionSet)
@@ -163,9 +159,9 @@ exports.userFill = async (req, res) => {
         .json({ error: error.details[0].message, body: null });
 
     // Finding valid questionSet
-    const questionSet = await QuestionSet.findById(
-      req.activeChatroom.chatroomId
-    ).exec();
+    const questionSet = await QuestionSet.findOne({
+      chatroomId: req.activeChatroom.chatroomId,
+    }).exec();
     if (!questionSet)
       return res.status(400).json({ error: "Invalid request.", body: null });
 
@@ -185,7 +181,7 @@ exports.userFill = async (req, res) => {
 
     // Creating responses and saving new details to questionSet
     await Promise.all([
-      Response.create({ ...value, questionSet: req.user.questionSet }),
+      Response.create({ ...value, questionSet: questionSet._id }),
       questionSet.save(),
     ]);
 
@@ -202,9 +198,9 @@ exports.userFill = async (req, res) => {
 exports.docGet = async (req, res) => {
   try {
     // Finding valid questionSet
-    const questionSet = await QuestionSet.findById(
-      req.activeChatroom.chatroomId
-    )
+    const questionSet = await QuestionSet.findOne({
+      chatroomId: req.activeChatroom.chatroomId,
+    })
       .populate("questions")
       .exec();
     if (!questionSet)
@@ -233,7 +229,9 @@ exports.docFilled = async (req, res) => {
     const date = new Date(value.date);
 
     // Finding valid questionSet
-    const questionSet = await QuestionSet.findById(req.params.id).populate({
+    const questionSet = await QuestionSet.findOne({
+      chatroomId: req.activeChatroom.chatroomId,
+    }).populate({
       path: "responses",
       match: {
         // ! Verify this
