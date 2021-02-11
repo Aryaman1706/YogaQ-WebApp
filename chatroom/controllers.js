@@ -166,6 +166,21 @@ exports.get = async (req, res) => {
   }
 };
 
+// * Clear active_chatroom session
+exports.clear = async (req, res) => {
+  try {
+    // Clearing session
+    req.session.active_chatroom = null;
+
+    return res
+      .status(200)
+      .json({ error: null, body: "Active Chatroom session cleared." });
+  } catch (error) {
+    console.log("Error occured here\n", error);
+    return res.status(500).json({ error: "Server Error.", body: null });
+  }
+};
+
 // * Get messages of active chatroom
 exports.messages = async (req, res) => {
   try {

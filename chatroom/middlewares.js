@@ -14,13 +14,10 @@ exports.loggedIn = async (req, res, next) => {
 // eslint-disable-next-line
 exports.auth = async (req, res, next) => {
   if (
-    req.session.active_chatroom &&
-    req.session.active_chatroom.chatroomId.toString() ===
-      req.params.id.toString() &&
-    (req.session.active_chatroom.userId.toString() ===
-      req.user._id.toString() ||
-      req.session.active_chatroom.partnerId.toString() ===
-        req.user._id.toString())
+    req.activeChatroom &&
+    req.activeChatroom.chatroomId.toString() === req.params.id.toString() &&
+    (req.activeChatroom.userId.toString() === req.user._id.toString() ||
+      req.activeChatroom.partnerId.toString() === req.user._id.toString())
   ) {
     next();
   } else {
