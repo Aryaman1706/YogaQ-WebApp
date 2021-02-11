@@ -3,6 +3,7 @@ const { routes: admin } = require("../admin");
 const { routes: doctor } = require("../doctor");
 const { routes: chatroom } = require("../chatroom");
 const { routes: call } = require("../call");
+const { routes: questionSet } = require("../questionSet");
 
 module.exports = (app) => {
   app.use("/api/user", user);
@@ -10,4 +11,5 @@ module.exports = (app) => {
   app.use("/api/chatroom", chatroom);
   app.use("/api/doctor", doctor);
   app.use("/api/call", call);
+  app.use("/api/questionSet", questionSet);
 };

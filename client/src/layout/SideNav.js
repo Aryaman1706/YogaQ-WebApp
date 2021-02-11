@@ -2,8 +2,6 @@ import React from "react";
 import { Avatar, makeStyles } from "@material-ui/core";
 import HomeIcon from "@material-ui/icons/Home";
 import ForumIcon from "@material-ui/icons/Forum";
-import GestureIcon from "@material-ui/icons/Gesture";
-import ImportContactsIcon from "@material-ui/icons/ImportContacts";
 import { useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
 import CreateIcon from "@material-ui/icons/Create";
