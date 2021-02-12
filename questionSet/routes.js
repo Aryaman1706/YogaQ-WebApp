@@ -27,7 +27,7 @@ const router = express.Router();
  *  "chatroomId": ""
  * }
  */
-router.post("/new/:id", adminLogin, controllers.create);
+router.post("/new", adminLogin, controllers.create);
 
 /**
  * Type:- PUT
@@ -65,7 +65,6 @@ router.put(
  *  "questionId": "ObjectId('...')"
  * }
  */
-// ! TODO
 router.delete(
   "/removeQuestion/:id",
   [adminOrDoctorLogin, chatroomAuth],

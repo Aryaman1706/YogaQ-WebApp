@@ -19,6 +19,7 @@ import {
   CLEAR_UNREAD_MESSAGES,
   CLEAR_UNREAD_MESSAGES_ACTIVE,
   CLEAR_ACTIVE_CHATROOM,
+  GET_QUESTION_SET,
 } from "../types";
 import axios from "../../utils/axios";
 import store from "../store";
@@ -305,4 +306,20 @@ export const clearActiveChatroom = () => async (dispatch) => {
   dispatch({
     type: CLEAR_ACTIVE_CHATROOM,
   });
+};
+
+// * Get questionSet
+export const getQuestionSet = (chatroomId) => async (dispatch) => {
+  try {
+    const res = await axios.get(`/questionSet/get/${chatroomId}`);
+    dispatch({
+      type: GET_QUESTION_SET,
+      payload: res.data.body,
+    });
+  } catch (error) {
+    dispatch({
+      type: USER_ERROR,
+      payload: error.response.data.error,
+    });
+  }
 };

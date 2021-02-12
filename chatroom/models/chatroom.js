@@ -64,6 +64,13 @@ chatroomSchema.virtual("call", {
   foreignField: "chatroomId",
 });
 
+// QuestionSet associated with chatroom virtual
+chatroomSchema.virtual("questionSet", {
+  ref: "QuestionSet",
+  localField: "_id",
+  foreignField: "chatroomId",
+});
+
 // Deleting messages if chatroom is deleted
 chatroomSchema.post("remove", async (doc, next) => {
   await Message.remove({ chatroomId: doc._id });
