@@ -115,9 +115,36 @@ exports.addQues = async (req, res) => {
   }
 };
 // * Remove and delete question from questionSet
-// ! TODO
 exports.deleteQues = async (req, res) => {
   try {
+    // Validating request body
+    const { error, value } = validators.removeQuestion(req.body);
+    if (error)
+      return res
+        .status(400)
+        .json({ error: error.details[0].message, body: null });
+
+    // Finding valid questionSet
+    const [questionSet, question] = await Promise.all([
+      QuestionSet.findOne({
+        chatroomId: req.activeChatroom.chatroomId,
+      }).exec(),
+      Question.findById(value.questionId).exec(),
+    ]);
+    if (!questionSet || !question)
+      return res.status(400).json({ error: "Invalid Request.", body: null });
+
+    // Checking if question is part of questionSet
+    if (!question.questionSetId.equals(questionSet._id)) {
+      return res.status(400).json({
+        error: "This question is not a part of this question set",
+        body: null,
+      });
+    }
+
+    // Deleting the question
+    await question.remove();
+
     return res
       .status(200)
       .json({ error: null, body: "Question Deleted Successfully." });

@@ -90,12 +90,12 @@ const MessageList = ({ socket }) => {
   useEffect(() => {
     return () => {
       socket.current.removeAllListeners("toClient");
-      dispatch(
-        userActions.modifyLastAccess({
-          id: active_chatroom._id,
-          formData: { lastAccess: new Date() },
-        })
-      );
+      // dispatch(
+      //   userActions.modifyLastAccess({
+      //     id: active_chatroom._id,
+      //     formData: { lastAccess: new Date() },
+      //   })
+      // );
     };
     // eslint-disable-next-line
   }, []);

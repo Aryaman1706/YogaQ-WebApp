@@ -19,6 +19,7 @@ import {
   CLEAR_UNREAD_MESSAGES,
   CLEAR_UNREAD_MESSAGES_ACTIVE,
   CLEAR_ACTIVE_CHATROOM,
+  GET_QUESTION_SET,
 } from "../types";
 
 const defaultState = {
@@ -28,6 +29,7 @@ const defaultState = {
   active_chatroom: null,
   user_messages: [],
   message_end: false,
+  questionSet: null,
   list: [],
   end: false,
   selectUser: null,
@@ -155,6 +157,11 @@ const stateHandler = (state = defaultState, action) => {
       return {
         ...state,
         active_chatroom: null,
+      };
+    case GET_QUESTION_SET:
+      return {
+        ...state,
+        questionSet: action.payload,
       };
     default:
       return state;

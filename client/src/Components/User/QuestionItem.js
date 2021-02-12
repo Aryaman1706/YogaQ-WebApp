@@ -40,8 +40,8 @@ const QuestionItem = ({ id, item, responses, setResponses }) => {
       <Grid item xs={12}>
         <Paper elevation={2} className={classes.questionCard}>
           <div className={classes.flexRow}>
-            <p>Q1.</p>
-            <p>Lorem impsum question</p>
+            <p>Q{{ id } + 1}.</p>
+            <p>{item.statement}</p>
           </div>
           <FormControl component="fieldset">
             <FormLabel component="legend">Select an option</FormLabel>
@@ -54,22 +54,14 @@ const QuestionItem = ({ id, item, responses, setResponses }) => {
               }}
               style={{ marginTop: "1rem" }}
             >
-              <FormControlLabel
-                value="female"
-                control={<Radio />}
-                label="Female"
-              />
-              <FormControlLabel value="male" control={<Radio />} label="Male" />
-              <FormControlLabel
-                value="other"
-                control={<Radio />}
-                label="Other"
-              />
-              <FormControlLabel
-                value="disabled"
-                control={<Radio />}
-                label="(Disabled option)"
-              />
+              {item.options.map((option, index) => (
+                <FormControlLabel
+                  key={index}
+                  value={option}
+                  control={<Radio />}
+                  label={option}
+                />
+              ))}
             </RadioGroup>
           </FormControl>
         </Paper>
