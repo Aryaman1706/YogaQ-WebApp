@@ -16,6 +16,7 @@ import {
   CLEAR_UNREAD_MESSAGES_ACTIVE_ADMIN,
   CLEAR_ADMIN_ACTIVE_CHATROOM,
   CLEAR_UNREAD_MESSAGES_ADMIN,
+  ADD_QUESTION_TO_QUESTION_SET,
 } from "../types";
 import axios from "../../utils/axios";
 import store from "../store";
@@ -271,4 +272,25 @@ export const clearActiveChatroom = () => async (dispatch) => {
   dispatch({
     type: CLEAR_ADMIN_ACTIVE_CHATROOM,
   });
+};
+
+// * Add question
+export const addQuestionToQuestionSet = ({ chatroomId, question }) => async (
+  dispatch
+) => {
+  try {
+    const res = await axios.post(
+      `/questionSet/addQuestion/${chatroomId}`,
+      question
+    );
+    dispatch({
+      type: ADD_QUESTION_TO_QUESTION_SET,
+      payload: res.data.body,
+    });
+  } catch (error) {
+    dispatch({
+      type: ADMIN_ERROR,
+      payload: error.response.data.error,
+    });
+  }
 };

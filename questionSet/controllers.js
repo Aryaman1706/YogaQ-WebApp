@@ -106,9 +106,10 @@ exports.addQues = async (req, res) => {
     questionSet.markModified("questions");
     await questionSet.save();
 
-    return res
-      .status(200)
-      .json({ error: null, body: "Question Added Successfully." });
+    return res.status(200).json({
+      error: null,
+      body: { question: newQuestion, message: "Question Added Successfully." },
+    });
   } catch (error) {
     console.error("Error occured here\n", error);
     return res.status(500).json({ error: "Server Error.", body: null });
