@@ -76,9 +76,14 @@ const BookCall = () => {
     chatroomId,
   });
 
+  const unmount = async () => {
+    await dispatch(userActions.clear());
+    await dispatch(userActions.clearActiveChatroom());
+  };
+
   useEffect(() => {
     return () => {
-      dispatch(userActions.clear());
+      unmount();
     };
     // eslint-disable-next-line
   }, []);
@@ -121,7 +126,9 @@ const BookCall = () => {
                   <div
                     className={classes.flexRow}
                     onClick={() => {
-                      history.push("/");
+                      window.location.href = "/";
+                      // unmount();
+                      // history.push("/");
                     }}
                   >
                     <img

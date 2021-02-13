@@ -23,6 +23,7 @@ const Chatroom = () => {
     if (chatroomLoading) {
       return <Loader />;
     }
+
     if (!chatroomLoading && !active_chatroom) {
       return <ChatroomWaiting type={"user"} />;
     }
