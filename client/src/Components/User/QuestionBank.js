@@ -22,6 +22,7 @@ const QuestionBank = () => {
     if (compLoading) {
       loadQuestionSet();
     }
+    // eslint-disable-next-line
   }, [compLoading]);
 
   const [responses, setResponses] = useState({});
@@ -53,11 +54,11 @@ const QuestionBank = () => {
                 </>
               ) : (
                 <>
-                  {questionSet.questions.map((item, index) => (
+                  {questionSet.questions.map((question, index) => (
                     <QuestionItem
                       key={index}
                       id={index}
-                      item={item}
+                      question={question}
                       responses={responses}
                       setResponses={setResponses}
                     />

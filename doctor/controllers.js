@@ -433,7 +433,8 @@ exports.viewDoctor = async (req, res) => {
       "partner.id": doctor._id,
       "partner.model": "Doctor",
     })
-      .select("user partner blocked")
+      .select("user partner blocked createdAt")
+      .sort("-createdAt")
       .populate("user.id", "username email")
       .populate({
         path: "call",

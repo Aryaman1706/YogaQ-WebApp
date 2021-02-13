@@ -28,7 +28,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const QuestionItem = ({ id, item, responses, setResponses }) => {
+const QuestionItem = ({ id, question, responses, setResponses }) => {
   const classes = useStyles();
   const onAnswer = (e) => {
     setResponses((prevResponses) => {
@@ -41,7 +41,7 @@ const QuestionItem = ({ id, item, responses, setResponses }) => {
         <Paper elevation={2} className={classes.questionCard}>
           <div className={classes.flexRow}>
             <p>Q{{ id } + 1}.</p>
-            <p>{item.statement}</p>
+            <p>{question.statement}</p>
           </div>
           <FormControl component="fieldset">
             <FormLabel component="legend">Select an option</FormLabel>
@@ -54,7 +54,7 @@ const QuestionItem = ({ id, item, responses, setResponses }) => {
               }}
               style={{ marginTop: "1rem" }}
             >
-              {item.options.map((option, index) => (
+              {question.options.map((option, index) => (
                 <FormControlLabel
                   key={index}
                   value={option}

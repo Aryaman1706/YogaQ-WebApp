@@ -23,6 +23,14 @@ const defaultState = {
   isAuthenticated: false,
   chatrooms: [],
   active_chatroom: null,
+  viewChatroom: {
+    details: null,
+    calls: {
+      list: null,
+      end: false,
+    },
+    questionSet: null,
+  },
   admin_messages: [],
   message_end: false,
   error: null,

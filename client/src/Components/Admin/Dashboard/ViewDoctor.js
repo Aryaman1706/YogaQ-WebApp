@@ -1,20 +1,14 @@
 import React, { useState, useEffect, Fragment } from "react";
 import DoctorProfile from "./DoctorProfile";
 import DoctorProfileComplete from "./DoctorProfileComplete";
-import {
-  Typography,
-  Toolbar,
-  Grid,
-  Button,
-  makeStyles,
-  Paper,
-  IconButton,
-} from "@material-ui/core";
-import VisibilityIcon from "@material-ui/icons/Visibility";
+import { Typography, Grid, Button, makeStyles, Paper } from "@material-ui/core";
 import Swal from "sweetalert2";
 import { useHistory, useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { doctor as doctorActions } from "../../../redux/actions/index";
+import {
+  doctor as doctorActions,
+  admin as adminActions,
+} from "../../../redux/actions/index";
 import background from "../../../assets/background.svg";
 
 const useStyles = makeStyles((theme) => ({
@@ -39,6 +33,19 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.only("xs")]: {
       padding: 10,
       marginTop: "1rem",
+    },
+  },
+  paperChatroom: {
+    padding: "5px 10px 5px 10px",
+    placeItems: "center",
+    display: "flex",
+    justifyContent: "space-between",
+    boxShadow: "rgba(0, 0, 0, 0.05) 0px 5px 16px 0px",
+    borderRadius: "3px",
+    "&:hover": {
+      transform: "scale(1.02)",
+      transition: "all 0.16s ease-in 0s",
+      cursor: "pointer",
     },
   },
 }));
@@ -97,6 +104,12 @@ const ViewDoctor = () => {
     setFull((prev) => {
       return !prev;
     });
+  };
+
+  const viewChatroom = async (event, chatroomId) => {
+    // set active_chatroom
+    await dispatch(adminActions.getChatroom(chatroomId));
+    history.push(`/admin/chatroom/view`);
   };
 
   const classes = useStyles();
@@ -162,7 +175,13 @@ const ViewDoctor = () => {
                         return (
                           <Fragment key={index}>
                             <Grid item>
-                              <Paper>
+                              <Paper
+                                elevation={0}
+                                className={classes.paperChatroom}
+                                onClick={(event) =>
+                                  viewChatroom(event, obj._id)
+                                }
+                              >
                                 <div className={classes.div2}>
                                   <div>
                                     <Typography variant="subtitle1">
@@ -171,10 +190,13 @@ const ViewDoctor = () => {
                                     <Typography variant="subtitle1">
                                       Email Address:- {obj.user.id.email}
                                     </Typography>
+                                    <Typography variant="subtitle2">
+                                      Created On:-{" "}
+                                      {new Date(
+                                        obj.createdAt
+                                      ).toLocaleDateString()}
+                                    </Typography>
                                   </div>
-                                  <IconButton>
-                                    <VisibilityIcon />
-                                  </IconButton>
                                 </div>
                               </Paper>
                             </Grid>
