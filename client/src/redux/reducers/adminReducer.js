@@ -16,6 +16,7 @@ import {
   CLEAR_ADMIN_ACTIVE_CHATROOM,
   CLEAR_UNREAD_MESSAGES_ACTIVE_ADMIN,
   CLEAR_UNREAD_MESSAGES_ADMIN,
+  ADD_QUESTION_TO_QUESTION_SET,
 } from "../types";
 
 const defaultState = {
@@ -23,6 +24,7 @@ const defaultState = {
   isAuthenticated: false,
   chatrooms: [],
   active_chatroom: null,
+  questionSet: null,
   admin_messages: [],
   message_end: false,
   error: null,
@@ -126,6 +128,12 @@ const stateHandler = (state = defaultState, action) => {
       return {
         ...state,
         chatrooms: action.payload,
+      };
+    case ADD_QUESTION_TO_QUESTION_SET:
+      return {
+        ...state,
+        message: action.payload.message,
+        questionSet: [...state.questionSet.questions, action.payload.question],
       };
     default:
       return state;

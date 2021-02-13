@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { TextField, Grid, makeStyles, IconButton } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
-import { admin as adminActions } from "../../redux/actions/index";
-import MessageItem from "./MessageItem";
-import Loader from "../Loader";
-import getUrls from "get-urls";
+import { admin as adminActions } from "../../../redux/actions";
+import MessageItem from "../MessageItem";
+import Loader from "../../Loader";
 import SendIcon from "@material-ui/icons/Send";
 
 const useStyles = makeStyles((theme) => ({
@@ -25,18 +24,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const MessageList = ({ socket }) => {
+const MessageList = () => {
   const classes = useStyles();
-
-  // * Socket Setup
-  useEffect(() => {
-    socket.current.emit("join", active_chatroom._id);
-
-    socket.current.on("toClient", (message) => {
-      dispatch(adminActions.appendMessage(message));
-    });
-    // eslint-disable-next-line
-  }, []);
 
   const {
     admin_messages,
@@ -50,7 +39,6 @@ const MessageList = ({ socket }) => {
 
   const [page, setPage] = useState(0);
   const [messageLoading, setMessageLoading] = useState(false);
-  const [message, setMessage] = useState("");
   const [height, setHeight] = useState(null);
   const [top, setTop] = useState(false);
 
@@ -89,7 +77,6 @@ const MessageList = ({ socket }) => {
   // * Clear
   useEffect(() => {
     return () => {
-      socket.current.removeAllListeners("toClient");
       // dispatch(
       //   adminActions.modifyLastAccess({
       //     id: active_chatroom._id,
@@ -140,58 +127,6 @@ const MessageList = ({ socket }) => {
     }
     // eslint-disable-next-line
   }, [page]);
-
-  const typing = (e) => {
-    setMessage(e.target.value);
-  };
-
-  function lastLink(set) {
-    let value;
-    for (value of set);
-    return value;
-  }
-
-  const enterSend = (e) => {
-    console.log(e);
-    if (e.code && /^enter$/i.test(e.code)) {
-      sendMessage();
-    }
-  };
-
-  const sendMessage = () => {
-    if (/\S/.test(message.trim())) {
-      const data = {
-        sender: {
-          id: admin._id,
-          model: admin.role.trim().replace(/^\w/, (char) => char.toUpperCase()),
-        },
-        message: {
-          text: message.trim(),
-          link: lastLink(getUrls(message.trim()))
-            ? lastLink(getUrls(message.trim()))
-            : null,
-        },
-      };
-      setMessage("");
-      dispatch(
-        adminActions.appendMessage({
-          chatroomId: active_chatroom._id,
-          sender: data.sender,
-          text: data.message.text,
-          link: data.message.link,
-          file: null,
-          urlEmbeds: {
-            title: null,
-            description: null,
-            image: null,
-          },
-          time: new Date(),
-        })
-      );
-      socket.current.emit("toServer", data);
-      dispatch(adminActions.clearUnreadMessagesActive());
-    }
-  };
 
   const newMessageIndicator = () => {
     return (
@@ -279,18 +214,11 @@ const MessageList = ({ socket }) => {
                   fullWidth
                   variant="outlined"
                   placeholder={`Message ${active_chatroom.partner.id.username} .  ..`}
-                  value={message}
-                  onChange={(event) => typing(event)}
-                  onKeyDown={(event) => enterSend(event)}
                   InputProps={{ className: classes.input }}
                 />
               </div>
               <div style={{ margin: "auto" }}>
-                <IconButton
-                  disabled={!/\S/.test(message.trim())}
-                  onClick={() => sendMessage()}
-                  color="primary"
-                >
+                <IconButton disabled={true} color="primary">
                   <SendIcon />
                 </IconButton>
               </div>

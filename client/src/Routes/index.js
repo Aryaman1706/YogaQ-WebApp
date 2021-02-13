@@ -18,6 +18,7 @@ import ViewDoctor from "../Components/Admin/Dashboard/ViewDoctor";
 import UserList from "../Components/Admin/Dashboard/UserList";
 import ViewUser from "../Components/Admin/Dashboard/ViewUser";
 import CreateChatroom from "../Components/Admin/Dashboard/CreateChatroom";
+import ViewChatroom from "../Components/Admin/Dashboard/ViewChatroom";
 
 // * Enquiry
 import NewEnquiry from "../Components/Doctor/Enquiry/NewEnquiry";
@@ -91,6 +92,12 @@ const Routes = () => {
           exact
           path="/admin/chatroom/create"
           component={CreateChatroom}
+        />
+        <Route
+          adminLogin
+          exact
+          path="/admin/chatroom/view"
+          component={ViewChatroom}
         />
 
         {/* Doctor */}

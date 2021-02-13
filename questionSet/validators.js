@@ -36,7 +36,7 @@ exports.toggleActive = (body) => {
 exports.addQuestion = (body) => {
   const schema = Joi.object({
     statement: Joi.string().max(250).trim().required(),
-    options: Joi.array().items(Joi.string().trim()).length(4).required(),
+    options: Joi.array().items(Joi.string().trim().min(1)).length(4).required(),
   });
 
   return schema.validate(body);
