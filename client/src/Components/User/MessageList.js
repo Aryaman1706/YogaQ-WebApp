@@ -30,11 +30,13 @@ const MessageList = ({ socket }) => {
 
   // * Socket Setup
   useEffect(() => {
-    socket.current.emit("join", active_chatroom._id);
+    if (active_chatroom) {
+      socket.current.emit("join", active_chatroom._id);
 
-    socket.current.on("toClient", (message) => {
-      dispatch(userActions.appendMessage(message));
-    });
+      socket.current.on("toClient", (message) => {
+        dispatch(userActions.appendMessage(message));
+      });
+    }
     // eslint-disable-next-line
   }, []);
 

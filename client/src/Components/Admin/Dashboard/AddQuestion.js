@@ -78,7 +78,6 @@ const AddQuestion = () => {
     if (message || error) {
       errorHandling();
     }
-
     // eslint-disable-next-line
   }, [message, error]);
 
