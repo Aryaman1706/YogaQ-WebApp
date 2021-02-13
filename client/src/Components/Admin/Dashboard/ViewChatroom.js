@@ -5,6 +5,7 @@ import { admin as adminActions } from "../../../redux/actions";
 import MessageItem from "../MessageItem";
 import Loader from "../../Loader";
 import SendIcon from "@material-ui/icons/Send";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   scrollDiv: {
@@ -36,7 +37,8 @@ const MessageList = () => {
     chatroomLoading,
   } = useSelector((state) => state.admin);
   const dispatch = useDispatch();
-
+  const history = useHistory();
+  const path = history.location.pathname;
   const [page, setPage] = useState(0);
   const [messageLoading, setMessageLoading] = useState(false);
   const [height, setHeight] = useState(null);
@@ -198,11 +200,17 @@ const MessageList = () => {
                       return (
                         <>
                           {newMessageIndicator()}
-                          <MessageItem message={item} id={admin._id} />
+                          <MessageItem
+                            message={item}
+                            id={admin._id}
+                            path={path}
+                          />
                         </>
                       );
                     }
-                    return <MessageItem message={item} id={admin._id} />;
+                    return (
+                      <MessageItem message={item} id={admin._id} path={path} />
+                    );
                   })}
               <div ref={lastMessage}></div>
             </Grid>
@@ -215,6 +223,7 @@ const MessageList = () => {
                   variant="outlined"
                   placeholder={`Message ${active_chatroom.partner.id.username} .  ..`}
                   InputProps={{ className: classes.input }}
+                  disabled
                 />
               </div>
               <div style={{ margin: "auto" }}>
