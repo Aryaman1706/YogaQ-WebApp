@@ -9,7 +9,9 @@ const AddQuestion = () => {
     statement: "",
     options: ["", "", "", ""],
   });
-  const { active_chatroom, message } = useSelector((state) => state.admin);
+  const { active_chatroom, message, error } = useSelector(
+    (state) => state.admin
+  );
   const dispatch = useDispatch();
 
   const {
@@ -47,9 +49,9 @@ const AddQuestion = () => {
     );
   };
 
-  useEffect(() => {
-    if (/^Question Added Successfully*/i.test(message)) {
-      Swal.fire({
+  const errorHandling = async () => {
+    if (message && /^Question Added Successfully*/i.test(message)) {
+      await Swal.fire({
         position: "center",
         icon: "success",
         title: "Success",
@@ -58,7 +60,27 @@ const AddQuestion = () => {
         timer: 1500,
       });
     }
-  }, [message]);
+    if (error) {
+      await Swal.fire({
+        position: "center",
+        icon: "error",
+        title: "Error",
+        text: error,
+        showConfirmButton: true,
+        timer: 1500,
+      });
+    }
+
+    await dispatch(adminActions.clear());
+  };
+
+  useEffect(() => {
+    if (message || error) {
+      errorHandling();
+    }
+
+    // eslint-disable-next-line
+  }, [message, error]);
 
   return (
     <>
