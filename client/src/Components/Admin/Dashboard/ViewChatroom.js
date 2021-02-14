@@ -6,6 +6,7 @@ import MessageItem from "../MessageItem";
 import Loader from "../../Loader";
 import SendIcon from "@material-ui/icons/Send";
 import ChatroomAppbar from "../ChatroomAppbar";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   scrollDiv: {
@@ -37,7 +38,8 @@ const MessageList = () => {
     chatroomLoading,
   } = useSelector((state) => state.admin);
   const dispatch = useDispatch();
-
+  const history = useHistory();
+  const path = history.location.pathname;
   const [page, setPage] = useState(0);
   const [messageLoading, setMessageLoading] = useState(false);
   const [height, setHeight] = useState(null);

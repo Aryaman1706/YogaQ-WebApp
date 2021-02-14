@@ -52,8 +52,45 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const MessageItem = ({ message, id }) => {
+const MessageItem = ({ message, id, path }) => {
   const classes = useStyles();
+
+  const checkMessageAlign = () => {
+    // * Check if the message will be left or right aligned according to the various conditions
+    if (message.sender.id.toString() === id.toString()) {
+      return "flex-end";
+    } else if (
+      path === "/admin/chatroom/view" &&
+      message.sender.model === "User"
+    ) {
+      return "flex-start";
+    } else if (
+      path === "/admin/chatroom/view" &&
+      message.sender.model === "Doctor"
+    ) {
+      return "flex-end";
+    } else {
+      return "flex-start";
+    }
+  };
+
+  const checkMessageClass = () => {
+    if (message.sender.id.toString() === id.toString()) {
+      return classes.sent;
+    } else if (
+      path === "/admin/chatroom/view" &&
+      message.sender.model === "User"
+    ) {
+      return classes.recieve;
+    } else if (
+      path === "/admin/chatroom/view" &&
+      message.sender.model === "Doctor"
+    ) {
+      return classes.sent;
+    } else {
+      return classes.recieve;
+    }
+  };
 
   const embeds = () => {
     if (
@@ -127,24 +164,8 @@ const MessageItem = ({ message, id }) => {
     <>
       <Grid item xs={12} style={{ height: "fit-content" }}>
         <Grid container direction="row" alignItems="stretch" spacing={0}>
-          <Grid
-            container
-            item
-            xs={12}
-            justify={
-              message.sender.id.toString() === id.toString()
-                ? "flex-end"
-                : "flex-start"
-            }
-          >
-            <Paper
-              elevation={0}
-              className={
-                message.sender.id.toString() === id.toString()
-                  ? classes.sent
-                  : classes.recieve
-              }
-            >
+          <Grid container item xs={12} justify={checkMessageAlign()}>
+            <Paper elevation={0} className={checkMessageClass()}>
               <Grid
                 container
                 direction="column"

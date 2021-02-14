@@ -17,6 +17,7 @@ import ProfileIcon from "../../assets/profile.svg";
 import Profile from "../../assets/user.svg";
 import LogoutIcon from "../../assets/log-out.svg";
 import { useSelector } from "react-redux";
+import MenuIcon from "@material-ui/icons/Menu";
 
 const useStyles = makeStyles((theme) => ({
   appbar: {
@@ -164,6 +165,109 @@ const AdminAppbar = ({ children }) => {
     />
   ));
 
+  const renderNavAction = () => {
+    if (isAuthenticated && admin) {
+      return (
+        <>
+          <IconButton
+            aria-controls="menu"
+            aria-haspopup="true"
+            onClick={handleClick}
+            className={classes.profile}
+          >
+            <AccountCircleOutlinedIcon />
+          </IconButton>
+          <StyledMenu
+            id="menu"
+            keepMounted
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
+            className={classes.menu}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "right",
+            }}
+            transformOrigin={{
+              vertical: "bottom",
+              horizontal: "right",
+            }}
+          >
+            <div className={classes.menuFlex}>
+              <div
+                className={classes.flexRow}
+                style={{ paddingBottom: "1rem" }}
+              >
+                <Avatar alt="Profile" src={Profile} />
+                <div className={classes.profileFlex}>
+                  <div className={classes.profileName}>{admin.username}</div>
+                  <div className={classes.profileJoin}>
+                    Joined {format(new Date(admin.createdAt), "MMM dd, yyyy")}
+                  </div>
+                </div>
+              </div>
+              <Divider />
+              <br />
+              <div
+                className={`${classes.flexRow} ${classes.paddingMenuItem}`}
+                onClick={() => {
+                  history.push("/edit");
+                }}
+              >
+                <div>
+                  <img
+                    src={ProfileIcon}
+                    alt="profile-icon"
+                    className={classes.profileIcon}
+                  />
+                </div>
+                <div className={classes.menuitem}>Profile</div>
+              </div>
+              <div className={`${classes.flexRow} ${classes.paddingMenuItem}`}>
+                <div>
+                  <img
+                    src={LogoutIcon}
+                    alt="profile-icon"
+                    className={classes.profileIcon}
+                  />
+                </div>
+                <div className={classes.menuitem}>Log out</div>
+              </div>
+            </div>
+          </StyledMenu>
+        </>
+      );
+    } else if (
+      isAuthenticated &&
+      admin &&
+      history.location.pathname === "/admin/chatroom/view"
+    ) {
+      return (
+        <>
+          <IconButton
+            aria-controls="menu"
+            aria-haspopup="true"
+            onClick={handleClick}
+            className={classes.profile}
+          >
+            <MenuIcon />
+          </IconButton>
+        </>
+      );
+    } else {
+      return (
+        <Button
+          className={classes.btn}
+          onClick={() => {
+            history.push("/admin/login");
+          }}
+        >
+          Login as Admin
+        </Button>
+      );
+    }
+  };
+
   return (
     <>
       <Grid
@@ -195,90 +299,7 @@ const AdminAppbar = ({ children }) => {
             </Typography>
           </Grid>
           <Grid item xs={9} className={classes.btnContainer}>
-            {isAuthenticated && admin ? (
-              <>
-                <IconButton
-                  aria-controls="menu"
-                  aria-haspopup="true"
-                  onClick={handleClick}
-                  className={classes.profile}
-                >
-                  <AccountCircleOutlinedIcon />
-                </IconButton>
-                <StyledMenu
-                  id="menu"
-                  keepMounted
-                  anchorEl={anchorEl}
-                  open={Boolean(anchorEl)}
-                  onClose={handleClose}
-                  className={classes.menu}
-                  anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "right",
-                  }}
-                  transformOrigin={{
-                    vertical: "bottom",
-                    horizontal: "right",
-                  }}
-                >
-                  <div className={classes.menuFlex}>
-                    <div
-                      className={classes.flexRow}
-                      style={{ paddingBottom: "1rem" }}
-                    >
-                      <Avatar alt="Profile" src={Profile} />
-                      <div className={classes.profileFlex}>
-                        <div className={classes.profileName}>
-                          {admin.username}
-                        </div>
-                        <div className={classes.profileJoin}>
-                          Joined{" "}
-                          {format(new Date(admin.createdAt), "MMM dd, yyyy")}
-                        </div>
-                      </div>
-                    </div>
-                    <Divider />
-                    <br />
-                    <div
-                      className={`${classes.flexRow} ${classes.paddingMenuItem}`}
-                      onClick={() => {
-                        history.push("/edit");
-                      }}
-                    >
-                      <div>
-                        <img
-                          src={ProfileIcon}
-                          alt="profile-icon"
-                          className={classes.profileIcon}
-                        />
-                      </div>
-                      <div className={classes.menuitem}>Profile</div>
-                    </div>
-                    <div
-                      className={`${classes.flexRow} ${classes.paddingMenuItem}`}
-                    >
-                      <div>
-                        <img
-                          src={LogoutIcon}
-                          alt="profile-icon"
-                          className={classes.profileIcon}
-                        />
-                      </div>
-                      <div className={classes.menuitem}>Log out</div>
-                    </div>
-                  </div>
-                </StyledMenu>
-              </>
-            ) : (
-              <Button
-                className={classes.btn}
-                onClick={() => {
-                  history.push("/admin/login");
-                }}
-              >
-                Login as Admin
-              </Button>
-            )}
+            {renderNavAction()}
           </Grid>
         </Grid>
       </Grid>
