@@ -4,6 +4,7 @@ import ChangePassword from "../../Components/Admin/ChangePassword";
 import { Grid, makeStyles, Paper, Toolbar } from "@material-ui/core";
 import { useSelector } from "react-redux";
 import background from "../../assets/background.svg";
+import AdminAppbar from "../../Components/Admin/AdminAppbar";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -27,21 +28,23 @@ const Profile = () => {
   const { loading } = useSelector((state) => state.admin);
   return (
     <>
-      {loading ? null : (
-        <>
-          <div className={classes.container}>
-            <Grid container item xs={12} sm={12} lg={12} justify="center">
-              <Grid item xs={6}>
-                <Paper elevation={8} className={classes.paper}>
-                  <Edit />
-                  <Toolbar />
-                  <ChangePassword />
-                </Paper>
+      <AdminAppbar>
+        {loading ? null : (
+          <>
+            <div className={classes.container}>
+              <Grid container item xs={12} sm={12} lg={12} justify="center">
+                <Grid item xs={6}>
+                  <Paper elevation={8} className={classes.paper}>
+                    <Edit />
+                    <Toolbar />
+                    <ChangePassword />
+                  </Paper>
+                </Grid>
               </Grid>
-            </Grid>
-          </div>
-        </>
-      )}
+            </div>
+          </>
+        )}
+      </AdminAppbar>
     </>
   );
 };

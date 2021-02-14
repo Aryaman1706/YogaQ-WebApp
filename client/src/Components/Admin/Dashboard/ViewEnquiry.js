@@ -20,6 +20,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { enquiry as enquiryActions } from "../../../redux/actions/index";
 import Loader from "../../Loader";
 import background from "../../../assets/background.svg";
+import AdminAppbar from "../AdminAppbar";
+import AdminLayout from "../../../layout/AdminLayout";
 
 const useStyles = makeStyles((theme) => ({
   div: {
@@ -150,292 +152,296 @@ const ViewEnquiry = () => {
   };
   return (
     <>
-      {!compLoading && !loadingDelete && enquiry ? (
-        <div className={classes.container}>
-          <Grid container item xs={12} sm={12} lg={12} justify="center">
-            <Paper elevation={8} className={classes.paper}>
-              <Typography variant="h2" align="center">
-                Enquiry
-              </Typography>
-              <>
-                <Grid
-                  container
-                  direction="row"
-                  justify="center"
-                  alignItems="stretch"
-                >
-                  <Grid item xs={12}>
+      <AdminAppbar>
+        <AdminLayout>
+          {!compLoading && !loadingDelete && enquiry ? (
+            <div className={classes.container}>
+              <Grid container item xs={12} sm={12} lg={12} justify="center">
+                <Paper elevation={8} className={classes.paper}>
+                  <Typography variant="h2" align="center">
+                    Enquiry
+                  </Typography>
+                  <>
                     <Grid
                       container
-                      direction="column"
-                      justify="space-around"
+                      direction="row"
+                      justify="center"
                       alignItems="stretch"
-                      spacing={2}
                     >
-                      <Grid item>
-                        <Typography variant="h5" align="center">
-                          Personal Details
-                        </Typography>
-                      </Grid>
-                      {/* Personal Details */}
-                      <Grid item>
-                        <TextField
-                          fullWidth
-                          variant="outlined"
-                          label="User Name"
-                          value={enquiry.username}
-                        />
-                      </Grid>
-                      <Grid item>
-                        <TextField
-                          fullWidth
-                          variant="outlined"
-                          label="Phone Number"
-                          value={enquiry.phoneNumber}
-                        />
-                      </Grid>
-                      <Grid item>
-                        <TextField
-                          fullWidth
-                          variant="outlined"
-                          label="Age"
-                          type="number"
-                          value={enquiry.age}
-                        />
-                      </Grid>
-                      <Grid item>
-                        <FormControl variant="outlined" fullWidth>
-                          <InputLabel id="genderSelect">Gender</InputLabel>
-                          <Select
-                            labelId="genderSelect"
-                            label="Gender"
-                            value={enquiry.gender}
-                          >
-                            <MenuItem value="select">Select</MenuItem>
-                            <MenuItem value="male">Male</MenuItem>
-                            <MenuItem value="female">Female</MenuItem>
-                            <MenuItem value="other">Other</MenuItem>
-                          </Select>
-                        </FormControl>
-                      </Grid>
-                      <Grid item>
-                        <TextField
-                          fullWidth
-                          variant="outlined"
-                          label="Country"
-                          value={enquiry.country}
-                        />
-                      </Grid>
-                      <Grid item>
-                        {/* Languages */}
+                      <Grid item xs={12}>
                         <Grid
                           container
-                          direction="row"
-                          justify="flex-start"
+                          direction="column"
+                          justify="space-around"
                           alignItems="stretch"
                           spacing={2}
                         >
-                          {enquiry.languages.map((item, index) => (
-                            <Fragment key={index}>
-                              <Grid item xs={6}>
-                                <TextField
-                                  fullWidth
-                                  variant="outlined"
-                                  label="Language"
-                                  value={item}
-                                />
-                              </Grid>
-                            </Fragment>
-                          ))}
-                        </Grid>
-                      </Grid>
-                      <Grid item>
-                        <TextField
-                          fullWidth
-                          multiline
-                          variant="outlined"
-                          label="Description"
-                          value={enquiry.description}
-                        />
-                      </Grid>
-                      <Grid item>
-                        <TextField
-                          fullWidth
-                          variant="outlined"
-                          label="Email Address"
-                          type="email"
-                          value={enquiry.email}
-                        />
-                      </Grid>
-                      <Grid item>
-                        <Typography variant="h5" align="center">
-                          Qualificational Details
-                        </Typography>
-                      </Grid>
-                      {/* Qualificational Details */}
-                      <Grid item>
-                        <Typography variant="subtitle1" align="left">
-                          Educational Qualification
-                        </Typography>
-                        {/* Educational Qualification */}
-                        <Grid
-                          container
-                          direction="row"
-                          justify="flex-start"
-                          alignItems="stretch"
-                          spacing={2}
-                        >
-                          {enquiry.qualificational.educationalQualification.map(
-                            (item, index) => (
+                          <Grid item>
+                            <Typography variant="h5" align="center">
+                              Personal Details
+                            </Typography>
+                          </Grid>
+                          {/* Personal Details */}
+                          <Grid item>
+                            <TextField
+                              fullWidth
+                              variant="outlined"
+                              label="User Name"
+                              value={enquiry.username}
+                            />
+                          </Grid>
+                          <Grid item>
+                            <TextField
+                              fullWidth
+                              variant="outlined"
+                              label="Phone Number"
+                              value={enquiry.phoneNumber}
+                            />
+                          </Grid>
+                          <Grid item>
+                            <TextField
+                              fullWidth
+                              variant="outlined"
+                              label="Age"
+                              type="number"
+                              value={enquiry.age}
+                            />
+                          </Grid>
+                          <Grid item>
+                            <FormControl variant="outlined" fullWidth>
+                              <InputLabel id="genderSelect">Gender</InputLabel>
+                              <Select
+                                labelId="genderSelect"
+                                label="Gender"
+                                value={enquiry.gender}
+                              >
+                                <MenuItem value="select">Select</MenuItem>
+                                <MenuItem value="male">Male</MenuItem>
+                                <MenuItem value="female">Female</MenuItem>
+                                <MenuItem value="other">Other</MenuItem>
+                              </Select>
+                            </FormControl>
+                          </Grid>
+                          <Grid item>
+                            <TextField
+                              fullWidth
+                              variant="outlined"
+                              label="Country"
+                              value={enquiry.country}
+                            />
+                          </Grid>
+                          <Grid item>
+                            {/* Languages */}
+                            <Grid
+                              container
+                              direction="row"
+                              justify="flex-start"
+                              alignItems="stretch"
+                              spacing={2}
+                            >
+                              {enquiry.languages.map((item, index) => (
+                                <Fragment key={index}>
+                                  <Grid item xs={6}>
+                                    <TextField
+                                      fullWidth
+                                      variant="outlined"
+                                      label="Language"
+                                      value={item}
+                                    />
+                                  </Grid>
+                                </Fragment>
+                              ))}
+                            </Grid>
+                          </Grid>
+                          <Grid item>
+                            <TextField
+                              fullWidth
+                              multiline
+                              variant="outlined"
+                              label="Description"
+                              value={enquiry.description}
+                            />
+                          </Grid>
+                          <Grid item>
+                            <TextField
+                              fullWidth
+                              variant="outlined"
+                              label="Email Address"
+                              type="email"
+                              value={enquiry.email}
+                            />
+                          </Grid>
+                          <Grid item>
+                            <Typography variant="h5" align="center">
+                              Qualificational Details
+                            </Typography>
+                          </Grid>
+                          {/* Qualificational Details */}
+                          <Grid item>
+                            <Typography variant="subtitle1" align="left">
+                              Educational Qualification
+                            </Typography>
+                            {/* Educational Qualification */}
+                            <Grid
+                              container
+                              direction="row"
+                              justify="flex-start"
+                              alignItems="stretch"
+                              spacing={2}
+                            >
+                              {enquiry.qualificational.educationalQualification.map(
+                                (item, index) => (
+                                  <Fragment key={index}>
+                                    <Grid item xs={6}>
+                                      <TextField
+                                        fullWidth
+                                        variant="outlined"
+                                        value={item}
+                                      />
+                                    </Grid>
+                                  </Fragment>
+                                )
+                              )}
+                            </Grid>
+                          </Grid>
+                          <Grid item>
+                            <Typography variant="subtitle1" align="left">
+                              Documents
+                            </Typography>
+                            {/* Documents */}
+                            {enquiry.qualificational.docs.map((obj, index) => (
                               <Fragment key={index}>
-                                <Grid item xs={6}>
-                                  <TextField
-                                    fullWidth
-                                    variant="outlined"
-                                    value={item}
-                                  />
+                                <Grid
+                                  container
+                                  direction="row"
+                                  justify="flex-start"
+                                  alignItems="stretch"
+                                  spacing={2}
+                                >
+                                  <Grid item xs={5}>
+                                    <TextField
+                                      fullWidth
+                                      variant="outlined"
+                                      label="Name"
+                                      value={obj.name}
+                                    />
+                                  </Grid>
+                                  <Grid item xs={5}>
+                                    <TextField
+                                      fullWidth
+                                      variant="outlined"
+                                      label="Institute"
+                                      value={obj.institute}
+                                    />
+                                  </Grid>
+                                  <Grid item xs={2}>
+                                    <IconButton
+                                      href={obj.doc}
+                                      target="_blank"
+                                      rel="noopener"
+                                    >
+                                      <Description />
+                                    </IconButton>
+                                  </Grid>
                                 </Grid>
                               </Fragment>
-                            )
-                          )}
+                            ))}
+                          </Grid>
+                          <Grid item>
+                            <Typography variant="h5" align="center">
+                              Professional Details
+                            </Typography>
+                          </Grid>
+                          <Grid item>
+                            {/* Professional Details */}
+                            {enquiry.professional.map((obj, index) => (
+                              <Fragment key={index}>
+                                <Grid
+                                  container
+                                  direction="row"
+                                  justify="flex-start"
+                                  alignItems="stretch"
+                                  spacing={2}
+                                >
+                                  <Grid item lg={6}>
+                                    <TextField
+                                      fullWidth
+                                      variant="outlined"
+                                      label="Place"
+                                      value={obj.place}
+                                    />
+                                  </Grid>
+                                  <Grid item xs={3}>
+                                    <TextField
+                                      fullWidth
+                                      variant="outlined"
+                                      label="Clients"
+                                      value={obj.clients}
+                                    />
+                                  </Grid>
+                                  <Grid item xs={2}>
+                                    <TextField
+                                      fullWidth
+                                      variant="outlined"
+                                      label="Years"
+                                      value={obj.noOfYears}
+                                    />
+                                  </Grid>
+                                  <Grid item xs={1}>
+                                    <IconButton
+                                      href={obj.doc}
+                                      target="_blank"
+                                      rel="noopener"
+                                    >
+                                      <Description />
+                                    </IconButton>
+                                  </Grid>
+                                </Grid>
+                              </Fragment>
+                            ))}
+                          </Grid>
+                          <Grid item>
+                            <TextField
+                              fullWidth
+                              multiline
+                              variant="outlined"
+                              label="Expertise"
+                              value={enquiry.expertise}
+                            />
+                          </Grid>
+                          <Grid item>
+                            <div className={classes.div}>
+                              <Button
+                                color="primary"
+                                variant="contained"
+                                onClick={(event) => acceptEnquiry(event)}
+                              >
+                                Accept
+                              </Button>
+                              <Button
+                                color="secondary"
+                                variant="contained"
+                                onClick={(event) => deleteEnquiry(event)}
+                              >
+                                Delete
+                              </Button>
+                            </div>
+                          </Grid>
+                          <Grid item>
+                            <Toolbar></Toolbar>
+                          </Grid>
                         </Grid>
                       </Grid>
-                      <Grid item>
-                        <Typography variant="subtitle1" align="left">
-                          Documents
-                        </Typography>
-                        {/* Documents */}
-                        {enquiry.qualificational.docs.map((obj, index) => (
-                          <Fragment key={index}>
-                            <Grid
-                              container
-                              direction="row"
-                              justify="flex-start"
-                              alignItems="stretch"
-                              spacing={2}
-                            >
-                              <Grid item xs={5}>
-                                <TextField
-                                  fullWidth
-                                  variant="outlined"
-                                  label="Name"
-                                  value={obj.name}
-                                />
-                              </Grid>
-                              <Grid item xs={5}>
-                                <TextField
-                                  fullWidth
-                                  variant="outlined"
-                                  label="Institute"
-                                  value={obj.institute}
-                                />
-                              </Grid>
-                              <Grid item xs={2}>
-                                <IconButton
-                                  href={obj.doc}
-                                  target="_blank"
-                                  rel="noopener"
-                                >
-                                  <Description />
-                                </IconButton>
-                              </Grid>
-                            </Grid>
-                          </Fragment>
-                        ))}
-                      </Grid>
-                      <Grid item>
-                        <Typography variant="h5" align="center">
-                          Professional Details
-                        </Typography>
-                      </Grid>
-                      <Grid item>
-                        {/* Professional Details */}
-                        {enquiry.professional.map((obj, index) => (
-                          <Fragment key={index}>
-                            <Grid
-                              container
-                              direction="row"
-                              justify="flex-start"
-                              alignItems="stretch"
-                              spacing={2}
-                            >
-                              <Grid item lg={6}>
-                                <TextField
-                                  fullWidth
-                                  variant="outlined"
-                                  label="Place"
-                                  value={obj.place}
-                                />
-                              </Grid>
-                              <Grid item xs={3}>
-                                <TextField
-                                  fullWidth
-                                  variant="outlined"
-                                  label="Clients"
-                                  value={obj.clients}
-                                />
-                              </Grid>
-                              <Grid item xs={2}>
-                                <TextField
-                                  fullWidth
-                                  variant="outlined"
-                                  label="Years"
-                                  value={obj.noOfYears}
-                                />
-                              </Grid>
-                              <Grid item xs={1}>
-                                <IconButton
-                                  href={obj.doc}
-                                  target="_blank"
-                                  rel="noopener"
-                                >
-                                  <Description />
-                                </IconButton>
-                              </Grid>
-                            </Grid>
-                          </Fragment>
-                        ))}
-                      </Grid>
-                      <Grid item>
-                        <TextField
-                          fullWidth
-                          multiline
-                          variant="outlined"
-                          label="Expertise"
-                          value={enquiry.expertise}
-                        />
-                      </Grid>
-                      <Grid item>
-                        <div className={classes.div}>
-                          <Button
-                            color="primary"
-                            variant="contained"
-                            onClick={(event) => acceptEnquiry(event)}
-                          >
-                            Accept
-                          </Button>
-                          <Button
-                            color="secondary"
-                            variant="contained"
-                            onClick={(event) => deleteEnquiry(event)}
-                          >
-                            Delete
-                          </Button>
-                        </div>
-                      </Grid>
-                      <Grid item>
-                        <Toolbar></Toolbar>
-                      </Grid>
                     </Grid>
-                  </Grid>
-                </Grid>
-              </>
-            </Paper>
-          </Grid>
-        </div>
-      ) : (
-        <Loader />
-      )}
+                  </>
+                </Paper>
+              </Grid>
+            </div>
+          ) : (
+            <Loader />
+          )}
+        </AdminLayout>
+      </AdminAppbar>
     </>
   );
 };

@@ -146,7 +146,7 @@ const StyledMenu = withStyles({
   />
 ));
 
-const CharoomAppbar = ({ user }) => {
+const CharoomAppbar = ({ user, children }) => {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
   const history = useHistory();
@@ -324,6 +324,7 @@ const CharoomAppbar = ({ user }) => {
           </Grid>
         </Grid>
       </Grid>
+      {children}
     </>
   );
 };

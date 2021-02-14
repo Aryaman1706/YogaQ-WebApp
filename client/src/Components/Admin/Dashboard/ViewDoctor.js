@@ -10,6 +10,8 @@ import {
   admin as adminActions,
 } from "../../../redux/actions/index";
 import background from "../../../assets/background.svg";
+import AdminAppbar from "../AdminAppbar";
+import AdminLayout from "../../../layout/AdminLayout";
 
 const useStyles = makeStyles((theme) => ({
   div: {
@@ -115,102 +117,108 @@ const ViewDoctor = () => {
   const classes = useStyles();
   return (
     <>
-      {!compLoading && selectDoctor ? (
-        <>
-          <div className={classes.container}>
-            <Grid container item xs={12} sm={12} lg={12} justify="center">
-              <Paper elevation={8} className={classes.paper}>
-                <Typography variant="h2" align="center">
-                  Doctor
-                </Typography>
-                <Grid
-                  container
-                  direction="row"
-                  justify="center"
-                  alignItems="stretch"
-                >
-                  <Grid item xs={12} lg={12}>
-                    <Grid
-                      container
-                      direction="column"
-                      justify="space-around"
-                      alignItems="stretch"
-                      spacing={2}
-                    >
-                      <Grid item>
-                        <div className={classes.div}>
-                          <Button
-                            variant="contained"
-                            onClick={(event) => toggle(event)}
-                          >
-                            {!full ? (
-                              <span>View More</span>
-                            ) : (
-                              <span>View Less</span>
-                            )}
-                          </Button>
-                        </div>
-                      </Grid>
-                      {full ? (
-                        <DoctorProfileComplete doctor={selectDoctor.doctor} />
-                      ) : (
-                        <DoctorProfile
-                          doctor={selectDoctor.doctor}
-                          chatrooms={selectDoctor.chatrooms}
-                        />
-                      )}
-                    </Grid>
-
-                    <Typography variant="h3" align="center">
-                      Chat Rooms
+      <AdminAppbar>
+        <AdminLayout>
+          {!compLoading && selectDoctor ? (
+            <>
+              <div className={classes.container}>
+                <Grid container item xs={12} sm={12} lg={12} justify="center">
+                  <Paper elevation={8} className={classes.paper}>
+                    <Typography variant="h2" align="center">
+                      Doctor
                     </Typography>
                     <Grid
                       container
-                      direction="column"
-                      justify="space-around"
+                      direction="row"
+                      justify="center"
                       alignItems="stretch"
-                      spacing={2}
                     >
-                      {selectDoctor.chatrooms.map((obj, index) => {
-                        return (
-                          <Fragment key={index}>
-                            <Grid item>
-                              <Paper
-                                elevation={0}
-                                className={classes.paperChatroom}
-                                onClick={(event) =>
-                                  viewChatroom(event, obj._id)
-                                }
+                      <Grid item xs={12} lg={12}>
+                        <Grid
+                          container
+                          direction="column"
+                          justify="space-around"
+                          alignItems="stretch"
+                          spacing={2}
+                        >
+                          <Grid item>
+                            <div className={classes.div}>
+                              <Button
+                                variant="contained"
+                                onClick={(event) => toggle(event)}
                               >
-                                <div className={classes.div2}>
-                                  <div>
-                                    <Typography variant="subtitle1">
-                                      Username:- {obj.user.id.username}
-                                    </Typography>
-                                    <Typography variant="subtitle1">
-                                      Email Address:- {obj.user.id.email}
-                                    </Typography>
-                                    <Typography variant="subtitle2">
-                                      Created On:-{" "}
-                                      {new Date(
-                                        obj.createdAt
-                                      ).toLocaleDateString()}
-                                    </Typography>
-                                  </div>
-                                </div>
-                              </Paper>
-                            </Grid>
-                          </Fragment>
-                        );
-                      })}
+                                {!full ? (
+                                  <span>View More</span>
+                                ) : (
+                                  <span>View Less</span>
+                                )}
+                              </Button>
+                            </div>
+                          </Grid>
+                          {full ? (
+                            <DoctorProfileComplete
+                              doctor={selectDoctor.doctor}
+                            />
+                          ) : (
+                            <DoctorProfile
+                              doctor={selectDoctor.doctor}
+                              chatrooms={selectDoctor.chatrooms}
+                            />
+                          )}
+                        </Grid>
+
+                        <Typography variant="h3" align="center">
+                          Chat Rooms
+                        </Typography>
+                        <Grid
+                          container
+                          direction="column"
+                          justify="space-around"
+                          alignItems="stretch"
+                          spacing={2}
+                        >
+                          {selectDoctor.chatrooms.map((obj, index) => {
+                            return (
+                              <Fragment key={index}>
+                                <Grid item>
+                                  <Paper
+                                    elevation={0}
+                                    className={classes.paperChatroom}
+                                    onClick={(event) =>
+                                      viewChatroom(event, obj._id)
+                                    }
+                                  >
+                                    <div className={classes.div2}>
+                                      <div>
+                                        <Typography variant="subtitle1">
+                                          Username:- {obj.user.id.username}
+                                        </Typography>
+                                        <Typography variant="subtitle1">
+                                          Email Address:- {obj.user.id.email}
+                                        </Typography>
+                                        <Typography variant="subtitle2">
+                                          Created On:-{" "}
+                                          {new Date(
+                                            obj.createdAt
+                                          ).toLocaleDateString()}
+                                        </Typography>
+                                      </div>
+                                    </div>
+                                  </Paper>
+                                </Grid>
+                              </Fragment>
+                            );
+                          })}
+                        </Grid>
+                      </Grid>
                     </Grid>
-                  </Grid>
+                  </Paper>
                 </Grid>
-              </Paper>
-            </Grid>
-          </div>
-        </>
-      ) : null}
+              </div>
+            </>
+          ) : null}
+        </AdminLayout>
+      </AdminAppbar>
     </>
   );
 };

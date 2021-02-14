@@ -5,6 +5,7 @@ import { admin as adminActions } from "../../../redux/actions";
 import MessageItem from "../MessageItem";
 import Loader from "../../Loader";
 import SendIcon from "@material-ui/icons/Send";
+import ChatroomAppbar from "../ChatroomAppbar";
 
 const useStyles = makeStyles((theme) => ({
   scrollDiv: {
@@ -165,67 +166,70 @@ const MessageList = () => {
 
   return (
     <>
-      {chatroomLoading && !active_chatroom ? (
-        <Loader />
-      ) : (
-        <Grid
-          container
-          direction="row"
-          justify="stretch"
-          alignItems="flex-end"
-          spacing={2}
-          style={{ overflow: "hidden" }}
-        >
-          <Grid item xs={12} className={classes.scrollDiv} ref={scroller}>
-            <Grid
-              container
-              direction="row"
-              justify="center"
-              alignItems="stretch"
-              spacing={2}
-            >
-              <div ref={firstMessage}></div>
-              {admin_messages.length > 0 &&
-                admin_messages
-                  .slice(0)
-                  .reverse()
-                  .map((item, index) => {
-                    if (
-                      active_chatroom.unreadMessages > 0 &&
-                      admin_messages.length - index ===
-                        active_chatroom.unreadMessages
-                    ) {
-                      return (
-                        <>
-                          {newMessageIndicator()}
-                          <MessageItem message={item} id={admin._id} />
-                        </>
-                      );
-                    }
-                    return <MessageItem message={item} id={admin._id} />;
-                  })}
-              <div ref={lastMessage}></div>
+      <ChatroomAppbar>
+        {chatroomLoading && !active_chatroom ? (
+          <Loader />
+        ) : (
+          <Grid
+            container
+            direction="row"
+            justify="stretch"
+            alignItems="flex-end"
+            spacing={2}
+            style={{ overflow: "hidden" }}
+          >
+            <Grid item xs={12} className={classes.scrollDiv} ref={scroller}>
+              <Grid
+                container
+                direction="row"
+                justify="center"
+                alignItems="stretch"
+                spacing={2}
+              >
+                <div ref={firstMessage}></div>
+                {admin_messages.length > 0 &&
+                  admin_messages
+                    .slice(0)
+                    .reverse()
+                    .map((item, index) => {
+                      if (
+                        active_chatroom.unreadMessages > 0 &&
+                        admin_messages.length - index ===
+                          active_chatroom.unreadMessages
+                      ) {
+                        return (
+                          <>
+                            {newMessageIndicator()}
+                            <MessageItem message={item} id={admin._id} />
+                          </>
+                        );
+                      }
+                      return <MessageItem message={item} id={admin._id} />;
+                    })}
+                <div ref={lastMessage}></div>
+              </Grid>
+            </Grid>
+            <Grid item xs={12} className={classes.chatInputContainer}>
+              <div className={classes.chatFlexContainer}>
+                <div style={{ width: "95%" }}>
+                  <TextField
+                    fullWidth
+                    disabled
+                    variant="outlined"
+                    placeholder={`Message ${active_chatroom.partner.id.username} .  ..`}
+                    InputProps={{ className: classes.input }}
+                  />
+                </div>
+                <div style={{ margin: "auto" }}>
+                  <IconButton disabled={true} color="primary">
+                    <SendIcon />
+                  </IconButton>
+                </div>
+              </div>
             </Grid>
           </Grid>
-          <Grid item xs={12} className={classes.chatInputContainer}>
-            <div className={classes.chatFlexContainer}>
-              <div style={{ width: "95%" }}>
-                <TextField
-                  fullWidth
-                  variant="outlined"
-                  placeholder={`Message ${active_chatroom.partner.id.username} .  ..`}
-                  InputProps={{ className: classes.input }}
-                />
-              </div>
-              <div style={{ margin: "auto" }}>
-                <IconButton disabled={true} color="primary">
-                  <SendIcon />
-                </IconButton>
-              </div>
-            </div>
-          </Grid>
-        </Grid>
-      )}
+        )}
+      </ChatroomAppbar>
     </>
   );
 };
