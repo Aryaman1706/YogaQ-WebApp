@@ -17,6 +17,7 @@ import {
   CLEAR_UNREAD_MESSAGES_ACTIVE_ADMIN,
   CLEAR_UNREAD_MESSAGES_ADMIN,
   ADD_QUESTION_TO_QUESTION_SET,
+  GET_ADMIN_QUESTION_SET,
 } from "../types";
 
 const defaultState = {
@@ -134,6 +135,11 @@ const stateHandler = (state = defaultState, action) => {
         ...state,
         message: action.payload.message,
         questionSet: [...state.questionSet.questions, action.payload.question],
+      };
+    case GET_ADMIN_QUESTION_SET:
+      return {
+        ...state,
+        questionSet: action.payload,
       };
     default:
       return state;
