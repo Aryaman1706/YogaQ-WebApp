@@ -1,10 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Button, Grid, makeStyles, Typography } from "@material-ui/core";
+import {
+  Button,
+  Grid,
+  makeStyles,
+  Typography,
+  TextField,
+} from "@material-ui/core";
 import QuestionItem from "../../User/QuestionItem";
 import { admin as adminActions } from "../../../redux/actions";
 import { useHistory, useParams } from "react-router-dom";
 import AdminAppbar from "../AdminAppbar";
+import Swal from "sweetalert2";
+import axios from "../../../utils/axios";
 
 const useStyles = makeStyles((theme) => ({
   btn: {
@@ -29,6 +37,11 @@ const useStyles = makeStyles((theme) => ({
       color: "#fff",
     },
   },
+  textField: {
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
+    width: 200,
+  },
 }));
 
 const QuestionBank = () => {
@@ -36,6 +49,7 @@ const QuestionBank = () => {
   const dispatch = useDispatch();
   const classes = useStyles();
   const [compLoading, setCompLoading] = useState(false);
+  const [date, setDate] = useState(null);
   const {
     location: { pathname },
     push,
@@ -48,6 +62,34 @@ const QuestionBank = () => {
     }
     await dispatch(adminActions.getQuestionSet(active_chatroom._id));
     setCompLoading(false);
+  };
+
+  const getResponses = async () => {
+    try {
+      const res = await axios.get(
+        `/questionSet/doctor/filled/${active_chatroom._id}/?date=${date}`
+      );
+      console.log(res.data);
+      // setResponses(res.data.body.questionSet.responses);
+    } catch (error) {
+      // swal fire error
+      console.log("Error here\n", error);
+    }
+  };
+
+  const submitHandler = () => {
+    if (!date) {
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: "Error",
+        text: "Enter a valid date.",
+        showConfirmButton: true,
+        timer: 1500,
+      });
+    } else {
+      getResponses();
+    }
   };
 
   useEffect(() => {
@@ -82,6 +124,33 @@ const QuestionBank = () => {
             </Typography>
           </Grid>
           <Grid item xs={12}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-start",
+                padding: "1rem 1rem 0 1rem",
+              }}
+            >
+              <Typography variant="h6">Get responses for:- </Typography>
+              <TextField
+                type="date"
+                value={date}
+                onChange={(event) => setDate(event.target.value)}
+                className={classes.textField}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={submitHandler}
+              >
+                Submit
+              </Button>
+            </div>
+          </Grid>
+          <Grid item xs={12}>
             <Typography
               variant="subtitle1"
               style={{ padding: "0 1rem 1rem 1rem" }}
@@ -113,7 +182,6 @@ const QuestionBank = () => {
             </Typography>
           </Grid>
         </Grid>
-        {console.log(responses, "responses")}
       </AdminAppbar>
     </>
   );

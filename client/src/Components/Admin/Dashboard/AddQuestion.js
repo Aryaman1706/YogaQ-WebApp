@@ -53,7 +53,7 @@ const AddQuestion = () => {
 
   const errorHandling = async () => {
     if (message && /^Question Added Successfully*/i.test(message)) {
-      await Swal.fire({
+      Swal.fire({
         position: "center",
         icon: "success",
         title: "Success",
@@ -63,7 +63,7 @@ const AddQuestion = () => {
       });
     }
     if (error) {
-      await Swal.fire({
+      Swal.fire({
         position: "center",
         icon: "error",
         title: "Error",
