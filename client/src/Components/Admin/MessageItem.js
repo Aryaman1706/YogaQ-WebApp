@@ -60,12 +60,12 @@ const MessageItem = ({ message, id, path }) => {
     if (message.sender.id.toString() === id.toString()) {
       return "flex-end";
     } else if (
-      path === "/admin/chatroom/view" &&
+      /^\/admin\/chatroom\/view\/*/i.test(path) &&
       message.sender.model === "User"
     ) {
       return "flex-start";
     } else if (
-      path === "/admin/chatroom/view" &&
+      /^\/admin\/chatroom\/view\/*/i.test(path) &&
       message.sender.model === "Doctor"
     ) {
       return "flex-end";
@@ -78,12 +78,12 @@ const MessageItem = ({ message, id, path }) => {
     if (message.sender.id.toString() === id.toString()) {
       return classes.sent;
     } else if (
-      path === "/admin/chatroom/view" &&
+      /^\/admin\/chatroom\/view\/*/i.test(path) &&
       message.sender.model === "User"
     ) {
       return classes.recieve;
     } else if (
-      path === "/admin/chatroom/view" &&
+      /^\/admin\/chatroom\/view\/*/i.test(path) &&
       message.sender.model === "Doctor"
     ) {
       return classes.sent;

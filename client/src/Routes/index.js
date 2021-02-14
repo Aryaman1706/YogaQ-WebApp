@@ -21,6 +21,7 @@ import CreateChatroom from "../Components/Admin/Dashboard/CreateChatroom";
 import ViewChatroom from "../Components/Admin/Dashboard/ViewChatroom";
 import AddQuestion from "../Components/Admin/Dashboard/AddQuestion";
 import AdminAppbar from "../Components/Admin/AdminAppbar";
+import QuestionBankAdmin from "../Components/Admin/Dashboard/QuestionBank";
 
 // * Enquiry
 import NewEnquiry from "../Components/Doctor/Enquiry/NewEnquiry";
@@ -98,7 +99,7 @@ const Routes = () => {
         <Route
           adminLogin
           exact
-          path="/admin/chatroom/view"
+          path="/admin/chatroom/view/:chatroomId"
           component={ViewChatroom}
         />
         <Route
@@ -110,13 +111,7 @@ const Routes = () => {
         <Route
           exact
           path="/admin/question-bank/:chatroomId"
-          render={(props) => (
-            <>
-              <AdminAppbar>
-                <QuestionBank {...props} />
-              </AdminAppbar>
-            </>
-          )}
+          component={QuestionBankAdmin}
         />
 
         {/* Doctor */}
@@ -138,7 +133,9 @@ const Routes = () => {
           render={(props) => (
             <>
               {/*TODO  Wrap the following in the nav layout component */}
-              <QuestionBank {...props} />
+              <UserAppbar>
+                <QuestionBank {...props} />
+              </UserAppbar>
             </>
           )}
         />

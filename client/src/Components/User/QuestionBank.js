@@ -2,10 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Grid, makeStyles, Typography } from "@material-ui/core";
 import QuestionItem from "./QuestionItem";
-import {
-  user as userActions,
-  admin as adminActions,
-} from "../../redux/actions/index";
+import { user as userActions } from "../../redux/actions/index";
 import { useHistory, useParams } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
@@ -49,23 +46,13 @@ const QuestionBank = () => {
     await dispatch(userActions.getQuestionSet(active_chatroom?._id));
     setCompLoading(false);
   };
-  const loadAdminQuestionSet = async () => {
-    console.log("admin magic yaay");
-    await dispatch(adminActions.getChatroom(chatroomId));
-    await dispatch(adminActions.getQuestionSet(active_chatroom?._id));
-    setCompLoading(false);
-  };
 
   useEffect(() => {
     setCompLoading(true);
   }, []);
 
   useEffect(() => {
-    if (compLoading && /\/admin*/.test(pathname) === false) {
-      loadQuestionSet();
-    } else if (compLoading && /\/admin*/.test(pathname) === true) {
-      loadAdminQuestionSet();
-    } else {
+    if (compLoading) {
       loadQuestionSet();
     }
     // eslint-disable-next-line
@@ -110,6 +97,7 @@ const QuestionBank = () => {
                     {questionSet.questions.map((question, index) => (
                       <QuestionItem
                         key={index}
+                        disabled={false}
                         id={index}
                         question={question}
                         responses={responses}

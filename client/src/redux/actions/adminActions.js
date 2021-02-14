@@ -280,7 +280,7 @@ export const addQuestionToQuestionSet = ({ chatroomId, question }) => async (
   dispatch
 ) => {
   try {
-    const res = await axios.post(
+    const res = await axios.put(
       `/questionSet/addQuestion/${chatroomId}`,
       question
     );

@@ -26,7 +26,7 @@ const RouteWrapper = ({
     !userState.loading &&
     !userState.isAuthenticated &&
     !userState.user &&
-    !userState.user.complete
+    !userState.user?.complete
   ) {
     return <Redirect to="/" />;
   }

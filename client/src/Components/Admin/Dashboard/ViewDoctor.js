@@ -111,7 +111,7 @@ const ViewDoctor = () => {
   const viewChatroom = async (event, chatroomId) => {
     // set active_chatroom
     await dispatch(adminActions.getChatroom(chatroomId));
-    history.push(`/admin/chatroom/view`);
+    history.push(`/admin/chatroom/view/${chatroomId}`);
   };
 
   const classes = useStyles();

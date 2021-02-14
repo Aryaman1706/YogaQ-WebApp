@@ -5,7 +5,7 @@ import { admin as adminActions } from "../../../redux/actions";
 import MessageItem from "../MessageItem";
 import Loader from "../../Loader";
 import SendIcon from "@material-ui/icons/Send";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import AdminViewChatAppbar from "../AdminViewChatAppbar";
 import AdminChatroomDrawer from "../AdminChatroomDrawer";
 
@@ -49,6 +49,8 @@ const MessageList = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const path = history.location.pathname;
+  const { chatroomId } = useParams();
+
   const [showDrawer, setShowDrawer] = useState(false);
   const [page, setPage] = useState(0);
   const [messageLoading, setMessageLoading] = useState(false);
@@ -76,9 +78,16 @@ const MessageList = () => {
   // * Load Chatroom if error
   const loadChatroom = async () => {
     await dispatch(adminActions.setChatroomLoading(true));
-    await dispatch(adminActions.getChatroom(active_chatroom._id));
+    await dispatch(adminActions.getChatroom(chatroomId));
     await dispatch(adminActions.setChatroomLoading(false));
   };
+
+  // useEffect(() => {
+  //   console.log(chatroomId);
+  //   if (!active_chatroom) {
+  //     loadChatroom();
+  //   }
+  // }, []);
 
   useEffect(() => {
     if (/Get chatroom first*/i.test(error)) {
@@ -179,7 +188,7 @@ const MessageList = () => {
   return (
     <>
       <AdminViewChatAppbar setShowDrawer={setShowDrawer}>
-        {chatroomLoading && !active_chatroom ? (
+        {chatroomLoading || !active_chatroom ? (
           <Loader />
         ) : (
           <Grid
