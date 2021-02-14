@@ -20,6 +20,7 @@ import {
   CLEAR_UNREAD_MESSAGES_ACTIVE,
   CLEAR_ACTIVE_CHATROOM,
   GET_QUESTION_SET,
+  FILL_QUESTION_SET,
 } from "../types";
 import axios from "../../utils/axios";
 import store from "../store";
@@ -314,6 +315,26 @@ export const getQuestionSet = (chatroomId) => async (dispatch) => {
     const res = await axios.get(`/questionSet/get/${chatroomId}`);
     dispatch({
       type: GET_QUESTION_SET,
+      payload: res.data.body,
+    });
+  } catch (error) {
+    dispatch({
+      type: USER_ERROR,
+      payload: error.response.data.error,
+    });
+  }
+};
+
+// * Fill questionSet
+export const fillQuestionSet = ({ chatroomId, responses }) => async (
+  dispatch
+) => {
+  try {
+    const res = await axios.post(`/questionSet/fill/${chatroomId}`, {
+      responses,
+    });
+    dispatch({
+      type: USER_MESSAGE,
       payload: res.data.body,
     });
   } catch (error) {

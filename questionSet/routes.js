@@ -83,7 +83,7 @@ router.get("/get/:id", [userLogin, chatroomAuth], controllers.userGet);
 /**
  * Type:- POST
  * Desc:- User fill questionSet
- * Route:- {{server_url}}/questionSet/fill
+ * Route:- {{server_url}}/questionSet/fill/:chatroomId
  * Middlewares:- User Login, Chatroom Auth
  * Request Body:- {
  *  "responses": {

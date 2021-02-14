@@ -32,7 +32,7 @@ const QuestionItem = ({ id, question, responses, setResponses, disabled }) => {
   const classes = useStyles();
   const onAnswer = (e) => {
     setResponses((prevResponses) => {
-      return { ...prevResponses, [id]: e.target.value };
+      return { ...prevResponses, [question._id]: e.target.value };
     });
   };
   return (
@@ -48,7 +48,7 @@ const QuestionItem = ({ id, question, responses, setResponses, disabled }) => {
             <RadioGroup
               aria-label="question"
               name="question"
-              value={responses[id] ? responses[id] : ""}
+              value={responses[question._id] ? responses[question._id] : ""}
               onChange={(e) => {
                 onAnswer(e);
               }}

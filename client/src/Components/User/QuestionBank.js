@@ -4,6 +4,7 @@ import { Button, Grid, makeStyles, Typography } from "@material-ui/core";
 import QuestionItem from "./QuestionItem";
 import { user as userActions } from "../../redux/actions/index";
 import { useHistory, useParams } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const useStyles = makeStyles((theme) => ({
   btn: {
@@ -31,10 +32,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const QuestionBank = () => {
-  const { active_chatroom, questionSet } = useSelector((state) => state.user);
+  const { active_chatroom, questionSet, error, message } = useSelector(
+    (state) => state.user
+  );
   const dispatch = useDispatch();
   const classes = useStyles();
   const [compLoading, setCompLoading] = useState(false);
+  const [responses, setResponses] = useState({});
   const {
     location: { pathname },
     push,
@@ -45,6 +49,15 @@ const QuestionBank = () => {
     console.log("user magic yaay");
     await dispatch(userActions.getQuestionSet(active_chatroom?._id));
     setCompLoading(false);
+  };
+
+  const submitHandler = async () => {
+    await dispatch(
+      userActions.fillQuestionSet({
+        chatroomId: active_chatroom._id,
+        responses,
+      })
+    );
   };
 
   useEffect(() => {
@@ -58,7 +71,38 @@ const QuestionBank = () => {
     // eslint-disable-next-line
   }, [compLoading]);
 
-  const [responses, setResponses] = useState({});
+  const errorHandling = async () => {
+    if (message && /^Response Submitted Successfully*/i.test(message)) {
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Success",
+        text: "Response Submitted Successfully.",
+        showConfirmButton: true,
+        timer: 1500,
+      });
+    }
+    if (error) {
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: "Error",
+        text: error,
+        showConfirmButton: true,
+        timer: 1500,
+      });
+    }
+
+    await dispatch(userActions.clear());
+  };
+
+  useEffect(() => {
+    if (message || error) {
+      errorHandling();
+    }
+    // eslint-disable-next-line
+  }, [message, error]);
+
   return (
     <>
       <Grid container spacing={2}>
@@ -110,8 +154,10 @@ const QuestionBank = () => {
             )}
           </Typography>
         </Grid>
+        <Grid item xs={12}>
+          <Button onClick={submitHandler}>Submit Responses</Button>
+        </Grid>
       </Grid>
-      {console.log(responses, "responses")}
     </>
   );
 };

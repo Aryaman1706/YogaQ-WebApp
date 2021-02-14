@@ -248,6 +248,21 @@ const CharoomAppbar = ({ user, children }) => {
                     <div
                       className={`${classes.flexRow} ${classes.paddingMenuItem}`}
                       onClick={() => {
+                        history.push("/admin/enquiries");
+                      }}
+                    >
+                      <div>
+                        <img
+                          src={ProfileIcon}
+                          alt="profile-icon"
+                          className={classes.profileIcon}
+                        />
+                      </div>
+                      <div className={classes.menuitem}>Dashboard</div>
+                    </div>
+                    <div
+                      className={`${classes.flexRow} ${classes.paddingMenuItem}`}
+                      onClick={() => {
                         history.push("/admin/profile");
                       }}
                     >
