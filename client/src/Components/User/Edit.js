@@ -18,6 +18,7 @@ import Loader from "../Loader";
 import background from "../../assets/background.svg";
 import homeIcon from "../../assets/home.svg";
 import { useHistory } from "react-router-dom";
+import UserAppbar from "./UserAppbar";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -151,128 +152,130 @@ const Edit = () => {
 
   return (
     <>
-      <div className={classes.container}>
-        <Grid container direction="row" justify="center" alignItems="stretch">
-          <Grid item xs={11} sm={10} lg={6}>
-            <Paper elevation={8} className={classes.paper}>
-              <Grid
-                container
-                direction="column"
-                justify="space-around"
-                alignItems="stretch"
-                spacing={2}
-              >
-                <Grid item xs={12}>
-                  <div
-                    className={classes.flexRow}
-                    onClick={() => {
-                      history.push("/");
-                    }}
-                  >
-                    <img
-                      src={homeIcon}
-                      alt="home"
-                      className={classes.homeIcon}
-                    />
-                    <span className={classes.homeText}>Back to home</span>
-                  </div>
-                </Grid>
-                <Grid item>
-                  <Typography
-                    variant="h4"
-                    align="center"
-                    style={{ fontWeight: "600" }}
-                  >
-                    Edit Profile
-                  </Typography>
-                </Grid>
-                {console.log(state)}
-                {state ? (
-                  <>
-                    <Grid item>
-                      <TextField
-                        fullWidth
-                        variant="outlined"
-                        label="Email Address"
-                        value={state.email}
+      <UserAppbar>
+        <div className={classes.container}>
+          <Grid container direction="row" justify="center" alignItems="stretch">
+            <Grid item xs={11} sm={10} lg={6}>
+              <Paper elevation={8} className={classes.paper}>
+                <Grid
+                  container
+                  direction="column"
+                  justify="space-around"
+                  alignItems="stretch"
+                  spacing={2}
+                >
+                  <Grid item xs={12}>
+                    <div
+                      className={classes.flexRow}
+                      onClick={() => {
+                        history.push("/");
+                      }}
+                    >
+                      <img
+                        src={homeIcon}
+                        alt="home"
+                        className={classes.homeIcon}
                       />
-                    </Grid>
-                    <Grid item>
-                      <TextField
-                        fullWidth
-                        variant="outlined"
-                        label="User Name"
-                        id="username"
-                        value={state.username}
-                        onChange={(event) => changeHandler(event)}
-                      />
-                    </Grid>
-                    <Grid item>
-                      <TextField
-                        fullWidth
-                        variant="outlined"
-                        label="Phone Number"
-                        id="phoneNumber"
-                        value={state.phoneNumber}
-                        onChange={(event) => changeHandler(event)}
-                      />
-                    </Grid>
-                    <Grid item>
-                      <TextField
-                        fullWidth
-                        type="number"
-                        variant="outlined"
-                        label="Age"
-                        id="age"
-                        value={state.age}
-                        onChange={(event) => changeHandler(event)}
-                      />
-                    </Grid>
-                    <Grid item>
-                      <FormControl variant="outlined" fullWidth>
-                        <InputLabel id="genderSelect">Gender</InputLabel>
-                        <Select
-                          labelId="genderSelect"
-                          label="Gender"
-                          value={state.gender}
-                          onChange={(event) => genderHandler(event)}
+                      <span className={classes.homeText}>Back to home</span>
+                    </div>
+                  </Grid>
+                  <Grid item>
+                    <Typography
+                      variant="h4"
+                      align="center"
+                      style={{ fontWeight: "600" }}
+                    >
+                      Edit Profile
+                    </Typography>
+                  </Grid>
+                  {console.log(state)}
+                  {state ? (
+                    <>
+                      <Grid item>
+                        <TextField
+                          fullWidth
+                          variant="outlined"
+                          label="Email Address"
+                          value={state.email}
+                        />
+                      </Grid>
+                      <Grid item>
+                        <TextField
+                          fullWidth
+                          variant="outlined"
+                          label="User Name"
+                          id="username"
+                          value={state.username}
+                          onChange={(event) => changeHandler(event)}
+                        />
+                      </Grid>
+                      <Grid item>
+                        <TextField
+                          fullWidth
+                          variant="outlined"
+                          label="Phone Number"
+                          id="phoneNumber"
+                          value={state.phoneNumber}
+                          onChange={(event) => changeHandler(event)}
+                        />
+                      </Grid>
+                      <Grid item>
+                        <TextField
+                          fullWidth
+                          type="number"
+                          variant="outlined"
+                          label="Age"
+                          id="age"
+                          value={state.age}
+                          onChange={(event) => changeHandler(event)}
+                        />
+                      </Grid>
+                      <Grid item>
+                        <FormControl variant="outlined" fullWidth>
+                          <InputLabel id="genderSelect">Gender</InputLabel>
+                          <Select
+                            labelId="genderSelect"
+                            label="Gender"
+                            value={state.gender}
+                            onChange={(event) => genderHandler(event)}
+                          >
+                            <MenuItem value="male">Male</MenuItem>
+                            <MenuItem value="female">Female</MenuItem>
+                            <MenuItem value="other">Other</MenuItem>
+                          </Select>
+                        </FormControl>
+                      </Grid>
+                      <Grid item>
+                        <TextField
+                          fullWidth
+                          variant="outlined"
+                          label="Country"
+                          id="country"
+                          value={state.country}
+                          onChange={(event) => changeHandler(event)}
+                        />
+                      </Grid>
+                      <Grid item>
+                        <Button
+                          fullWidth
+                          variant="contained"
+                          color="primary"
+                          className={classes.btn}
+                          onClick={(event) => submitHandler(event)}
                         >
-                          <MenuItem value="male">Male</MenuItem>
-                          <MenuItem value="female">Female</MenuItem>
-                          <MenuItem value="other">Other</MenuItem>
-                        </Select>
-                      </FormControl>
-                    </Grid>
-                    <Grid item>
-                      <TextField
-                        fullWidth
-                        variant="outlined"
-                        label="Country"
-                        id="country"
-                        value={state.country}
-                        onChange={(event) => changeHandler(event)}
-                      />
-                    </Grid>
-                    <Grid item>
-                      <Button
-                        fullWidth
-                        variant="contained"
-                        color="primary"
-                        className={classes.btn}
-                        onClick={(event) => submitHandler(event)}
-                      >
-                        Submit
-                      </Button>
-                    </Grid>
-                  </>
-                ) : (
-                  <Loader />
-                )}
-              </Grid>
-            </Paper>
+                          Submit
+                        </Button>
+                      </Grid>
+                    </>
+                  ) : (
+                    <Loader />
+                  )}
+                </Grid>
+              </Paper>
+            </Grid>
           </Grid>
-        </Grid>
-      </div>
+        </div>
+      </UserAppbar>
     </>
   );
 };

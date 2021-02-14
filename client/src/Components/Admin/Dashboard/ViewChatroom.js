@@ -5,7 +5,7 @@ import { admin as adminActions } from "../../../redux/actions";
 import MessageItem from "../MessageItem";
 import Loader from "../../Loader";
 import SendIcon from "@material-ui/icons/Send";
-import ChatroomAppbar from "../ChatroomAppbar";
+import AdminAppbar from "../AdminAppbar";
 import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
@@ -168,7 +168,7 @@ const MessageList = () => {
 
   return (
     <>
-      <ChatroomAppbar>
+      <AdminAppbar>
         {chatroomLoading && !active_chatroom ? (
           <Loader />
         ) : (
@@ -231,7 +231,7 @@ const MessageList = () => {
             </Grid>
           </Grid>
         )}
-      </ChatroomAppbar>
+      </AdminAppbar>
     </>
   );
 };

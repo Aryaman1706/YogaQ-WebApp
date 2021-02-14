@@ -6,6 +6,8 @@ import Chatroom from "../Components/User/Chatroom";
 import Loader from "../Components/Loader";
 import ChatroomDrawer from "../Components/User/ChatroomDrawer";
 import Landing from "../Components/Landing/Landing";
+import ChatroomAppbar from "../Components/User/CharoomAppbar";
+import UserAppbar from "../Components/User/UserAppbar";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -82,48 +84,52 @@ const Home = () => {
   const chatComponent = () => {
     return (
       <>
-        <Grid
-          container
-          direction="row"
-          justify="center"
-          alignItems="stretch"
-          className={classes.container}
-        >
+        <ChatroomAppbar>
           <Grid
-            item
-            xs={12}
-            lg={widths.chatroomList}
-            className={
-              active_chatroom ? `${classes.item} ${classes.hide}` : classes.item
-            }
+            container
+            direction="row"
+            justify="center"
+            alignItems="stretch"
+            className={classes.container}
           >
-            <ChatroomList />
-          </Grid>
-          <Grid
-            item
-            xs={12}
-            sm={12}
-            md={12}
-            lg={widths.chatroom}
-            xl={widths.chatroom}
-            className={renderClassname()}
-          >
-            <Chatroom />
-          </Grid>
-          {active_chatroom ? (
+            <Grid
+              item
+              xs={12}
+              lg={widths.chatroomList}
+              className={
+                active_chatroom
+                  ? `${classes.item} ${classes.hide}`
+                  : classes.item
+              }
+            >
+              <ChatroomList />
+            </Grid>
             <Grid
               item
               xs={12}
               sm={12}
               md={12}
-              lg={widths.drawer}
-              xl={widths.drawer}
-              className={showDrawer ? classes.itemC : classes.hideDrawer}
+              lg={widths.chatroom}
+              xl={widths.chatroom}
+              className={renderClassname()}
             >
-              <ChatroomDrawer />
+              <Chatroom />
             </Grid>
-          ) : null}
-        </Grid>
+            {active_chatroom ? (
+              <Grid
+                item
+                xs={12}
+                sm={12}
+                md={12}
+                lg={widths.drawer}
+                xl={widths.drawer}
+                className={showDrawer ? classes.itemC : classes.hideDrawer}
+              >
+                <ChatroomDrawer />
+              </Grid>
+            ) : null}
+          </Grid>
+        </ChatroomAppbar>
       </>
     );
   };
@@ -132,7 +138,11 @@ const Home = () => {
     if (isAuthenticated) {
       return chatComponent();
     } else {
-      return <Landing />;
+      return (
+        <UserAppbar>
+          <Landing />
+        </UserAppbar>
+      );
     }
   };
 

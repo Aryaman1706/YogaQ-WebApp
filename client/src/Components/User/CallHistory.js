@@ -16,6 +16,7 @@ import CallHistoryItem from "./CallHistoryItem";
 import { useHistory, useParams } from "react-router-dom";
 import Loader from "../Loader";
 import homeIcon from "../../assets/home.svg";
+import UserAppbar from "./UserAppbar";
 
 const useStyles = makeStyles((theme) => ({
   homeIcon: {
@@ -168,108 +169,110 @@ const CallHistory = () => {
 
   return (
     <>
-      <Grid container spacing={2}>
-        <Grid item xs={12} style={{ padding: "1rem" }}>
-          <div
-            className={classes.flexRow}
-            onClick={() => {
-              history.push("/");
-            }}
-          >
-            <img src={homeIcon} alt="home" className={classes.homeIcon} />
-            <span className={classes.homeText}>Back to home</span>
-          </div>
+      <UserAppbar>
+        <Grid container spacing={2}>
+          <Grid item xs={12} style={{ padding: "1rem" }}>
+            <div
+              className={classes.flexRow}
+              onClick={() => {
+                history.push("/");
+              }}
+            >
+              <img src={homeIcon} alt="home" className={classes.homeIcon} />
+              <span className={classes.homeText}>Back to home</span>
+            </div>
+          </Grid>
         </Grid>
-      </Grid>
-      <Typography variant="h2" style={{ padding: "1rem" }}>
-        Call History
-      </Typography>
-      <Grid
-        container
-        direction="row"
-        justify="center"
-        alignItems="stretch"
-        style={{ padding: "1rem" }}
-      >
-        <Grid item xs={12} lg={12}>
-          {!state || compLoading ? (
-            <Loader />
-          ) : (
-            <>
-              <Grid
-                container
-                direction="column"
-                justify="space-around"
-                alignItems="stretch"
-                spacing={2}
-              >
+        <Typography variant="h2" style={{ padding: "1rem" }}>
+          Call History
+        </Typography>
+        <Grid
+          container
+          direction="row"
+          justify="center"
+          alignItems="stretch"
+          style={{ padding: "1rem" }}
+        >
+          <Grid item xs={12} lg={12}>
+            {!state || compLoading ? (
+              <Loader />
+            ) : (
+              <>
                 <Grid
                   container
-                  item
-                  xs={12}
-                  justify="space-between"
-                  style={{ padding: "15px" }}
+                  direction="column"
+                  justify="space-around"
+                  alignItems="stretch"
+                  spacing={2}
                 >
-                  <Grid item xs={2}>
-                    <Typography variant="h5" style={{ color: "#606060" }}>
-                      Date
-                    </Typography>
+                  <Grid
+                    container
+                    item
+                    xs={12}
+                    justify="space-between"
+                    style={{ padding: "15px" }}
+                  >
+                    <Grid item xs={2}>
+                      <Typography variant="h5" style={{ color: "#606060" }}>
+                        Date
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={2}>
+                      <Typography
+                        variant="h5"
+                        align="right"
+                        style={{ color: "#606060" }}
+                      >
+                        Status
+                      </Typography>
+                    </Grid>
                   </Grid>
-                  <Grid item xs={2}>
-                    <Typography
-                      variant="h5"
-                      align="right"
-                      style={{ color: "#606060" }}
-                    >
-                      Status
-                    </Typography>
-                  </Grid>
+                  {callHistoryList
+                    ?.slice(startIndex, endIndex)
+                    .map((item, index) => {
+                      return (
+                        <>
+                          <CallHistoryItem key={index} item={item} />
+                        </>
+                      );
+                    })}
                 </Grid>
-                {callHistoryList
-                  ?.slice(startIndex, endIndex)
-                  .map((item, index) => {
-                    return (
-                      <>
-                        <CallHistoryItem key={index} item={item} />
-                      </>
-                    );
-                  })}
-              </Grid>
-              <br />
-              <ButtonGroup variant="contained" color="primary" fullWidth>
-                {currentPage !== 1 ? (
-                  <Button
-                    startIcon={<ArrowBackIos />}
-                    onClick={(event) => prevHandler(event)}
-                    style={{
-                      backgroundColor: "#0FC1A7",
-                      height: "50px",
-                      backgroundImage:
-                        "linear-gradient(315deg, #abe9cd 0%, #3eadcf 74%)",
-                    }}
-                  >
-                    Previous
-                  </Button>
-                ) : null}
-                {end && currentPage === loadedPages ? null : (
-                  <Button
-                    endIcon={<ArrowForwardIos />}
-                    onClick={(event) => nextHandler(event)}
-                    style={{
-                      backgroundColor: "#0FC1A7",
-                      height: "50px",
-                      backgroundImage:
-                        "linear-gradient(315deg, #abe9cd 0%, #3eadcf 74%)",
-                    }}
-                  >
-                    Next
-                  </Button>
-                )}
-              </ButtonGroup>
-            </>
-          )}
+                <br />
+                <ButtonGroup variant="contained" color="primary" fullWidth>
+                  {currentPage !== 1 ? (
+                    <Button
+                      startIcon={<ArrowBackIos />}
+                      onClick={(event) => prevHandler(event)}
+                      style={{
+                        backgroundColor: "#0FC1A7",
+                        height: "50px",
+                        backgroundImage:
+                          "linear-gradient(315deg, #abe9cd 0%, #3eadcf 74%)",
+                      }}
+                    >
+                      Previous
+                    </Button>
+                  ) : null}
+                  {end && currentPage === loadedPages ? null : (
+                    <Button
+                      endIcon={<ArrowForwardIos />}
+                      onClick={(event) => nextHandler(event)}
+                      style={{
+                        backgroundColor: "#0FC1A7",
+                        height: "50px",
+                        backgroundImage:
+                          "linear-gradient(315deg, #abe9cd 0%, #3eadcf 74%)",
+                      }}
+                    >
+                      Next
+                    </Button>
+                  )}
+                </ButtonGroup>
+              </>
+            )}
+          </Grid>
         </Grid>
-      </Grid>
+      </UserAppbar>
     </>
   );
 };
