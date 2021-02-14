@@ -19,6 +19,8 @@ import UserList from "../Components/Admin/Dashboard/UserList";
 import ViewUser from "../Components/Admin/Dashboard/ViewUser";
 import CreateChatroom from "../Components/Admin/Dashboard/CreateChatroom";
 import ViewChatroom from "../Components/Admin/Dashboard/ViewChatroom";
+import AddQuestion from "../Components/Admin/Dashboard/AddQuestion";
+import AdminAppbar from "../Components/Admin/AdminAppbar";
 
 // * Enquiry
 import NewEnquiry from "../Components/Doctor/Enquiry/NewEnquiry";
@@ -36,6 +38,7 @@ import EditUser from "../Components/User/Edit";
 import BookCall from "../Components/User/BookCall";
 import CallHistory from "../Components/User/CallHistory";
 import QuestionBank from "../Components/User/QuestionBank";
+import UserAppbar from "../Components/User/UserAppbar";
 
 const Routes = () => {
   return (
@@ -98,6 +101,23 @@ const Routes = () => {
           path="/admin/chatroom/view"
           component={ViewChatroom}
         />
+        <Route
+          adminLogin
+          exact
+          path="/admin/add-question/:chatroomId"
+          component={AddQuestion}
+        />
+        <Route
+          exact
+          path="/admin/question-bank/:chatroomId"
+          render={(props) => (
+            <>
+              <AdminAppbar>
+                <QuestionBank {...props} />
+              </AdminAppbar>
+            </>
+          )}
+        />
 
         {/* Doctor */}
         <Route exact path="/enquire" component={NewEnquiry} />
@@ -115,7 +135,12 @@ const Routes = () => {
         <Route
           exact
           path="/question-bank/:chatroomId"
-          component={QuestionBank}
+          render={(props) => (
+            <>
+              {/*TODO  Wrap the following in the nav layout component */}
+              <QuestionBank {...props} />
+            </>
+          )}
         />
       </Switch>
     </>

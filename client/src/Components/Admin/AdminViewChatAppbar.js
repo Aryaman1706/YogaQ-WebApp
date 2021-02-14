@@ -4,18 +4,9 @@ import {
   Button,
   IconButton,
   makeStyles,
-  Menu,
   Grid,
-  Divider,
-  Avatar,
-  withStyles,
 } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
-import AccountCircleOutlinedIcon from "@material-ui/icons/AccountCircleOutlined";
-import { format } from "date-fns";
-import ProfileIcon from "../../assets/profile.svg";
-import Profile from "../../assets/user.svg";
-import LogoutIcon from "../../assets/log-out.svg";
 import { useSelector } from "react-redux";
 import MenuIcon from "@material-ui/icons/Menu";
 
@@ -127,43 +118,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AdminAppbar = ({ children }) => {
+const AdminViewChatAppbar = ({ children, setShowDrawer }) => {
   const classes = useStyles();
-  const [anchorEl, setAnchorEl] = useState(null);
   const history = useHistory();
   const { isAuthenticated, admin } = useSelector((state) => state.admin);
-
-  const handleClick = (e) => {
-    setAnchorEl(e.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const StyledMenu = withStyles({
-    paper: {
-      border: "1px solid #d3d4d5",
-      borderRadius: 10,
-    },
-    "&:focus": {
-      outline: "none",
-    },
-  })((props) => (
-    <Menu
-      elevation={1}
-      getContentAnchorEl={null}
-      anchorOrigin={{
-        vertical: "bottom",
-        horizontal: "right",
-      }}
-      transformOrigin={{
-        vertical: "bottom",
-        horizontal: "right",
-      }}
-      {...props}
-    />
-  ));
 
   const renderNavAction = () => {
     if (isAuthenticated && admin) {
@@ -172,69 +130,13 @@ const AdminAppbar = ({ children }) => {
           <IconButton
             aria-controls="menu"
             aria-haspopup="true"
-            onClick={handleClick}
+            onClick={() => {
+              setShowDrawer((prev) => !prev);
+            }}
             className={classes.profile}
           >
-            <AccountCircleOutlinedIcon />
+            <MenuIcon />
           </IconButton>
-          <StyledMenu
-            id="menu"
-            keepMounted
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={handleClose}
-            className={classes.menu}
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "right",
-            }}
-            transformOrigin={{
-              vertical: "bottom",
-              horizontal: "right",
-            }}
-          >
-            <div className={classes.menuFlex}>
-              <div
-                className={classes.flexRow}
-                style={{ paddingBottom: "1rem" }}
-              >
-                <Avatar alt="Profile" src={Profile} />
-                <div className={classes.profileFlex}>
-                  <div className={classes.profileName}>{admin.username}</div>
-                  <div className={classes.profileJoin}>
-                    Joined {format(new Date(admin.createdAt), "MMM dd, yyyy")}
-                  </div>
-                </div>
-              </div>
-              <Divider />
-              <br />
-              <div
-                className={`${classes.flexRow} ${classes.paddingMenuItem}`}
-                onClick={() => {
-                  history.push("/edit");
-                }}
-              >
-                <div>
-                  <img
-                    src={ProfileIcon}
-                    alt="profile-icon"
-                    className={classes.profileIcon}
-                  />
-                </div>
-                <div className={classes.menuitem}>Profile</div>
-              </div>
-              <div className={`${classes.flexRow} ${classes.paddingMenuItem}`}>
-                <div>
-                  <img
-                    src={LogoutIcon}
-                    alt="profile-icon"
-                    className={classes.profileIcon}
-                  />
-                </div>
-                <div className={classes.menuitem}>Log out</div>
-              </div>
-            </div>
-          </StyledMenu>
         </>
       );
     } else {
@@ -291,4 +193,4 @@ const AdminAppbar = ({ children }) => {
   );
 };
 
-export default AdminAppbar;
+export default AdminViewChatAppbar;

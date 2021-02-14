@@ -3,6 +3,7 @@ import { TextField, Typography, Grid, Button } from "@material-ui/core";
 import { useSelector, useDispatch } from "react-redux";
 import { admin as adminActions } from "../../../redux/actions";
 import Swal from "sweetalert2";
+import AdminAppbar from "../AdminAppbar";
 
 const AddQuestion = () => {
   const [state, setState] = useState({
@@ -83,101 +84,148 @@ const AddQuestion = () => {
 
   return (
     <>
-      <Typography variant="h4" align="center">
-        Add Question
-      </Typography>
-      <Typography variant="h5" align="left">
-        Question Statement
-      </Typography>
-      <TextField
-        fullWidth
-        variant="outlined"
-        placeholder="Statement"
-        id="statement"
-        value={statement}
-        onChange={(event) => onStatementChange(event)}
-      />
-      <Grid container spacing={1}>
-        <Grid item xs={12}>
-          <Grid container>
-            <Grid item xs={4} style={{ display: "flex", placeItems: "center" }}>
-              First Option
-            </Grid>
-            <Grid item xs={8} style={{ display: "flex", placeItems: "center" }}>
-              <TextField
-                fullWidth
-                variant="outlined"
-                placeholder="Option"
-                value={option1}
-                id="option-1"
-                onChange={(event) => onOptionChange(event)}
-              />
-            </Grid>
+      <AdminAppbar>
+        <Grid container spacing={2} style={{ padding: "1rem" }}>
+          <Grid item xs={12}>
+            <Typography variant="h4" align="center" style={{ margin: "1rem" }}>
+              Add Question
+            </Typography>
+            <Typography
+              variant="h5"
+              align="left"
+              style={{ margin: "1rem 0 1rem 0" }}
+            >
+              Question Statement
+            </Typography>
+            <TextField
+              fullWidth
+              variant="outlined"
+              placeholder="Statement"
+              id="statement"
+              value={statement}
+              onChange={(event) => onStatementChange(event)}
+              style={{ margin: "0 0 1.5rem 0" }}
+            />
           </Grid>
         </Grid>
-
-        <Grid item xs={12}>
-          <Grid container>
-            <Grid item xs={4} style={{ display: "flex", placeItems: "center" }}>
-              Second Option
-            </Grid>
-            <Grid item xs={8} style={{ display: "flex", placeItems: "center" }}>
-              <TextField
-                fullWidth
-                variant="outlined"
-                placeholder="Option"
-                value={option2}
-                id="option-2"
-                onChange={(event) => onOptionChange(event)}
-              />
-            </Grid>
-          </Grid>
-        </Grid>
-
-        <Grid item xs={12}>
-          <Grid container>
-            <Grid item xs={4} style={{ display: "flex", placeItems: "center" }}>
-              Third Option
-            </Grid>
-            <Grid item xs={8} style={{ display: "flex", placeItems: "center" }}>
-              <TextField
-                fullWidth
-                variant="outlined"
-                placeholder="Option"
-                value={option3}
-                id="option-3"
-                onChange={(event) => onOptionChange(event)}
-              />
+        <Grid container spacing={2} style={{ padding: "1rem" }}>
+          <Grid item xs={12}>
+            <Grid container>
+              <Grid
+                item
+                xs={4}
+                style={{ display: "flex", placeItems: "center" }}
+              >
+                First Option
+              </Grid>
+              <Grid
+                item
+                xs={8}
+                style={{ display: "flex", placeItems: "center" }}
+              >
+                <TextField
+                  fullWidth
+                  variant="outlined"
+                  placeholder="Option"
+                  value={option1}
+                  id="option-1"
+                  onChange={(event) => onOptionChange(event)}
+                />
+              </Grid>
             </Grid>
           </Grid>
-        </Grid>
 
-        <Grid item xs={12}>
-          <Grid container>
-            <Grid item xs={4} style={{ display: "flex", placeItems: "center" }}>
-              Fourth Option
-            </Grid>
-            <Grid item xs={8} style={{ display: "flex", placeItems: "center" }}>
-              <TextField
-                fullWidth
-                variant="outlined"
-                placeholder="Option"
-                value={option4}
-                id="option-4"
-                onChange={(event) => onOptionChange(event)}
-              />
+          <Grid item xs={12}>
+            <Grid container>
+              <Grid
+                item
+                xs={4}
+                style={{ display: "flex", placeItems: "center" }}
+              >
+                Second Option
+              </Grid>
+              <Grid
+                item
+                xs={8}
+                style={{ display: "flex", placeItems: "center" }}
+              >
+                <TextField
+                  fullWidth
+                  variant="outlined"
+                  placeholder="Option"
+                  value={option2}
+                  id="option-2"
+                  onChange={(event) => onOptionChange(event)}
+                />
+              </Grid>
             </Grid>
           </Grid>
-        </Grid>
 
-        <Grid item xs={12}>
-          <div style={{ display: "flex", justifyContent: "center" }}>
-            <Button variant="contained" color="primary" onClick={submitHandler}>
-              Submit
-            </Button>
-          </div>
+          <Grid item xs={12}>
+            <Grid container>
+              <Grid
+                item
+                xs={4}
+                style={{ display: "flex", placeItems: "center" }}
+              >
+                Third Option
+              </Grid>
+              <Grid
+                item
+                xs={8}
+                style={{ display: "flex", placeItems: "center" }}
+              >
+                <TextField
+                  fullWidth
+                  variant="outlined"
+                  placeholder="Option"
+                  value={option3}
+                  id="option-3"
+                  onChange={(event) => onOptionChange(event)}
+                />
+              </Grid>
+            </Grid>
+          </Grid>
+
+          <Grid item xs={12}>
+            <Grid container>
+              <Grid
+                item
+                xs={4}
+                style={{ display: "flex", placeItems: "center" }}
+              >
+                Fourth Option
+              </Grid>
+              <Grid
+                item
+                xs={8}
+                style={{ display: "flex", placeItems: "center" }}
+              >
+                <TextField
+                  fullWidth
+                  variant="outlined"
+                  placeholder="Option"
+                  value={option4}
+                  id="option-4"
+                  onChange={(event) => onOptionChange(event)}
+                />
+              </Grid>
+            </Grid>
+          </Grid>
+
+          <Grid item xs={12}>
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={submitHandler}
+              >
+                Submit
+              </Button>
+            </div>
+          </Grid>
         </Grid>
-      </Grid>
+      </AdminAppbar>
     </>
   );
 };
