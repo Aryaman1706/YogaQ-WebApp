@@ -28,7 +28,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const QuestionItem = ({ id, question, responses, setResponses }) => {
+const QuestionItem = ({ id, question, responses, setResponses, disabled }) => {
   const classes = useStyles();
   const onAnswer = (e) => {
     setResponses((prevResponses) => {
@@ -40,7 +40,7 @@ const QuestionItem = ({ id, question, responses, setResponses }) => {
       <Grid item xs={12}>
         <Paper elevation={2} className={classes.questionCard}>
           <div className={classes.flexRow}>
-            <p>Q{{ id } + 1}.</p>
+            <p>Q{id + 1}.</p>
             <p>{question.statement}</p>
           </div>
           <FormControl component="fieldset">
@@ -56,6 +56,7 @@ const QuestionItem = ({ id, question, responses, setResponses }) => {
             >
               {question.options.map((option, index) => (
                 <FormControlLabel
+                  disabled={disabled}
                   key={index}
                   value={option}
                   control={<Radio />}

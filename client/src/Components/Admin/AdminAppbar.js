@@ -211,7 +211,7 @@ const AdminAppbar = ({ children }) => {
               <div
                 className={`${classes.flexRow} ${classes.paddingMenuItem}`}
                 onClick={() => {
-                  history.push("/edit");
+                  history.push("/admin/profile");
                 }}
               >
                 <div>
