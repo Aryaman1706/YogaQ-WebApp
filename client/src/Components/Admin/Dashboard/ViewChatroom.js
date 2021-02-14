@@ -5,8 +5,9 @@ import { admin as adminActions } from "../../../redux/actions";
 import MessageItem from "../MessageItem";
 import Loader from "../../Loader";
 import SendIcon from "@material-ui/icons/Send";
-import ChatroomAppbar from "../ChatroomAppbar";
 import { useHistory } from "react-router-dom";
+import AdminViewChatAppbar from "../AdminViewChatAppbar";
+import AdminChatroomDrawer from "../AdminChatroomDrawer";
 
 const useStyles = makeStyles((theme) => ({
   scrollDiv: {
@@ -24,6 +25,14 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "row",
     justifyContent: "space-between",
   },
+  itemC: {
+    border: "1px solid rgb(216, 216, 224)",
+    borderTop: "0px",
+    padding: "15px 10px 15px 10px",
+    height: "calc(100vh - 143px)",
+    overflowY: "auto",
+    backgroundColor: "#fff",
+  },
 }));
 
 const MessageList = () => {
@@ -40,6 +49,7 @@ const MessageList = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const path = history.location.pathname;
+  const [showDrawer, setShowDrawer] = useState(false);
   const [page, setPage] = useState(0);
   const [messageLoading, setMessageLoading] = useState(false);
   const [height, setHeight] = useState(null);
@@ -168,7 +178,7 @@ const MessageList = () => {
 
   return (
     <>
-      <ChatroomAppbar>
+      <AdminViewChatAppbar setShowDrawer={setShowDrawer}>
         {chatroomLoading && !active_chatroom ? (
           <Loader />
         ) : (
@@ -180,7 +190,12 @@ const MessageList = () => {
             spacing={2}
             style={{ overflow: "hidden" }}
           >
-            <Grid item xs={12} className={classes.scrollDiv} ref={scroller}>
+            <Grid
+              item
+              xs={showDrawer ? 10 : 12}
+              className={classes.scrollDiv}
+              ref={scroller}
+            >
               <Grid
                 container
                 direction="row"
@@ -202,15 +217,34 @@ const MessageList = () => {
                         return (
                           <>
                             {newMessageIndicator()}
-                            <MessageItem message={item} id={admin._id} />
+                            <MessageItem
+                              message={item}
+                              id={admin._id}
+                              path={path}
+                            />
                           </>
                         );
                       }
-                      return <MessageItem message={item} id={admin._id} />;
+                      return (
+                        <MessageItem
+                          message={item}
+                          id={admin._id}
+                          path={path}
+                        />
+                      );
                     })}
                 <div ref={lastMessage}></div>
               </Grid>
             </Grid>
+            {showDrawer && (
+              <Grid
+                item
+                lg={2}
+                className={showDrawer ? classes.itemC : classes.hideDrawer}
+              >
+                <AdminChatroomDrawer />
+              </Grid>
+            )}
             <Grid item xs={12} className={classes.chatInputContainer}>
               <div className={classes.chatFlexContainer}>
                 <div style={{ width: "95%" }}>
@@ -231,7 +265,7 @@ const MessageList = () => {
             </Grid>
           </Grid>
         )}
-      </ChatroomAppbar>
+      </AdminViewChatAppbar>
     </>
   );
 };

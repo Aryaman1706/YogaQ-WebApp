@@ -17,6 +17,7 @@ import {
   CLEAR_ADMIN_ACTIVE_CHATROOM,
   CLEAR_UNREAD_MESSAGES_ADMIN,
   ADD_QUESTION_TO_QUESTION_SET,
+  GET_ADMIN_QUESTION_SET,
 } from "../types";
 import axios from "../../utils/axios";
 import store from "../store";
@@ -285,6 +286,22 @@ export const addQuestionToQuestionSet = ({ chatroomId, question }) => async (
     );
     dispatch({
       type: ADD_QUESTION_TO_QUESTION_SET,
+      payload: res.data.body,
+    });
+  } catch (error) {
+    dispatch({
+      type: ADMIN_ERROR,
+      payload: error.response.data.error,
+    });
+  }
+};
+
+// * Get questionSet
+export const getQuestionSet = (chatroomId) => async (dispatch) => {
+  try {
+    const res = await axios.get(`/questionSet/doctor/get/${chatroomId}`);
+    dispatch({
+      type: GET_ADMIN_QUESTION_SET,
       payload: res.data.body,
     });
   } catch (error) {
