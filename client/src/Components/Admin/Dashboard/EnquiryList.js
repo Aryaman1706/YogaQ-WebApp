@@ -5,6 +5,7 @@ import EnquiryItem from "./EnquiryItem";
 import { useDispatch, useSelector } from "react-redux";
 import { enquiry as enquiryActions } from "../../../redux/actions/index";
 import AdminLayout from "../../../layout/AdminLayout";
+import AdminAppbar from "../AdminAppbar";
 
 const EnquiryList = () => {
   const [pagination, setPagination] = useState({
@@ -113,75 +114,77 @@ const EnquiryList = () => {
 
   return (
     <>
-      <AdminLayout>
-        <Typography variant="h2" style={{ padding: "1rem" }}>
-          All Enquiries
-        </Typography>
-        <Grid
-          container
-          direction="row"
-          justify="center"
-          alignItems="stretch"
-          style={{ padding: "1rem" }}
-        >
-          <Grid item xs={12} lg={12}>
-            {compLoading ? null : (
-              <>
-                <Grid
-                  container
-                  direction="column"
-                  justify="space-around"
-                  alignItems="stretch"
-                  spacing={2}
-                >
-                  {enquiries.slice(startIndex, endIndex).map((enquiry) => {
-                    return (
-                      <>
-                        <EnquiryItem
-                          key={enquiry._id}
-                          username={enquiry.username}
-                          email={enquiry.email}
-                          id={enquiry._id}
-                        />
-                      </>
-                    );
-                  })}
+      <AdminAppbar>
+        <AdminLayout>
+          <Typography variant="h2" style={{ padding: "1rem" }}>
+            All Enquiries
+          </Typography>
+          <Grid
+            container
+            direction="row"
+            justify="center"
+            alignItems="stretch"
+            style={{ padding: "1rem" }}
+          >
+            <Grid item xs={12} lg={12}>
+              {compLoading ? null : (
+                <Grid>
+                  <Grid
+                    container
+                    direction="column"
+                    justify="space-around"
+                    alignItems="stretch"
+                    spacing={2}
+                  >
+                    {enquiries.slice(startIndex, endIndex).map((enquiry) => {
+                      return (
+                        <Grid>
+                          <EnquiryItem
+                            key={enquiry._id}
+                            username={enquiry.username}
+                            email={enquiry.email}
+                            id={enquiry._id}
+                          />
+                        </Grid>
+                      );
+                    })}
+                  </Grid>
+                  <ButtonGroup variant="contained" color="primary" fullWidth>
+                    {currentPage !== 1 ? (
+                      <Button
+                        startIcon={<ArrowBackIos />}
+                        onClick={(event) => prevHandler(event)}
+                        style={{
+                          backgroundColor: "#0FC1A7",
+                          height: "50px",
+                          backgroundImage:
+                            "linear-gradient(315deg, #abe9cd 0%, #3eadcf 74%)",
+                        }}
+                      >
+                        Previous
+                      </Button>
+                    ) : null}
+                    {end && currentPage === loadedPages ? null : (
+                      <Button
+                        endIcon={<ArrowForwardIos />}
+                        onClick={(event) => nextHandler(event)}
+                        style={{
+                          backgroundColor: "#0FC1A7",
+                          height: "50px",
+                          backgroundImage:
+                            "linear-gradient(315deg, #abe9cd 0%, #3eadcf 74%)",
+                        }}
+                      >
+                        Next
+                      </Button>
+                    )}
+                  </ButtonGroup>
                 </Grid>
-                <ButtonGroup variant="contained" color="primary" fullWidth>
-                  {currentPage !== 1 ? (
-                    <Button
-                      startIcon={<ArrowBackIos />}
-                      onClick={(event) => prevHandler(event)}
-                      style={{
-                        backgroundColor: "#0FC1A7",
-                        height: "50px",
-                        backgroundImage:
-                          "linear-gradient(315deg, #abe9cd 0%, #3eadcf 74%)",
-                      }}
-                    >
-                      Previous
-                    </Button>
-                  ) : null}
-                  {end && currentPage === loadedPages ? null : (
-                    <Button
-                      endIcon={<ArrowForwardIos />}
-                      onClick={(event) => nextHandler(event)}
-                      style={{
-                        backgroundColor: "#0FC1A7",
-                        height: "50px",
-                        backgroundImage:
-                          "linear-gradient(315deg, #abe9cd 0%, #3eadcf 74%)",
-                      }}
-                    >
-                      Next
-                    </Button>
-                  )}
-                </ButtonGroup>
-              </>
-            )}
+              )}
+            </Grid>
           </Grid>
-        </Grid>
-      </AdminLayout>
+        </AdminLayout>
+      </AdminAppbar>
     </>
   );
 };

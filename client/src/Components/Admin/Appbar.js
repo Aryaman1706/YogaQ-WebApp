@@ -1,13 +1,8 @@
 import React, { useEffect } from "react";
-import { useHistory } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { admin as adminActions } from "../../redux/actions";
-import AdminAppbar from "./AdminAppbar";
-import ChatroomAppbar from "./ChatroomAppbar";
 
 const Appbar = () => {
-  const history = useHistory();
-  const { isAuthenticated, admin } = useSelector((state) => state.admin);
   const dispatch = useDispatch();
   const load = async () => {
     await dispatch(adminActions.setLoading(true));
@@ -18,16 +13,8 @@ const Appbar = () => {
     load();
     // eslint-disable-next-line
   }, []);
-  const x = history.location.pathname;
-  const render = () => {
-    if (/^\/admin$/.test(x)) {
-      return <ChatroomAppbar />;
-    } else {
-      return <AdminAppbar isAuthenticated={isAuthenticated} admin={admin} />;
-    }
-  };
 
-  return <>{render()}</>;
+  return <></>;
 };
 
 export default Appbar;

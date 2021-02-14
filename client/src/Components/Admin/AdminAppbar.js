@@ -16,6 +16,7 @@ import { format } from "date-fns";
 import ProfileIcon from "../../assets/profile.svg";
 import Profile from "../../assets/user.svg";
 import LogoutIcon from "../../assets/log-out.svg";
+import { useSelector } from "react-redux";
 import MenuIcon from "@material-ui/icons/Menu";
 
 const useStyles = makeStyles((theme) => ({
@@ -126,11 +127,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AdminAppbar = ({ isAuthenticated, admin }) => {
+const AdminAppbar = ({ children }) => {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
   const history = useHistory();
-  // const [path, setPath] = useState(null);
+  const { isAuthenticated, admin } = useSelector((state) => state.admin);
 
   const handleClick = (e) => {
     setAnchorEl(e.currentTarget);
@@ -302,6 +303,7 @@ const AdminAppbar = ({ isAuthenticated, admin }) => {
           </Grid>
         </Grid>
       </Grid>
+      {children}
     </>
   );
 };

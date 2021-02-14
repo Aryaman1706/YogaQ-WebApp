@@ -15,6 +15,8 @@ import { useHistory, useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { user as userActions } from "../../../redux/actions/index";
 import Loader from "../../Loader";
+import AdminAppbar from "../AdminAppbar";
+import AdminLayout from "../../../layout/AdminLayout";
 
 const useStyles = makeStyles((theme) => ({
   div2: {
@@ -140,154 +142,165 @@ const ViewUser = () => {
   const classes = useStyles();
   return (
     <>
-      <Typography variant="h2" align="center">
-        User
-      </Typography>
-      <Toolbar></Toolbar>
-      {!compLoading && selectUser && !loadingBlock ? (
-        <>
-          <Grid container direction="row" justify="center" alignItems="stretch">
-            <Grid item xs={1} lg={3}></Grid>
-            <Grid item xs={10} lg={6}>
+      <AdminAppbar>
+        <AdminLayout>
+          <Typography variant="h2" align="center">
+            User
+          </Typography>
+          <Toolbar></Toolbar>
+          {!compLoading && selectUser && !loadingBlock ? (
+            <>
               <Grid
                 container
-                direction="column"
-                justify="space-around"
+                direction="row"
+                justify="center"
                 alignItems="stretch"
-                spacing={2}
               >
-                <Grid item>
-                  {selectUser.user.complete ? (
-                    <Typography variant="h6" align="left">
-                      User profile is Complete
-                    </Typography>
-                  ) : (
-                    <Typography variant="h6" align="left" color="error">
-                      User profile is Incomplete
-                    </Typography>
-                  )}
-                </Grid>
-                <Grid item>
-                  <TextField
-                    fullWidth
-                    variant="outlined"
-                    label="User Name"
-                    value={selectUser.user.username}
-                  />
-                </Grid>
-                <Grid item>
-                  <TextField
-                    fullWidth
-                    variant="outlined"
-                    label="Email"
-                    value={selectUser.user.email}
-                  />
-                </Grid>
-                <Grid item>
-                  <TextField
-                    fullWidth
-                    variant="outlined"
-                    label="Phone Number"
-                    value={selectUser.user.phoneNumber}
-                  />
-                </Grid>
-                <Grid item>
-                  <TextField
-                    fullWidth
-                    variant="outlined"
-                    label="Age"
-                    value={selectUser.user.age}
-                  />
-                </Grid>
-                <Grid item>
-                  <TextField
-                    fullWidth
-                    variant="outlined"
-                    label="Gender"
-                    value={selectUser.user.gender}
-                  />
-                </Grid>
-                <Grid item>
-                  <TextField
-                    fullWidth
-                    variant="outlined"
-                    label="Country"
-                    value={selectUser.user.country}
-                  />
-                </Grid>
-                {getCallCount()}
-                <Grid item>
-                  <div className={classes.div}>
-                    <Typography variant="subtitle1">
-                      Number of Chat Rooms
-                    </Typography>
-                    <Typography variant="subtitle1" color="secondary">
-                      {selectUser.chatrooms.length}
-                    </Typography>
-                  </div>
-                </Grid>
-                <Grid item>
-                  <div className={classes.div}>
-                    <Typography variant="subtitle1">Number of Calls</Typography>
-                    <Typography variant="subtitle1" color="secondary">
-                      {callCount.current}
-                    </Typography>
-                  </div>
-                </Grid>
-                <Grid item>
-                  <Button
-                    fullWidth
-                    variant="contained"
-                    onClick={(event) => clickHandler(event)}
+                <Grid item xs={1} lg={3}></Grid>
+                <Grid item xs={10} lg={6}>
+                  <Grid
+                    container
+                    direction="column"
+                    justify="space-around"
+                    alignItems="stretch"
+                    spacing={2}
                   >
-                    {selectUser.user.blocked ? "Unblock" : "Block"} User
-                  </Button>
+                    <Grid item>
+                      {selectUser.user.complete ? (
+                        <Typography variant="h6" align="left">
+                          User profile is Complete
+                        </Typography>
+                      ) : (
+                        <Typography variant="h6" align="left" color="error">
+                          User profile is Incomplete
+                        </Typography>
+                      )}
+                    </Grid>
+                    <Grid item>
+                      <TextField
+                        fullWidth
+                        variant="outlined"
+                        label="User Name"
+                        value={selectUser.user.username}
+                      />
+                    </Grid>
+                    <Grid item>
+                      <TextField
+                        fullWidth
+                        variant="outlined"
+                        label="Email"
+                        value={selectUser.user.email}
+                      />
+                    </Grid>
+                    <Grid item>
+                      <TextField
+                        fullWidth
+                        variant="outlined"
+                        label="Phone Number"
+                        value={selectUser.user.phoneNumber}
+                      />
+                    </Grid>
+                    <Grid item>
+                      <TextField
+                        fullWidth
+                        variant="outlined"
+                        label="Age"
+                        value={selectUser.user.age}
+                      />
+                    </Grid>
+                    <Grid item>
+                      <TextField
+                        fullWidth
+                        variant="outlined"
+                        label="Gender"
+                        value={selectUser.user.gender}
+                      />
+                    </Grid>
+                    <Grid item>
+                      <TextField
+                        fullWidth
+                        variant="outlined"
+                        label="Country"
+                        value={selectUser.user.country}
+                      />
+                    </Grid>
+                    {getCallCount()}
+                    <Grid item>
+                      <div className={classes.div}>
+                        <Typography variant="subtitle1">
+                          Number of Chat Rooms
+                        </Typography>
+                        <Typography variant="subtitle1" color="secondary">
+                          {selectUser.chatrooms.length}
+                        </Typography>
+                      </div>
+                    </Grid>
+                    <Grid item>
+                      <div className={classes.div}>
+                        <Typography variant="subtitle1">
+                          Number of Calls
+                        </Typography>
+                        <Typography variant="subtitle1" color="secondary">
+                          {callCount.current}
+                        </Typography>
+                      </div>
+                    </Grid>
+                    <Grid item>
+                      <Button
+                        fullWidth
+                        variant="contained"
+                        onClick={(event) => clickHandler(event)}
+                      >
+                        {selectUser.user.blocked ? "Unblock" : "Block"} User
+                      </Button>
+                    </Grid>
+                  </Grid>
+                  <Toolbar></Toolbar>
+                  <Grid
+                    container
+                    direction="column"
+                    justify="space-around"
+                    alignItems="stretch"
+                    spacing={2}
+                  >
+                    <Grid item>
+                      <Typography variant="h3" align="center">
+                        Chat Rooms
+                      </Typography>
+                    </Grid>
+                    {selectUser.chatrooms.map((obj, index) => {
+                      return (
+                        <Fragment key={index}>
+                          <Grid item>
+                            <Paper>
+                              <div className={classes.div2}>
+                                <div>
+                                  <Typography variant="subtitle1">
+                                    Username:- {obj.partner.id.username}
+                                  </Typography>
+                                  <Typography variant="subtitle1">
+                                    Email Address:- {obj.partner.id.email}
+                                  </Typography>
+                                </div>
+                                <IconButton>
+                                  <VisibilityIcon />
+                                </IconButton>
+                              </div>
+                            </Paper>
+                          </Grid>
+                        </Fragment>
+                      );
+                    })}
+                  </Grid>
                 </Grid>
+                <Grid item xs={1} lg={3}></Grid>
               </Grid>
-              <Toolbar></Toolbar>
-              <Grid
-                container
-                direction="column"
-                justify="space-around"
-                alignItems="stretch"
-                spacing={2}
-              >
-                <Grid item>
-                  <Typography variant="h3" align="center">
-                    Chat Rooms
-                  </Typography>
-                </Grid>
-                {selectUser.chatrooms.map((obj, index) => {
-                  return (
-                    <Fragment key={index}>
-                      <Grid item>
-                        <Paper>
-                          <div className={classes.div2}>
-                            <div>
-                              <Typography variant="subtitle1">
-                                Username:- {obj.partner.id.username}
-                              </Typography>
-                              <Typography variant="subtitle1">
-                                Email Address:- {obj.partner.id.email}
-                              </Typography>
-                            </div>
-                            <IconButton>
-                              <VisibilityIcon />
-                            </IconButton>
-                          </div>
-                        </Paper>
-                      </Grid>
-                    </Fragment>
-                  );
-                })}
-              </Grid>
-            </Grid>
-            <Grid item xs={1} lg={3}></Grid>
-          </Grid>
-        </>
-      ) : (
-        <Loader />
-      )}
+            </>
+          ) : (
+            <Loader />
+          )}
+        </AdminLayout>
+      </AdminAppbar>
     </>
   );
 };

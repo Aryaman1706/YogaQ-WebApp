@@ -5,6 +5,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { enquiry as enquiryAction } from "../../../redux/actions/index";
 import Swal from "sweetalert2";
+import AdminAppbar from "../AdminAppbar";
+import AdminLayout from "../../../layout/AdminLayout";
 
 const RegisterEnquiry = () => {
   const [password, setPassword] = useState("");
@@ -87,64 +89,73 @@ const RegisterEnquiry = () => {
 
   return (
     <>
-      {enquiry ? (
-        <>
-          <Grid container direction="row" justify="center" alignItems="stretch">
-            <Grid item xs={3} lg={4}></Grid>
-            <Grid item xs={6} lg={4}>
+      <AdminAppbar>
+        <AdminLayout>
+          {enquiry ? (
+            <>
               <Grid
                 container
-                direction="column"
-                justify="space-around"
+                direction="row"
+                justify="center"
                 alignItems="stretch"
-                spacing={2}
               >
-                <Grid item>
-                  <Typography variant="h2" align="center">
-                    Register Enquiry
-                  </Typography>
+                <Grid item xs={3} lg={4}></Grid>
+                <Grid item xs={6} lg={4}>
+                  <Grid
+                    container
+                    direction="column"
+                    justify="space-around"
+                    alignItems="stretch"
+                    spacing={2}
+                  >
+                    <Grid item>
+                      <Typography variant="h2" align="center">
+                        Register Enquiry
+                      </Typography>
+                    </Grid>
+                    {compLoading ? (
+                      <Loader />
+                    ) : (
+                      <>
+                        <Grid item>
+                          <TextField
+                            fullWidth
+                            variant="outlined"
+                            label="Email"
+                            value={enquiry.email}
+                          />
+                        </Grid>
+                        <Grid item>
+                          <TextField
+                            fullWidth
+                            variant="outlined"
+                            label="Password"
+                            id="password"
+                            type="text"
+                            value={password}
+                            onChange={(event) => changeHandler(event)}
+                          />
+                        </Grid>
+                        <Grid item>
+                          <Button
+                            fullWidth
+                            variant="contained"
+                            color="primary"
+                            onClick={(event) => submitHandler(event)}
+                          >
+                            Create
+                          </Button>
+                        </Grid>
+                      </>
+                    )}
+                  </Grid>
                 </Grid>
-                {compLoading ? (
-                  <Loader />
-                ) : (
-                  <>
-                    <Grid item>
-                      <TextField
-                        fullWidth
-                        variant="outlined"
-                        label="Email"
-                        value={enquiry.email}
-                      />
-                    </Grid>
-                    <Grid item>
-                      <TextField
-                        fullWidth
-                        variant="outlined"
-                        label="Password"
-                        id="password"
-                        type="text"
-                        value={password}
-                        onChange={(event) => changeHandler(event)}
-                      />
-                    </Grid>
-                    <Grid item>
-                      <Button
-                        fullWidth
-                        variant="contained"
-                        color="primary"
-                        onClick={(event) => submitHandler(event)}
-                      >
-                        Create
-                      </Button>
-                    </Grid>
-                  </>
-                )}
+                <Grid item xs={3} lg={4}></Grid>
               </Grid>
-            </Grid>
-            <Grid item xs={3} lg={4}></Grid>
-          </Grid>
-        </>
-      ) : null}
+            </>
+          ) : null}
+        </AdminLayout>
+      </AdminAppbar>
     </>
   );
 };

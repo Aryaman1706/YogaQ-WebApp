@@ -13,6 +13,8 @@ import Loader from "../../Loader";
 import Swal from "sweetalert2";
 import { useSelector, useDispatch } from "react-redux";
 import { admin as adminActions } from "../../../redux/actions/index";
+import AdminAppbar from "../AdminAppbar";
+import AdminLayout from "../../../layout/AdminLayout";
 
 const CreateChatroom = () => {
   const [details, setDetails] = useState({
@@ -106,85 +108,89 @@ const CreateChatroom = () => {
 
   return (
     <>
-      <Grid container direction="row" justify="center" alignItems="stretch">
-        <Grid item xs={2} lg={4}></Grid>
-        <Grid item xs={8} lg={4}>
-          <Grid
-            container
-            direction="column"
-            justify="space-around"
-            alignItems="stretch"
-            spacing={2}
-          >
-            <Grid item>
-              <Typography variant="h4" align="center">
-                Create Chatroom
-              </Typography>
+      <AdminAppbar>
+        <AdminLayout>
+          <Grid container direction="row" justify="center" alignItems="stretch">
+            <Grid item xs={2} lg={4}></Grid>
+            <Grid item xs={8} lg={4}>
+              <Grid
+                container
+                direction="column"
+                justify="space-around"
+                alignItems="stretch"
+                spacing={2}
+              >
+                <Grid item>
+                  <Typography variant="h4" align="center">
+                    Create Chatroom
+                  </Typography>
+                </Grid>
+                {compLoading ? (
+                  <Loader />
+                ) : (
+                  <>
+                    <Grid item>
+                      <Typography variant="h6" align="left">
+                        User Details
+                      </Typography>
+                    </Grid>
+                    <Grid item>
+                      <TextField
+                        fullWidth
+                        variant="outlined"
+                        label="User Email Id"
+                        id="user"
+                        value={details.user}
+                        onChange={(event) => changeHandler(event)}
+                      />
+                    </Grid>
+                    <Grid item>
+                      <Typography variant="h6" align="left">
+                        Partner Details
+                      </Typography>
+                    </Grid>
+                    <Grid item>
+                      <TextField
+                        fullWidth
+                        variant="outlined"
+                        label="Partner Email Id"
+                        id="partner"
+                        value={details.partner}
+                        onChange={(event) => changeHandler(event)}
+                      />
+                    </Grid>
+                    <Grid item>
+                      <FormControl variant="outlined" fullWidth>
+                        <InputLabel id="partnerModel">Role</InputLabel>
+                        <Select
+                          labelId="partnerModel"
+                          id="partnerModel"
+                          value={details.partnerModel}
+                          onChange={(event) => selectHandler(event)}
+                        >
+                          <MenuItem value="Doctor">Doctor</MenuItem>
+                          <MenuItem value="Admin">Admin</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                    <Grid item>
+                      <Button
+                        fullWidth
+                        variant="contained"
+                        color="primary"
+                        onClick={(event) => submitHandler(event)}
+                      >
+                        Create
+                      </Button>
+                    </Grid>
+                  </>
+                )}
+              </Grid>
             </Grid>
-            {compLoading ? (
-              <Loader />
-            ) : (
-              <>
-                <Grid item>
-                  <Typography variant="h6" align="left">
-                    User Details
-                  </Typography>
-                </Grid>
-                <Grid item>
-                  <TextField
-                    fullWidth
-                    variant="outlined"
-                    label="User Email Id"
-                    id="user"
-                    value={details.user}
-                    onChange={(event) => changeHandler(event)}
-                  />
-                </Grid>
-                <Grid item>
-                  <Typography variant="h6" align="left">
-                    Partner Details
-                  </Typography>
-                </Grid>
-                <Grid item>
-                  <TextField
-                    fullWidth
-                    variant="outlined"
-                    label="Partner Email Id"
-                    id="partner"
-                    value={details.partner}
-                    onChange={(event) => changeHandler(event)}
-                  />
-                </Grid>
-                <Grid item>
-                  <FormControl variant="outlined" fullWidth>
-                    <InputLabel id="partnerModel">Role</InputLabel>
-                    <Select
-                      labelId="partnerModel"
-                      id="partnerModel"
-                      value={details.partnerModel}
-                      onChange={(event) => selectHandler(event)}
-                    >
-                      <MenuItem value="Doctor">Doctor</MenuItem>
-                      <MenuItem value="Admin">Admin</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid item>
-                  <Button
-                    fullWidth
-                    variant="contained"
-                    color="primary"
-                    onClick={(event) => submitHandler(event)}
-                  >
-                    Create
-                  </Button>
-                </Grid>
-              </>
-            )}
+            <Grid item xs={2} lg={4}></Grid>
           </Grid>
-        </Grid>
-        <Grid item xs={2} lg={4}></Grid>
-      </Grid>
+        </AdminLayout>
+      </AdminAppbar>
     </>
   );
 };

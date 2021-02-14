@@ -11,6 +11,8 @@ import Loader from "../../Loader";
 import { useSelector, useDispatch } from "react-redux";
 import { user as userActions } from "../../../redux/actions/index";
 import UserItem from "./UserItem";
+import AdminAppbar from "../AdminAppbar";
+import AdminLayout from "../../../layout/AdminLayout";
 
 const UserList = () => {
   const [pagination, setPagination] = useState({
@@ -121,60 +123,64 @@ const UserList = () => {
 
   return (
     <>
-      <Typography variant="h2" align="center">
-        All Users
-      </Typography>
-      <Toolbar></Toolbar>
-      <Grid container direction="row" justify="center" alignItems="stretch">
-        <Grid item xs={2} lg={4}></Grid>
-        <Grid item xs={8} lg={4}>
-          {compLoading ? (
-            <Loader />
-          ) : (
-            <>
-              <Grid
-                container
-                direction="column"
-                justify="space-around"
-                alignItems="stretch"
-                spacing={2}
-              >
-                {users.slice(startIndex, endIndex).map((user) => {
-                  return (
-                    <Fragment key={user._id}>
-                      <UserItem
-                        username={user.username}
-                        email={user.email}
-                        id={user._id}
-                      />
-                    </Fragment>
-                  );
-                })}
-              </Grid>
-              <Toolbar></Toolbar>
-              <ButtonGroup variant="contained" color="primary" fullWidth>
-                {currentPage !== 1 ? (
-                  <Button
-                    startIcon={<ArrowBackIos />}
-                    onClick={(event) => prevHandler(event)}
+      <AdminAppbar>
+        <AdminLayout>
+          <Typography variant="h2" align="center">
+            All Users
+          </Typography>
+          <Toolbar></Toolbar>
+          <Grid container direction="row" justify="center" alignItems="stretch">
+            <Grid item xs={2} lg={4}></Grid>
+            <Grid item xs={8} lg={4}>
+              {compLoading ? (
+                <Loader />
+              ) : (
+                <>
+                  <Grid
+                    container
+                    direction="column"
+                    justify="space-around"
+                    alignItems="stretch"
+                    spacing={2}
                   >
-                    Previous
-                  </Button>
-                ) : null}
-                {end && currentPage === loadedPages ? null : (
-                  <Button
-                    endIcon={<ArrowForwardIos />}
-                    onClick={(event) => nextHandler(event)}
-                  >
-                    Next
-                  </Button>
-                )}
-              </ButtonGroup>
-            </>
-          )}
-        </Grid>
-        <Grid item xs={2} lg={4}></Grid>
-      </Grid>
+                    {users.slice(startIndex, endIndex).map((user) => {
+                      return (
+                        <Fragment key={user._id}>
+                          <UserItem
+                            username={user.username}
+                            email={user.email}
+                            id={user._id}
+                          />
+                        </Fragment>
+                      );
+                    })}
+                  </Grid>
+                  <Toolbar></Toolbar>
+                  <ButtonGroup variant="contained" color="primary" fullWidth>
+                    {currentPage !== 1 ? (
+                      <Button
+                        startIcon={<ArrowBackIos />}
+                        onClick={(event) => prevHandler(event)}
+                      >
+                        Previous
+                      </Button>
+                    ) : null}
+                    {end && currentPage === loadedPages ? null : (
+                      <Button
+                        endIcon={<ArrowForwardIos />}
+                        onClick={(event) => nextHandler(event)}
+                      >
+                        Next
+                      </Button>
+                    )}
+                  </ButtonGroup>
+                </>
+              )}
+            </Grid>
+            <Grid item xs={2} lg={4}></Grid>
+          </Grid>
+        </AdminLayout>
+      </AdminAppbar>
     </>
   );
 };

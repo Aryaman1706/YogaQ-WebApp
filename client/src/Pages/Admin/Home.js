@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import Loader from "../../Components/Loader";
 import ChatroomList from "../../Components/Admin/ChatroomList";
 import Chatroom from "../../Components/Admin/Chatroom";
+import ChatroomAppbar from "../../Components/Admin/ChatroomAppbar";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -54,43 +55,45 @@ const Home = () => {
 
   return (
     <>
-      {loading ? (
-        <Loader />
-      ) : (
-        <>
-          <Grid
-            container
-            direction="row"
-            justify="center"
-            alignItems="stretch"
-            className={classes.container}
-          >
+      <ChatroomAppbar>
+        {loading ? (
+          <Loader />
+        ) : (
+          <>
             <Grid
-              item
-              xs={12}
-              lg={2}
-              className={
-                active_chatroom
-                  ? `${classes.item} ${classes.hide}`
-                  : classes.item
-              }
+              container
+              direction="row"
+              justify="center"
+              alignItems="stretch"
+              className={classes.container}
             >
-              <ChatroomList />
+              <Grid
+                item
+                xs={12}
+                lg={2}
+                className={
+                  active_chatroom
+                    ? `${classes.item} ${classes.hide}`
+                    : classes.item
+                }
+              >
+                <ChatroomList />
+              </Grid>
+              <Grid
+                item
+                xs={12}
+                sm={12}
+                md={12}
+                lg={10}
+                xl={10}
+                className={renderClassname()}
+              >
+                <Chatroom />
+              </Grid>
             </Grid>
-            <Grid
-              item
-              xs={12}
-              sm={12}
-              md={12}
-              lg={10}
-              xl={10}
-              className={renderClassname()}
-            >
-              <Chatroom />
-            </Grid>
-          </Grid>
-        </>
-      )}
+          </>
+        )}
+      </ChatroomAppbar>
     </>
   );
 };
