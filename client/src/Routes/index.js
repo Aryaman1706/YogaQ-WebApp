@@ -140,7 +140,6 @@ const Routes = () => {
           render={(props) => (
             <>
               {/*TODO  Wrap the following in the nav layout component */}
-              <UserAppbar />
               <QuestionBank {...props} />
             </>
           )}
