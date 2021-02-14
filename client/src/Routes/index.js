@@ -35,7 +35,6 @@ import Home from "../Pages/Home";
 import Room from "../Pages/Room";
 import Signup from "../Pages/Signup";
 import EditUser from "../Components/User/Edit";
-import Chat from "../Components/User/Chat";
 import BookCall from "../Components/User/BookCall";
 import CallHistory from "../Components/User/CallHistory";
 import QuestionBank from "../Components/User/QuestionBank";
@@ -130,8 +129,7 @@ const Routes = () => {
         <Route exact path="/" component={Home} />
         <Route exact path="/signup" component={Signup} />
         <Route userComplete exact path="/edit" component={EditUser} />
-        <Route exact path="/chat/:id" component={Chat} />
-        <Route exact path="/room" component={Room} />
+        {/* <Route exact path="/room" component={Room} /> */}
         <Route exact path="/book-call/:chatroomId" component={BookCall} />
         <Route exact path="/call-history/:chatroomId" component={CallHistory} />
         <Route

@@ -156,10 +156,12 @@ const StyledMenu = withStyles({
   />
 ));
 
-const CharoomAppbar = ({ user }) => {
+const CharoomAppbar = ({ children }) => {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
-  const { active_chatroom } = useSelector((state) => state.user);
+  const { active_chatroom, isAuthenticated, user, loading } = useSelector(
+    (state) => state.user
+  );
   const { showDrawer } = useSelector((state) => state.chatroom);
   const history = useHistory();
   const dispatch = useDispatch();
@@ -183,218 +185,232 @@ const CharoomAppbar = ({ user }) => {
 
   return (
     <>
-      <Grid
-        container
-        direction="row"
-        justify="flex-start"
-        alignItems="stretch"
-        className={classes.parent}
-      >
+      <>
         <Grid
-          item
-          xs={12}
-          sm={12}
-          md={12}
-          lg={2}
-          xl={2}
-          className={active_chatroom && classes.hide}
+          container
+          direction="row"
+          justify="flex-start"
+          alignItems="stretch"
+          className={classes.parent}
         >
           <Grid
-            container
-            direction="row"
-            justify="flex-start"
-            alignItems="stretch"
-            className={classes.appbarB}
-          >
-            <Grid item xs={3} className={classes.title}>
-              <Typography
-                variant="h5"
-                className={classes.logo}
-                onClick={() => {
-                  history.push("/");
-                }}
-              >
-                YogaQ
-              </Typography>
-            </Grid>
-            <Grid item xs={9} className={classes.btnContainer}>
-              <IconButton
-                aria-controls="menu"
-                aria-haspopup="true"
-                onClick={handleClick}
-                className={classes.profile}
-              >
-                <AccountCircleOutlinedIcon />
-              </IconButton>
-              <StyledMenu
-                id="menu"
-                keepMounted
-                anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
-                onClose={handleClose}
-                className={classes.menu}
-                anchorOrigin={{
-                  vertical: "bottom",
-                  horizontal: "right",
-                }}
-                transformOrigin={{
-                  vertical: "bottom",
-                  horizontal: "right",
-                }}
-              >
-                <div className={classes.menuFlex}>
-                  <div
-                    className={classes.flexRow}
-                    style={{ paddingBottom: "1rem" }}
-                  >
-                    <Avatar alt="Profile" src={Profile} />
-                    <div className={classes.profileFlex}>
-                      <div className={classes.profileName}>{user.username}</div>
-                      <div className={classes.profileJoin}>
-                        Joined{" "}
-                        {format(new Date(user.createdAt), "MMM dd, yyyy")}
-                      </div>
-                    </div>
-                  </div>
-                  <Divider />
-                  <br />
-                  <div
-                    className={`${classes.flexRow} ${classes.paddingMenuItem}`}
-                    onClick={() => {
-                      history.push("/edit");
-                      setAnchorEl(null);
-                    }}
-                  >
-                    <div>
-                      <img
-                        src={ProfileIcon}
-                        alt="profile-icon"
-                        className={classes.profileIcon}
-                      />
-                    </div>
-                    <div className={classes.menuitem}>Profile</div>
-                  </div>
-                  <div
-                    className={`${classes.flexRow} ${classes.paddingMenuItem}`}
-                    onClick={() => {
-                      history.push("/edit");
-                      setAnchorEl(null);
-                    }}
-                  >
-                    <div>
-                      <img
-                        src={StarIcon}
-                        alt="star-icon"
-                        className={classes.profileIcon}
-                      />
-                    </div>
-                    <div className={classes.menuitem}>Starred Messages</div>
-                  </div>
-                  <div
-                    className={`${classes.flexRow} ${classes.paddingMenuItem}`}
-                    onClick={() => {
-                      history.push("/edit");
-                      setAnchorEl(null);
-                    }}
-                  >
-                    <div>
-                      <img
-                        src={FileIcon}
-                        alt="file-icon"
-                        className={classes.profileIcon}
-                      />
-                    </div>
-                    <div className={classes.menuitem}>Shared Files</div>
-                  </div>
-                  <div
-                    className={`${classes.flexRow} ${classes.paddingMenuItem}`}
-                    onClick={() => {
-                      window.open("https://www.yogaqtherapy.com/privacy");
-                      setAnchorEl(null);
-                    }}
-                  >
-                    <div>
-                      <img
-                        src={PrivacyIcon}
-                        alt="policy-icon"
-                        className={classes.profileIcon}
-                      />
-                    </div>
-                    <div className={classes.menuitem}>Privacy Policy</div>
-                  </div>
-                  <div
-                    className={`${classes.flexRow} ${classes.paddingMenuItem}`}
-                    onClick={() => {
-                      userLogOut();
-                      setAnchorEl(null);
-                    }}
-                  >
-                    <div>
-                      <img
-                        src={LogoutIcon}
-                        alt="profile-icon"
-                        className={classes.profileIcon}
-                      />
-                    </div>
-                    <div className={classes.menuitem}>Log out</div>
-                  </div>
-                </div>
-              </StyledMenu>
-            </Grid>
-          </Grid>
-        </Grid>
-        <Grid
-          item
-          xs={12}
-          sm={12}
-          md={12}
-          lg={10}
-          xl={10}
-          className={!active_chatroom && classes.hide}
-        >
-          <Grid
-            container
-            justify="center"
-            alignItems="flex-start"
-            className={classes.appbar}
+            item
+            xs={12}
+            sm={12}
+            md={12}
+            lg={2}
+            xl={2}
+            className={active_chatroom && classes.hide}
           >
             <Grid
-              item
-              xs={1}
-              className={classes.backIcon}
-              onClick={() => {
-                dispatch(clearActiveChatroom());
-              }}
+              container
+              direction="row"
+              justify="flex-start"
+              alignItems="stretch"
+              className={classes.appbarB}
             >
-              <ArrowBackIcon />
-            </Grid>
-            <Grid item xs={8} sm={10} md={10} lg={11} className={classes.title}>
-              {active_chatroom ? (
-                <div style={{ display: "flex", placeItems: "center" }}>
-                  <Avatar
-                    alt={active_chatroom.partner.id.username}
-                    src={active_chatroom.partner.id.profilePicture}
-                    style={{ marginRight: "15px" }}
-                  />
-                  <Typography variant="h6" style={{ color: "#000000" }}>
-                    {active_chatroom ? active_chatroom.partner.id.username : ""}
-                  </Typography>
-                </div>
-              ) : null}
-            </Grid>
-            {active_chatroom && (
-              <Grid item xs={1} className={classes.btnContainer}>
-                <IconButton
-                  className={classes.drawer}
-                  onClick={() => drawerHandler()}
+              <Grid item xs={3} className={classes.title}>
+                <Typography
+                  variant="h5"
+                  className={classes.logo}
+                  onClick={() => {
+                    history.push("/");
+                  }}
                 >
-                  {showDrawer ? <CloseIcon /> : <MenuIcon />}
-                </IconButton>
+                  YogaQ
+                </Typography>
               </Grid>
-            )}
+              <Grid item xs={9} className={classes.btnContainer}>
+                <IconButton
+                  aria-controls="menu"
+                  aria-haspopup="true"
+                  onClick={handleClick}
+                  className={classes.profile}
+                >
+                  <AccountCircleOutlinedIcon />
+                </IconButton>
+                <StyledMenu
+                  id="menu"
+                  keepMounted
+                  anchorEl={anchorEl}
+                  open={Boolean(anchorEl)}
+                  onClose={handleClose}
+                  className={classes.menu}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "right",
+                  }}
+                  transformOrigin={{
+                    vertical: "bottom",
+                    horizontal: "right",
+                  }}
+                >
+                  <div className={classes.menuFlex}>
+                    <div
+                      className={classes.flexRow}
+                      style={{ paddingBottom: "1rem" }}
+                    >
+                      <Avatar alt="Profile" src={Profile} />
+                      <div className={classes.profileFlex}>
+                        <div className={classes.profileName}>
+                          {user.username}
+                        </div>
+                        <div className={classes.profileJoin}>
+                          Joined{" "}
+                          {format(new Date(user.createdAt), "MMM dd, yyyy")}
+                        </div>
+                      </div>
+                    </div>
+                    <Divider />
+                    <br />
+                    <div
+                      className={`${classes.flexRow} ${classes.paddingMenuItem}`}
+                      onClick={() => {
+                        history.push("/edit");
+                        setAnchorEl(null);
+                      }}
+                    >
+                      <div>
+                        <img
+                          src={ProfileIcon}
+                          alt="profile-icon"
+                          className={classes.profileIcon}
+                        />
+                      </div>
+                      <div className={classes.menuitem}>Profile</div>
+                    </div>
+                    <div
+                      className={`${classes.flexRow} ${classes.paddingMenuItem}`}
+                      onClick={() => {
+                        history.push("/edit");
+                        setAnchorEl(null);
+                      }}
+                    >
+                      <div>
+                        <img
+                          src={StarIcon}
+                          alt="star-icon"
+                          className={classes.profileIcon}
+                        />
+                      </div>
+                      <div className={classes.menuitem}>Starred Messages</div>
+                    </div>
+                    <div
+                      className={`${classes.flexRow} ${classes.paddingMenuItem}`}
+                      onClick={() => {
+                        history.push("/edit");
+                        setAnchorEl(null);
+                      }}
+                    >
+                      <div>
+                        <img
+                          src={FileIcon}
+                          alt="file-icon"
+                          className={classes.profileIcon}
+                        />
+                      </div>
+                      <div className={classes.menuitem}>Shared Files</div>
+                    </div>
+                    <div
+                      className={`${classes.flexRow} ${classes.paddingMenuItem}`}
+                      onClick={() => {
+                        window.open("https://www.yogaqtherapy.com/privacy");
+                        setAnchorEl(null);
+                      }}
+                    >
+                      <div>
+                        <img
+                          src={PrivacyIcon}
+                          alt="policy-icon"
+                          className={classes.profileIcon}
+                        />
+                      </div>
+                      <div className={classes.menuitem}>Privacy Policy</div>
+                    </div>
+                    <div
+                      className={`${classes.flexRow} ${classes.paddingMenuItem}`}
+                      onClick={() => {
+                        userLogOut();
+                        setAnchorEl(null);
+                      }}
+                    >
+                      <div>
+                        <img
+                          src={LogoutIcon}
+                          alt="profile-icon"
+                          className={classes.profileIcon}
+                        />
+                      </div>
+                      <div className={classes.menuitem}>Log out</div>
+                    </div>
+                  </div>
+                </StyledMenu>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid
+            item
+            xs={12}
+            sm={12}
+            md={12}
+            lg={10}
+            xl={10}
+            className={!active_chatroom && classes.hide}
+          >
+            <Grid
+              container
+              justify="center"
+              alignItems="flex-start"
+              className={classes.appbar}
+            >
+              <Grid
+                item
+                xs={1}
+                className={classes.backIcon}
+                onClick={() => {
+                  dispatch(clearActiveChatroom());
+                }}
+              >
+                <ArrowBackIcon />
+              </Grid>
+              <Grid
+                item
+                xs={8}
+                sm={10}
+                md={10}
+                lg={11}
+                className={classes.title}
+              >
+                {active_chatroom ? (
+                  <div style={{ display: "flex", placeItems: "center" }}>
+                    <Avatar
+                      alt={active_chatroom.partner.id.username}
+                      src={active_chatroom.partner.id.profilePicture}
+                      style={{ marginRight: "15px" }}
+                    />
+                    <Typography variant="h6" style={{ color: "#000000" }}>
+                      {active_chatroom
+                        ? active_chatroom.partner.id.username
+                        : ""}
+                    </Typography>
+                  </div>
+                ) : null}
+              </Grid>
+              {active_chatroom && (
+                <Grid item xs={1} className={classes.btnContainer}>
+                  <IconButton
+                    className={classes.drawer}
+                    onClick={() => drawerHandler()}
+                  >
+                    {showDrawer ? <CloseIcon /> : <MenuIcon />}
+                  </IconButton>
+                </Grid>
+              )}
+            </Grid>
           </Grid>
         </Grid>
-      </Grid>
+        {children}
+      </>
     </>
   );
 };

@@ -11,6 +11,7 @@ import queryString from "query-string";
 import Swal from "sweetalert2";
 import { useDispatch, useSelector } from "react-redux";
 import { user as userActions } from "../redux/actions/index";
+import UserAppbar from "../Components/User/UserAppbar";
 
 const Signup = () => {
   const history = useHistory();
@@ -117,35 +118,37 @@ const Signup = () => {
 
   return (
     <>
-      <Typography variant="h2" align="center">
-        Sign Up
-      </Typography>
-      <Toolbar></Toolbar>
-      <Grid container direction="row" justify="center" alignItems="stretch">
-        <Grid item xs={2} lg={4}></Grid>
-        <Grid item xs={8} lg={4}>
-          <Grid
-            container
-            direction="column"
-            justify="space-around"
-            alignItems="stretch"
-            spacing={2}
-          >
-            {render()}
-            <Grid item>
-              <Button
-                fullWidth
-                variant="contained"
-                color="primary"
-                onClick={(event) => submitHandler(event)}
-              >
-                Submit
-              </Button>
+      <UserAppbar>
+        <Typography variant="h2" align="center">
+          Sign Up
+        </Typography>
+        <Toolbar></Toolbar>
+        <Grid container direction="row" justify="center" alignItems="stretch">
+          <Grid item xs={2} lg={4}></Grid>
+          <Grid item xs={8} lg={4}>
+            <Grid
+              container
+              direction="column"
+              justify="space-around"
+              alignItems="stretch"
+              spacing={2}
+            >
+              {render()}
+              <Grid item>
+                <Button
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                  onClick={(event) => submitHandler(event)}
+                >
+                  Submit
+                </Button>
+              </Grid>
             </Grid>
           </Grid>
+          <Grid item xs={2} lg={4}></Grid>
         </Grid>
-        <Grid item xs={2} lg={4}></Grid>
-      </Grid>
+      </UserAppbar>
     </>
   );
 };

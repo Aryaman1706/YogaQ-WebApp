@@ -15,6 +15,7 @@ import homeIcon from "../../assets/home.svg";
 import callIcon from "../../assets/phone-call.svg";
 import { useHistory, useParams } from "react-router-dom";
 import useCallForm from "../../hooks/useCallForm";
+import UserAppbar from "./UserAppbar";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -111,98 +112,100 @@ const BookCall = () => {
 
   return (
     <>
-      <div className={classes.container}>
-        <Grid container direction="row" justify="center" alignItems="stretch">
-          <Grid item xs={11} sm={10} lg={6}>
-            <Paper elevation={8} className={classes.paper}>
-              <Grid
-                container
-                direction="row"
-                justify="space-around"
-                alignItems="stretch"
-                spacing={2}
-              >
-                <Grid item xs={6}>
-                  <div
-                    className={classes.flexRow}
-                    onClick={() => {
-                      window.location.href = "/";
-                      // unmount();
-                      // history.push("/");
-                    }}
-                  >
-                    <img
-                      src={homeIcon}
-                      alt="home"
-                      className={classes.homeIcon}
-                    />
-                    <span className={classes.homeText}>Back to home</span>
-                  </div>
-                </Grid>
-                <Grid container item xs={6} justify="flex-end">
-                  <div
-                    className={classes.flexRow}
-                    onClick={() => {
-                      history.push(`/call-history/${chatroomId}`);
-                    }}
-                  >
-                    <img
-                      src={callIcon}
-                      alt="home"
-                      className={classes.homeIcon}
-                    />
-                    <span className={classes.homeText}>Call History</span>
-                  </div>
-                </Grid>
-                <Grid item xs={12}>
-                  <Typography
-                    variant="h4"
-                    align="center"
-                    style={{ fontWeight: "600" }}
-                  >
-                    Book A Call
-                  </Typography>
-                </Grid>
-                {state ? (
-                  <>
-                    <Grid item xs={12} style={{ marginTop: "1rem" }}>
-                      <TextField
-                        id="datetime-local"
-                        label="Schedule"
-                        type="datetime-local"
-                        value={date}
-                        onChange={(e) => {
-                          setDate(e.target.value);
-                        }}
-                        className={classes.textField}
-                        InputLabelProps={{
-                          shrink: true,
-                        }}
-                        fullWidth
-                        variant="outlined"
+      <UserAppbar>
+        <div className={classes.container}>
+          <Grid container direction="row" justify="center" alignItems="stretch">
+            <Grid item xs={11} sm={10} lg={6}>
+              <Paper elevation={8} className={classes.paper}>
+                <Grid
+                  container
+                  direction="row"
+                  justify="space-around"
+                  alignItems="stretch"
+                  spacing={2}
+                >
+                  <Grid item xs={6}>
+                    <div
+                      className={classes.flexRow}
+                      onClick={() => {
+                        window.location.href = "/";
+                        // unmount();
+                        // history.push("/");
+                      }}
+                    >
+                      <img
+                        src={homeIcon}
+                        alt="home"
+                        className={classes.homeIcon}
                       />
-                    </Grid>
+                      <span className={classes.homeText}>Back to home</span>
+                    </div>
+                  </Grid>
+                  <Grid container item xs={6} justify="flex-end">
+                    <div
+                      className={classes.flexRow}
+                      onClick={() => {
+                        history.push(`/call-history/${chatroomId}`);
+                      }}
+                    >
+                      <img
+                        src={callIcon}
+                        alt="home"
+                        className={classes.homeIcon}
+                      />
+                      <span className={classes.homeText}>Call History</span>
+                    </div>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Typography
+                      variant="h4"
+                      align="center"
+                      style={{ fontWeight: "600" }}
+                    >
+                      Book A Call
+                    </Typography>
+                  </Grid>
+                  {state ? (
+                    <>
+                      <Grid item xs={12} style={{ marginTop: "1rem" }}>
+                        <TextField
+                          id="datetime-local"
+                          label="Schedule"
+                          type="datetime-local"
+                          value={date}
+                          onChange={(e) => {
+                            setDate(e.target.value);
+                          }}
+                          className={classes.textField}
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                          fullWidth
+                          variant="outlined"
+                        />
+                      </Grid>
 
-                    <Grid item xs={12} style={{ marginTop: "1rem" }}>
-                      <Button
-                        fullWidth
-                        variant="contained"
-                        color="primary"
-                        className={classes.btn}
-                        onClick={(event) => submitHandler(event)}
-                      >
-                        Book
-                      </Button>
-                    </Grid>
-                  </>
-                ) : (
-                  <Loader />
-                )}
-              </Grid>
-            </Paper>
+                      <Grid item xs={12} style={{ marginTop: "1rem" }}>
+                        <Button
+                          fullWidth
+                          variant="contained"
+                          color="primary"
+                          className={classes.btn}
+                          onClick={(event) => submitHandler(event)}
+                        >
+                          Book
+                        </Button>
+                      </Grid>
+                    </>
+                  ) : (
+                    <Loader />
+                  )}
+                </Grid>
+              </Paper>
+            </Grid>
           </Grid>
-        </Grid>
-      </div>
+        </div>
+      </UserAppbar>
     </>
   );
 };

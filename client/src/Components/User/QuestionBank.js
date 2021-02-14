@@ -97,34 +97,30 @@ const QuestionBank = () => {
             variant="subtitle1"
             style={{ padding: "0 1rem 1rem 1rem" }}
           >
-            Help us to understand you know better by answering the folowing
-            questions.
+            {compLoading ? (
+              <h3>Loading...</h3>
+            ) : (
+              <>
+                {!questionSet || questionSet.questions.length === 0 ? (
+                  <>
+                    <h3>No questions available</h3>
+                  </>
+                ) : (
+                  <>
+                    {questionSet.questions.map((question, index) => (
+                      <QuestionItem
+                        key={index}
+                        id={index}
+                        question={question}
+                        responses={responses}
+                        setResponses={setResponses}
+                      />
+                    ))}
+                  </>
+                )}
+              </>
+            )}
           </Typography>
-        </Grid>
-        <Grid item xs={12} container spacing={2} style={{ padding: "1.5rem" }}>
-          {compLoading ? (
-            <h3>Loading...</h3>
-          ) : (
-            <>
-              {!questionSet || questionSet.questions.length() === 0 ? (
-                <>
-                  <h3>No questions available</h3>
-                </>
-              ) : (
-                <>
-                  {questionSet.questions.map((question, index) => (
-                    <QuestionItem
-                      key={index}
-                      id={index}
-                      question={question}
-                      responses={responses}
-                      setResponses={setResponses}
-                    />
-                  ))}
-                </>
-              )}
-            </>
-          )}
         </Grid>
       </Grid>
       {console.log(responses, "responses")}
