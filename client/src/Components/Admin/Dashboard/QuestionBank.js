@@ -69,8 +69,9 @@ const QuestionBank = () => {
       const res = await axios.get(
         `/questionSet/doctor/filled/${active_chatroom._id}/?date=${date}`
       );
-      console.log(res.data);
-      // setResponses(res.data.body.questionSet.responses);
+      setResponses(
+        res.data.body.responses ? res.data.body.responses.responses : {}
+      );
     } catch (error) {
       // swal fire error
       console.log("Error here\n", error);
