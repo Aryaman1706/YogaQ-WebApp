@@ -21,6 +21,8 @@ import {
 } from "../types";
 import axios from "../../utils/axios";
 import store from "../store";
+import Swal from "sweetalert2";
+import { chatroom } from ".";
 
 // * Login as Admin
 export const loginAdmin = (formData) => async (dispatch) => {
@@ -305,6 +307,35 @@ export const getQuestionSet = (chatroomId) => async (dispatch) => {
       payload: res.data.body,
     });
   } catch (error) {
+    if (error.response.data.error === "Invalid Question Set.") {
+      Swal.fire({
+        title: "Error",
+        text: "No question set found for this chatroom.",
+        icon: "error",
+        showConfirmButton: true,
+        confirmButtonText: "Create Question Set",
+        allowOutsideClick: false,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          axios
+            .post(`/questionSet/new`, {
+              chatroomId,
+            })
+            .then((res) => {
+              Swal.fire({
+                title: res.data.body,
+                icon: "success",
+              });
+            })
+            .catch((err) => {
+              Swal.fire({
+                icon: "error",
+                title: err.response.data.error,
+              });
+            });
+        }
+      });
+    }
     dispatch({
       type: ADMIN_ERROR,
       payload: error.response.data.error,
