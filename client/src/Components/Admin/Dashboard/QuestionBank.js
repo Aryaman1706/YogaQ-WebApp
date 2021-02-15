@@ -59,15 +59,16 @@ const QuestionBank = () => {
   const loadAdminQuestionSet = async () => {
     if (!active_chatroom) {
       await dispatch(adminActions.getChatroom(chatroomId));
+    } else if (active_chatroom) {
+      await dispatch(adminActions.getQuestionSet(active_chatroom?._id));
+      setCompLoading(false);
     }
-    await dispatch(adminActions.getQuestionSet(active_chatroom._id));
-    setCompLoading(false);
   };
 
   const getResponses = async () => {
     try {
       const res = await axios.get(
-        `/questionSet/doctor/filled/${active_chatroom._id}/?date=${date}`
+        `/questionSet/doctor/filled/${active_chatroom?._id}/?date=${date}`
       );
       setResponses(
         res.data.body.responses ? res.data.body.responses.responses : {}
@@ -104,6 +105,12 @@ const QuestionBank = () => {
     // eslint-disable-next-line
   }, [compLoading]);
 
+  useEffect(() => {
+    // * Rerun the following function when active_chatroom changes from null to valid
+    loadAdminQuestionSet();
+    // eslint-disable-next-line
+  }, [active_chatroom]);
+
   const [responses, setResponses] = useState({});
   return (
     <>
@@ -132,12 +139,15 @@ const QuestionBank = () => {
                 padding: "1rem 1rem 0 1rem",
               }}
             >
-              <Typography variant="h6">Get responses for:- </Typography>
+              <Typography variant="h6" style={{ alignSelf: "center" }}>
+                Get responses for:-{" "}
+              </Typography>
               <TextField
                 type="date"
                 value={date}
                 onChange={(event) => setDate(event.target.value)}
                 className={classes.textField}
+                variant="outlined"
                 InputLabelProps={{
                   shrink: true,
                 }}
