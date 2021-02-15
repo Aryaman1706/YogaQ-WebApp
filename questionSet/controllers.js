@@ -262,7 +262,6 @@ exports.docFilled = async (req, res) => {
     }).populate({
       path: "responses",
       match: {
-        // ! Verify this
         date: {
           $gte: new Date(date.setHours(0, 0, 0)),
           $lte: new Date(date.setDate(date.getDate() + 1)),
