@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Typography,
   Button,
@@ -16,8 +16,9 @@ import { format } from "date-fns";
 import ProfileIcon from "../../assets/profile.svg";
 import Profile from "../../assets/user.svg";
 import LogoutIcon from "../../assets/log-out.svg";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import MenuIcon from "@material-ui/icons/Menu";
+import { admin as adminActions } from "../../redux/actions";
 
 const useStyles = makeStyles((theme) => ({
   appbar: {
@@ -131,7 +132,11 @@ const AdminAppbar = ({ children }) => {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
   const history = useHistory();
-  const { isAuthenticated, admin } = useSelector((state) => state.admin);
+  const dispatch = useDispatch();
+  const { isAuthenticated, admin, active_chatroom } = useSelector(
+    (state) => state.admin
+  );
+  const [clicked, setClicked] = useState(false);
 
   const handleClick = (e) => {
     setAnchorEl(e.currentTarget);
@@ -139,6 +144,15 @@ const AdminAppbar = ({ children }) => {
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const onClick = async () => {
+    setClicked(true);
+    if (active_chatroom) {
+      await dispatch(adminActions.clearActiveChatroom());
+    }
+    history.push("/admin");
+    setClicked(false);
   };
 
   const StyledMenu = withStyles({
@@ -274,9 +288,7 @@ const AdminAppbar = ({ children }) => {
             <Typography
               variant="h5"
               className={classes.logo}
-              onClick={() => {
-                history.push("/admin");
-              }}
+              onClick={clicked ? () => {} : onClick}
             >
               YogaQ
             </Typography>

@@ -16,37 +16,9 @@ const validators = require("./validators");
 // * Controllers -->
 
 // * Create a new enquiry
-exports.newEnquiryCheck = async (req, res, next) => {
-  try {
-    console.log(req.body);
-    const body = {
-      ...req.body,
-      languages: JSON.parse(req.body.languages),
-      qualificational: JSON.parse(req.body.qualificational),
-      professional: JSON.parse(req.body.qualificational),
-    };
-    const { error, value } = validators.enquiry(body);
-    if (error) return res.json({ error: error.details[0].message, body: null });
-
-    if (await Enquiry.findOne({ email: value.email }))
-      return res.json({
-        error: "An application with same email address already exist.",
-        body: null,
-      });
-
-    req.cleanData = value;
-    return next();
-  } catch (error) {
-    console.log(error);
-    return res.json({
-      error: "Invalid Data. Try Again.",
-      body: null,
-    });
-  }
-};
-
 exports.newEnquiry = async (req, res) => {
   try {
+    // Validating request body
     const body = {
       ...req.body,
       languages: JSON.parse(req.body.languages),
@@ -60,7 +32,8 @@ exports.newEnquiry = async (req, res) => {
         body: null,
       });
 
-    if (await Enquiry.findOne({ email: value.email }))
+    // Finding valid enquiry
+    if (await Enquiry.findOne({ email: value.email }).exec())
       return res.status(400).json({
         error:
           "Validation Error. An application with same email address already exist.",
@@ -95,6 +68,7 @@ exports.newEnquiry = async (req, res) => {
       return obj;
     });
 
+    // Creating new enquiry
     await Enquiry.create({ ...value });
 
     return res.status(200).json({
@@ -110,6 +84,7 @@ exports.newEnquiry = async (req, res) => {
 // * Create a doctor from enquiry
 exports.register = async (req, res) => {
   try {
+    // Validating request body
     const { error, value } = validators.register(req.body);
     if (error)
       return res.status(400).json({
@@ -117,12 +92,17 @@ exports.register = async (req, res) => {
         body: null,
       });
 
+    // Finding valid enquiry
     const enquiry = await Enquiry.findById(value.enquiry).exec();
     if (!enquiry)
       return res.status(404).json({ error: "Invalid Enquiry.", body: null });
-    const body = omit(enquiry.toObject(), ["postedOn"]);
+
+    // Hashing the password
     const salt = await genSalt(10);
     const password = await hash(value.password, salt);
+
+    // Creting new Doctor and deleting enquiry
+    const body = omit(enquiry.toObject(), ["postedOn"]);
     await Promise.all([Doctor.create({ ...body, password }), enquiry.remove()]);
 
     return res
@@ -134,9 +114,11 @@ exports.register = async (req, res) => {
   }
 };
 
+// ! TODO:- Delete the documents
 // * Deny an enquiry
 exports.denyEnquiry = async (req, res) => {
   try {
+    // Finding and deleting valid enquiry
     const enquiry = await Enquiry.findByIdAndDelete(
       req.params.enquiryId
     ).exec();
