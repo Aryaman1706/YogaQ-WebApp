@@ -1,9 +1,19 @@
-import React from "react";
-import { Grid, Paper, Typography, makeStyles } from "@material-ui/core";
+import React, { useState } from "react";
+import {
+  Grid,
+  Paper,
+  Typography,
+  makeStyles,
+  IconButton,
+  Tooltip,
+} from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 import { format } from "date-fns";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import ErrorIcon from "@material-ui/icons/Error";
+import EditIcon from "@material-ui/icons/Edit";
+import EditCallModal from "./EditCallModal";
+import { chatroom } from "../../redux/actions";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -23,11 +33,15 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
   },
+  flexGrowCls: {
+    flexGrow: 2,
+  },
 }));
 
-const CallHistoryItem = ({ item }) => {
+const CallHistoryItem = ({ item, chatroomId }) => {
   const classes = useStyles();
   const history = useHistory();
+  const [open, setOpen] = useState(false);
 
   const renderStatus = () => {
     if (item.accepted) {
@@ -58,7 +72,7 @@ const CallHistoryItem = ({ item }) => {
     <>
       <Grid item xs={12}>
         <Paper elevation={6} className={classes.paper}>
-          <div className={classes.flexCol}>
+          <div className={`${classes.flexCol} ${classes.flexGrowCls}`}>
             <Typography variant="h6">
               {format(new Date(item.time), "dd MMM yyyy")}
             </Typography>
@@ -66,9 +80,29 @@ const CallHistoryItem = ({ item }) => {
               {format(new Date(item.time), "hh:mm aaa")}
             </Typography>
           </div>
+          {!item.accepted && !item.completed && (
+            <div className={classes.flexCol}>
+              <Tooltip title="Edit Call">
+                <IconButton
+                  onClick={() => {
+                    setOpen(true);
+                  }}
+                >
+                  <EditIcon />
+                </IconButton>
+              </Tooltip>
+            </div>
+          )}
           <div className={classes.flexCol}>{renderStatus()}</div>
         </Paper>
       </Grid>
+      <EditCallModal
+        open={open}
+        setOpen={setOpen}
+        chatroomId={chatroomId}
+        date={format(new Date(item.time), "yyyy-MM-dd'T'kk:mm")}
+        callId={item._id}
+      />
     </>
   );
 };

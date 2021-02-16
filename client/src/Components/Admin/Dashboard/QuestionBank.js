@@ -170,13 +170,13 @@ const QuestionBank = () => {
                 <h3>Loading...</h3>
               ) : (
                 <>
-                  {!questionSet || questionSet.questions.length === 0 ? (
+                  {!questionSet || questionSet?.questions?.length === 0 ? (
                     <>
                       <h3>No questions available</h3>
                     </>
                   ) : (
                     <>
-                      {questionSet.questions.map((question, index) => (
+                      {questionSet?.questions?.map((question, index) => (
                         <QuestionItem
                           key={index}
                           disabled={true}
@@ -184,6 +184,7 @@ const QuestionBank = () => {
                           question={question}
                           responses={responses}
                           setResponses={setResponses}
+                          type={"admin"}
                         />
                       ))}
                     </>

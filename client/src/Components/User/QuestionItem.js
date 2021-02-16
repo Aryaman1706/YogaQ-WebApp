@@ -8,7 +8,9 @@ import {
   FormControlLabel,
   FormControl,
   FormLabel,
+  IconButton,
 } from "@material-ui/core";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 const useStyles = makeStyles(() => ({
   questionCard: {
@@ -26,9 +28,19 @@ const useStyles = makeStyles(() => ({
       fontSize: "1.4rem",
     },
   },
+  deleteBtn: {
+    textAlign: "right",
+  },
 }));
 
-const QuestionItem = ({ id, question, responses, setResponses, disabled }) => {
+const QuestionItem = ({
+  id,
+  question,
+  responses,
+  setResponses,
+  disabled,
+  type,
+}) => {
   const classes = useStyles();
   const onAnswer = (e) => {
     setResponses((prevResponses) => {
@@ -39,6 +51,13 @@ const QuestionItem = ({ id, question, responses, setResponses, disabled }) => {
     <>
       <Grid item xs={12}>
         <Paper elevation={2} className={classes.questionCard}>
+          {type === "admin" && (
+            <div className={classes.deleteBtn}>
+              <IconButton>
+                <DeleteIcon />
+              </IconButton>
+            </div>
+          )}
           <div className={classes.flexRow}>
             <p>Q{id + 1}.</p>
             <p>{question.statement}</p>
