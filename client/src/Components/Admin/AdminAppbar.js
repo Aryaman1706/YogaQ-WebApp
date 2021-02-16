@@ -132,11 +132,7 @@ const AdminAppbar = ({ children }) => {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
   const history = useHistory();
-  const dispatch = useDispatch();
-  const { isAuthenticated, admin, active_chatroom } = useSelector(
-    (state) => state.admin
-  );
-  const [clicked, setClicked] = useState(false);
+  const { isAuthenticated, admin } = useSelector((state) => state.admin);
 
   const handleClick = (e) => {
     setAnchorEl(e.currentTarget);
@@ -144,15 +140,6 @@ const AdminAppbar = ({ children }) => {
 
   const handleClose = () => {
     setAnchorEl(null);
-  };
-
-  const onClick = async () => {
-    setClicked(true);
-    if (active_chatroom) {
-      await dispatch(adminActions.clearActiveChatroom());
-    }
-    history.push("/admin");
-    setClicked(false);
   };
 
   const StyledMenu = withStyles({
@@ -288,7 +275,7 @@ const AdminAppbar = ({ children }) => {
             <Typography
               variant="h5"
               className={classes.logo}
-              onClick={clicked ? () => {} : onClick}
+              onClick={() => history.push("/admin")}
             >
               YogaQ
             </Typography>
