@@ -29,6 +29,9 @@ const useStyles = makeStyles((theme) => ({
       color: "#fff",
     },
   },
+  submitBtn: {
+    margin: "1rem",
+  },
 }));
 
 const QuestionBank = () => {
@@ -79,7 +82,6 @@ const QuestionBank = () => {
         title: "Success",
         text: "Response Submitted Successfully.",
         showConfirmButton: true,
-        timer: 1500,
       });
     }
     if (error) {
@@ -132,7 +134,7 @@ const QuestionBank = () => {
               <h3>Loading...</h3>
             ) : (
               <>
-                {!questionSet || questionSet.questions.length === 0 ? (
+                {!questionSet || questionSet?.questions?.length === 0 ? (
                   <>
                     <h3>No questions available</h3>
                   </>
@@ -155,7 +157,14 @@ const QuestionBank = () => {
           </Typography>
         </Grid>
         <Grid item xs={12}>
-          <Button onClick={submitHandler}>Submit Responses</Button>
+          <Button
+            onClick={submitHandler}
+            variant="contained"
+            color="primary"
+            className={classes.submitBtn}
+          >
+            Submit Responses
+          </Button>
         </Grid>
       </Grid>
     </>

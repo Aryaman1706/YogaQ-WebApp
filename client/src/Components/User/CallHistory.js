@@ -11,12 +11,14 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   user as userActions,
   callHistory as callHistoryActions,
+  chatroom,
 } from "../../redux/actions/index";
 import CallHistoryItem from "./CallHistoryItem";
 import { useHistory, useParams } from "react-router-dom";
 import Loader from "../Loader";
 import homeIcon from "../../assets/home.svg";
 import UserAppbar from "./UserAppbar";
+import EditCallModal from "./EditCallModal";
 
 const useStyles = makeStyles((theme) => ({
   homeIcon: {
@@ -232,7 +234,11 @@ const CallHistory = () => {
                     .map((item, index) => {
                       return (
                         <>
-                          <CallHistoryItem key={index} item={item} />
+                          <CallHistoryItem
+                            key={index}
+                            item={item}
+                            chatroomId={chatroomId}
+                          />
                         </>
                       );
                     })}
