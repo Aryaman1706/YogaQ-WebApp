@@ -18,7 +18,10 @@ const ChatroomWaiting = ({ type }) => {
     <>
       <Grid container spacing={2} className={classes.mainContainer}>
         <Grid item xs={12} className={classes.textContainer}>
-          <h1>No Open Chatroom</h1>
+          <h1>
+            Start your journey towards healthier you by chatting with one of our
+            therapists
+          </h1>
         </Grid>
         {type === "user" && (
           <>

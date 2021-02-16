@@ -6,18 +6,18 @@ const useStyles = makeStyles(() => ({
   card: {
     backgroundColor: (props) => props.color,
     color: "#245468",
-    height: "310px",
-    width: "240px",
+    height: "420px",
+    width: "340px",
     borderRadius: "10px",
     padding: "1rem",
     display: "flex",
     flexDirection: "column",
   },
   title: {
-    fontSize: "24px",
+    fontSize: "26px",
     fontWeight: "700",
     letterSpacing: "0px",
-    lineHeight: "1rem",
+    lineHeight: "1.4rem",
   },
   para: {
     color: "#005368",
