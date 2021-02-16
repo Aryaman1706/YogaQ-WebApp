@@ -5,7 +5,7 @@ import { format } from "date-fns";
 
 const useStyles = makeStyles((theme) => ({
   sent: {
-    backgroundColor: "lightgreen",
+    backgroundColor: "#DBF6C6",
     padding: "10px 15px 10px 15px",
     borderRadius: "20px",
     height: "100%",
@@ -17,7 +17,8 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   recieve: {
-    backgroundColor: "lightblue",
+    backgroundColor: "#fff",
+    border: "2px solid #f0f0f0",
     padding: "10px 15px 10px 15px",
     borderRadius: "20px",
     height: "100%",
