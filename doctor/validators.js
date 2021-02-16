@@ -6,7 +6,7 @@ const enquiryObj = Joi.object({
   phoneNumber: Joi.string()
     .pattern(/[1-9]{1}[0-9]{9}/)
     .required(),
-  age: Joi.number().integer().required(),
+  age: Joi.number().integer().positive().required(),
   gender: Joi.string()
     .lowercase()
     .trim()
@@ -48,8 +48,8 @@ const enquiryObj = Joi.object({
     .items(
       Joi.object({
         place: Joi.string().trim().required(),
-        clients: Joi.number().integer().required(),
-        noOfYears: Joi.number().integer().min(0).required(),
+        clients: Joi.number().integer().positive().required(),
+        noOfYears: Joi.number().integer().positive().required(),
         doc: Joi.string(), // File
       })
     )
@@ -57,12 +57,62 @@ const enquiryObj = Joi.object({
   expertise: Joi.string().max(200).trim().required(),
 });
 
+/**
+ * {
+ *  "username": "testUsername",
+ *  "phoneNumber": "9999999999",
+ *  "age": 18,
+ *  "gender": "male",
+ *  "country": "India",
+ *  "languages": ["Hindi", "English"],
+ *  "description": "Test Description".
+ *  "email": "testEnquiry@mail.com",
+ *  "qualificational": {
+ *    "educationalQualification": ["certificate", "diploma"],
+ *    "docs": [
+ *      {"name": "test1", "description": "test1", "doc": "uuid"},
+ *      {"name": "test1", "description": "test1", "doc": "uuid"}
+ *     ]
+ *  },
+ *  "professional":[
+ *    { "place": "test1", "clients": 100, "noOfYears": 2, "doc": "uuid" },
+ *    { "place": "test1", "clients": 100, "noOfYears": 2, "doc": "uuid" }
+ *  ],
+ *  "expertise": "Test statement"
+ * }
+ */
+
 exports.enquiry = (body) => {
   const schema = enquiryObj;
 
   return schema.validate(body);
 };
 
+/**
+ * {
+ *  "username": "testUsername",
+ *  "phoneNumber": "9999999999",
+ *  "age": 18,
+ *  "gender": "male",
+ *  "country": "India",
+ *  "languages": ["Hindi", "English"],
+ *  "description": "Test Description".
+ *  "email": "testEnquiry@mail.com",
+ *  "qualificational": {
+ *    "educationalQualification": ["certificate", "diploma"],
+ *    "docs": [
+ *      {"name": "test1", "description": "test1", "doc": "uuid"},
+ *      {"name": "test1", "description": "test1", "doc": "uuid"}
+ *     ]
+ *  },
+ *  "professional":[
+ *    { "place": "test1", "clients": 100, "noOfYears": 2, "doc": "uuid" },
+ *    { "place": "test1", "clients": 100, "noOfYears": 2, "doc": "uuid" }
+ *  ],
+ *  "expertise": "Test statement",
+ *  "welcomeMessage": "Test statement"
+ * }
+ */
 exports.edit = (body) => {
   const schema = enquiryObj.append({
     welcomeMessage: Joi.string().max(200).trim().required(),
@@ -70,7 +120,12 @@ exports.edit = (body) => {
 
   return schema.validate(body);
 };
-
+/**
+ * {
+ *  "enquiry": "ObjectId('...')",
+ *  "password": "testPassword"
+ * }
+ */
 exports.register = (body) => {
   const schema = Joi.object({
     enquiry: Joi.objectId().trim().required(),

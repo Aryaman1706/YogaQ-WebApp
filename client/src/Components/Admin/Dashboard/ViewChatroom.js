@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useEffect,
-  useRef,
-  useCallback,
-  useLayoutEffect,
-} from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { TextField, Grid, makeStyles, IconButton } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import { admin as adminActions } from "../../../redux/actions";
@@ -86,21 +80,22 @@ const MessageList = () => {
     await dispatch(adminActions.setChatroomLoading(true));
     await dispatch(adminActions.getChatroom(chatroomId));
     await dispatch(adminActions.setChatroomLoading(false));
+    setMessageLoading(false);
   };
 
   useEffect(() => {
-    console.log(chatroomId);
     if (!active_chatroom) {
       loadChatroom();
     }
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
-    if (/Get chatroom first*/i.test(error)) {
-      // loadChatroom();
+    if (!active_chatroom) {
+      setMessageLoading(true);
     }
     // eslint-disable-next-line
-  }, [error]);
+  }, []);
 
   // * Clear
   useEffect(() => {
@@ -135,7 +130,7 @@ const MessageList = () => {
 
   useEffect(() => {
     if (messageLoading) {
-      setPage((prev) => prev + 1);
+      active_chatroom ? setPage((prev) => prev + 1) : loadChatroom();
     }
     // eslint-disable-next-line
   }, [messageLoading]);

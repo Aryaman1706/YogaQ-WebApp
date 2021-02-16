@@ -23,11 +23,12 @@ const Chatroom = () => {
     if (chatroomLoading) {
       return <Loader />;
     }
-    if (!chatroomLoading && !active_chatroom) {
-      return <ChatroomWaiting type={"admin"} />;
-    }
-    if (active_chatroom && !chatroomLoading) {
-      return <MessageList socket={socket} />;
+    if (!chatroomLoading) {
+      return active_chatroom ? (
+        <MessageList socket={socket} />
+      ) : (
+        <ChatroomWaiting type={"admin"} />
+      );
     }
   };
 
