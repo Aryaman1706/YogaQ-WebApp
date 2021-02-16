@@ -76,14 +76,14 @@ const CallHistory = () => {
   useEffect(() => {
     return () => {
       dispatch(userActions.clear());
-      dispatch(userActions.clearActiveChatroom());
+      // dispatch(userActions.clearActiveChatroom());
       dispatch(callHistoryActions.clearList());
     };
     // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
-    dispatch(userActions.getChatroom(chatroomId));
+    // dispatch(userActions.getChatroom(chatroomId));
     //eslint-disable-next-line
   }, []);
 

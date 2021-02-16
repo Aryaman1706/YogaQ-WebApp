@@ -79,7 +79,7 @@ const BookCall = () => {
 
   const unmount = async () => {
     await dispatch(userActions.clear());
-    await dispatch(userActions.clearActiveChatroom());
+    // await dispatch(userActions.clearActiveChatroom());
   };
 
   useEffect(() => {
@@ -128,9 +128,9 @@ const BookCall = () => {
                     <div
                       className={classes.flexRow}
                       onClick={() => {
-                        window.location.href = "/";
+                        // window.location.href = "/";
                         // unmount();
-                        // history.push("/");
+                        history.push("/");
                       }}
                     >
                       <img

@@ -32,7 +32,15 @@ const Chatroom = () => {
     }
   };
 
-  return <>{render()}</>;
+  return (
+    <>
+      {socket.current && socket.current.connected ? (
+        render()
+      ) : (
+        <h1>Connecting...</h1>
+      )}
+    </>
+  );
 };
 
 export default Chatroom;
