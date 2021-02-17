@@ -4,13 +4,17 @@ Joi.objectId = require("joi-objectid")(Joi);
 /**
  * {
  *  "chatroomId": "60204cc5b08d2aa154576945",
- *  "time": new Date()
+ *  "time": new Date('...')
  * }
  */
 exports.request = (body) => {
+  // 24 hours delay from now
+  const date = new Date();
+  date.setDate(date.getDate() + 1);
+
   const schema = Joi.object({
     chatroomId: Joi.objectId().trim().required(),
-    time: Joi.date().greater("now").required(),
+    time: Joi.date().greater(date).required(),
   });
 
   return schema.validate(body);
