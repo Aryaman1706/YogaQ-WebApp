@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import MessageList from "./MessageList";
-import Loader from "../Loader";
+import Loader from "../Common/Loader";
 import io from "socket.io-client";
 import ChatroomWaiting from "./ChatroomWaiting";
 

@@ -18,7 +18,7 @@ import { useParams, useHistory } from "react-router-dom";
 import Swal from "sweetalert2";
 import { useDispatch, useSelector } from "react-redux";
 import { enquiry as enquiryActions } from "../../../redux/actions/index";
-import Loader from "../../Loader";
+import Loader from "../../Common/Loader";
 import background from "../../../assets/background.svg";
 import AdminAppbar from "../AdminAppbar";
 import AdminLayout from "../../../layout/AdminLayout";

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Grid, Typography, makeStyles } from "@material-ui/core";
+import { Grid, makeStyles } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import { user as userActions } from "../../redux/actions/index";
 import ChatroomItem from "./ChatroomItem";

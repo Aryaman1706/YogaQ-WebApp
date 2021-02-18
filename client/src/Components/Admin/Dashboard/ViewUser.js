@@ -14,7 +14,7 @@ import Swal from "sweetalert2";
 import { useHistory, useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { user as userActions } from "../../../redux/actions/index";
-import Loader from "../../Loader";
+import Loader from "../../Common/Loader";
 import AdminAppbar from "../AdminAppbar";
 import AdminLayout from "../../../layout/AdminLayout";
 

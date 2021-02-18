@@ -3,7 +3,7 @@ import { TextField, Grid, makeStyles, IconButton } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import { user as userActions } from "../../redux/actions/index";
 import MessageItem from "./MessageItem";
-import Loader from "../Loader";
+import Loader from "../Common/Loader";
 import getUrls from "get-urls";
 import SendIcon from "@material-ui/icons/Send";
 

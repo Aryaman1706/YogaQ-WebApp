@@ -1,10 +1,10 @@
 import React from "react";
 import { Grid, makeStyles } from "@material-ui/core";
 import { useSelector } from "react-redux";
-import Loader from "../../Components/Loader";
-import ChatroomList from "../../Components/Admin/ChatroomList";
-import Chatroom from "../../Components/Admin/Chatroom";
-import ChatroomAppbar from "../../Components/Admin/ChatroomAppbar";
+import Loader from "../../Components/Common/Loader";
+import ChatroomList from "../../Components/Common/ChatroomList";
+import Chatroom from "../../Components/Common/Chatroom";
+import ChatroomAppbar from "../../Components/Common/ChatroomAppbar";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -41,9 +41,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Home = () => {
+const Home = ({ type }) => {
   const classes = useStyles();
-  const { loading, active_chatroom } = useSelector((state) => state.admin);
+  const { loading, active_chatroom } = useSelector((state) => {
+    if (type.trim() === "admin") return state.admin;
+    else if (type.trim() === "user") return state.user;
+    else if (type.trim() === "doctor") return state.doctor;
+  });
 
   const renderClassname = () => {
     if (!active_chatroom) {
@@ -55,7 +59,7 @@ const Home = () => {
 
   return (
     <>
-      <ChatroomAppbar>
+      <ChatroomAppbar type={type.trim()}>
         {loading ? (
           <Loader />
         ) : (
@@ -77,7 +81,7 @@ const Home = () => {
                     : classes.item
                 }
               >
-                <ChatroomList />
+                <ChatroomList type={type.trim()} />
               </Grid>
               <Grid
                 item
@@ -88,7 +92,7 @@ const Home = () => {
                 xl={10}
                 className={renderClassname()}
               >
-                <Chatroom />
+                <Chatroom type={type.trim()} />
               </Grid>
             </Grid>
           </>

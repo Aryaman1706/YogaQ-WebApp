@@ -7,7 +7,7 @@ import {
   Toolbar,
 } from "@material-ui/core";
 import { ArrowBackIos, ArrowForwardIos } from "@material-ui/icons";
-import Loader from "../../Loader";
+import Loader from "../../Common/Loader";
 import { useSelector, useDispatch } from "react-redux";
 import { user as userActions } from "../../../redux/actions/index";
 import UserItem from "./UserItem";

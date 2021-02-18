@@ -8,7 +8,7 @@ import {
   IconButton,
 } from "@material-ui/core";
 import { Visibility, VisibilityOff } from "@material-ui/icons";
-import Loader from "../../Loader";
+import Loader from "../../Common/Loader";
 import Swal from "sweetalert2";
 import { useSelector, useDispatch } from "react-redux";
 import { doctor } from "../../../redux/actions/index";

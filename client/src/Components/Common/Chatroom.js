@@ -1,14 +1,15 @@
 import React, { useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
-import MessageList from "./MessageList";
-import Loader from "../Loader";
+import MessageList from "../Admin/MessageList";
+import Loader from "./Loader";
 import io from "socket.io-client";
-import ChatroomWaiting from "../User/ChatroomWaiting";
+import ChatroomWaiting from "../Common/ChatroomWaiting";
 
-const Chatroom = () => {
-  const { chatroomLoading, active_chatroom } = useSelector(
-    (state) => state.admin
-  );
+const Chatroom = ({ type }) => {
+  const { chatroomLoading, active_chatroom } = useSelector((state) => {
+    if (type.trim() === "admin") return state.admin;
+    else if (type.trim() === "user") return state.user;
+  });
 
   // * Socket Setup
   const ENDPOINT = process.env.REACT_APP_SERVER_URL;
@@ -27,7 +28,7 @@ const Chatroom = () => {
       return active_chatroom ? (
         <MessageList socket={socket} />
       ) : (
-        <ChatroomWaiting type={"admin"} />
+        <ChatroomWaiting type={type.trim()} />
       );
     }
   };
