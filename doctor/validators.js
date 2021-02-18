@@ -1,6 +1,18 @@
 const Joi = require("joi");
 Joi.objectId = require("joi-objectid")(Joi);
 
+// * External Validators
+// ! Why is this not working ?
+// const {
+//   validators: { login, changePassword, forgotPassword1, forgotPassword2 },
+// } = require("../admin");
+const {
+  login,
+  changePassword,
+  forgotPassword1,
+  forgotPassword2,
+} = require("../admin/validators");
+
 const enquiryObj = Joi.object({
   username: Joi.string().min(3).max(150).trim().required(),
   phoneNumber: Joi.string()
@@ -135,37 +147,59 @@ exports.register = (body) => {
   return schema.validate(body);
 };
 
-exports.login = (body) => {
+/**
+ * {
+ *  "username": "testUsername",
+ *  "password": "testPassword"
+ * }
+ */
+exports.login = login;
+
+/**
+ * {
+ *  "oldPassword": "testOldPassword",
+ *  "newPassword": "testNewPassword",
+ *  "confirmPassword": "testNewPassword"
+ * }
+ */
+exports.changePassword = changePassword;
+
+/**
+ * {
+ *  "email": "testEmail@mail.com"
+ * }
+ */
+exports.forgotPassword1 = forgotPassword1;
+
+/**
+ * {
+ *  "newPassword": "testNewPassword",
+ *  "confirmPassword": "testNewPassword"
+ * }
+ */
+exports.forgotPassword2 = forgotPassword2;
+
+/**
+ * {
+ *  "complete": false
+ * }
+ */
+exports.completeQuery = (body) => {
   const schema = Joi.object({
-    username: Joi.string().email().trim().required(),
-    password: Joi.string().min(8).max(20).trim().required(),
+    complete: Joi.boolean().default(false),
   });
 
   return schema.validate(body);
 };
 
-exports.changePassword = (body) => {
+/**
+ * {
+ *  "page": 1
+ * }
+ */
+exports.pageQuery = (body) => {
   const schema = Joi.object({
-    oldPassword: Joi.string().min(8).max(20).trim().required(),
-    newPassword: Joi.string().min(8).max(20).trim().required(),
-    confirmPassword: Joi.string().min(8).max(20).trim().required(),
-  });
-
-  return schema.validate(body);
-};
-
-exports.forgotPassword1 = (body) => {
-  const schema = Joi.object({
-    email: Joi.string().email().max(150).trim().required(),
-  });
-
-  return schema.validate(body);
-};
-
-exports.forgotPassword2 = (body) => {
-  const schema = Joi.object({
-    newPassword: Joi.string().min(8).max(20).trim().required(),
-    confirmPassword: Joi.string().min(8).max(20).trim().required(),
+    page: Joi.number().integer().positive().required(),
   });
 
   return schema.validate(body);

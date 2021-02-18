@@ -26,8 +26,7 @@ const router = express.Router();
  * Desc:- Create a new enquiry
  * Route:- {{server_url}}/doctor/enquire
  * Middlewares:- Upload
- * Request Body:-
- * {
+ * Request Body:- {
  *  "username": "testUsername",
  *  "phoneNumber": "9999999999",
  *  "age": 18,
@@ -74,7 +73,16 @@ router.post("/register", loginAdmin, controllers.register);
  */
 router.delete("/delete/:enquiryId", loginAdmin, controllers.denyEnquiry);
 
-// * Login as Doctor
+/**
+ * Type:- POST
+ * Desc:- Login as doctor
+ * Route:- {{server_url}}/doctor/login
+ * Middlewares:- None
+ * Request Body:- {
+ *  "username": "testUsername",
+ *  "password": "testPassword"
+ * }
+ */
 router.post("/login", (req, res, next) => {
   passport.authenticate("doctor", (err, user, info) => {
     if (err) return next(err);
@@ -93,35 +101,116 @@ router.post("/login", (req, res, next) => {
   })(req, res, next);
 });
 
-// * Get my profile
-// /doctor/profile?complete=(true/false)
+/**
+ * Type:- GET
+ * Desc:- Get profile of currently logged in doctor
+ * Route:- {{server_url}}/doctor/profile?complete=false
+ * Middlewares:- Doctor Login
+ * Request Body:- None
+ */
 router.get("/profile", loginDoctor, controllers.myProfile);
 
-// * Edit my profile
+/**
+ * Type:- PUT
+ * Desc:- Edit profile of currently logged in doctor
+ * Route:- {{server_url}}/doctor/profile
+ * Middlewares:- Doctor Login, Upload
+ * Request Body:- {
+ *  "username": "testUsername",
+ *  "phoneNumber": "9999999999",
+ *  "age": 18,
+ *  "gender": "male",
+ *  "country": "India",
+ *  "languages": ["Hindi", "English"],
+ *  "description": "Test Description".
+ *  "email": "testEnquiry@mail.com",
+ *  "qualificational": {
+ *    "educationalQualification": ["certificate", "diploma"],
+ *    "docs": [
+ *      {"name": "test1", "description": "test1", "doc": "uuid"},
+ *      {"name": "test1", "description": "test1", "doc": "uuid"}
+ *     ]
+ *  },
+ *  "professional":[
+ *    { "place": "test1", "clients": 100, "noOfYears": 2, "doc": "uuid" },
+ *    { "place": "test1", "clients": 100, "noOfYears": 2, "doc": "uuid" }
+ *  ],
+ *  "expertise": "Test statement",
+ *  "welcomeMessage": "Test statement"
+ * }
+ */
 router.put("/profile", [loginDoctor, upload.any()], controllers.editProfile);
 
-// * Change Password
+/**
+ * Type:- PUT
+ * Desc:- Change password of currently logged in doctor
+ * Route:- {{server_url}}/doctor/changePassword
+ * Middlewares:- Doctor Login
+ * Request Body:- {
+ *  "oldPassword": "testOldPassword",
+ *  "newPassword": "testNewPassword",
+ *  "confirmPassword": "testNewPassword"
+ * }
+ */
 router.put("/changePassword", loginDoctor, controllers.changePassword);
 
-// * Forgot password 1 (Enter email to send reset token to)
+/**
+ * Type:- POST
+ * Desc:- Enter email to get password reset token
+ * Route:- {{server_url}}/doctor/forgotPassword
+ * Middlewares:- None
+ * Request Body:- {
+ *  "email": "testEmail@mail.com"
+ * }
+ */
 router.post("/forgotPassword", controllers.forgotPassword1);
 
-// * Forgot password 2 (Enter new password)
-router.post("/forgotPassword/:token", controllers.forgotPassword2);
+/**
+ * Type:- POST
+ * Desc:- Enter new password
+ * Route:- {{server_url}}/doctor/forgotPassword/:resetToken
+ * Middlewares:- None
+ * Request Body:- {
+ *  "newPassword": "testNewPassword",
+ *  "confirmPassword": "testNewPassword"
+ * }
+ */
+router.post("/forgotPassword/:resetToken", controllers.forgotPassword2);
 
-// * List all enquiries
-// "/doctor/enquiry/list/?page=1"
+/**
+ * Type:- GET
+ * Desc:- List all enquiries
+ * Route:- {{server_url}}/doctor/enquiry/list/?page=1
+ * Middlewares:- Admin Login
+ * Request Body:- None
+ */
 router.get("/enquiry/list", loginAdmin, controllers.listEnquiries);
 
-// * View an enquiry
+/**
+ * Type:- GET
+ * Desc:- View an enquiry
+ * Route:- {{server_url}}/doctor/enquiry/view/:enquiryId
+ * Middlewares:- Admin Login
+ * Request Body:- None
+ */
 router.get("/enquiry/view/:id", loginAdmin, controllers.viewEnquiry);
 
-// * List all Doctors
-// "/doctor/list/?page=1"
+/**
+ * Type:- GET
+ * Desc:- List all Doctors
+ * Route:- {{server_url}}/doctor/list/?page=1
+ * Middlewares:- Admin Login
+ * Request Body:- None
+ */
 router.get("/list", loginAdmin, controllers.listDoctors);
 
-// * View a Doctor
-// Chatrooms and details
+/**
+ * Type:- GET
+ * Desc:- View a doctor
+ * Route:- {{server_url}}/doctor/view/:doctorId
+ * Middlewares:- Admin Login
+ * Request Body:- None
+ */
 router.get("/view/:id", loginAdmin, controllers.viewDoctor);
 
 // * End of API Endpoints -->

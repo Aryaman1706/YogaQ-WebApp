@@ -1,21 +1,11 @@
-const { Doctor } = require("./models");
-
-// * Doctor is logged in
+// * Middleware to check if admin is logged in
+// eslint-disable-next-line
 exports.login = async (req, res, next) => {
-  try {
-    if (req.user) {
-      const doctor = await Doctor.findById(req.user._id).exec();
-      if (!doctor) {
-        return res.status(404).json({ error: "Invalid account.", body: null });
-      }
-      if (doctor.role === "doctor" && !doctor.restricted) {
-        return next();
-      }
-      return res.status(550).json({ error: "Permission Denied.", body: null });
-    }
-    return res.status(401).json({ error: "Login to continue", body: null });
-  } catch (error) {
-    console.log("Error occured here\n", error);
-    return res.status(500).json({ error: "Server Error.", body: null });
+  // Session is present and is valid
+  if (req.user && req.user.role.trim() === "doctor") {
+    next();
+  } else {
+    // Session is absent
+    return res.status(401).json({ error: "Permission Denied.", body: null });
   }
 };
