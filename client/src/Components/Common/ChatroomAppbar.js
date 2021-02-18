@@ -183,7 +183,9 @@ const CharoomAppbar = ({ type, children }) => {
     if (type.trim() === "admin") {
       return <AdminChatroomAppbarExt classes={classes} />;
     } else if (type.trim() === "user") {
-      return <UserChatroomAppbarExt classes={classes} setAnchorEl />;
+      return (
+        <UserChatroomAppbarExt classes={classes} setAnchorEl={setAnchorEl} />
+      );
     } else if (type.trim() === "doctor") {
       //
     }
