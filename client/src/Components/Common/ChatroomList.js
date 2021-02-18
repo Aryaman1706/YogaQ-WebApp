@@ -7,9 +7,8 @@ import {
   user as userActions,
   doctor as doctorActions,
 } from "../../redux/actions/index";
-import AdminChatroomItem from "../Admin/ChatroomItem";
-import UserChatroomItem from "../User/ChatroomItem";
 import homeIcon from "../../assets/home.svg";
+import ChatroomItem from "./ChatroomItem";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -125,13 +124,9 @@ const ChatroomList = ({ type }) => {
         >
           {!compLoading ? (
             <>
-              {chatrooms.map((item, index) => {
-                if (type.trim() === "admin") {
-                  return <AdminChatroomItem chatroom={item} key={index} />;
-                } else if (type.trim() === "user") {
-                  return <UserChatroomItem chatroom={item} key={index} />;
-                }
-              })}
+              {chatrooms.map((item, index) => (
+                <ChatroomItem type={type.trim()} chatroom={item} key={index} />
+              ))}
             </>
           ) : null}
         </Grid>
