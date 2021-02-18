@@ -5,6 +5,8 @@ import Loader from "../../Components/Common/Loader";
 import ChatroomList from "../../Components/Common/ChatroomList";
 import Chatroom from "../../Components/Common/Chatroom";
 import ChatroomAppbar from "../../Components/Common/ChatroomAppbar";
+import UserAppbar from "../../Components/User/UserAppbar";
+import Landing from "../../Components/Landing/Landing";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -43,11 +45,13 @@ const useStyles = makeStyles((theme) => ({
 
 const Home = ({ type }) => {
   const classes = useStyles();
-  const { loading, active_chatroom } = useSelector((state) => {
+  const globalState = useSelector((state) => {
     if (type.trim() === "admin") return state.admin;
     else if (type.trim() === "user") return state.user;
     else if (type.trim() === "doctor") return state.doctor;
   });
+
+  const { loading, active_chatroom } = globalState;
 
   const renderClassname = () => {
     if (!active_chatroom) {
@@ -57,12 +61,10 @@ const Home = ({ type }) => {
     }
   };
 
-  return (
-    <>
-      <ChatroomAppbar type={type.trim()}>
-        {loading ? (
-          <Loader />
-        ) : (
+  const chatComponent = () => {
+    return (
+      <>
+        <ChatroomAppbar type={type.trim()}>
           <>
             <Grid
               container
@@ -96,10 +98,24 @@ const Home = ({ type }) => {
               </Grid>
             </Grid>
           </>
-        )}
-      </ChatroomAppbar>
-    </>
-  );
+        </ChatroomAppbar>
+      </>
+    );
+  };
+
+  const renderMainContent = () => {
+    if (type.trim() === "user" && !globalState.isAuthenticated) {
+      return (
+        <UserAppbar>
+          <Landing />
+        </UserAppbar>
+      );
+    } else {
+      return chatComponent();
+    }
+  };
+
+  return <>{loading ? <Loader /> : renderMainContent()}</>;
 };
 
 export default Home;

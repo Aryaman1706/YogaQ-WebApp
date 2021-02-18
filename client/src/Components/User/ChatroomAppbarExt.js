@@ -1,5 +1,7 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { logoutUser } from "../../redux/actions/userActions";
 import ProfileIcon from "../../assets/profile.svg";
 import LogoutIcon from "../../assets/log-out.svg";
 import StarIcon from "../../assets/star.svg";
@@ -8,6 +10,13 @@ import PrivacyIcon from "../../assets/privacy-policy.svg";
 
 const ChatroomAppbarExt = ({ classes, setAnchorEl }) => {
   const history = useHistory();
+  const dispatch = useDispatch();
+
+  const userLogOut = async () => {
+    setAnchorEl(null);
+    await dispatch(logoutUser());
+    history.push("/");
+  };
 
   return (
     <>
@@ -70,8 +79,7 @@ const ChatroomAppbarExt = ({ classes, setAnchorEl }) => {
       <div
         className={`${classes.flexRow} ${classes.paddingMenuItem}`}
         onClick={() => {
-          // ! User logout
-          setAnchorEl(null);
+          userLogOut();
         }}
       >
         <div>
