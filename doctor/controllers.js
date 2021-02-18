@@ -273,6 +273,37 @@ exports.changePassword = async (req, res) => {
   }
 };
 
+// * Get chatrooms of logged in doctor
+exports.myChatrooms = async (req, res) => {
+  try {
+    // Finding all chatrooms loggend in doctor is part of
+    const chatrooms = await Chatroom.find({
+      "partner.id": req.user._id,
+      "partner.model": "Doctor",
+    }).exec();
+    const promiseArray = [];
+
+    // Populating chatroom with required data
+    chatrooms.forEach((doc) => {
+      const pro = doc
+        .populate("user.id", "username email")
+        .populate({
+          path: "unreadMessages",
+          match: { time: { $gt: doc.lastOpened.partner } },
+        })
+        .execPopulate();
+
+      promiseArray.push(pro);
+    });
+    await Promise.all(promiseArray);
+
+    return res.status(200).json({ error: null, body: chatrooms });
+  } catch (error) {
+    console.error("Error occured here\n", error);
+    return res.status(500).json({ error: "Server Error.", body: null });
+  }
+};
+
 // * Enter email to get password reset token
 exports.forgotPassword1 = async (req, res) => {
   try {
