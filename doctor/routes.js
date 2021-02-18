@@ -155,6 +155,15 @@ router.put("/profile", [loginDoctor, upload.any()], controllers.editProfile);
 router.put("/changePassword", loginDoctor, controllers.changePassword);
 
 /**
+ * Type:- GET
+ * Desc:- Get chatrooms of logged in doctor
+ * Route:- {{server_url}}/doctor/chatrooms
+ * Middlewares:- Doctor Login
+ * Request Body:- None
+ */
+router.get("/chatrooms", loginDoctor, controllers.myChatrooms);
+
+/**
  * Type:- POST
  * Desc:- Enter email to get password reset token
  * Route:- {{server_url}}/doctor/forgotPassword

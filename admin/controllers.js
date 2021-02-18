@@ -261,7 +261,6 @@ exports.myChatrooms = async (req, res) => {
     chatrooms.forEach((doc) => {
       const pro = doc
         .populate("user.id", "username email")
-        .populate("partner.id", "username email")
         .populate({
           path: "unreadMessages",
           match: { time: { $gt: doc.lastOpened.partner } },
