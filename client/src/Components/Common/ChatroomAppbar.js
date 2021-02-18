@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 import {
   Grid,
   makeStyles,
@@ -10,14 +11,17 @@ import {
   Divider,
   Avatar,
 } from "@material-ui/core";
-import AccountCircleOutlinedIcon from "@material-ui/icons/AccountCircleOutlined";
-import { useSelector, useDispatch } from "react-redux";
-import ProfileIcon from "../../assets/profile.svg";
-import LogoutIcon from "../../assets/log-out.svg";
-import ArrowBackIcon from "@material-ui/icons/ArrowBack";
-import { format } from "date-fns";
+import {
+  AccountCircleOutlined as AccountCircleOutlinedIcon,
+  ArrowBack as ArrowBackIcon,
+  Menu as MenuIcon,
+  Close as CloseIcon,
+} from "@material-ui/icons";
 import Profile from "../../assets/user.svg";
-import { logoutAdmin } from "../../redux/actions/adminActions";
+import { format } from "date-fns";
+import { chatroom as chatroomActions } from "../../redux/actions";
+import AdminChatroomAppbarExt from "../Admin/ChatroomAppbarExt";
+import UserChatroomAppbarExt from "../User/ChatroomAppbarExt";
 
 const useStyles = makeStyles((theme) => ({
   parent: {
@@ -146,11 +150,23 @@ const StyledMenu = withStyles({
   />
 ));
 
-const CharoomAppbar = ({ user, children }) => {
+const CharoomAppbar = ({ type, children }) => {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
+
+  // Common for Admin, User and Doctor
+  const globalState = useSelector((state) => {
+    if (type.trim() === "admin") return state.admin;
+    else if (type.trim() === "user") return state.user;
+    else if (type.trim() === "doctor") return state.doctor;
+  });
+
+  const { active_chatroom } = globalState;
+
+  const { showDrawer } = useSelector((state) => state.chatroom);
   const history = useHistory();
   const dispatch = useDispatch();
+
   const handleClick = (e) => {
     setAnchorEl(e.currentTarget);
   };
@@ -159,12 +175,54 @@ const CharoomAppbar = ({ user, children }) => {
     setAnchorEl(null);
   };
 
-  const adminLogout = async () => {
-    await dispatch(logoutAdmin());
-    history.push("/admin/login");
+  const drawerHandler = () => {
+    dispatch(chatroomActions.setDrawer(!showDrawer));
   };
 
-  const { active_chatroom, admin } = useSelector((state) => state.admin);
+  const renderChatroomAppbarExt = () => {
+    if (type.trim() === "admin") {
+      return <AdminChatroomAppbarExt classes={classes} />;
+    } else if (type.trim() === "user") {
+      return <UserChatroomAppbarExt classes={classes} setAnchorEl />;
+    } else if (type.trim() === "doctor") {
+      //
+    }
+  };
+
+  const renderChatroomDetails = () => {
+    if (type.trim() === "admin" || type.trim() === "doctor") {
+      return (
+        <>
+          <div style={{ display: "flex", placeItems: "center" }}>
+            <Avatar
+              alt={active_chatroom.user.id.username}
+              src={active_chatroom.user.id.profilePicture}
+              style={{ marginRight: "15px" }}
+            />
+            <Typography variant="h6" style={{ color: "#000000" }}>
+              {active_chatroom.user.id.username}
+            </Typography>
+          </div>
+        </>
+      );
+    } else if (type.trim() === "user") {
+      return (
+        <>
+          <div style={{ display: "flex", placeItems: "center" }}>
+            <Avatar
+              alt={active_chatroom.partner.id.username}
+              src={active_chatroom.partner.id.profilePicture}
+              style={{ marginRight: "15px" }}
+            />
+            <Typography variant="h6" style={{ color: "#000000" }}>
+              {active_chatroom.partner.id.username}
+            </Typography>
+          </div>
+        </>
+      );
+    }
+  };
+
   return (
     <>
       <Grid
@@ -195,13 +253,17 @@ const CharoomAppbar = ({ user, children }) => {
                 variant="h5"
                 className={classes.logo}
                 onClick={() => {
-                  history.push("/admin");
+                  if (type.trim() === "admin") {
+                    history.push("/admin");
+                  } else if (type.trim() === "user") {
+                    history.push("/");
+                  }
                 }}
               >
                 YogaQ
               </Typography>
             </Grid>
-            {admin && (
+            {globalState[type.trim()] && (
               <Grid item xs={9} className={classes.btnContainer}>
                 <IconButton
                   aria-controls="menu"
@@ -235,59 +297,20 @@ const CharoomAppbar = ({ user, children }) => {
                       <Avatar alt="Profile" src={Profile} />
                       <div className={classes.profileFlex}>
                         <div className={classes.profileName}>
-                          {admin?.username}
+                          {globalState[type.trim()]?.username}
                         </div>
                         <div className={classes.profileJoin}>
                           Joined{" "}
-                          {format(new Date(admin?.createdAt), "MMM dd, yyyy")}
+                          {format(
+                            new Date(globalState[type.trim()]?.createdAt),
+                            "MMM dd, yyyy"
+                          )}
                         </div>
                       </div>
                     </div>
                     <Divider />
                     <br />
-                    <div
-                      className={`${classes.flexRow} ${classes.paddingMenuItem}`}
-                      onClick={() => {
-                        history.push("/admin/enquiries");
-                      }}
-                    >
-                      <div>
-                        <img
-                          src={ProfileIcon}
-                          alt="profile-icon"
-                          className={classes.profileIcon}
-                        />
-                      </div>
-                      <div className={classes.menuitem}>Dashboard</div>
-                    </div>
-                    <div
-                      className={`${classes.flexRow} ${classes.paddingMenuItem}`}
-                      onClick={() => {
-                        history.push("/admin/profile");
-                      }}
-                    >
-                      <div>
-                        <img
-                          src={ProfileIcon}
-                          alt="profile-icon"
-                          className={classes.profileIcon}
-                        />
-                      </div>
-                      <div className={classes.menuitem}>Profile</div>
-                    </div>
-                    <div
-                      className={`${classes.flexRow} ${classes.paddingMenuItem}`}
-                      onClick={() => adminLogout()}
-                    >
-                      <div>
-                        <img
-                          src={LogoutIcon}
-                          alt="profile-icon"
-                          className={classes.profileIcon}
-                        />
-                      </div>
-                      <div className={classes.menuitem}>Log out</div>
-                    </div>
+                    {renderChatroomAppbarExt()}
                   </div>
                 </StyledMenu>
               </Grid>
@@ -320,22 +343,22 @@ const CharoomAppbar = ({ user, children }) => {
               <ArrowBackIcon />
             </Grid>
             <Grid item xs={8} sm={10} md={10} lg={11} className={classes.title}>
-              {active_chatroom && (
-                <div style={{ display: "flex", placeItems: "center" }}>
-                  <Avatar
-                    alt={active_chatroom.user?.id.username}
-                    src={active_chatroom.user?.id.profilePicture}
-                    style={{ marginRight: "15px" }}
-                  />
-                  <Typography variant="h6" style={{ color: "#000000" }}>
-                    {active_chatroom ? active_chatroom.user?.id.username : ""}
-                  </Typography>
-                </div>
-              )}
+              {active_chatroom && renderChatroomDetails()}
             </Grid>
-            <Grid item xs={1} className={classes.btnContainer}>
-              {/* <Button>1</Button> */}
-            </Grid>
+            {type.trim() === "user" ? (
+              <>
+                {active_chatroom && (
+                  <Grid item xs={1} className={classes.btnContainer}>
+                    <IconButton
+                      className={classes.drawer}
+                      onClick={() => drawerHandler()}
+                    >
+                      {showDrawer ? <CloseIcon /> : <MenuIcon />}
+                    </IconButton>
+                  </Grid>
+                )}
+              </>
+            ) : null}
           </Grid>
         </Grid>
       </Grid>

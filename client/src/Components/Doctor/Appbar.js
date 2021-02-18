@@ -1,11 +1,8 @@
 import React, { useEffect } from "react";
-import { useHistory } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { doctor as doctorActions } from "../../redux/actions";
 
 const Appbar = () => {
-  const history = useHistory();
-  const { error } = useSelector((state) => state.doctor);
   const dispatch = useDispatch();
   const load = async () => {
     await dispatch(doctorActions.setLoading(true));
@@ -17,13 +14,6 @@ const Appbar = () => {
     load();
     // eslint-disable-next-line
   }, []);
-
-  // useEffect(() => {
-  //   if (/^Invalid account*/i.test(error) || ) {
-  //     history.push("/");
-  //   }
-  //   // eslint-disable-next-line
-  // }, [error]);
 
   return <></>;
 };

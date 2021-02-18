@@ -9,7 +9,7 @@ import {
   Button,
   Typography,
 } from "@material-ui/core";
-import Loader from "../../Loader";
+import Loader from "../../Common/Loader";
 import Swal from "sweetalert2";
 import { useSelector, useDispatch } from "react-redux";
 import { admin as adminActions } from "../../../redux/actions/index";

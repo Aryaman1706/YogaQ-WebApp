@@ -1,6 +1,6 @@
 import React from "react";
 import { Grid, makeStyles } from "@material-ui/core";
-import ChatroomWaitingCard from "./ChatroomWaitingCard";
+import ChatroomWaitingCard from "../User/ChatroomWaitingCard";
 
 const useStyles = makeStyles(() => ({
   textContainer: {
@@ -23,7 +23,7 @@ const ChatroomWaiting = ({ type }) => {
             therapists
           </h1>
         </Grid>
-        {type === "user" && (
+        {type.trim() === "user" && (
           <>
             <ChatroomWaitingCard
               title={"Profile"}
@@ -48,7 +48,7 @@ const ChatroomWaiting = ({ type }) => {
             />
           </>
         )}
-        {type === "admin" && (
+        {type.trim() === "admin" && (
           <>
             <ChatroomWaitingCard
               title={"Enquires"}

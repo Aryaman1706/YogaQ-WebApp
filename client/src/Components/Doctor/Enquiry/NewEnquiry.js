@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Button, Grid, Paper, Typography, makeStyles } from "@material-ui/core";
-import Loader from "../../Loader";
+import Loader from "../../Common/Loader";
 import Swal from "sweetalert2";
 import { v4 as uuidV4 } from "uuid";
 import { useHistory } from "react-router-dom";

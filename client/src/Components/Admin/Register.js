@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { TextField, Button, Grid, Typography } from "@material-ui/core";
-import Loader from "../Loader";
+import Loader from "../Common/Loader";
 import Swal from "sweetalert2";
 import { useSelector, useDispatch } from "react-redux";
 import { admin } from "../../redux/actions/index";

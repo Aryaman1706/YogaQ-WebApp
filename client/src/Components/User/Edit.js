@@ -14,7 +14,7 @@ import {
 import Swal from "sweetalert2";
 import { useSelector, useDispatch } from "react-redux";
 import { user as userActions } from "../../redux/actions/index";
-import Loader from "../Loader";
+import Loader from "../Common/Loader";
 import background from "../../assets/background.svg";
 import homeIcon from "../../assets/home.svg";
 import { useHistory } from "react-router-dom";

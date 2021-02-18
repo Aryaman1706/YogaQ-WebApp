@@ -15,7 +15,7 @@ import {
 } from "../../redux/actions/index";
 import CallHistoryItem from "./CallHistoryItem";
 import { useHistory, useParams } from "react-router-dom";
-import Loader from "../Loader";
+import Loader from "../Common/Loader";
 import homeIcon from "../../assets/home.svg";
 import UserAppbar from "./UserAppbar";
 import EditCallModal from "./EditCallModal";

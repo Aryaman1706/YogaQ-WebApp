@@ -3,9 +3,11 @@ import { Switch } from "react-router-dom";
 import Route from "./RouteWrapper";
 import Wrapper from "../Components/Wrapper";
 
+import Home from "../Pages/Common/Home";
+
 // * Admin
 import AdminLogin from "../Pages/Admin/LoginPage";
-import AdminHome from "../Pages/Admin/Home";
+// import AdminHome from "../Pages/Admin/Home";
 import AdminProfile from "../Pages/Admin/Profile";
 
 // * Admin DashBoard
@@ -20,7 +22,6 @@ import ViewUser from "../Components/Admin/Dashboard/ViewUser";
 import CreateChatroom from "../Components/Admin/Dashboard/CreateChatroom";
 import ViewChatroom from "../Components/Admin/Dashboard/ViewChatroom";
 import AddQuestion from "../Components/Admin/Dashboard/AddQuestion";
-import AdminAppbar from "../Components/Admin/AdminAppbar";
 import QuestionBankAdmin from "../Components/Admin/Dashboard/QuestionBank";
 
 // * Enquiry
@@ -32,8 +33,7 @@ import DoctorLogin from "../Pages/Doctor/LoginPage";
 // * Doctor Dashboard
 
 // * User
-import Home from "../Pages/Home";
-import Room from "../Pages/Room";
+// import Home from "../Pages/Home";
 import Signup from "../Pages/Signup";
 import EditUser from "../Components/User/Edit";
 import BookCall from "../Components/User/BookCall";
@@ -48,7 +48,16 @@ const Routes = () => {
       <Switch>
         {/* Admin */}
         <Route exact path="/admin/login" component={AdminLogin} />
-        <Route adminLogin exact path="/admin" component={AdminHome} />
+        <Route
+          adminLogin
+          exact
+          path="/admin"
+          render={(props) => (
+            <>
+              <Home type="admin" />
+            </>
+          )}
+        />
         <Route
           adminLogin
           exact
@@ -121,7 +130,16 @@ const Routes = () => {
         {/* Doctor Dashboard */}
 
         {/* User */}
-        <Route exact path="/" component={Home} />
+        {/* <Route exact path="/" component={Home} /> */}
+        <Route
+          exact
+          path="/"
+          render={(props) => (
+            <>
+              <Home type="user" />
+            </>
+          )}
+        />
         <Route exact path="/signup" component={Signup} />
         <Route userComplete exact path="/edit" component={EditUser} />
         {/* <Route exact path="/room" component={Room} /> */}

@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import { Grid, makeStyles } from "@material-ui/core";
 import { useSelector } from "react-redux";
 import ChatroomList from "../Components/User/ChatroomList";
-import Chatroom from "../Components/User/Chatroom";
-import Loader from "../Components/Loader";
+// import Chatroom from "../Components/User/Chatroom";
+import Chatroom from "../Components/Admin/Chatroom";
+import Loader from "../Components/Common/Loader";
 import ChatroomDrawer from "../Components/User/ChatroomDrawer";
 import Landing from "../Components/Landing/Landing";
 import ChatroomAppbar from "../Components/User/CharoomAppbar";
@@ -113,7 +114,7 @@ const Home = () => {
               xl={widths.chatroom}
               className={renderClassname()}
             >
-              <Chatroom />
+              <Chatroom type={"user"} />
             </Grid>
             {active_chatroom ? (
               <Grid

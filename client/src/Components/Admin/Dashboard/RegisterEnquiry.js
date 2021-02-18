@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Typography, Grid, TextField, Button } from "@material-ui/core";
-import Loader from "../../Loader";
+import Loader from "../../Common/Loader";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { enquiry as enquiryAction } from "../../../redux/actions/index";

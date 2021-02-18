@@ -3,7 +3,7 @@ import { TextField, Grid, makeStyles, IconButton } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import { admin as adminActions } from "../../../redux/actions";
 import MessageItem from "../MessageItem";
-import Loader from "../../Loader";
+import Loader from "../../Common/Loader";
 import SendIcon from "@material-ui/icons/Send";
 import { useHistory, useParams } from "react-router-dom";
 import AdminViewChatAppbar from "../AdminViewChatAppbar";
