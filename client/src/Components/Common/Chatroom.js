@@ -26,8 +26,9 @@ const Chatroom = ({ type }) => {
     }
     if (!chatroomLoading) {
       return active_chatroom ? (
-        <MessageList socket={socket} />
+        <h1>{active_chatroom._id}</h1>
       ) : (
+        // <MessageList socket={socket} />
         <ChatroomWaiting type={type.trim()} />
       );
     }
