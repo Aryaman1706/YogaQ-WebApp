@@ -105,7 +105,7 @@ router.put("/changePassword", loginAdmin, controllers.changePassword);
 /**
  * Type:- POST
  * Desc:- Enter email to get password reset token
- * Route:- {{server_url}}/admin
+ * Route:- {{server_url}}/admin/forgotPassword
  * Middlewares:- None
  * Request Body:- {
  *  "email": "testEmail@mail.com"
@@ -116,7 +116,7 @@ router.post("/forgotPassword", controllers.forgotPassword1);
 /**
  * Type:- POST
  * Desc:- Enter new password
- * Route:- {{server_url}}/admin
+ * Route:- {{server_url}}/admin/forgotPassword/:resetToken
  * Middlewares:- None
  * Request Body:- {
  *  "newPassword": "testNewPassword",

@@ -125,7 +125,6 @@ const doctorSchema = new mongoose.Schema({
     type: String,
     enum: ["admin", "doctor", "user"],
     default: "doctor",
-    immutable: true,
   },
   joinedOn: {
     type: Date,

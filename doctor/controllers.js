@@ -1,8 +1,6 @@
-// * NPM Packages
 const { genSalt, hash, compare } = require("bcryptjs");
 const { randomBytes } = require("crypto");
 const { validate: uuidValidate } = require("uuid");
-const omit = require("lodash/omit");
 
 // * Models
 const { Doctor, Enquiry } = require("./models");
@@ -102,7 +100,7 @@ exports.register = async (req, res) => {
     const password = await hash(value.password, salt);
 
     // Creting new Doctor and deleting enquiry
-    const body = omit(enquiry.toObject(), ["postedOn"]);
+    const body = { ...enquiry.toObject(), postedOn: undefined };
     await Promise.all([Doctor.create({ ...body, password }), enquiry.remove()]);
 
     return res
@@ -134,17 +132,26 @@ exports.denyEnquiry = async (req, res) => {
   }
 };
 
-// * Get my profile
+// * Get profile of currently logged in doctor
 exports.myProfile = async (req, res) => {
   try {
+    // Validating request query
+    const { error, value } = validators.completeQuery(req.query);
+    if (error)
+      return res.status(400).json({
+        error: `Validation Error. ${error.details[0].message}`,
+        body: null,
+      });
+
+    // Finding valid doctor
     let doctor = null;
-    if (req.query.complete) {
+    if (value.complete) {
       doctor = await Doctor.findById(req.user._id)
         .select("-password -resetToken -resetTokenValidity")
         .exec();
     } else {
       doctor = await Doctor.findById(req.user._id)
-        .select("username email restricted role")
+        .select("username email restricted role joinedOn")
         .exec();
     }
     if (!doctor)
@@ -157,9 +164,10 @@ exports.myProfile = async (req, res) => {
   }
 };
 
-// * Edit my profile
+// * Edit profile of currently logged in doctor
 exports.editProfile = async (req, res) => {
   try {
+    // Validating request body
     const { error, value } = validators.edit(req.body);
     if (error)
       return res.status(400).json({
@@ -176,7 +184,7 @@ exports.editProfile = async (req, res) => {
     // Replacing uuid with url in qualificational
     value.qualificational.docs = value.qualificational.docs.map((obj) => {
       if (uuidValidate(obj.doc)) {
-        // remove previous file
+        // Remove previous file
         if (fileObj[obj.doc]) {
           return { ...obj, doc: fileObj[obj.doc].url };
         }
@@ -188,7 +196,7 @@ exports.editProfile = async (req, res) => {
     // Replacing uuid with url in professional
     value.professional = value.professional.map((obj) => {
       if (uuidValidate(obj.doc)) {
-        // remove previous file
+        // Remove previous file
         if (fileObj[obj.doc]) {
           return { ...obj, doc: fileObj[obj.doc].url };
         }
@@ -197,6 +205,7 @@ exports.editProfile = async (req, res) => {
       return obj;
     });
 
+    // Finding and updating doctor
     const doctor = await Doctor.findByIdAndUpdate(
       req.user._id,
       { ...value },
@@ -217,9 +226,10 @@ exports.editProfile = async (req, res) => {
   }
 };
 
-// * Change Password
+// * Change password of currently logged in doctor
 exports.changePassword = async (req, res) => {
   try {
+    // Validating request body
     const { error, value } = validators.changePassword(req.body);
     if (error)
       return res.status(400).json({
@@ -227,27 +237,32 @@ exports.changePassword = async (req, res) => {
         body: null,
       });
 
-    let doctor = await Doctor.findById(req.user._id).exec();
+    // Finding valid doctor
+    const doctor = await Doctor.findById(req.user._id).exec();
     if (!doctor)
       return res.status(404).json({ error: "Account not found.", body: null });
 
     const { oldPassword, newPassword, confirmPassword } = value;
+
+    // Validating newPassword and confirmPassword
     if (newPassword !== confirmPassword)
       return res.status(400).json({
         error: "Validation Error. Passwords do not match.",
         body: null,
       });
 
+    // Comparing user-supplied password with hashed password in DB
     const result = await compare(oldPassword, doctor.password);
     if (!result)
       return res
         .status(400)
         .json({ error: "Validation Error. Incorrect Password.", body: null });
 
+    // Hashing and storing newPassword
     const salt = await genSalt(10);
     const password = hash(newPassword, salt);
     doctor.password = password;
-    doctor = await doctor.save();
+    await doctor.save();
 
     return res
       .status(200)
@@ -258,7 +273,7 @@ exports.changePassword = async (req, res) => {
   }
 };
 
-// * Forgot password 1 (Enter email to send reset link on)
+// * Enter email to get password reset token
 exports.forgotPassword1 = async (req, res) => {
   try {
     const { error, value } = validators.forgotPassword1(req.body);
@@ -288,7 +303,7 @@ exports.forgotPassword1 = async (req, res) => {
   }
 };
 
-// * Forgot password 2 (Enter a new password)
+// * Enter new password
 exports.forgotPassword2 = async (req, res) => {
   try {
     const { error, value } = validators.forgotPassword2(req.body);
@@ -333,13 +348,21 @@ exports.forgotPassword2 = async (req, res) => {
 // * List all enquiries
 exports.listEnquiries = async (req, res) => {
   try {
+    // Validating request query
+    const { error, value } = validators.pageQuery(req.query);
+    if (error)
+      return res
+        .status(400)
+        .json({ error: error.details[0].message, body: null });
+
+    // Paginating enquiries
     const limit = 5;
     const total = await Enquiry.countDocuments();
-    if ((parseInt(req.query.page, 10) - 1) * limit < total) {
+    if ((parseInt(value.page, 10) - 1) * limit < total) {
       const enquiries = await Enquiry.find()
         .select("postedOn username email")
         .sort("-postedOn")
-        .skip((parseInt(req.query.page, 10) - 1) * limit)
+        .skip((parseInt(value.page, 10) - 1) * limit)
         .limit(limit)
         .exec();
 
@@ -362,6 +385,7 @@ exports.listEnquiries = async (req, res) => {
 // * View an Enquiry
 exports.viewEnquiry = async (req, res) => {
   try {
+    // Finding valid enquiry
     const enquiry = await Enquiry.findById(req.params.id).exec();
     if (!enquiry)
       return res.status(400).json({ error: "Enquiry not found.", body: null });
@@ -376,13 +400,21 @@ exports.viewEnquiry = async (req, res) => {
 // * List all Doctors
 exports.listDoctors = async (req, res) => {
   try {
+    // Validating request query
+    const { error, value } = validators.pageQuery(req.query);
+    if (error)
+      return res
+        .status(400)
+        .json({ error: error.details[0].message, body: null });
+
+    // Paginating doctors
     const total = await Doctor.countDocuments();
     const limit = 5;
-    if ((parseInt(req.query.page, 10) - 1) * limit < total) {
+    if ((parseInt(value.page, 10) - 1) * limit < total) {
       const doctors = await Doctor.find()
         .select("username email joinedOn")
         .sort("-joinedOn")
-        .skip((parseInt(req.query.page, 10) - 1) * limit)
+        .skip((parseInt(value.page, 10) - 1) * limit)
         .limit(limit)
         .exec();
 
@@ -403,27 +435,30 @@ exports.listDoctors = async (req, res) => {
 };
 
 // * View a Doctor
+// TODO :- It might be better to paginate/limit chatrooms and calls
 exports.viewDoctor = async (req, res) => {
   try {
-    const doctor = await Doctor.findById(req.params.id)
-      .select("-password -resetToken -resetTokenValidity")
-      .exec();
+    // Finding valid doctor and associated chatrooms
+    const [doctor, chatrooms] = await Promise.all([
+      Doctor.findById(req.params.id)
+        .select("-password -resetToken -resetTokenValidity")
+        .exec(),
+      Chatroom.find({
+        "partner.id": req.params.id,
+        "partner.model": "Doctor",
+      })
+        .select("user partner blocked createdAt")
+        .sort("-createdAt")
+        .populate("user.id", "username email")
+        .populate({
+          path: "call",
+          select: "time accepted completed",
+          sort: "-time",
+        })
+        .exec(),
+    ]);
     if (!doctor)
       return res.status(400).json({ error: "Doctor not found.", body: null });
-
-    const chatrooms = await Chatroom.find({
-      "partner.id": doctor._id,
-      "partner.model": "Doctor",
-    })
-      .select("user partner blocked createdAt")
-      .sort("-createdAt")
-      .populate("user.id", "username email")
-      .populate({
-        path: "call",
-        select: "time",
-        sort: "-time",
-      })
-      .exec();
 
     return res.status(200).json({ error: null, body: { doctor, chatrooms } });
   } catch (error) {
