@@ -1,6 +1,8 @@
 import React, { useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
-import MessageList from "../Admin/MessageList";
+import MessageList from "./MessageList";
+import UserMessageList from "../User/MessageList";
+import AdminMessageList from "../Admin/MessageList";
 import Loader from "./Loader";
 import io from "socket.io-client";
 import ChatroomWaiting from "../Common/ChatroomWaiting";
@@ -26,9 +28,15 @@ const Chatroom = ({ type }) => {
     }
     if (!chatroomLoading) {
       return active_chatroom ? (
-        <h1>{active_chatroom._id}</h1>
+        <>
+          {type.trim() === "user" ? (
+            <UserMessageList socket={socket} />
+          ) : (
+            <AdminMessageList socket={socket} />
+          )}
+          {/* <MessageList type={type.trim()} socket={socket} /> */}
+        </>
       ) : (
-        // <MessageList socket={socket} />
         <ChatroomWaiting type={type.trim()} />
       );
     }

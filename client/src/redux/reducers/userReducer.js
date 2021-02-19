@@ -96,6 +96,8 @@ const stateHandler = (state = defaultState, action) => {
       return {
         ...state,
         active_chatroom: action.payload,
+        user_messages: [],
+        message_end: false,
         chatroomLoading: false,
       };
     case USER_GET_MESSAGES:
