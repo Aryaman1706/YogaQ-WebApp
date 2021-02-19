@@ -83,6 +83,11 @@ const MessageList = ({ type, socket }) => {
   useEffect(() => {
     return () => {
       socket.current.removeAllListeners("toClient");
+      if (type.trim() === "admin") {
+        adminActions.modifyLastAccess();
+      } else if (type.trim() === "user") {
+        userActions.modifyLastAccess();
+      }
       // ! Clear active_chatroom and unreadMessages
     };
     // eslint-disable-next-line

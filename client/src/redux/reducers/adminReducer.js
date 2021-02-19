@@ -68,6 +68,8 @@ const stateHandler = (state = defaultState, action) => {
       return {
         ...state,
         active_chatroom: action.payload,
+        admin_messages: [],
+        message_end: false,
         chatroomLoading: false,
       };
     case ADMIN_GET_MESSAGES:

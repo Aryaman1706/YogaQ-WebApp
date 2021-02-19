@@ -22,7 +22,6 @@ import {
 import axios from "../../utils/axios";
 import store from "../store";
 import Swal from "sweetalert2";
-import { chatroom } from ".";
 
 // * Login as Admin
 export const loginAdmin = (formData) => async (dispatch) => {
@@ -202,9 +201,9 @@ export const appendMessage = (data) => async (dispatch) => {
 };
 
 // * Modify Last access
-export const modifyLastAccess = ({ id, formData }) => async (dispatch) => {
+export const modifyLastAccess = () => async (dispatch) => {
   try {
-    await axios.put(`/chatroom/lastAccess/${id}`, formData);
+    // await axios.put(`/chatroom/lastAccess/${id}`, formData);
     dispatch({
       type: CLEAR_ADMIN_CHATROOM,
       payload: null,
