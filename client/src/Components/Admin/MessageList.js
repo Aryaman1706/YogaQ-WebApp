@@ -250,7 +250,7 @@ const MessageList = ({ socket }) => {
               spacing={2}
             >
               <div ref={firstMessage}></div>
-              {admin_messages.length > 0 &&
+              {admin_messages &&
                 admin_messages
                   .slice(0)
                   .reverse()
