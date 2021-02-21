@@ -325,6 +325,9 @@ export const getQuestionSet = (chatroomId) => async (dispatch) => {
                 title: res.data.body,
                 icon: "success",
               });
+              dispatch({
+                type: CLEAR_ADMIN_ERROR,
+              });
             })
             .catch((err) => {
               Swal.fire({

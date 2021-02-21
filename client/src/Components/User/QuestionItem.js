@@ -11,6 +11,8 @@ import {
   IconButton,
 } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
+import axios from "../../utils/axios";
+import Swal from "sweetalert2";
 
 const useStyles = makeStyles(() => ({
   questionCard: {
@@ -42,18 +44,61 @@ const QuestionItem = ({
   type,
 }) => {
   const classes = useStyles();
+
   const onAnswer = (e) => {
     setResponses((prevResponses) => {
       return { ...prevResponses, [question._id]: e.target.value };
     });
   };
+
+  const handleDeleteAction = () => {
+    Swal.fire({
+      title: "Are you sure you want to delete the selected question?",
+      text: "This action cannot be undone",
+      icon: "warning",
+      showConfirmButton: true,
+      showCancelButton: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteQuestion();
+      }
+    });
+  };
+
+  // ! Fix get chatroomId first
+  const deleteQuestion = () => {
+    axios
+      .delete(`/questionSet/removeQuestion/${question._id}`, {
+        questionId: id,
+      })
+      .then((res) => {
+        console.log(res.data);
+        Swal.fire({
+          title: "Sucessfully Deleted",
+          text:
+            "Successfully removed the selected question from the question set",
+          icon: "success",
+          showConfirmButton: true,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+        Swal.fire({
+          title: "Error",
+          text: "Something went wrong",
+          icon: "error",
+          showConfirmButton: true,
+        });
+      });
+  };
+
   return (
     <>
       <Grid item xs={12}>
         <Paper elevation={2} className={classes.questionCard}>
           {type === "admin" && (
             <div className={classes.deleteBtn}>
-              <IconButton>
+              <IconButton onClick={handleDeleteAction}>
                 <DeleteIcon />
               </IconButton>
             </div>

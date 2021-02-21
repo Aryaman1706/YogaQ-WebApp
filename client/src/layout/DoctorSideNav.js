@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SideNav = () => {
+const DoctorSideNav = () => {
   const classes = useStyles();
   const history = useHistory();
   const admin = useSelector((state) => state.admin.admin);
@@ -135,4 +135,4 @@ const SideNav = () => {
   );
 };
 
-export default SideNav;
+export default DoctorSideNav;

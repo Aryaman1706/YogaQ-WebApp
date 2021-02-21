@@ -2,9 +2,12 @@ import React from "react";
 import { useHistory } from "react-router-dom";
 import ProfileIcon from "../../assets/profile.svg";
 import LogoutIcon from "../../assets/log-out.svg";
+import { admin as adminActions } from "../../redux/actions/index";
+import { useDispatch } from "react-redux";
 
 const ChatroomAppbarExt = ({ classes }) => {
   const history = useHistory();
+  const dispatch = useDispatch();
   return (
     <>
       <div
@@ -41,6 +44,7 @@ const ChatroomAppbarExt = ({ classes }) => {
         className={`${classes.flexRow} ${classes.paddingMenuItem}`}
         onClick={() => {
           // ! Admin Logout
+          dispatch(adminActions.logoutAdmin());
         }}
       >
         <div>
