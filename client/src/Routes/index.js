@@ -31,6 +31,7 @@ import NewEnquiry from "../Components/Doctor/Enquiry/NewEnquiry";
 import DoctorLogin from "../Pages/Doctor/LoginPage";
 
 // * Doctor Dashboard
+import CallListing from "../Pages/Doctor/CallListing";
 
 // * User
 // import Home from "../Pages/Home";
@@ -128,7 +129,7 @@ const Routes = () => {
         <Route exact path="/doctor/login" component={DoctorLogin} />
 
         {/* Doctor Dashboard */}
-
+        <Route exact path="/doctor/calls" component={CallListing} />
         {/* User */}
         {/* <Route exact path="/" component={Home} /> */}
         <Route
