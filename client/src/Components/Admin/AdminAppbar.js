@@ -124,6 +124,7 @@ const useStyles = makeStyles((theme) => ({
     "&:hover": {
       backgroundColor: "rgb(211,211,211, 0.4)",
       borderRadius: 6,
+      cursor: "pointer",
     },
   },
 }));
@@ -133,6 +134,7 @@ const AdminAppbar = ({ children }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const history = useHistory();
   const { isAuthenticated, admin } = useSelector((state) => state.admin);
+  const dispatch = useDispatch();
 
   const handleClick = (e) => {
     setAnchorEl(e.currentTarget);
@@ -224,7 +226,12 @@ const AdminAppbar = ({ children }) => {
                 </div>
                 <div className={classes.menuitem}>Profile</div>
               </div>
-              <div className={`${classes.flexRow} ${classes.paddingMenuItem}`}>
+              <div
+                className={`${classes.flexRow} ${classes.paddingMenuItem}`}
+                onClick={() => {
+                  dispatch(adminActions.logoutAdmin());
+                }}
+              >
                 <div>
                   <img
                     src={LogoutIcon}
