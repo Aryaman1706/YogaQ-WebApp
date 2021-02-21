@@ -178,6 +178,12 @@ const Login = () => {
                     variant="contained"
                     color="primary"
                     onClick={(event) => submitHandler(event)}
+                    style={{
+                      backgroundColor: "#0FC1A7",
+                      height: "50px",
+                      backgroundImage:
+                        "linear-gradient(315deg, #abe9cd 0%, #3eadcf 74%)",
+                    }}
                   >
                     Login
                   </Button>

@@ -14,6 +14,9 @@ import ErrorIcon from "@material-ui/icons/Error";
 import EditIcon from "@material-ui/icons/Edit";
 import EditCallModal from "./EditCallModal";
 import { chatroom } from "../../redux/actions";
+import CheckIcon from "@material-ui/icons/Check";
+import ClearIcon from "@material-ui/icons/Clear";
+import DoneAllIcon from "@material-ui/icons/DoneAll";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -38,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const CallHistoryItem = ({ item, chatroomId }) => {
+const CallHistoryItem = ({ item, chatroomId, type }) => {
   const classes = useStyles();
   const history = useHistory();
   const [open, setOpen] = useState(false);
@@ -80,7 +83,48 @@ const CallHistoryItem = ({ item, chatroomId }) => {
               {format(new Date(item.time), "hh:mm aaa")}
             </Typography>
           </div>
-          {!item.accepted && !item.completed && (
+          {type === "doctor" && !item.accepted && !item.completed && (
+            <>
+              <div className={classes.flexCol}>
+                <Tooltip title="Accept Call">
+                  <IconButton
+                    onClick={() => {
+                      setOpen(true);
+                    }}
+                  >
+                    <CheckIcon />
+                  </IconButton>
+                </Tooltip>
+              </div>
+              <div className={classes.flexCol}>
+                <Tooltip title="Reject Call">
+                  <IconButton
+                    onClick={() => {
+                      setOpen(true);
+                    }}
+                  >
+                    <ClearIcon />
+                  </IconButton>
+                </Tooltip>
+              </div>
+            </>
+          )}
+          {type === "doctor" && item.accepted && !item.completed && (
+            <>
+              <div className={classes.flexCol}>
+                <Tooltip title="Mark as completed">
+                  <IconButton
+                    onClick={() => {
+                      setOpen(true);
+                    }}
+                  >
+                    <DoneAllIcon />
+                  </IconButton>
+                </Tooltip>
+              </div>
+            </>
+          )}
+          {!type && !item.accepted && !item.completed && (
             <div className={classes.flexCol}>
               <Tooltip title="Edit Call">
                 <IconButton
