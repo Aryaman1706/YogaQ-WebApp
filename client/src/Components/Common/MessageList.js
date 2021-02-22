@@ -5,7 +5,7 @@ import {
   admin as adminActions,
   user as userActions,
 } from "../../redux/actions/index";
-import MessageItem from "../Admin/MessageItem";
+import MessageItem from "./MessageItem";
 import Loader from "../Common/Loader";
 import getUrls from "get-urls";
 import SendIcon from "@material-ui/icons/Send";
@@ -202,26 +202,29 @@ const MessageList = ({ type, socket }) => {
           })
         );
       } else if (type.trim() === "user") {
-        userActions.appendMessage({
-          chatroomId: active_chatroom._id,
-          sender: data.sender,
-          text: data.message.text,
-          link: data.message.link,
-          file: null,
-          urlEmbeds: {
-            title: null,
-            description: null,
-            image: null,
-          },
-          time: new Date(),
-        });
+        dispatch(
+          userActions.appendMessage({
+            chatroomId: active_chatroom._id,
+            sender: data.sender,
+            text: data.message.text,
+            link: data.message.link,
+            file: null,
+            urlEmbeds: {
+              title: null,
+              description: null,
+              image: null,
+            },
+            time: new Date(),
+          })
+        );
       }
       socket.current.emit("toServer", data);
-      if (type.trim() === "admin") {
-        dispatch(adminActions.clearUnreadMessagesActive());
-      } else if (type.trim() === "user") {
-        dispatch(userActions.clearUnreadMessagesActive());
-      }
+      // ! Why?
+      // if (type.trim() === "admin") {
+      //   dispatch(adminActions.clearUnreadMessagesActive());
+      // } else if (type.trim() === "user") {
+      //   dispatch(userActions.clearUnreadMessagesActive());
+      // }
     }
   };
 
@@ -342,67 +345,7 @@ const MessageList = ({ type, socket }) => {
               spacing={2}
             >
               <div ref={firstMessage}></div>
-              {type.trim() === "user" ? (
-                <>
-                  {globalState.user_messages.length > 0 &&
-                    globalState.user_messages
-                      .slice(0)
-                      .reverse()
-                      .map((item, index) => {
-                        if (
-                          active_chatroom.unreadMessages > 0 &&
-                          globalState.user_messages.length - index ===
-                            active_chatroom.unreadMessages
-                        ) {
-                          return (
-                            <>
-                              {newMessageIndicator()}
-                              <MessageItem
-                                message={item}
-                                id={globalState.user._id}
-                              />
-                            </>
-                          );
-                        }
-                        return (
-                          <MessageItem
-                            message={item}
-                            id={globalState.user._id}
-                          />
-                        );
-                      })}
-                </>
-              ) : (
-                <>
-                  {globalState.admin_messages.length > 0 &&
-                    globalState.admin_messages
-                      .slice(0)
-                      .reverse()
-                      .map((item, index) => {
-                        if (
-                          active_chatroom.unreadMessages > 0 &&
-                          globalState.admin_messages.length - index ===
-                            active_chatroom.unreadMessages
-                        ) {
-                          return (
-                            <>
-                              {newMessageIndicator()}
-                              <MessageItem
-                                message={item}
-                                id={globalState.admin._id}
-                              />
-                            </>
-                          );
-                        }
-                        return (
-                          <MessageItem
-                            message={item}
-                            id={globalState.admin._id}
-                          />
-                        );
-                      })}
-                </>
-              )}
+              {renderMessages()}
               <div ref={lastMessage}></div>
             </Grid>
           </Grid>

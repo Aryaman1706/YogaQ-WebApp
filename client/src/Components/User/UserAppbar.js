@@ -291,12 +291,6 @@ const UserAppbar = ({ children }) => {
                     </StyledMenu>
                   </>
                 ) : (
-                  // <Button
-                  //   className={classes.btn}
-                  //   href={`${process.env.REACT_APP_SERVER_URL}/api/user/auth`}
-                  // >
-                  //   Login with Google
-                  // </Button>
                   <>
                     <IconButton
                       aria-controls="menu"
