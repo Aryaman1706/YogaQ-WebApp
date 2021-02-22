@@ -79,15 +79,21 @@ const MessageList = ({ type, socket }) => {
     [messageLoading, message_end]
   );
 
+  // * Unmount
+  const unmount = async () => {
+    console.log("MessageList unmount.");
+    socket.current.removeAllListeners("toClient");
+    if (type.trim() === "admin") {
+      await dispatch(adminActions.modifyLastAccess());
+    } else if (type.trim() === "user") {
+      await dispatch(userActions.modifyLastAccess());
+    }
+  };
+
   // * Clear
   useEffect(() => {
     return () => {
-      socket.current.removeAllListeners("toClient");
-      if (type.trim() === "admin") {
-        adminActions.modifyLastAccess();
-      } else if (type.trim() === "user") {
-        userActions.modifyLastAccess();
-      }
+      unmount();
       // ! Clear active_chatroom and unreadMessages
     };
     // eslint-disable-next-line
