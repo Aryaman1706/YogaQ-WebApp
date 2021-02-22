@@ -29,12 +29,7 @@ const Chatroom = ({ type }) => {
     if (!chatroomLoading) {
       return active_chatroom ? (
         <>
-          {type.trim() === "user" ? (
-            <UserMessageList socket={socket} />
-          ) : (
-            <AdminMessageList socket={socket} />
-          )}
-          {/* <MessageList type={type.trim()} socket={socket} /> */}
+          <MessageList type={type.trim()} socket={socket} />
         </>
       ) : (
         <ChatroomWaiting type={type.trim()} />
@@ -47,7 +42,9 @@ const Chatroom = ({ type }) => {
       {socket.current && socket.current.connected ? (
         render()
       ) : (
-        <h1>Connecting...</h1>
+        <>
+          <h1>Connecting...</h1>
+        </>
       )}
     </>
   );
