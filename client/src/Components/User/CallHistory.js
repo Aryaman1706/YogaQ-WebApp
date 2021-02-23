@@ -17,7 +17,7 @@ import CallHistoryItem from "./CallHistoryItem";
 import { useHistory, useParams } from "react-router-dom";
 import Loader from "../Common/Loader";
 import homeIcon from "../../assets/home.svg";
-import UserAppbar from "./UserAppbar";
+import UserAppbar from "../Common/Appbar";
 import EditCallModal from "./EditCallModal";
 
 const useStyles = makeStyles((theme) => ({
@@ -171,7 +171,7 @@ const CallHistory = () => {
 
   return (
     <>
-      <UserAppbar>
+      <UserAppbar type={"user"}>
         <Grid container spacing={2}>
           <Grid item xs={12} style={{ padding: "1rem" }}>
             <div

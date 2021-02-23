@@ -9,6 +9,7 @@ import {
 import { useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
 import AdminAppbarExt from "../Admin/AdminAppbarExt";
+import UserAppbarExt from "../User/UserAppbarExt";
 
 const useStyles = makeStyles((theme) => ({
   appbar: {
@@ -159,6 +160,8 @@ const Appbar = ({ type, children }) => {
   const renderAppbarExtension = () => {
     if (type.trim() === "admin")
       return <AdminAppbarExt classes={classes} StyledMenu={StyledMenu} />;
+    if (type.trim() === "user")
+      return <UserAppbarExt classes={classes} StyledMenu={StyledMenu} />;
   };
 
   return (

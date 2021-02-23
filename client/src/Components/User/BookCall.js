@@ -15,7 +15,7 @@ import homeIcon from "../../assets/home.svg";
 import callIcon from "../../assets/phone-call.svg";
 import { useHistory, useParams } from "react-router-dom";
 import useCallForm from "../../hooks/useCallForm";
-import UserAppbar from "./UserAppbar";
+import UserAppbar from "../Common/Appbar";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -112,7 +112,7 @@ const BookCall = () => {
 
   return (
     <>
-      <UserAppbar>
+      <UserAppbar type={"user"}>
         <div className={classes.container}>
           <Grid container direction="row" justify="center" alignItems="stretch">
             <Grid item xs={11} sm={10} lg={6}>
