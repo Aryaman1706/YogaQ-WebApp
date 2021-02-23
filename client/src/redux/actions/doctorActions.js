@@ -181,7 +181,7 @@ export const getChatroom = (id) => async (dispatch) => {
 // * Set unread messages to 0
 export const clearUnreadMessages = (id) => async (dispatch) => {
   const storeState = store.getState();
-  const newChatrooms = storeState.admin.chatrooms.map((item) => {
+  const newChatrooms = storeState.doctor.chatrooms.map((item) => {
     if (item._id === id) {
       const newItem = { ...item, unreadMessages: 0 };
       return newItem;

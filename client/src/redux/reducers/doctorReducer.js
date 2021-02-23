@@ -16,6 +16,7 @@ import {
   APPEND_DOCTOR_MESSAGE,
   CLEAR_DOCTOR_CHATROOM,
   DOCTOR_GET_MESSAGES,
+  DOCTOR_CHATROOM_LOADING,
 } from "../types";
 import pick from "lodash/pick";
 
@@ -138,6 +139,11 @@ const stateHandler = (state = defaultState, action) => {
         active_chatroom: null,
         doctor_messages: [],
         message_end: false,
+      };
+    case DOCTOR_CHATROOM_LOADING:
+      return {
+        ...state,
+        chatroomLoading: action.payload,
       };
     default:
       return state;
