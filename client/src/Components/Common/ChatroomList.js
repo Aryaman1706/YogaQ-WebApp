@@ -71,7 +71,7 @@ const ChatroomList = ({ type }) => {
     } else if (type.trim() === "user") {
       await dispatch(userActions.listChatrooms());
     } else if (type.trim() === "doctor") {
-      // !
+      await dispatch(doctorActions.listChatrooms());
     }
 
     setCompLoading(false);
@@ -98,12 +98,16 @@ const ChatroomList = ({ type }) => {
         spacing={2}
         className={classes.container}
       >
-        {type.trim() === "admin" ? (
+        {type.trim() === "admin" || type.trim() === "doctor" ? (
           <Grid item xs={12}>
             <div
               className={classes.flexRow}
               onClick={() => {
-                history.push("/admin/enquiries");
+                if (type.trim() === "admin") {
+                  history.push("/admin/enquiries");
+                } else {
+                  history.push("/doctor/calls");
+                }
               }}
             >
               <img src={homeIcon} alt="home" className={classes.homeIcon} />

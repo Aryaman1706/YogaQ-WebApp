@@ -73,6 +73,31 @@ const ChatroomWaiting = ({ type }) => {
             />
           </>
         )}
+        {type.trim() === "doctor" && (
+          <>
+            <ChatroomWaitingCard
+              title={"Calls"}
+              description={"Calls"}
+              btnText={"Proceed"}
+              link={"/doctor/calls"}
+              color={"#E1F0EE"}
+            />
+            {/* <ChatroomWaitingCard
+              title={"Doctors"}
+              description={"Detailed Analysis of all the doctors"}
+              btnText={"Proceed"}
+              link={"/admin/doctors"}
+              color={"#F1DDDD"}
+            />
+            <ChatroomWaitingCard
+              title={"Profile"}
+              description={"Customise your profile"}
+              btnText={"Edit Profile"}
+              link={"/admin/profile"}
+              color={"#C5CBF1"}
+            /> */}
+          </>
+        )}
       </Grid>
     </>
   );

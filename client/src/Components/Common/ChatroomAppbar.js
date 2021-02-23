@@ -302,11 +302,15 @@ const CharoomAppbar = ({ type, children }) => {
                           {globalState[type.trim()]?.username}
                         </div>
                         <div className={classes.profileJoin}>
-                          Joined{" "}
-                          {format(
-                            new Date(globalState[type.trim()]?.createdAt),
-                            "MMM dd, yyyy"
-                          )}
+                          {globalState[type.trim()].createdAt ? (
+                            <>
+                              Joined{" "}
+                              {format(
+                                new Date(globalState[type.trim()].createdAt),
+                                "MMM dd, yyyy"
+                              )}
+                            </>
+                          ) : null}
                         </div>
                       </div>
                     </div>
