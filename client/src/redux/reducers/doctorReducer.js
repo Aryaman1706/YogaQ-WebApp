@@ -10,6 +10,13 @@ import {
   DOCTOR_MESSAGE,
   DOCTOR_LOADING,
   CLEAR_DOCTOR_ERROR,
+  DOCTOR_GET_CHATROOMS,
+  SELECT_CHATROOM_DOCTOR,
+  CLEAR_UNREAD_MESSAGES_DOCTOR,
+  APPEND_DOCTOR_MESSAGE,
+  CLEAR_DOCTOR_CHATROOM,
+  DOCTOR_GET_MESSAGES,
+  DOCTOR_CHATROOM_LOADING,
 } from "../types";
 import pick from "lodash/pick";
 
@@ -17,11 +24,16 @@ const defaultState = {
   doctor: null,
   isAuthenticated: false,
   completeProfile: null,
+  chatrooms: [],
+  active_chatroom: null,
+  doctor_messages: [],
+  message_end: false,
   list: [],
   end: false,
   selectDoctor: null,
   error: null,
   message: null,
+  chatroomLoading: false,
   loading: true,
 };
 
@@ -90,6 +102,48 @@ const stateHandler = (state = defaultState, action) => {
         ...state,
         error: null,
         message: null,
+      };
+    case DOCTOR_GET_CHATROOMS:
+      return {
+        ...state,
+        chatrooms: action.payload,
+      };
+    case SELECT_CHATROOM_DOCTOR:
+      return {
+        ...state,
+        active_chatroom: action.payload,
+        doctor_messages: [],
+        message_end: false,
+        chatroomLoading: false,
+      };
+    case CLEAR_UNREAD_MESSAGES_DOCTOR:
+      return {
+        ...state,
+        chatrooms: action.payload,
+      };
+    case APPEND_DOCTOR_MESSAGE:
+      return {
+        ...state,
+        doctor_messages: [action.payload, ...state.doctor_messages],
+      };
+    case DOCTOR_GET_MESSAGES:
+      return {
+        ...state,
+        active_chatroom: { ...state.active_chatroom, unreadMessages: 0 },
+        doctor_messages: [...state.doctor_messages, ...action.payload.messages],
+        message_end: action.payload.end,
+      };
+    case CLEAR_DOCTOR_CHATROOM:
+      return {
+        ...state,
+        active_chatroom: null,
+        doctor_messages: [],
+        message_end: false,
+      };
+    case DOCTOR_CHATROOM_LOADING:
+      return {
+        ...state,
+        chatroomLoading: action.payload,
       };
     default:
       return state;

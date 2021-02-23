@@ -6,7 +6,7 @@ const Appbar = () => {
   const dispatch = useDispatch();
   const load = async () => {
     await dispatch(doctorActions.setLoading(true));
-    await dispatch(doctorActions.loadDoctor());
+    await dispatch(doctorActions.loadDoctor(false));
     await dispatch(doctorActions.setLoading(false));
   };
 

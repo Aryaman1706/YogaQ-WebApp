@@ -63,7 +63,10 @@ const ChatroomItem = ({ type, chatroom }) => {
   };
 
   const selectChatroomForDoctor = async () => {
-    //
+    await dispatch(doctorActions.setChatroomLoading(true));
+    await dispatch(doctorActions.getChatroom(chatroom._id));
+    await dispatch(doctorActions.setChatroomLoading(false));
+    await dispatch(doctorActions.clearUnreadMessages(chatroom._id));
   };
 
   const selectChatroomForUser = async () => {

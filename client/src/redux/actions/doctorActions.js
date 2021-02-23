@@ -10,8 +10,16 @@ import {
   DOCTOR_MESSAGE,
   DOCTOR_LOADING,
   CLEAR_DOCTOR_ERROR,
+  DOCTOR_GET_CHATROOMS,
+  DOCTOR_CHATROOM_LOADING,
+  SELECT_CHATROOM_DOCTOR,
+  CLEAR_UNREAD_MESSAGES_DOCTOR,
+  APPEND_DOCTOR_MESSAGE,
+  CLEAR_DOCTOR_CHATROOM,
+  DOCTOR_GET_MESSAGES,
 } from "../types";
 import axios from "../../utils/axios";
+import store from "../store";
 
 // * Login as Doctor
 export const loginDoctor = (formData) => async (dispatch) => {
@@ -137,10 +145,108 @@ export const clearSelected = () => async (dispatch) => {
   });
 };
 
+// * Get my chatrooms
+export const listChatrooms = () => async (dispatch) => {
+  try {
+    const res = await axios.get("/doctor/chatrooms");
+
+    dispatch({
+      type: DOCTOR_GET_CHATROOMS,
+      payload: res.data.body,
+    });
+  } catch (error) {
+    dispatch({
+      type: DOCTOR_ERROR,
+      payload: error.response.data.error,
+    });
+  }
+};
+
+// * Get chatroom contents
+export const getChatroom = (id) => async (dispatch) => {
+  try {
+    const res = await axios.get(`/chatroom/get/${id}`);
+    dispatch({
+      type: SELECT_CHATROOM_DOCTOR,
+      payload: res.data.body,
+    });
+  } catch (error) {
+    dispatch({
+      type: DOCTOR_ERROR,
+      payload: error.response.data.error,
+    });
+  }
+};
+
+// * Set unread messages to 0
+export const clearUnreadMessages = (id) => async (dispatch) => {
+  const storeState = store.getState();
+  const newChatrooms = storeState.doctor.chatrooms.map((item) => {
+    if (item._id === id) {
+      const newItem = { ...item, unreadMessages: 0 };
+      return newItem;
+    } else {
+      return item;
+    }
+  });
+  dispatch({
+    type: CLEAR_UNREAD_MESSAGES_DOCTOR,
+    payload: newChatrooms,
+  });
+};
+
+// * Send/Recieve Message
+export const appendMessage = (data) => async (dispatch) => {
+  dispatch({
+    type: APPEND_DOCTOR_MESSAGE,
+    payload: data,
+  });
+};
+
+// * Modify Last access
+export const modifyLastAccess = () => async (dispatch) => {
+  try {
+    // await axios.put(`/chatroom/lastAccess/${id}`, formData);
+    dispatch({
+      type: CLEAR_DOCTOR_CHATROOM,
+      payload: null,
+    });
+  } catch (error) {
+    dispatch({
+      type: DOCTOR_ERROR,
+      payload: error.response?.data?.error,
+    });
+  }
+};
+
+// * Get Messages of active chatroom
+export const getMessages = ({ id, page }) => async (dispatch) => {
+  try {
+    const res = await axios.get(`/chatroom/messages/${id}/?page=${page}`);
+    dispatch({
+      type: DOCTOR_GET_MESSAGES,
+      payload: res.data.body,
+    });
+  } catch (error) {
+    dispatch({
+      type: DOCTOR_ERROR,
+      payload: error.response.data.error,
+    });
+  }
+};
+
 // * Set Loading
 export const setLoading = (value) => async (dispatch) => {
   dispatch({
     type: DOCTOR_LOADING,
+    payload: value,
+  });
+};
+
+// * Set Chatroom Loading
+export const setChatroomLoading = (value) => async (dispatch) => {
+  dispatch({
+    type: DOCTOR_CHATROOM_LOADING,
     payload: value,
   });
 };

@@ -11,7 +11,7 @@ import { Visibility, VisibilityOff } from "@material-ui/icons";
 import Loader from "../../Common/Loader";
 import Swal from "sweetalert2";
 import { useSelector, useDispatch } from "react-redux";
-import { doctor } from "../../../redux/actions/index";
+import { doctor as doctorActions } from "../../../redux/actions/index";
 import { useHistory } from "react-router-dom";
 
 const Login = () => {
@@ -41,12 +41,12 @@ const Login = () => {
 
   useEffect(() => {
     return () => {
-      dispatch(doctor.clearError());
+      dispatch(doctorActions.clear());
     };
     // eslint-disable-next-line
   }, []);
 
-  useEffect(() => {
+  const errorHandling = () => {
     if (/^Validation Error*/i.test(error)) {
       Swal.fire({
         position: "center",
@@ -57,9 +57,16 @@ const Login = () => {
         timer: 1500,
       });
     }
+
+    dispatch(doctorActions.clear());
+  };
+
+  useEffect(() => {
     if (isAuthenticated) {
-      history.push("/");
+      history.push("/doctor");
     }
+
+    if (error) errorHandling();
     // eslint-disable-next-line
   }, [error, isAuthenticated]);
 
@@ -87,7 +94,10 @@ const Login = () => {
 
   const submit = async () => {
     await dispatch(
-      doctor.loginDoctor({ username: user.email, password: user.password })
+      doctorActions.loginDoctor({
+        username: user.email,
+        password: user.password,
+      })
     );
     setCompLoading(false);
   };

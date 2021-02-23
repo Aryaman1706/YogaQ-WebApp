@@ -125,13 +125,22 @@ const Routes = () => {
         />
 
         {/* Doctor */}
+        <Route
+          doctorLogin
+          exact
+          path="/doctor"
+          render={(props) => (
+            <>
+              <Home type="doctor" />
+            </>
+          )}
+        />
         <Route exact path="/enquire" component={NewEnquiry} />
         <Route exact path="/doctor/login" component={DoctorLogin} />
 
         {/* Doctor Dashboard */}
         <Route exact path="/doctor/calls" component={CallListing} />
         {/* User */}
-        {/* <Route exact path="/" component={Home} /> */}
         <Route
           exact
           path="/"
@@ -143,7 +152,6 @@ const Routes = () => {
         />
         <Route exact path="/signup" component={Signup} />
         <Route userComplete exact path="/edit" component={EditUser} />
-        {/* <Route exact path="/room" component={Room} /> */}
         <Route exact path="/book-call/:chatroomId" component={BookCall} />
         <Route exact path="/call-history/:chatroomId" component={CallHistory} />
         <Route
@@ -151,7 +159,6 @@ const Routes = () => {
           path="/question-bank/:chatroomId"
           render={(props) => (
             <>
-              {/*TODO  Wrap the following in the nav layout component */}
               <UserAppbar>
                 <QuestionBank {...props} />
               </UserAppbar>

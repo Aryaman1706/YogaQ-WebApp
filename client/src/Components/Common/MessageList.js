@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   admin as adminActions,
   user as userActions,
+  doctor as doctorActions,
 } from "../../redux/actions/index";
 import MessageItem from "./MessageItem";
 import Loader from "../Common/Loader";
@@ -38,6 +39,8 @@ const MessageList = ({ type, socket }) => {
     socket.current.on("toClient", (message) => {
       if (type.trim() === "admin") {
         dispatch(adminActions.appendMessage(message));
+      } else if (type.trim() === "doctor") {
+        dispatch(doctorActions.appendMessage(message));
       } else if (type.trim() === "user") {
         dispatch(userActions.appendMessage(message));
       }
@@ -85,6 +88,8 @@ const MessageList = ({ type, socket }) => {
     socket.current.removeAllListeners("toClient");
     if (type.trim() === "admin") {
       await dispatch(adminActions.modifyLastAccess());
+    } else if (type.trim() === "doctor") {
+      await dispatch(doctorActions.modifyLastAccess());
     } else if (type.trim() === "user") {
       await dispatch(userActions.modifyLastAccess());
     }
@@ -101,6 +106,7 @@ const MessageList = ({ type, socket }) => {
 
   const depArrayForScroll = () => {
     if (type.trim() === "admin") return [globalState.admin_messages];
+    else if (type.trim() === "doctor") return [globalState.doctor_messages];
     else if (type.trim() === "user") return [globalState.user_messages];
   };
 
@@ -134,6 +140,10 @@ const MessageList = ({ type, socket }) => {
       if (type.trim() === "admin") {
         await dispatch(
           adminActions.getMessages({ id: active_chatroom._id, page })
+        );
+      } else if (type.trim() === "doctor") {
+        await dispatch(
+          doctorActions.getMessages({ id: active_chatroom._id, page })
         );
       } else if (type.trim() === "user") {
         await dispatch(
@@ -185,38 +195,25 @@ const MessageList = ({ type, socket }) => {
         },
       };
       setMessage("");
+      const messageToSend = {
+        chatroomId: active_chatroom._id,
+        sender: data.sender,
+        text: data.message.text,
+        link: data.message.link,
+        file: null,
+        urlEmbeds: {
+          title: null,
+          description: null,
+          image: null,
+        },
+        time: new Date(),
+      };
       if (type.trim() === "admin") {
-        dispatch(
-          adminActions.appendMessage({
-            chatroomId: active_chatroom._id,
-            sender: data.sender,
-            text: data.message.text,
-            link: data.message.link,
-            file: null,
-            urlEmbeds: {
-              title: null,
-              description: null,
-              image: null,
-            },
-            time: new Date(),
-          })
-        );
+        dispatch(adminActions.appendMessage(messageToSend));
+      } else if (type.trim() === "doctor") {
+        dispatch(doctorActions.appendMessage(messageToSend));
       } else if (type.trim() === "user") {
-        dispatch(
-          userActions.appendMessage({
-            chatroomId: active_chatroom._id,
-            sender: data.sender,
-            text: data.message.text,
-            link: data.message.link,
-            file: null,
-            urlEmbeds: {
-              title: null,
-              description: null,
-              image: null,
-            },
-            time: new Date(),
-          })
-        );
+        dispatch(userActions.appendMessage(messageToSend));
       }
       socket.current.emit("toServer", data);
       // ! Why?
@@ -238,6 +235,37 @@ const MessageList = ({ type, socket }) => {
             if (
               active_chatroom.unreadMessages > 0 &&
               globalState.admin_messages.length - index ===
+                active_chatroom.unreadMessages
+            ) {
+              return (
+                <>
+                  {newMessageIndicator()}
+                  <MessageItem
+                    message={item}
+                    id={globalState[type.trim()]._id}
+                  />
+                </>
+              );
+            }
+            return (
+              <MessageItem message={item} id={globalState[type.trim()]._id} />
+            );
+          });
+      }
+
+      return null;
+    } else if (type.trim() === "doctor") {
+      if (
+        globalState.doctor_messages &&
+        globalState.doctor_messages.length > 0
+      ) {
+        return globalState.doctor_messages
+          .slice(0)
+          .reverse()
+          .map((item, index) => {
+            if (
+              active_chatroom.unreadMessages > 0 &&
+              globalState.doctor_messages.length - index ===
                 active_chatroom.unreadMessages
             ) {
               return (
