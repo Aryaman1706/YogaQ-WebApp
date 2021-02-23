@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { enquiry as enquiryAction } from "../../../redux/actions/index";
 import Swal from "sweetalert2";
-import AdminAppbar from "../AdminAppbar";
+import AdminAppbar from "../../Common/Appbar";
 import AdminLayout from "../../../layout/AdminLayout";
 
 const RegisterEnquiry = () => {
@@ -89,7 +89,7 @@ const RegisterEnquiry = () => {
 
   return (
     <>
-      <AdminAppbar>
+      <AdminAppbar type={"admin"}>
         <AdminLayout>
           {enquiry ? (
             <>

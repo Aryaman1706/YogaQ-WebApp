@@ -13,7 +13,7 @@ import Loader from "../../Common/Loader";
 import Swal from "sweetalert2";
 import { useSelector, useDispatch } from "react-redux";
 import { admin as adminActions } from "../../../redux/actions/index";
-import AdminAppbar from "../AdminAppbar";
+import AdminAppbar from "../../Common/Appbar";
 import AdminLayout from "../../../layout/AdminLayout";
 
 const CreateChatroom = () => {
@@ -108,7 +108,7 @@ const CreateChatroom = () => {
 
   return (
     <>
-      <AdminAppbar>
+      <AdminAppbar type={"admin"}>
         <AdminLayout>
           <Grid container direction="row" justify="center" alignItems="stretch">
             <Grid item xs={2} lg={4}></Grid>

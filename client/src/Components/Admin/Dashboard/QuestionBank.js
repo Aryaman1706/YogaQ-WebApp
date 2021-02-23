@@ -10,7 +10,7 @@ import {
 import QuestionItem from "../../User/QuestionItem";
 import { admin as adminActions } from "../../../redux/actions";
 import { useHistory, useParams } from "react-router-dom";
-import AdminAppbar from "../AdminAppbar";
+import AdminAppbar from "../../Common/Appbar";
 import Swal from "sweetalert2";
 import axios from "../../../utils/axios";
 
@@ -114,7 +114,7 @@ const QuestionBank = () => {
   const [responses, setResponses] = useState({});
   return (
     <>
-      <AdminAppbar>
+      <AdminAppbar type={"admin"}>
         <Grid container spacing={2}>
           <Grid item xs={12} style={{ textAlign: "right" }}>
             <Button

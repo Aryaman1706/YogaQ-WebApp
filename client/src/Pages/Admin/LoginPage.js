@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import Login from "../../Components/Admin/Login";
-import AdminAppbar from "../../Components/Admin/AdminAppbar";
+import AdminAppbar from "../../Components/Common/Appbar";
 
 const LoginPage = () => {
   const { admin, isAuthenticated } = useSelector((state) => state.admin);
@@ -16,7 +16,7 @@ const LoginPage = () => {
   }, [isAuthenticated, admin]);
   return (
     <>
-      <AdminAppbar>
+      <AdminAppbar type={"admin"}>
         <Login />
       </AdminAppbar>
     </>

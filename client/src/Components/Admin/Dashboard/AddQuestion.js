@@ -3,7 +3,7 @@ import { TextField, Typography, Grid, Button } from "@material-ui/core";
 import { useSelector, useDispatch } from "react-redux";
 import { admin as adminActions } from "../../../redux/actions";
 import Swal from "sweetalert2";
-import AdminAppbar from "../AdminAppbar";
+import AdminAppbar from "../../Common/Appbar";
 import AdminLayout from "../../../layout/AdminLayout";
 
 const AddQuestion = () => {
@@ -85,7 +85,7 @@ const AddQuestion = () => {
 
   return (
     <>
-      <AdminAppbar>
+      <AdminAppbar type={"admin"}>
         <AdminLayout>
           <Grid container spacing={2} style={{ padding: "1rem" }}>
             <Grid item xs={12}>

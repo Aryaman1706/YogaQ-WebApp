@@ -1,11 +1,11 @@
 import React from "react";
-import AdminAppbar from "../../Components/Admin/AdminAppbar";
+import AdminAppbar from "../../Components/Common/Appbar";
 import Register from "../../Components/Admin/Register";
 
 const RegisterPage = () => {
   return (
     <>
-      <AdminAppbar>
+      <AdminAppbar type={"admin"}>
         <Register />
       </AdminAppbar>
     </>

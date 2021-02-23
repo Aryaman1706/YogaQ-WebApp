@@ -20,7 +20,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { enquiry as enquiryActions } from "../../../redux/actions/index";
 import Loader from "../../Common/Loader";
 import background from "../../../assets/background.svg";
-import AdminAppbar from "../AdminAppbar";
+import AdminAppbar from "../../Common/Appbar";
 import AdminLayout from "../../../layout/AdminLayout";
 
 const useStyles = makeStyles((theme) => ({
@@ -152,7 +152,7 @@ const ViewEnquiry = () => {
   };
   return (
     <>
-      <AdminAppbar>
+      <AdminAppbar type={"admin"}>
         <AdminLayout>
           {!compLoading && !loadingDelete && enquiry ? (
             <div className={classes.container}>

@@ -4,7 +4,7 @@ import ChangePassword from "../../Components/Admin/ChangePassword";
 import { Grid, makeStyles, Paper, Toolbar } from "@material-ui/core";
 import { useSelector } from "react-redux";
 import background from "../../assets/background.svg";
-import AdminAppbar from "../../Components/Admin/AdminAppbar";
+import AdminAppbar from "../../Components/Common/Appbar";
 import AdminLayout from "../../layout/AdminLayout";
 
 const useStyles = makeStyles((theme) => ({
@@ -29,7 +29,7 @@ const Profile = () => {
   const { loading } = useSelector((state) => state.admin);
   return (
     <>
-      <AdminAppbar>
+      <AdminAppbar type={"admin"}>
         <AdminLayout>
           {loading ? null : (
             <>

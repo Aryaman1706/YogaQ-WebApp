@@ -15,7 +15,7 @@ import { useHistory, useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { user as userActions } from "../../../redux/actions/index";
 import Loader from "../../Common/Loader";
-import AdminAppbar from "../AdminAppbar";
+import AdminAppbar from "../../Common/Appbar";
 import AdminLayout from "../../../layout/AdminLayout";
 
 const useStyles = makeStyles((theme) => ({
@@ -142,7 +142,7 @@ const ViewUser = () => {
   const classes = useStyles();
   return (
     <>
-      <AdminAppbar>
+      <AdminAppbar type={"admin"}>
         <AdminLayout>
           <Typography variant="h2" align="center">
             User
