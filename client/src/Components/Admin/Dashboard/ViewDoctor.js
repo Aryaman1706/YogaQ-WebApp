@@ -10,7 +10,7 @@ import {
   admin as adminActions,
 } from "../../../redux/actions/index";
 import background from "../../../assets/background.svg";
-import AdminAppbar from "../AdminAppbar";
+import AdminAppbar from "../../Common/Appbar";
 import AdminLayout from "../../../layout/AdminLayout";
 
 const useStyles = makeStyles((theme) => ({
@@ -117,7 +117,7 @@ const ViewDoctor = () => {
   const classes = useStyles();
   return (
     <>
-      <AdminAppbar>
+      <AdminAppbar type={"admin"}>
         <AdminLayout>
           {!compLoading && selectDoctor ? (
             <>

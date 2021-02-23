@@ -11,7 +11,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { doctor as doctorActions } from "../../../redux/actions/index";
 import DoctorItem from "./DoctorItem";
 import AdminLayout from "../../../layout/AdminLayout";
-import AdminAppbar from "../AdminAppbar";
+import AdminAppbar from "../../Common/Appbar";
 
 const DoctorList = () => {
   const [pagination, setPagination] = useState({
@@ -123,7 +123,7 @@ const DoctorList = () => {
 
   return (
     <>
-      <AdminAppbar>
+      <AdminAppbar type={"admin"}>
         <AdminLayout>
           <Typography variant="h2" style={{ padding: "1rem" }}>
             All Doctors

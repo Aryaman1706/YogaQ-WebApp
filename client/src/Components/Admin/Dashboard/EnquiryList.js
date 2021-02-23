@@ -5,7 +5,7 @@ import EnquiryItem from "./EnquiryItem";
 import { useDispatch, useSelector } from "react-redux";
 import { enquiry as enquiryActions } from "../../../redux/actions/index";
 import AdminLayout from "../../../layout/AdminLayout";
-import AdminAppbar from "../AdminAppbar";
+import AdminAppbar from "../../Common/Appbar";
 
 const EnquiryList = () => {
   const [pagination, setPagination] = useState({
@@ -114,7 +114,7 @@ const EnquiryList = () => {
 
   return (
     <>
-      <AdminAppbar>
+      <AdminAppbar type={"admin"}>
         <AdminLayout>
           <Typography variant="h2" style={{ padding: "1rem" }}>
             All Enquiries

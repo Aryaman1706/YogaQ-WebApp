@@ -5,7 +5,7 @@ import Loader from "../../Components/Common/Loader";
 import ChatroomList from "../../Components/Common/ChatroomList";
 import Chatroom from "../../Components/Common/Chatroom";
 import ChatroomAppbar from "../../Components/Common/ChatroomAppbar";
-import UserAppbar from "../../Components/User/UserAppbar";
+import UserAppbar from "../../Components/Common/Appbar";
 import Landing from "../../Components/Landing/Landing";
 import ChatroomDrawer from "../../Components/User/ChatroomDrawer";
 
@@ -149,7 +149,7 @@ const Home = ({ type }) => {
   const renderMainContent = () => {
     if (type.trim() === "user" && !globalState.isAuthenticated) {
       return (
-        <UserAppbar>
+        <UserAppbar type={"user"}>
           <Landing />
         </UserAppbar>
       );

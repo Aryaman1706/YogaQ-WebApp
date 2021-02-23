@@ -11,7 +11,7 @@ import Loader from "../../Common/Loader";
 import { useSelector, useDispatch } from "react-redux";
 import { user as userActions } from "../../../redux/actions/index";
 import UserItem from "./UserItem";
-import AdminAppbar from "../AdminAppbar";
+import AdminAppbar from "../../Common/Appbar";
 import AdminLayout from "../../../layout/AdminLayout";
 
 const UserList = () => {
@@ -123,7 +123,7 @@ const UserList = () => {
 
   return (
     <>
-      <AdminAppbar>
+      <AdminAppbar type={"admin"}>
         <AdminLayout>
           <Typography variant="h2" align="center">
             All Users

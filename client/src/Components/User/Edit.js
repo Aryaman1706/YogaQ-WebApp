@@ -18,7 +18,7 @@ import Loader from "../Common/Loader";
 import background from "../../assets/background.svg";
 import homeIcon from "../../assets/home.svg";
 import { useHistory } from "react-router-dom";
-import UserAppbar from "./UserAppbar";
+import UserAppbar from "../Common/Appbar";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -152,7 +152,7 @@ const Edit = () => {
 
   return (
     <>
-      <UserAppbar>
+      <UserAppbar type={"user"}>
         <div className={classes.container}>
           <Grid container direction="row" justify="center" alignItems="stretch">
             <Grid item xs={11} sm={10} lg={6}>

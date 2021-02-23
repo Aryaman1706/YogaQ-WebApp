@@ -40,7 +40,7 @@ import EditUser from "../Components/User/Edit";
 import BookCall from "../Components/User/BookCall";
 import CallHistory from "../Components/User/CallHistory";
 import QuestionBank from "../Components/User/QuestionBank";
-import UserAppbar from "../Components/User/UserAppbar";
+import UserAppbar from "../Components/Common/Appbar";
 
 const Routes = () => {
   return (
@@ -159,7 +159,7 @@ const Routes = () => {
           path="/question-bank/:chatroomId"
           render={(props) => (
             <>
-              <UserAppbar>
+              <UserAppbar type={"user"}>
                 <QuestionBank {...props} />
               </UserAppbar>
             </>

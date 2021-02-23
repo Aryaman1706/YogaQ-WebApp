@@ -11,7 +11,7 @@ import queryString from "query-string";
 import Swal from "sweetalert2";
 import { useDispatch, useSelector } from "react-redux";
 import { user as userActions } from "../redux/actions/index";
-import UserAppbar from "../Components/User/UserAppbar";
+import UserAppbar from "../Components/Common/Appbar";
 
 const Signup = () => {
   const history = useHistory();
@@ -118,7 +118,7 @@ const Signup = () => {
 
   return (
     <>
-      <UserAppbar>
+      <UserAppbar type={"user"}>
         <Typography variant="h2" align="center">
           Sign Up
         </Typography>
