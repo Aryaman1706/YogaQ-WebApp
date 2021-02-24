@@ -3,11 +3,12 @@ import { Switch } from "react-router-dom";
 import Route from "./RouteWrapper";
 import Wrapper from "../Components/Wrapper";
 
+// * Common Components
 import Home from "../Pages/Common/Home";
+import Login from "../Components/Common/Login";
 
 // * Admin
 import AdminLogin from "../Pages/Admin/LoginPage";
-// import AdminHome from "../Pages/Admin/Home";
 import AdminProfile from "../Pages/Admin/Profile";
 
 // * Admin DashBoard
@@ -48,7 +49,11 @@ const Routes = () => {
       <Wrapper />
       <Switch>
         {/* Admin */}
-        <Route exact path="/admin/login" component={AdminLogin} />
+        <Route
+          exact
+          path="/admin/login"
+          render={(props) => <Login type={"admin"} />}
+        />
         <Route
           adminLogin
           exact
@@ -122,9 +127,7 @@ const Routes = () => {
           exact
           path="/admin/question-bank/:chatroomId"
           render={(props) => (
-            <>
-              <QuestionBankAdminDoctor type="admin" {...props} />
-            </>
+            <QuestionBankAdminDoctor type="admin" {...props} />
           )}
         />
 
@@ -133,21 +136,19 @@ const Routes = () => {
           doctorLogin
           exact
           path="/doctor"
-          render={(props) => (
-            <>
-              <Home type="doctor" {...props} />
-            </>
-          )}
+          render={(props) => <Home type="doctor" {...props} />}
         />
         <Route exact path="/enquire" component={NewEnquiry} />
-        <Route exact path="/doctor/login" component={DoctorLogin} />
+        <Route
+          exact
+          path="/doctor/login"
+          render={(props) => <Login type={"doctor"} />}
+        />
         <Route
           exact
           path="/doctor/question-bank/:chatroomId"
           render={(props) => (
-            <>
-              <QuestionBankAdminDoctor type="doctor" {...props} />
-            </>
+            <QuestionBankAdminDoctor type="doctor" {...props} />
           )}
         />
         {/* Doctor Dashboard */}

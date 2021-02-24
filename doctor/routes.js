@@ -84,9 +84,10 @@ router.delete("/delete/:enquiryId", loginAdmin, controllers.denyEnquiry);
  * }
  */
 router.post("/login", (req, res, next) => {
+  // eslint-disable-next-line
   passport.authenticate("doctor", (err, user, info) => {
     if (err) return next(err);
-    if (!user) return res.json({ error: info.message, body: null });
+    if (!user) return res.status(404).json({ error: info.message, body: null });
 
     req.logIn(user, (error) => {
       if (error) return next(error);
@@ -97,7 +98,6 @@ router.post("/login", (req, res, next) => {
         body: body,
       });
     });
-    return next();
   })(req, res, next);
 });
 

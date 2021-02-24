@@ -12,12 +12,18 @@ import {
 import { Formik } from "formik";
 import { object as yupObject, string as yupString } from "yup";
 import { Visibility, VisibilityOff } from "@material-ui/icons";
-import Loader from "../Common/Loader";
+import Loader from "./Loader";
 import Swal from "sweetalert2";
 import { admin, doctor } from "../../redux/actions";
+import Appbar from "./Appbar";
 
 const Login = ({ type }) => {
   const dispatch = useDispatch();
+  const { error, isAuthenticated } = useSelector((state) => {
+    if (type.trim() === "admin") return state.admin;
+    else if (type.trim() === "doctor") return state.doctor;
+  });
+  const history = useHistory();
 
   useEffect(() => {
     return () => {
@@ -40,8 +46,6 @@ const Login = ({ type }) => {
   }) => {
     const [show, setShow] = useState(false);
     const [compLoading, setCompLoading] = useState(false);
-    const { error, isAuthenticated } = useSelector((state) => state.admin);
-    const history = useHistory();
 
     const passwordToggle = (event) => {
       setShow((prev) => {
@@ -49,7 +53,7 @@ const Login = ({ type }) => {
       });
     };
 
-    const errorHandler = () => {
+    const errorHandler = async () => {
       if (/^Validation Error*/i.test(error)) {
         Swal.fire({
           position: "center",
@@ -62,9 +66,9 @@ const Login = ({ type }) => {
       }
 
       if (type.trim() === "admin") {
-        dispatch(admin.clear());
+        await dispatch(admin.clear());
       } else if (type.trim() === "doctor") {
-        dispatch(doctor.clear());
+        await dispatch(doctor.clear());
       }
     };
 
@@ -190,31 +194,34 @@ const Login = ({ type }) => {
 
   return (
     <>
-      <Grid container direction="row" justify="center" alignItems="stretch">
-        <Grid item xs={2} lg={4}></Grid>
-        <Grid item xs={8} lg={4}>
-          <Grid
-            container
-            direction="column"
-            justify="space-around"
-            alignItems="stretch"
-            spacing={2}
-          >
-            <Grid item>
-              <Typography variant="h4" align="center">
-                Login as Admin
-              </Typography>
+      <Appbar type={type.trim()}>
+        <Grid container direction="row" justify="center" alignItems="stretch">
+          <Grid item xs={2} lg={4}></Grid>
+          <Grid item xs={8} lg={4}>
+            <Grid
+              container
+              direction="column"
+              justify="space-around"
+              alignItems="stretch"
+              spacing={2}
+            >
+              <Grid item>
+                <Typography variant="h4" align="center">
+                  Login as{" "}
+                  {type.trim().charAt(0).toUpperCase() + type.trim().slice(1)}
+                </Typography>
+              </Grid>
+              <Formik
+                initialValues={{ email: "", password: "" }}
+                validationSchema={validationSchema}
+                validateOnMount={true}
+                component={Form}
+              />
             </Grid>
-            <Formik
-              initialValues={{ email: "", password: "" }}
-              validationSchema={validationSchema}
-              validateOnMount={true}
-              component={Form}
-            />
           </Grid>
+          <Grid item xs={2} lg={4}></Grid>
         </Grid>
-        <Grid item xs={2} lg={4}></Grid>
-      </Grid>
+      </Appbar>
     </>
   );
 };
