@@ -1,12 +1,5 @@
 import React from "react";
-import {
-  Grid,
-  Paper,
-  Typography,
-  makeStyles,
-  IconButton,
-} from "@material-ui/core";
-import { Visibility } from "@material-ui/icons";
+import { Grid, Paper, Typography, makeStyles } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
@@ -15,10 +8,17 @@ const useStyles = makeStyles((theme) => ({
     placeItems: "center",
     display: "flex",
     justifyContent: "space-between",
+    boxShadow: "rgba(0, 0, 0, 0.05) 0px 5px 16px 0px",
+    borderRadius: "3px",
+    "&:hover": {
+      transform: "scale(1.02)",
+      transition: "all 0.16s ease-in 0s",
+      cursor: "pointer",
+    },
   },
 }));
 
-const UserItem = ({ username, email, id }) => {
+const UserItem = ({ value: { username, email, _id: id } }) => {
   const classes = useStyles();
   const history = useHistory();
 
@@ -29,15 +29,14 @@ const UserItem = ({ username, email, id }) => {
   return (
     <>
       <Grid item>
-        <Paper elevation={3} className={classes.paper}>
+        <Paper
+          elevation={0}
+          className={classes.paper}
+          onClick={(event) => viewUser(event)}
+        >
           <div>
             <Typography variant="h6">{username}</Typography>
             <Typography variant="subtitle2">{email}</Typography>
-          </div>
-          <div>
-            <IconButton onClick={(event) => viewUser(event)}>
-              <Visibility color="primary" />
-            </IconButton>
           </div>
         </Paper>
       </Grid>

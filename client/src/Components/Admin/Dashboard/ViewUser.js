@@ -6,23 +6,56 @@ import {
   Button,
   makeStyles,
   Paper,
-  IconButton,
   TextField,
 } from "@material-ui/core";
-import VisibilityIcon from "@material-ui/icons/Visibility";
+import background from "../../../assets/background.svg";
 import Swal from "sweetalert2";
 import { useHistory, useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { user as userActions } from "../../../redux/actions/index";
+import {
+  user as userActions,
+  admin as adminActions,
+} from "../../../redux/actions/index";
 import Loader from "../../Common/Loader";
 import AdminAppbar from "../../Common/Appbar";
 import AdminLayout from "../../../layout/AdminLayout";
 
 const useStyles = makeStyles((theme) => ({
+  div: {
+    display: "flex",
+    justifyContent: "flex-end",
+  },
   div2: {
     padding: "5px 10px 5px 10px",
     display: "flex",
     justifyContent: "space-between",
+  },
+  container: {
+    backgroundImage: `url(${background})`,
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "contain",
+    backgroundAttachment: "fixed",
+  },
+  paper: {
+    padding: 50,
+    marginTop: "6rem",
+    [theme.breakpoints.only("xs")]: {
+      padding: 10,
+      marginTop: "1rem",
+    },
+  },
+  paperChatroom: {
+    padding: "5px 10px 5px 10px",
+    placeItems: "center",
+    display: "flex",
+    justifyContent: "space-between",
+    boxShadow: "rgba(0, 0, 0, 0.05) 0px 5px 16px 0px",
+    borderRadius: "3px",
+    "&:hover": {
+      transform: "scale(1.02)",
+      transition: "all 0.16s ease-in 0s",
+      cursor: "pointer",
+    },
   },
 }));
 
@@ -137,6 +170,11 @@ const ViewUser = () => {
       x = x + chatroom.call.length;
     });
     callCount.current = x;
+  };
+
+  const viewChatroom = async (event, chatroomId) => {
+    await dispatch(adminActions.getChatroom(chatroomId));
+    history.push(`/admin/chatroom/view/${chatroomId}`);
   };
 
   const classes = useStyles();
@@ -272,7 +310,11 @@ const ViewUser = () => {
                       return (
                         <Fragment key={index}>
                           <Grid item>
-                            <Paper>
+                            <Paper
+                              elevation={0}
+                              className={classes.paperChatroom}
+                              onClick={(event) => viewChatroom(event, obj._id)}
+                            >
                               <div className={classes.div2}>
                                 <div>
                                   <Typography variant="subtitle1">
@@ -281,10 +323,13 @@ const ViewUser = () => {
                                   <Typography variant="subtitle1">
                                     Email Address:- {obj.partner.id.email}
                                   </Typography>
+                                  <Typography variant="subtitle2">
+                                    Created On:-{" "}
+                                    {new Date(
+                                      obj.createdAt
+                                    ).toLocaleDateString()}
+                                  </Typography>
                                 </div>
-                                <IconButton>
-                                  <VisibilityIcon />
-                                </IconButton>
                               </div>
                             </Paper>
                           </Grid>
