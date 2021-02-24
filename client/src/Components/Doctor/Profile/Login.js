@@ -13,6 +13,7 @@ import Swal from "sweetalert2";
 import { useSelector, useDispatch } from "react-redux";
 import { doctor as doctorActions } from "../../../redux/actions/index";
 import { useHistory } from "react-router-dom";
+import Appbar from "../../Common/Appbar";
 
 const Login = () => {
   const [user, setUser] = useState({
@@ -111,99 +112,103 @@ const Login = () => {
 
   return (
     <>
-      <Grid container direction="row" justify="center" alignItems="stretch">
-        <Grid item xs={2} lg={4}></Grid>
-        <Grid item xs={8} lg={4}>
-          <Grid
-            container
-            direction="column"
-            justify="space-around"
-            alignItems="stretch"
-            spacing={2}
-          >
-            <Grid item>
-              <Typography variant="h4" align="center">
-                Login as Doctor
-              </Typography>
+      <Appbar type={"doctor"}>
+        <Grid container direction="row" justify="center" alignItems="stretch">
+          <Grid item xs={2} lg={4}></Grid>
+          <Grid item xs={8} lg={4}>
+            <Grid
+              container
+              direction="column"
+              justify="space-around"
+              alignItems="stretch"
+              spacing={2}
+            >
+              <Grid item>
+                <Typography variant="h4" align="center">
+                  Login as Doctor
+                </Typography>
+              </Grid>
+              {compLoading ? (
+                <Loader />
+              ) : (
+                <>
+                  <Grid item>
+                    <TextField
+                      fullWidth
+                      label="Email Address"
+                      id="email"
+                      variant="outlined"
+                      value={user.email}
+                      onChange={(event) => changeHandler(event)}
+                      error={
+                        user.email.length > 0 &&
+                        (user.email.length > 150 ||
+                          !emailRegex.test(user.email))
+                      }
+                      helperText={
+                        user.email.length > 0 &&
+                        (user.email.length > 150 ||
+                          !emailRegex.test(user.email))
+                          ? "Enter Valid Email Address"
+                          : null
+                      }
+                    />
+                  </Grid>
+                  <Grid item>
+                    <TextField
+                      fullWidth
+                      type={show ? "text" : "password"}
+                      label="Password"
+                      id="password"
+                      variant="outlined"
+                      value={user.password}
+                      onChange={(event) => changeHandler(event)}
+                      error={
+                        user.password.length > 0 &&
+                        (user.password.length > 20 || user.password.length < 8)
+                      }
+                      helperText={
+                        user.password.length > 0 &&
+                        (user.password.length > 20 || user.password.length < 8)
+                          ? "Password must be between 8 to 20 characters long."
+                          : null
+                      }
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <IconButton
+                              onClick={(event) => passwordToggle(event)}
+                            >
+                              {show ? <VisibilityOff /> : <Visibility />}
+                            </IconButton>
+                          </InputAdornment>
+                        ),
+                      }}
+                    />
+                  </Grid>
+                  <Grid item>
+                    <Button
+                      fullWidth
+                      variant="contained"
+                      color="primary"
+                      onClick={(event) => submitHandler(event)}
+                      style={{
+                        backgroundColor: "#0FC1A7",
+                        height: "50px",
+                        backgroundImage:
+                          "linear-gradient(315deg, #abe9cd 0%, #3eadcf 74%)",
+                      }}
+                    >
+                      Login
+                    </Button>
+                  </Grid>
+                </>
+              )}
             </Grid>
-            {compLoading ? (
-              <Loader />
-            ) : (
-              <>
-                <Grid item>
-                  <TextField
-                    fullWidth
-                    label="Email Address"
-                    id="email"
-                    variant="outlined"
-                    value={user.email}
-                    onChange={(event) => changeHandler(event)}
-                    error={
-                      user.email.length > 0 &&
-                      (user.email.length > 150 || !emailRegex.test(user.email))
-                    }
-                    helperText={
-                      user.email.length > 0 &&
-                      (user.email.length > 150 || !emailRegex.test(user.email))
-                        ? "Enter Valid Email Address"
-                        : null
-                    }
-                  />
-                </Grid>
-                <Grid item>
-                  <TextField
-                    fullWidth
-                    type={show ? "text" : "password"}
-                    label="Password"
-                    id="password"
-                    variant="outlined"
-                    value={user.password}
-                    onChange={(event) => changeHandler(event)}
-                    error={
-                      user.password.length > 0 &&
-                      (user.password.length > 20 || user.password.length < 8)
-                    }
-                    helperText={
-                      user.password.length > 0 &&
-                      (user.password.length > 20 || user.password.length < 8)
-                        ? "Password must be between 8 to 20 characters long."
-                        : null
-                    }
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <IconButton
-                            onClick={(event) => passwordToggle(event)}
-                          >
-                            {show ? <VisibilityOff /> : <Visibility />}
-                          </IconButton>
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                </Grid>
-                <Grid item>
-                  <Button
-                    fullWidth
-                    variant="contained"
-                    color="primary"
-                    onClick={(event) => submitHandler(event)}
-                    style={{
-                      backgroundColor: "#0FC1A7",
-                      height: "50px",
-                      backgroundImage:
-                        "linear-gradient(315deg, #abe9cd 0%, #3eadcf 74%)",
-                    }}
-                  >
-                    Login
-                  </Button>
-                </Grid>
-              </>
-            )}
           </Grid>
+          <Grid item xs={2} lg={4}></Grid>
         </Grid>
-        <Grid item xs={2} lg={4}></Grid>
-      </Grid>
+      </Appbar>
     </>
   );
 };

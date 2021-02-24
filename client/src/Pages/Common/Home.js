@@ -86,7 +86,8 @@ const Home = ({ type }) => {
   };
 
   useEffect(() => {
-    type.trim() === "user" && adjustWidths();
+    (type.trim() === "user" || type.trim() === "doctor") && adjustWidths();
+    // eslint-disable-next-line
   }, [showDrawer, active_chatroom]);
 
   const chatComponent = () => {
@@ -124,7 +125,8 @@ const Home = ({ type }) => {
               >
                 <Chatroom type={type.trim()} />
               </Grid>
-              {type.trim() === "user" && active_chatroom ? (
+              {(type.trim() === "user" || type.trim() === "doctor") &&
+              active_chatroom ? (
                 <>
                   <Grid
                     item
@@ -135,7 +137,7 @@ const Home = ({ type }) => {
                     xl={widths.drawer}
                     className={showDrawer ? classes.itemC : classes.hideDrawer}
                   >
-                    <ChatroomDrawer />
+                    <ChatroomDrawer type={type} />
                   </Grid>
                 </>
               ) : null}

@@ -17,9 +17,12 @@ import {
   APPEND_DOCTOR_MESSAGE,
   CLEAR_DOCTOR_CHATROOM,
   DOCTOR_GET_MESSAGES,
+  DOCTOR_ADD_QUESTION_TO_QUESTION_SET,
+  GET_DOCTOR_QUESTION_SET,
 } from "../types";
 import axios from "../../utils/axios";
 import store from "../store";
+import Swal from "sweetalert2";
 
 // * Login as Doctor
 export const loginDoctor = (formData) => async (dispatch) => {
@@ -257,4 +260,49 @@ export const clear = () => async (dispatch) => {
     type: CLEAR_DOCTOR_ERROR,
     payload: null,
   });
+};
+
+// * Add question
+export const addQuestionToQuestionSet = ({ chatroomId, question }) => async (
+  dispatch
+) => {
+  try {
+    const res = await axios.put(
+      `/questionSet/addQuestion/${chatroomId}`,
+      question
+    );
+    dispatch({
+      type: DOCTOR_ADD_QUESTION_TO_QUESTION_SET,
+      payload: res.data.body,
+    });
+  } catch (error) {
+    dispatch({
+      type: DOCTOR_ERROR,
+      payload: error.response.data.error,
+    });
+  }
+};
+
+// * Get questionSet
+export const getQuestionSet = (chatroomId) => async (dispatch) => {
+  try {
+    const res = await axios.get(`/questionSet/doctor/get/${chatroomId}`);
+    dispatch({
+      type: GET_DOCTOR_QUESTION_SET,
+      payload: res.data.body,
+    });
+  } catch (error) {
+    if (error.response.data.error === "Invalid Question Set.") {
+      Swal.fire({
+        title: "Error",
+        text: "No question set found for this chatroom.",
+        icon: "error",
+        showConfirmButton: true,
+      });
+    }
+    dispatch({
+      type: DOCTOR_ERROR,
+      payload: error.response.data.error,
+    });
+  }
 };

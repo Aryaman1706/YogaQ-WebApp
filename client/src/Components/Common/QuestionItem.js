@@ -96,7 +96,7 @@ const QuestionItem = ({
     <>
       <Grid item xs={12}>
         <Paper elevation={2} className={classes.questionCard}>
-          {type === "admin" && (
+          {(type === "admin" || type === "doctor") && (
             <div className={classes.deleteBtn}>
               <IconButton onClick={handleDeleteAction}>
                 <DeleteIcon />

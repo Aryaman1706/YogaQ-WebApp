@@ -45,10 +45,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ChatroomDrawer = () => {
+const ChatroomDrawer = ({ type }) => {
   const classes = useStyles();
   const history = useHistory();
-  const { active_chatroom } = useSelector((state) => state.user);
+  const { active_chatroom } = useSelector((state) => {
+    if (type.trim === "user") return state.user;
+    else if (type.trim() === "doctor") return state.doctor;
+  });
   const [show, setShow] = useState(false);
 
   const handleShow = () => {
@@ -61,15 +64,27 @@ const ChatroomDrawer = () => {
     <>
       <Grid container direction="row" justify="center" alignItems="stretch">
         <Grid item xs={12}>
-          <img
-            src={
-              active_chatroom.partner.id.profilePicture
-                ? active_chatroom.partner.id.profilePicture
-                : Profile
-            }
-            alt={active_chatroom.partner.id.username}
-            className={classes.profile}
-          />
+          {type.trim() === "user" ? (
+            <img
+              src={
+                active_chatroom.partner.id.profilePicture
+                  ? active_chatroom.partner.id.profilePicture
+                  : Profile
+              }
+              alt={active_chatroom.partner.id.username}
+              className={classes.profile}
+            />
+          ) : (
+            <img
+              src={
+                active_chatroom.user.id.profilePicture
+                  ? active_chatroom.user.id.profilePicture
+                  : Profile
+              }
+              alt={active_chatroom.user.id.username}
+              className={classes.profile}
+            />
+          )}
         </Grid>
         <Grid item xs={12}>
           <div
@@ -80,7 +95,9 @@ const ChatroomDrawer = () => {
             }}
           >
             <Typography variant="h5" align="center">
-              {active_chatroom.partner.id.username}
+              {type.trim() === "user"
+                ? active_chatroom.partner.id.username
+                : active_chatroom.user.id.username}
             </Typography>
             {active_chatroom.partner.id.description ? (
               <IconButton size="small" onClick={() => handleShow()}>
@@ -95,41 +112,80 @@ const ChatroomDrawer = () => {
         </Grid>
         <Grid item xs={12}>
           <Typography variant="subtitle1" align="center">
-            {active_chatroom.partner.id.email}
+            {type.trim() === "user"
+              ? active_chatroom.partner.id.email
+              : active_chatroom.user.id.email}
           </Typography>
         </Grid>
         {show ? (
           <Grid item xs={12} style={{ padding: "2px 5px 2px 5px" }}>
             <br />
-            <Typography variant="body1">
-              {active_chatroom.partner.id.description || null}
-            </Typography>
+            {type.trim() === "user" ? (
+              <Typography variant="body1">
+                {active_chatroom.partner.id.description || "No description"}
+              </Typography>
+            ) : (
+              <Typography variant="body1">
+                {active_chatroom.user.id.description || "No description"}
+              </Typography>
+            )}
           </Grid>
         ) : null}
-        <Grid item xs={12} style={{ textAlign: "center" }}>
-          <br />
-          <Button
-            className={classes.btn}
-            disabled={active_chatroom.partner.id.role !== "doctor"}
-            onClick={() => {
-              history.push(`/book-call/${active_chatroom._id}`);
-            }}
-          >
-            Book a Session
-          </Button>
-        </Grid>
-        <Grid item xs={12} style={{ textAlign: "center" }}>
-          <br />
-          <Button
-            className={classes.btn}
-            disabled={active_chatroom.partner.id.role !== "doctor"}
-            onClick={() => {
-              history.push(`/question-bank/${active_chatroom._id}`);
-            }}
-          >
-            Evaluate
-          </Button>
-        </Grid>
+        {type.trim() === "user" ? (
+          <>
+            <Grid item xs={12} style={{ textAlign: "center" }}>
+              <br />
+              <Button
+                className={classes.btn}
+                disabled={active_chatroom.partner.id.role !== "doctor"}
+                onClick={() => {
+                  history.push(`/book-call/${active_chatroom._id}`);
+                }}
+              >
+                Book a Session
+              </Button>
+            </Grid>
+            <Grid item xs={12} style={{ textAlign: "center" }}>
+              <br />
+              <Button
+                className={classes.btn}
+                disabled={active_chatroom.partner.id.role !== "doctor"}
+                onClick={() => {
+                  history.push(`/question-bank/${active_chatroom._id}`);
+                }}
+              >
+                Evaluate
+              </Button>
+            </Grid>
+          </>
+        ) : (
+          <>
+            <Grid item xs={12} style={{ textAlign: "center" }}>
+              <br />
+              <Button
+                className={classes.btn}
+                disabled={active_chatroom.partner.id.role !== "doctor"}
+                onClick={() => {
+                  history.push(`/book-call/${active_chatroom._id}`);
+                }}
+              >
+                View Calls
+              </Button>
+            </Grid>
+            <Grid item xs={12} style={{ textAlign: "center" }}>
+              <br />
+              <Button
+                className={classes.btn}
+                disabled={active_chatroom.partner.id.role !== "doctor"}
+                onClick={() => {
+                  history.push(`/doctor/question-bank/${active_chatroom._id}`);
+                }}
+              >
+                View Responses
+              </Button>
+            </Grid>
+          </>
+        )}
       </Grid>
     </>
   );

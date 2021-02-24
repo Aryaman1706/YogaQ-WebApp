@@ -7,12 +7,15 @@ import {
   Typography,
   TextField,
 } from "@material-ui/core";
-import QuestionItem from "../../User/QuestionItem";
-import { admin as adminActions } from "../../../redux/actions";
+import QuestionItem from "./QuestionItem";
+import {
+  admin as adminActions,
+  doctor as doctorActions,
+} from "../../redux/actions";
 import { useHistory, useParams } from "react-router-dom";
-import AdminAppbar from "../../Common/Appbar";
+import Appbar from "./Appbar";
 import Swal from "sweetalert2";
-import axios from "../../../utils/axios";
+import axios from "../../utils/axios";
 
 const useStyles = makeStyles((theme) => ({
   btn: {
@@ -44,8 +47,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const QuestionBank = () => {
-  const { active_chatroom, questionSet } = useSelector((state) => state.admin);
+const QuestionBank = ({ type }) => {
+  const { active_chatroom, questionSet } = useSelector((state) => {
+    if (type.trim() === "admin") return state.admin;
+    else if (type.trim() === "doctor") return state.doctor;
+  });
   const dispatch = useDispatch();
   const classes = useStyles();
   const [compLoading, setCompLoading] = useState(false);
@@ -61,6 +67,15 @@ const QuestionBank = () => {
       await dispatch(adminActions.getChatroom(chatroomId));
     } else if (active_chatroom) {
       await dispatch(adminActions.getQuestionSet(active_chatroom?._id));
+      setCompLoading(false);
+    }
+  };
+
+  const loadDoctorQuestionSet = async () => {
+    if (!active_chatroom) {
+      await dispatch(doctorActions.getChatroom(chatroomId));
+    } else if (active_chatroom) {
+      await dispatch(doctorActions.getQuestionSet(active_chatroom?._id));
       setCompLoading(false);
     }
   };
@@ -99,22 +114,28 @@ const QuestionBank = () => {
   }, []);
 
   useEffect(() => {
-    if (compLoading) {
+    if (compLoading && type.trim() === "admin") {
       loadAdminQuestionSet();
+    } else if (compLoading && type.trim() === "doctor") {
+      loadDoctorQuestionSet();
     }
     // eslint-disable-next-line
-  }, [compLoading]);
+  }, [compLoading, type]);
 
   useEffect(() => {
     // * Rerun the following function when active_chatroom changes from null to valid
-    loadAdminQuestionSet();
+    if (type.trim() === "admin") {
+      loadAdminQuestionSet();
+    } else if (type.trim() === "doctor") {
+      loadDoctorQuestionSet();
+    }
     // eslint-disable-next-line
-  }, [active_chatroom]);
+  }, [active_chatroom, type]);
 
   const [responses, setResponses] = useState({});
   return (
     <>
-      <AdminAppbar type={"admin"}>
+      <Appbar type={type}>
         <Grid container spacing={2}>
           <Grid item xs={12} style={{ textAlign: "right" }}>
             <Button
@@ -184,7 +205,7 @@ const QuestionBank = () => {
                           question={question}
                           responses={responses}
                           setResponses={setResponses}
-                          type={"admin"}
+                          type={type}
                         />
                       ))}
                     </>
@@ -194,7 +215,7 @@ const QuestionBank = () => {
             </Typography>
           </Grid>
         </Grid>
-      </AdminAppbar>
+      </Appbar>
     </>
   );
 };
