@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const EnquiryItem = ({ username, email, id }) => {
+const EnquiryItem = ({ value: { username, email, _id: id } }) => {
   const classes = useStyles();
   const history = useHistory();
 

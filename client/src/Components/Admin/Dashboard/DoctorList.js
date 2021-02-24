@@ -1,12 +1,5 @@
-import React, { Fragment, useEffect, useState } from "react";
-import {
-  Typography,
-  Grid,
-  Button,
-  ButtonGroup,
-  Toolbar,
-} from "@material-ui/core";
-import { ArrowBackIos, ArrowForwardIos } from "@material-ui/icons";
+import React, { useEffect } from "react";
+import { Typography } from "@material-ui/core";
 import { useSelector, useDispatch } from "react-redux";
 import { doctor as doctorActions } from "../../../redux/actions/index";
 import DoctorItem from "./DoctorItem";
