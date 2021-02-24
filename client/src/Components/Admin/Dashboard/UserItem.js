@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const UserItem = ({ username, email, id }) => {
+const UserItem = ({ username, email, _id: id }) => {
   const classes = useStyles();
   const history = useHistory();
 
