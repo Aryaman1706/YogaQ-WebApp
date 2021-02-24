@@ -66,9 +66,9 @@ const Login = ({ type }) => {
       }
 
       if (type.trim() === "admin") {
-        await dispatch(admin.clear());
+        dispatch(admin.clear());
       } else if (type.trim() === "doctor") {
-        await dispatch(doctor.clear());
+        dispatch(doctor.clear());
       }
     };
 
