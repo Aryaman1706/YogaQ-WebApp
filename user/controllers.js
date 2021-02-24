@@ -53,7 +53,7 @@ exports.viewUser = async (req, res) => {
     const chatrooms = await Chatroom.find({
       "user.id": user._id,
     })
-      .select("user partner blocked")
+      .select("user partner blocked createdAt")
       .populate("partner.id", "username email")
       .populate({
         path: "call",

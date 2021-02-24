@@ -88,6 +88,17 @@ const SideNav = () => {
         <div
           className={classes.flexRow}
           onClick={() => {
+            history.push("/admin/users");
+          }}
+        >
+          <span>
+            <SupervisorAccountIcon fontSize="large" />
+          </span>
+          <span className={classes.text}>Users</span>
+        </div>
+        <div
+          className={classes.flexRow}
+          onClick={() => {
             history.push("/admin/enquiries");
           }}
         >
