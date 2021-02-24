@@ -178,7 +178,7 @@ const ChatroomDrawer = ({ type }) => {
                 className={classes.btn}
                 disabled={active_chatroom.partner.id.role !== "doctor"}
                 onClick={() => {
-                  history.push(`/question-bank/${active_chatroom._id}`);
+                  history.push(`/doctor/question-bank/${active_chatroom._id}`);
                 }}
               >
                 View Responses

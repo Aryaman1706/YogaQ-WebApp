@@ -22,7 +22,7 @@ import ViewUser from "../Components/Admin/Dashboard/ViewUser";
 import CreateChatroom from "../Components/Admin/Dashboard/CreateChatroom";
 import ViewChatroom from "../Components/Admin/Dashboard/ViewChatroom";
 import AddQuestion from "../Components/Admin/Dashboard/AddQuestion";
-import QuestionBankAdmin from "../Components/Admin/Dashboard/QuestionBank";
+import QuestionBankAdminDoctor from "../Components/Common/QuestionBank";
 
 // * Enquiry
 import NewEnquiry from "../Components/Doctor/Enquiry/NewEnquiry";
@@ -121,7 +121,11 @@ const Routes = () => {
         <Route
           exact
           path="/admin/question-bank/:chatroomId"
-          component={QuestionBankAdmin}
+          render={(props) => (
+            <>
+              <QuestionBankAdminDoctor type="admin" {...props} />
+            </>
+          )}
         />
 
         {/* Doctor */}
@@ -131,13 +135,21 @@ const Routes = () => {
           path="/doctor"
           render={(props) => (
             <>
-              <Home type="doctor" />
+              <Home type="doctor" {...props} />
             </>
           )}
         />
         <Route exact path="/enquire" component={NewEnquiry} />
         <Route exact path="/doctor/login" component={DoctorLogin} />
-
+        <Route
+          exact
+          path="/doctor/question-bank/:chatroomId"
+          render={(props) => (
+            <>
+              <QuestionBankAdminDoctor type="doctor" {...props} />
+            </>
+          )}
+        />
         {/* Doctor Dashboard */}
         <Route exact path="/doctor/calls" component={CallListing} />
         {/* User */}
@@ -146,7 +158,7 @@ const Routes = () => {
           path="/"
           render={(props) => (
             <>
-              <Home type="user" />
+              <Home type="user" {...props} />
             </>
           )}
         />

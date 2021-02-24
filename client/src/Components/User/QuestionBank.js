@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Grid, makeStyles, Typography } from "@material-ui/core";
-import QuestionItem from "./QuestionItem";
+import QuestionItem from "../Common/QuestionItem";
 import { user as userActions } from "../../redux/actions/index";
 import { useHistory, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
