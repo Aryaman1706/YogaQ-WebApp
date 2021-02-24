@@ -1,12 +1,5 @@
 import React from "react";
-import {
-  Grid,
-  Paper,
-  Typography,
-  makeStyles,
-  IconButton,
-} from "@material-ui/core";
-import { Visibility } from "@material-ui/icons";
+import { Grid, Paper, Typography, makeStyles } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
@@ -25,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const DoctorItem = ({ username, email, id }) => {
+const DoctorItem = ({ value: { username, email, id } }) => {
   const classes = useStyles();
   const history = useHistory();
 
