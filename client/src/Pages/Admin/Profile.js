@@ -1,6 +1,6 @@
 import React from "react";
 import Edit from "../../Components/Admin/Edit";
-import ChangePassword from "../../Components/Admin/ChangePassword";
+import ChangePassword from "../../Components/Common/ChangePassword";
 import { Grid, makeStyles, Paper, Toolbar } from "@material-ui/core";
 import { useSelector } from "react-redux";
 import background from "../../assets/background.svg";
@@ -39,7 +39,7 @@ const Profile = () => {
                     <Paper elevation={8} className={classes.paper}>
                       <Edit />
                       <Toolbar />
-                      <ChangePassword />
+                      <ChangePassword type={"admin"} />
                     </Paper>
                   </Grid>
                 </Grid>
