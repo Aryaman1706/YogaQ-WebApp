@@ -22,7 +22,7 @@ import UserList from "../Components/Admin/Dashboard/UserList";
 import ViewUser from "../Components/Admin/Dashboard/ViewUser";
 import CreateChatroom from "../Components/Admin/Dashboard/CreateChatroom";
 import ViewChatroom from "../Components/Admin/Dashboard/ViewChatroom";
-import AddQuestion from "../Components/Admin/Dashboard/AddQuestion";
+import AddQuestion from "../Components/Common/AddQuestion";
 import QuestionBankAdminDoctor from "../Components/Common/QuestionBank";
 
 // * Enquiry
@@ -121,7 +121,11 @@ const Routes = () => {
           adminLogin
           exact
           path="/admin/add-question/:chatroomId"
-          component={AddQuestion}
+          render={(props) => (
+            <>
+              <AddQuestion type="admin" {...props} />
+            </>
+          )}
         />
         <Route
           exact
@@ -145,13 +149,23 @@ const Routes = () => {
           render={(props) => <Login type={"doctor"} />}
         />
         <Route
+          doctorLogin
           exact
           path="/doctor/question-bank/:chatroomId"
           render={(props) => (
             <QuestionBankAdminDoctor type="doctor" {...props} />
           )}
         />
-
+        <Route
+          doctorLogin
+          exact
+          path="/doctor/add-question/:chatroomId"
+          render={(props) => (
+            <>
+              <AddQuestion type="doctor" {...props} />
+            </>
+          )}
+        />
         {/* Doctor Dashboard */}
         <Route exact path="/doctor/calls" component={CallListing} />
 

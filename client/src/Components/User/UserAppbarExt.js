@@ -118,6 +118,7 @@ const UserAppbarExt = ({ classes, StyledMenu }) => {
               setSideDrawer(true);
             }}
             className={classes.menuIcon}
+            style={{ color: "rgb(92, 132, 251)" }}
           >
             <MenuIcon />
           </IconButton>

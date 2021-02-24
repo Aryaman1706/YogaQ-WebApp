@@ -55,8 +55,7 @@ const SideDrawer = ({ sideDrawer, setSideDrawer }) => {
             key={text}
             onClick={(e) => {
               if (text === "Continue as Therapist") {
-                // TODO Add therapist login link
-                history.push("/");
+                history.push("/doctor/login");
               }
             }}
             data-aos="fade-up"
