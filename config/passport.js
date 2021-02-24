@@ -3,13 +3,19 @@ const LocalStrategy = require("passport-local").Strategy;
 const { compare } = require("bcryptjs");
 
 // * Models
-const Admin = require("../admin/models");
-const Doctor = require("../doctor/models/doctor");
+const { models: Admin } = require("../admin");
+const {
+  models: { Doctor },
+} = require("../doctor");
 
 // * Utils
-const { login: adminLogin } = require("../admin/validators");
-const { login: doctorLogin } = require("../doctor/validators");
-const User = require("../user/models");
+const {
+  validators: { login: adminLogin },
+} = require("../admin");
+const {
+  validators: { login: doctorLogin },
+} = require("../doctor");
+const { models: User } = require("../user");
 
 passport.use(
   "admin",
@@ -24,12 +30,12 @@ passport.use(
       .exec();
     if (!admin)
       return done(null, false, {
-        message: "Validation Error Invalid Credentials.",
+        message: "Validation Error. Invalid Credentials.",
       });
 
     if (!(await compare(value.password, admin.password))) {
       return done(null, false, {
-        message: "Validation Error Invalid Credentials.",
+        message: "Validation Error. Invalid Credentials.",
       });
     }
 
@@ -43,7 +49,7 @@ passport.use(
     const { error, value } = doctorLogin({ username, password });
     if (error)
       return done(null, false, {
-        message: `Validation Error. ${error.details[0].message}`,
+        message: `Validation Error ${error.details[0].message}`,
       });
     const doctor = await Doctor.findOne({ email: value.username })
       .select("password username email restricted role")
