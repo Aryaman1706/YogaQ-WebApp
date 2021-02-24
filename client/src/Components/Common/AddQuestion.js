@@ -1,19 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { TextField, Typography, Grid, Button } from "@material-ui/core";
 import { useSelector, useDispatch } from "react-redux";
-import { admin as adminActions } from "../../../redux/actions";
+import {
+  admin as adminActions,
+  doctor as doctorActions,
+} from "../../redux/actions";
 import Swal from "sweetalert2";
-import AdminAppbar from "../../Common/Appbar";
-import AdminLayout from "../../../layout/AdminLayout";
+import Appbar from "./Appbar";
+import AdminLayout from "../../layout/AdminLayout";
 
-const AddQuestion = () => {
+const AddQuestion = ({ type }) => {
   const [state, setState] = useState({
     statement: "",
     options: ["", "", "", ""],
   });
-  const { active_chatroom, message, error } = useSelector(
-    (state) => state.admin
-  );
+  const { active_chatroom, message, error } = useSelector((state) => {
+    if (type.trim() === "admin") return state.admin;
+    else if (type.trim() === "doctor") return state.doctor;
+  });
   const dispatch = useDispatch();
 
   const {
@@ -43,12 +47,21 @@ const AddQuestion = () => {
   };
 
   const submitHandler = async () => {
-    await dispatch(
-      adminActions.addQuestionToQuestionSet({
-        chatroomId: active_chatroom._id,
-        question: state,
-      })
-    );
+    if (type.trim() === "admin") {
+      await dispatch(
+        adminActions.addQuestionToQuestionSet({
+          chatroomId: active_chatroom._id,
+          question: state,
+        })
+      );
+    } else if (type.trim() === "doctor") {
+      await dispatch(
+        doctorActions.addQuestionToQuestionSet({
+          chatroomId: active_chatroom._id,
+          question: state,
+        })
+      );
+    }
   };
 
   const errorHandling = async () => {
@@ -72,8 +85,11 @@ const AddQuestion = () => {
         timer: 1500,
       });
     }
-
-    await dispatch(adminActions.clear());
+    if (type.trim() === "admin") {
+      await dispatch(adminActions.clear());
+    } else if (type.trim() === "doctor") {
+      await dispatch(doctorActions.clear());
+    }
   };
 
   useEffect(() => {
@@ -85,7 +101,7 @@ const AddQuestion = () => {
 
   return (
     <>
-      <AdminAppbar type={"admin"}>
+      <Appbar type={type}>
         <AdminLayout>
           <Grid container spacing={2} style={{ padding: "1rem" }}>
             <Grid item xs={12}>
@@ -232,7 +248,7 @@ const AddQuestion = () => {
             </Grid>
           </Grid>
         </AdminLayout>
-      </AdminAppbar>
+      </Appbar>
     </>
   );
 };

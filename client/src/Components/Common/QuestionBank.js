@@ -56,10 +56,7 @@ const QuestionBank = ({ type }) => {
   const classes = useStyles();
   const [compLoading, setCompLoading] = useState(false);
   const [date, setDate] = useState(null);
-  const {
-    location: { pathname },
-    push,
-  } = useHistory();
+  const { push } = useHistory();
   const { chatroomId } = useParams();
 
   const loadAdminQuestionSet = async () => {
@@ -141,7 +138,11 @@ const QuestionBank = ({ type }) => {
             <Button
               className={classes.btn}
               onClick={() => {
-                push(`/admin/add-question/${chatroomId}`);
+                if (type.trim() === "admin") {
+                  push(`/admin/add-question/${chatroomId}`);
+                } else if (type.trim() === "doctor") {
+                  push(`/doctor/add-question/${chatroomId}`);
+                }
               }}
             >
               Add A Question
