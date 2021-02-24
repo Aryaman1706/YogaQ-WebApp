@@ -351,7 +351,7 @@ const CharoomAppbar = ({ type, children }) => {
             <Grid item xs={8} sm={10} md={10} lg={11} className={classes.title}>
               {active_chatroom && renderChatroomDetails()}
             </Grid>
-            {type.trim() === "user" ? (
+            {type.trim() === "user" || type.trim() === "doctor" ? (
               <>
                 {active_chatroom && (
                   <Grid item xs={1} className={classes.btnContainer}>
