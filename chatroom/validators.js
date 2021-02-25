@@ -64,3 +64,20 @@ exports.lastAccess = (body) => {
   });
   return schema.validate(body);
 };
+
+/**
+ * {
+ *  startDate= new Date(),
+ *  endDate= new Date(),
+ *  onlyNew=false
+ * }
+ */
+exports.listChatrooms = (body) => {
+  const schema = Joi.object({
+    page: Joi.number().integer().positive().required(),
+    startDate: Joi.date().max("now").required(),
+    endDate: Joi.date().max(Joi.ref("startDate")).default("now"),
+    onlyNew: Joi.boolean().default(false),
+  });
+  return schema.validate(body);
+};

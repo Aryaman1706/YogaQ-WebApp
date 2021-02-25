@@ -15,7 +15,7 @@ const { getAccessToken, getProfile } = require("../utils/oauth");
 // * List all users
 exports.listUser = async (req, res) => {
   try {
-    const total = await User.countDocuments();
+    const total = await User.estimatedDocumentCount();
     const limit = 5;
     if ((parseInt(req.query.page, 10) - 1) * limit < total) {
       const users = await User.find()
