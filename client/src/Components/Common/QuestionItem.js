@@ -67,7 +67,8 @@ const QuestionItem = ({
     return () => {
       clearErrors();
     };
-  });
+    // eslint-disable-next-line
+  }, []);
 
   const onAnswer = (e) => {
     setResponses((prevResponses) => {
