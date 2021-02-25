@@ -138,6 +138,7 @@ const CallHistoryItem = ({ chatroomId, type, value: item }) => {
         </Paper>
       </Grid>
       <EditCallModal
+        key={item._id}
         open={open}
         setOpen={setOpen}
         chatroomId={chatroomId}
