@@ -69,10 +69,27 @@ const Calls = () => {
       <Grid
         container
         direction="row"
-        justify="center"
+        justify="stretch"
         alignItems="stretch"
         style={{ padding: "1rem" }}
       >
+        <Grid item xs={6}>
+          <Typography
+            variant="h5"
+            style={{ color: "#606060", paddingLeft: "1.5rem" }}
+          >
+            Date
+          </Typography>
+        </Grid>
+        <Grid item xs={6}>
+          <Typography
+            variant="h5"
+            align="right"
+            style={{ color: "#606060", paddingRight: "1.5rem" }}
+          >
+            Status
+          </Typography>
+        </Grid>
         {chatroomId ? (
           <PaginatedList
             ListItem={CallHistoryItem}

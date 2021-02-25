@@ -19,6 +19,7 @@ import Loader from "../Common/Loader";
 import homeIcon from "../../assets/home.svg";
 import UserAppbar from "../Common/Appbar";
 import EditCallModal from "./EditCallModal";
+import PaginatedList from "../Common/PaginatedList";
 
 const useStyles = makeStyles((theme) => ({
   homeIcon: {
@@ -50,27 +51,11 @@ const useStyles = makeStyles((theme) => ({
 const CallHistory = () => {
   const classes = useStyles();
   const history = useHistory();
-  const [pagination, setPagination] = useState({
-    loadedPages: 1,
-    currentPage: 1,
-    startIndex: 0,
-    endIndex: 0,
-    callHistoryList: [],
-    end: false,
-  });
   const [compLoading, setCompLoading] = useState(true);
   const [state, setState] = useState(null);
-  const {
-    loadedPages,
-    currentPage,
-    startIndex,
-    endIndex,
-    callHistoryList,
-    end,
-  } = pagination;
   const dispatch = useDispatch();
   const { user, active_chatroom } = useSelector((state) => state.user);
-  const callHistoryState = useSelector((state) => state.callHistory);
+  const { list, end } = useSelector((state) => state.callHistory);
   const { chatroomId } = useParams();
 
   useEffect(() => {
@@ -83,90 +68,14 @@ const CallHistory = () => {
   }, []);
 
   useEffect(() => {
-    // dispatch(userActions.getChatroom(chatroomId));
-    //eslint-disable-next-line
-  }, []);
-
-  useEffect(() => {
     console.log(user);
     setState(user);
   }, [user]);
 
-  const load = async () => {
+  const load = async (page) => {
     // setCompLoading(true);
-    await dispatch(callHistoryActions.listEnquiries(loadedPages, chatroomId));
+    await dispatch(callHistoryActions.listEnquiries(page, chatroomId));
     setCompLoading(false);
-  };
-  useEffect(() => {
-    setCompLoading(true);
-    // load();
-    // eslint-disable-next-line
-  }, [loadedPages]);
-
-  useEffect(() => {
-    if (compLoading && active_chatroom) {
-      load();
-    }
-    // eslint-disable-next-line
-  }, [compLoading, active_chatroom]);
-
-  useEffect(() => {
-    setPagination((prev) => {
-      return {
-        ...prev,
-        startIndex: (prev.loadedPages - 1) * 5,
-        endIndex: prev.loadedPages * 5,
-        callHistoryList: callHistoryState.list,
-        end: callHistoryState.end,
-      };
-    });
-  }, [callHistoryState.end, callHistoryState.list]);
-
-  const nextHandler = (event) => {
-    if (!end) {
-      if (currentPage === loadedPages) {
-        setPagination((prev) => {
-          return {
-            ...prev,
-            loadedPages: prev.loadedPages + 1,
-            currentPage: prev.currentPage + 1,
-          };
-        });
-      } else {
-        setPagination((prev) => {
-          return {
-            ...prev,
-            currentPage: prev.currentPage + 1,
-            startIndex: prev.currentPage * 5,
-            endIndex: (prev.currentPage + 1) * 5,
-          };
-        });
-      }
-    } else {
-      if (currentPage !== loadedPages) {
-        setPagination((prev) => {
-          return {
-            ...prev,
-            currentPage: prev.currentPage + 1,
-            startIndex: prev.currentPage * 5,
-            endIndex: (prev.currentPage + 1) * 5,
-          };
-        });
-      }
-    }
-  };
-
-  const prevHandler = (event) => {
-    if (currentPage > 1) {
-      setPagination((prev) => {
-        return {
-          ...prev,
-          currentPage: prev.currentPage - 1,
-          startIndex: (prev.currentPage - 2) * 5,
-          endIndex: (prev.currentPage - 1) * 5,
-        };
-      });
-    }
   };
 
   return (
@@ -196,86 +105,47 @@ const CallHistory = () => {
           style={{ padding: "1rem" }}
         >
           <Grid item xs={12} lg={12}>
-            {!state || compLoading ? (
-              <Loader />
-            ) : (
-              <>
-                <Grid
-                  container
-                  direction="column"
-                  justify="space-around"
-                  alignItems="stretch"
-                  spacing={2}
-                >
-                  <Grid
-                    container
-                    item
-                    xs={12}
-                    justify="space-between"
-                    style={{ padding: "15px" }}
-                  >
-                    <Grid item xs={2}>
-                      <Typography variant="h5" style={{ color: "#606060" }}>
-                        Date
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={2}>
-                      <Typography
-                        variant="h5"
-                        align="right"
-                        style={{ color: "#606060" }}
-                      >
-                        Status
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                  {callHistoryList
-                    ?.slice(startIndex, endIndex)
-                    .map((item, index) => {
-                      return (
-                        <>
-                          <CallHistoryItem
-                            key={index}
-                            item={item}
-                            chatroomId={chatroomId}
-                          />
-                        </>
-                      );
-                    })}
+            <Grid
+              container
+              direction="column"
+              justify="space-around"
+              alignItems="stretch"
+              spacing={2}
+            >
+              <Grid
+                container
+                item
+                xs={12}
+                justify="space-between"
+                style={{ padding: "15px" }}
+              >
+                <Grid item xs={2}>
+                  <Typography variant="h5" style={{ color: "#606060" }}>
+                    Date
+                  </Typography>
                 </Grid>
-                <br />
-                <ButtonGroup variant="contained" color="primary" fullWidth>
-                  {currentPage !== 1 ? (
-                    <Button
-                      startIcon={<ArrowBackIos />}
-                      onClick={(event) => prevHandler(event)}
-                      style={{
-                        backgroundColor: "#0FC1A7",
-                        height: "50px",
-                        backgroundImage:
-                          "linear-gradient(315deg, #abe9cd 0%, #3eadcf 74%)",
-                      }}
-                    >
-                      Previous
-                    </Button>
-                  ) : null}
-                  {end && currentPage === loadedPages ? null : (
-                    <Button
-                      endIcon={<ArrowForwardIos />}
-                      onClick={(event) => nextHandler(event)}
-                      style={{
-                        backgroundColor: "#0FC1A7",
-                        height: "50px",
-                        backgroundImage:
-                          "linear-gradient(315deg, #abe9cd 0%, #3eadcf 74%)",
-                      }}
-                    >
-                      Next
-                    </Button>
-                  )}
-                </ButtonGroup>
-              </>
-            )}
+                <Grid item xs={2}>
+                  <Typography
+                    variant="h5"
+                    align="right"
+                    style={{ color: "#606060" }}
+                  >
+                    Status
+                  </Typography>
+                </Grid>
+              </Grid>
+              {list ? (
+                <PaginatedList
+                  ListItem={CallHistoryItem}
+                  loadFunction={load}
+                  end={end}
+                  list={list}
+                  chatroomId={chatroomId}
+                />
+              ) : (
+                <Loader />
+              )}
+            </Grid>
           </Grid>
         </Grid>
       </UserAppbar>
