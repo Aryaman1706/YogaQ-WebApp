@@ -47,7 +47,7 @@ exports.edit = (body) => {
   const schema = Joi.object({
     username: Joi.string().min(5).max(150).trim().required(),
     email: Joi.string().email().max(150).trim().required(),
-    welcomeMessage: Joi.string().max(500).trim(),
+    welcomeMessage: Joi.string().max(500).trim().required(),
   });
 
   return schema.validate(body);

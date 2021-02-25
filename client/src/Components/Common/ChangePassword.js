@@ -200,6 +200,7 @@ const ChangePassword = ({ type }) => {
             </Grid>
             <Grid item>
               <Button
+                disabled={!isValid}
                 fullWidth
                 variant="contained"
                 color="primary"
