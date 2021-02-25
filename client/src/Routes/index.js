@@ -168,6 +168,7 @@ const Routes = () => {
         />
         {/* Doctor Dashboard */}
         <Route exact path="/doctor/calls" component={CallListing} />
+        <Route exact path="/doctor/calls/:chatroomId" component={CallListing} />
 
         {/* User */}
         <Route

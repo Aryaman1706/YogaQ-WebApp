@@ -4,10 +4,8 @@ import HomeIcon from "@material-ui/icons/Home";
 import ForumIcon from "@material-ui/icons/Forum";
 import { useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
-import CreateIcon from "@material-ui/icons/Create";
 import PersonIcon from "@material-ui/icons/Person";
-import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
-import AddIcon from "@material-ui/icons/Add";
+import CallIcon from "@material-ui/icons/Call";
 
 const useStyles = makeStyles((theme) => ({
   flexCol: {
@@ -43,14 +41,14 @@ const useStyles = makeStyles((theme) => ({
 const DoctorSideNav = () => {
   const classes = useStyles();
   const history = useHistory();
-  const admin = useSelector((state) => state.admin.admin);
+  const doctor = useSelector((state) => state.doctor.doctor);
   return (
     <>
       <div className={classes.flexCol}>
         <div style={{ padding: "10px 0 10px 10px" }}>
           <Avatar
             alt=""
-            src={admin?.profilePicture}
+            src={doctor?.profilePicture}
             className={classes.large}
           />
         </div>
@@ -61,12 +59,12 @@ const DoctorSideNav = () => {
             fontWeight: "bold",
           }}
         >
-          Hello {admin?.username}
+          Hello {doctor?.username}
         </div>
         <div
           className={classes.flexRow}
           onClick={() => {
-            history.push("/admin/enquiries");
+            history.push("/doctor/calls");
           }}
         >
           <span style={{ alignSelf: "flex-end" }}>
@@ -74,33 +72,11 @@ const DoctorSideNav = () => {
           </span>
           <span className={classes.text}>Home</span>
         </div>
-        <div
-          className={classes.flexRow}
-          onClick={() => {
-            history.push("/admin/doctors");
-          }}
-        >
-          <span>
-            <SupervisorAccountIcon fontSize="large" />
-          </span>
-          <span className={classes.text}>Doctors</span>
-        </div>
-        <div
-          className={classes.flexRow}
-          onClick={() => {
-            history.push("/admin/enquiries");
-          }}
-        >
-          <span style={{ alignSelf: "flex-end" }}>
-            <CreateIcon fontSize="large" />
-          </span>
-          <span className={classes.text}>Enquires</span>
-        </div>
 
         <div
           className={classes.flexRow}
           onClick={() => {
-            history.push("/admin");
+            history.push("/doctor");
           }}
         >
           <span>
@@ -111,18 +87,18 @@ const DoctorSideNav = () => {
         <div
           className={classes.flexRow}
           onClick={() => {
-            history.push("/admin/chatroom/create");
+            history.push("/doctor/calls");
           }}
         >
           <span>
-            <AddIcon fontSize="large" />
+            <CallIcon fontSize="large" />
           </span>
-          <span className={classes.text}>Create Chatroom</span>
+          <span className={classes.text}>Calls</span>
         </div>
         <div
           className={classes.flexRow}
           onClick={() => {
-            history.push("/admin/profile");
+            history.push("/doctor/profile");
           }}
         >
           <span>
