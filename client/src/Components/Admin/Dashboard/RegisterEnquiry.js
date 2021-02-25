@@ -7,85 +7,168 @@ import { enquiry as enquiryAction } from "../../../redux/actions/index";
 import Swal from "sweetalert2";
 import AdminAppbar from "../../Common/Appbar";
 import AdminLayout from "../../../layout/AdminLayout";
+import { Formik } from "formik";
+import { object, string } from "yup";
 
 const RegisterEnquiry = () => {
-  const [password, setPassword] = useState("");
-  const [compLoading, setCompLoading] = useState(false);
-  const { enquiry, message, error } = useSelector((state) => state.enquiry);
   const history = useHistory();
   const dispatch = useDispatch();
+  const { enquiry, message, error } = useSelector((state) => state.enquiry);
+  const Yup = { object, string };
+
+  const clearErrors = () => {
+    dispatch(enquiryAction.clearEnquiry());
+    dispatch(enquiryAction.clear());
+  };
 
   useEffect(() => {
     if (!enquiry) {
       history.push("/admin/enquiries");
     }
     return () => {
-      dispatch(enquiryAction.clearEnquiry());
-      dispatch(enquiryAction.clear());
+      clearErrors();
     };
     // eslint-disable-next-line
   }, []);
 
-  useEffect(() => {
-    if (/Validation Error*/i.test(error)) {
-      Swal.fire({
-        position: "center",
-        icon: "error",
-        title: "Error Occured.",
-        text: error,
-        showConfirmButton: true,
-        timer: 1500,
-      });
-    }
+  const Form = ({
+    values: { password },
+    errors,
+    touched,
+    handleChange,
+    isValid,
+    setFieldTouched,
+    resetForm,
+  }) => {
+    const [compLoading, setCompLoading] = useState(false);
 
-    if (/New Doctor registered successfully*/i.test(message)) {
-      Swal.fire({
-        position: "center",
-        icon: "success",
-        title: "Success!",
-        text: message,
-        showConfirmButton: true,
-        timer: 1500,
-      }).then(() => {
-        history.push("/admin/enquiries");
-      });
-    }
-    // eslint-disable-next-line
-  }, [error, message]);
-
-  const changeHandler = (e) => {
-    setPassword(e.target.value);
-  };
-
-  const submitHandler = (e) => {
-    Swal.fire({
-      position: "center",
-      icon: "question",
-      title: "Are you sure?",
-      html: `<h4>Email:- ${enquiry.email}</h4><h4>Password:- ${password}</h4>`,
-      showConfirmButton: true,
-      showDenyButton: true,
-      backdrop: false,
-    }).then((result) => {
-      if (!result.isDenied) {
-        setCompLoading(true);
+    const errorHandler = () => {
+      if (error && /^Validation Error*/i.test(error)) {
+        Swal.fire({
+          position: "center",
+          icon: "error",
+          title: "Error Occured.",
+          text: error,
+          showConfirmButton: true,
+          timer: 1500,
+        });
       }
-    });
-  };
 
-  const submit = async () => {
-    await dispatch(
-      enquiryAction.registerEnquiry({ enquiry: enquiry._id, password })
+      if (message && /^New Doctor registered successfully*/i.test(message)) {
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Success!",
+          text: message,
+          showConfirmButton: true,
+          timer: 1500,
+        }).then(() => {
+          resetForm();
+          history.push("/admin/enquiries");
+        });
+      }
+
+      clearErrors();
+    };
+
+    useEffect(() => {
+      if (error || message) errorHandler();
+      // eslint-disable-next-line
+    }, [error, message]);
+
+    const changeHandler = (e) => {
+      handleChange(e);
+      setFieldTouched(e.target.name, true, false);
+    };
+
+    const submitHandler = (e) => {
+      if (isValid) {
+        Swal.fire({
+          position: "center",
+          icon: "question",
+          title: "Are you sure?",
+          html: `<h4>Email:- ${enquiry.email}</h4><h4>Password:- ${password}</h4>`,
+          showConfirmButton: true,
+          showDenyButton: true,
+          backdrop: false,
+        }).then((result) => {
+          if (result.isConfirmed) {
+            setCompLoading(true);
+          }
+        });
+      } else {
+        Swal.fire({
+          position: "center",
+          icon: "error",
+          title: "Error Occured.",
+          text: "Invalid Inputs. Try Again.",
+          showConfirmButton: true,
+          timer: 1500,
+        });
+      }
+    };
+
+    const submit = async () => {
+      await dispatch(
+        enquiryAction.registerEnquiry({ enquiry: enquiry._id, password })
+      );
+      setCompLoading(false);
+    };
+
+    useEffect(() => {
+      if (compLoading) {
+        submit();
+      }
+      // eslint-disable-next-line
+    }, [compLoading]);
+
+    return (
+      <>
+        {compLoading ? (
+          <Loader />
+        ) : (
+          <>
+            <Grid item>
+              <TextField
+                fullWidth
+                variant="outlined"
+                label="Email"
+                value={enquiry.email}
+              />
+            </Grid>
+            <Grid item>
+              <TextField
+                fullWidth
+                variant="outlined"
+                label="Password"
+                name="password"
+                type="text"
+                value={password}
+                onChange={(event) => changeHandler(event)}
+                helperText={touched.password ? errors.password : ""}
+                error={touched.password && Boolean(errors.password)}
+              />
+            </Grid>
+            <Grid item>
+              <Button
+                disabled={!isValid}
+                fullWidth
+                variant="contained"
+                color="primary"
+                onClick={(event) => submitHandler(event)}
+              >
+                Create
+              </Button>
+            </Grid>
+          </>
+        )}
+      </>
     );
-    setCompLoading(false);
   };
 
-  useEffect(() => {
-    if (compLoading) {
-      submit();
-    }
-    // eslint-disable-next-line
-  }, [compLoading]);
+  const validationSchema = Yup.object({
+    password: Yup.string().min(8).max(20).trim().required(),
+  });
 
   return (
     <>
@@ -113,41 +196,12 @@ const RegisterEnquiry = () => {
                         Register Enquiry
                       </Typography>
                     </Grid>
-                    {compLoading ? (
-                      <Loader />
-                    ) : (
-                      <>
-                        <Grid item>
-                          <TextField
-                            fullWidth
-                            variant="outlined"
-                            label="Email"
-                            value={enquiry.email}
-                          />
-                        </Grid>
-                        <Grid item>
-                          <TextField
-                            fullWidth
-                            variant="outlined"
-                            label="Password"
-                            id="password"
-                            type="text"
-                            value={password}
-                            onChange={(event) => changeHandler(event)}
-                          />
-                        </Grid>
-                        <Grid item>
-                          <Button
-                            fullWidth
-                            variant="contained"
-                            color="primary"
-                            onClick={(event) => submitHandler(event)}
-                          >
-                            Create
-                          </Button>
-                        </Grid>
-                      </>
-                    )}
+                    <Formik
+                      initialValues={{ password: "" }}
+                      validationSchema={validationSchema}
+                      validateOnMount={true}
+                      component={Form}
+                    />
                   </Grid>
                 </Grid>
                 <Grid item xs={3} lg={4}></Grid>
