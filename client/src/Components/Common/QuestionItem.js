@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Grid,
   makeStyles,
@@ -11,7 +11,11 @@ import {
   IconButton,
 } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
-import axios from "../../utils/axios";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  admin as adminActions,
+  doctor as doctorActions,
+} from "../../redux/actions";
 import Swal from "sweetalert2";
 
 const useStyles = makeStyles(() => ({
@@ -44,6 +48,26 @@ const QuestionItem = ({
   type,
 }) => {
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const { active_chatroom, error, message } = useSelector((state) => {
+    if (type.trim() === "admin") return state.admin;
+    else if (type.trim() === "doctor") return state.doctor;
+    else if (type.trim() === "user") return state.user;
+  });
+
+  const clearErrors = () => {
+    if (type.trim() === "admin") {
+      dispatch(adminActions.clear());
+    } else if (type.trim() === "doctor") {
+      dispatch(doctorActions.clear());
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      clearErrors();
+    };
+  });
 
   const onAnswer = (e) => {
     setResponses((prevResponses) => {
@@ -65,38 +89,56 @@ const QuestionItem = ({
     });
   };
 
+  const errorHandler = () => {
+    if (error) {
+      Swal.fire({
+        title: "Error",
+        text: error,
+        icon: "error",
+        showConfirmButton: true,
+      });
+    }
+    if (message) {
+      Swal.fire({
+        title: "Sucess",
+        text: message,
+        icon: "success",
+        showConfirmButton: true,
+      });
+    }
+
+    clearErrors();
+  };
+
+  useEffect(() => {
+    if (error || message) errorHandler();
+    // eslint-disable-next-line
+  }, [error, message]);
+
   // ! Fix get chatroomId first
   const deleteQuestion = () => {
-    axios
-      .delete(`/questionSet/removeQuestion/${question._id}`, {
-        questionId: id,
-      })
-      .then((res) => {
-        console.log(res.data);
-        Swal.fire({
-          title: "Sucessfully Deleted",
-          text:
-            "Successfully removed the selected question from the question set",
-          icon: "success",
-          showConfirmButton: true,
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-        Swal.fire({
-          title: "Error",
-          text: "Something went wrong",
-          icon: "error",
-          showConfirmButton: true,
-        });
-      });
+    if (type.trim() === "admin") {
+      dispatch(
+        adminActions.removeQuestionToQuestionSet({
+          chatroomId: active_chatroom._id,
+          questionId: question._id,
+        })
+      );
+    } else if (type.trim() === "doctor") {
+      dispatch(
+        doctorActions.removeQuestionToQuestionSet({
+          chatroomId: active_chatroom._id,
+          questionId: question._id,
+        })
+      );
+    }
   };
 
   return (
     <>
       <Grid item xs={12}>
         <Paper elevation={2} className={classes.questionCard}>
-          {(type === "admin" || type === "doctor") && (
+          {(type.trim() === "admin" || type.trim() === "doctor") && (
             <div className={classes.deleteBtn}>
               <IconButton onClick={handleDeleteAction}>
                 <DeleteIcon />

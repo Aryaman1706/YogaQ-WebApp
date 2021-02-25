@@ -65,7 +65,7 @@ router.put(
  *  "questionId": "ObjectId('...')"
  * }
  */
-router.delete(
+router.put(
   "/removeQuestion/:id",
   [adminOrDoctorLogin, chatroomAuth],
   controllers.deleteQues

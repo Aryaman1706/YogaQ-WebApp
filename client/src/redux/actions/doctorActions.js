@@ -18,6 +18,7 @@ import {
   CLEAR_DOCTOR_CHATROOM,
   DOCTOR_GET_MESSAGES,
   DOCTOR_ADD_QUESTION_TO_QUESTION_SET,
+  DOCTOR_REMOVE_QUESTION_TO_QUESTION_SET,
   GET_DOCTOR_QUESTION_SET,
 } from "../types";
 import axios from "../../utils/axios";
@@ -300,6 +301,33 @@ export const getQuestionSet = (chatroomId) => async (dispatch) => {
         showConfirmButton: true,
       });
     }
+    dispatch({
+      type: DOCTOR_ERROR,
+      payload: error.response.data.error,
+    });
+  }
+};
+
+// * Remove question from questionSet
+export const removeQuestionToQuestionSet = ({
+  chatroomId,
+  questionId,
+}) => async (dispatch) => {
+  try {
+    const storeState = store.getState();
+    const questions = storeState.doctor.questionSet.questions.filter(
+      (question) =>
+        question._id.toString().trim() !== questionId.toString().trim()
+    );
+
+    axios.put(`/questionSet/removeQuestion/${chatroomId}`, {
+      questionId,
+    });
+    dispatch({
+      type: DOCTOR_REMOVE_QUESTION_TO_QUESTION_SET,
+      payload: { message: "Question removed successfully.", questions },
+    });
+  } catch (error) {
     dispatch({
       type: DOCTOR_ERROR,
       payload: error.response.data.error,

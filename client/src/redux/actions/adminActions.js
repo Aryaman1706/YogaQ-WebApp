@@ -17,6 +17,7 @@ import {
   CLEAR_ADMIN_ACTIVE_CHATROOM,
   CLEAR_UNREAD_MESSAGES_ADMIN,
   ADD_QUESTION_TO_QUESTION_SET,
+  REMOVE_QUESTION_TO_QUESTION_SET,
   GET_ADMIN_QUESTION_SET,
 } from "../types";
 import axios from "../../utils/axios";
@@ -338,6 +339,33 @@ export const getQuestionSet = (chatroomId) => async (dispatch) => {
         }
       });
     }
+    dispatch({
+      type: ADMIN_ERROR,
+      payload: error.response.data.error,
+    });
+  }
+};
+
+// * Remove question from questionSet
+export const removeQuestionToQuestionSet = ({
+  chatroomId,
+  questionId,
+}) => async (dispatch) => {
+  try {
+    const storeState = store.getState();
+    const questions = storeState.admin.questionSet.questions.filter(
+      (question) =>
+        question._id.toString().trim() !== questionId.toString().trim()
+    );
+
+    axios.put(`/questionSet/removeQuestion/${chatroomId}`, {
+      questionId,
+    });
+    dispatch({
+      type: REMOVE_QUESTION_TO_QUESTION_SET,
+      payload: { message: "Question removed successfully.", questions },
+    });
+  } catch (error) {
     dispatch({
       type: ADMIN_ERROR,
       payload: error.response.data.error,
