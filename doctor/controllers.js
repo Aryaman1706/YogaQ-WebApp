@@ -388,7 +388,7 @@ exports.listEnquiries = async (req, res) => {
 
     // Paginating enquiries
     const limit = 5;
-    const total = await Enquiry.countDocuments();
+    const total = await Enquiry.estimatedDocumentCount();
     if ((parseInt(value.page, 10) - 1) * limit < total) {
       const enquiries = await Enquiry.find()
         .select("postedOn username email")
@@ -439,7 +439,7 @@ exports.listDoctors = async (req, res) => {
         .json({ error: error.details[0].message, body: null });
 
     // Paginating doctors
-    const total = await Doctor.countDocuments();
+    const total = await Doctor.estimatedDocumentCount();
     const limit = 5;
     if ((parseInt(value.page, 10) - 1) * limit < total) {
       const doctors = await Doctor.find()

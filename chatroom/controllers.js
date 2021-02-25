@@ -289,4 +289,63 @@ exports.lastAccess = async (req, res) => {
   }
 };
 
+// * List chatrooms of any doctor
+exports.listChatrooms = async (req, res) => {
+  try {
+    // Validating request body
+    const { error, value } = validators.listChatrooms(req.query);
+    if (error)
+      return res.status(400).json({
+        error: `Validation Error. ${error.details[0].message}`,
+        body: null,
+      });
+
+    let dateFilter = { $lte: value.endDate };
+    // Checking is onlyNew is true
+    if (value.onlyNew) {
+      dateFilter = { $lte: value.endDate, $gte: value.startDate };
+    }
+
+    // Finding valid doctor and total valid chatrooms
+    const [doctor, total] = await Promise.all([
+      Doctor.findById(req.params.doctorId).select("_id").exec(),
+      Chatroom.countDocuments({
+        "partner.id": req.params.doctorId,
+        "partner.model": "Doctor",
+        createdAt: dateFilter,
+      }),
+    ]);
+    if (!doctor)
+      return res.status(404).json({ error: "Invalid Doctor.", body: null });
+
+    // Paginating Chatrooms
+    const limit = 5;
+    if ((parseInt(value.page, 10) - 1) * limit < total) {
+      const chatrooms = await Chatroom.find({
+        "partner.id": req.params.doctorId,
+        "partner.model": "Doctor",
+        createdAt: dateFilter,
+      })
+        .populate("user.id", "username email")
+        .sort("-createdAt")
+        .skip((parseInt(value.page, 10) - 1) * limit)
+        .limit(limit)
+        .exec();
+
+      return res.status(200).json({
+        error: null,
+        body: { chatrooms, end: chatrooms.length < limit },
+      });
+    }
+
+    return res.status(200).json({
+      error: null,
+      body: { chatrooms: [], end: true },
+    });
+  } catch (error) {
+    console.log("Error occured here\n", error);
+    return res.status(500).json({ error: "Server Error.", body: null });
+  }
+};
+
 // * End of Controllers -->

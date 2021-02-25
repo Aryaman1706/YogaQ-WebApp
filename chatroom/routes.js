@@ -74,6 +74,15 @@ router.get("/messages/:id", [loggedIn, auth], controllers.messages);
  */
 router.put("/lastAccess/:id", [loggedIn, auth], controllers.lastAccess);
 
+/**
+ * Type:- GET
+ * Desc:- List chatrooms of any doctor
+ * Route:- {{server_url}}/chatroom/list/:doctorId/?startDate=new Date()&endDate=new Date()&onlyNew=true
+ * Middlewares:- Admin Login
+ * Request Body: None
+ */
+router.put("/list/:doctorId", loginAdmin, controllers.listChatrooms);
+
 // * End of API Endpoints -->
 
 module.exports = router;
