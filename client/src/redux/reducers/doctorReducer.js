@@ -18,6 +18,7 @@ import {
   DOCTOR_GET_MESSAGES,
   DOCTOR_CHATROOM_LOADING,
   DOCTOR_ADD_QUESTION_TO_QUESTION_SET,
+  DOCTOR_REMOVE_QUESTION_TO_QUESTION_SET,
   GET_DOCTOR_QUESTION_SET,
 } from "../types";
 import pick from "lodash/pick";
@@ -153,6 +154,15 @@ const stateHandler = (state = defaultState, action) => {
         ...state,
         message: action.payload.message,
         questionSet: [...state.questionSet.questions, action.payload.question],
+      };
+    case DOCTOR_REMOVE_QUESTION_TO_QUESTION_SET:
+      return {
+        ...state,
+        questionSet: {
+          ...state.questionSet,
+          questions: action.payload.questions,
+        },
+        message: action.payload.message,
       };
     case GET_DOCTOR_QUESTION_SET:
       return {
