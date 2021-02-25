@@ -20,6 +20,7 @@ import {
   DOCTOR_ADD_QUESTION_TO_QUESTION_SET,
   DOCTOR_REMOVE_QUESTION_TO_QUESTION_SET,
   GET_DOCTOR_QUESTION_SET,
+  GET_DOCTOR_CHATROOM_CALLS,
 } from "../types";
 import pick from "lodash/pick";
 
@@ -30,6 +31,7 @@ const defaultState = {
   chatrooms: [],
   active_chatroom: null,
   questionSet: null,
+  calls: [],
   doctor_messages: [],
   message_end: false,
   list: [],
@@ -168,6 +170,12 @@ const stateHandler = (state = defaultState, action) => {
       return {
         ...state,
         questionSet: action.payload,
+      };
+    case GET_DOCTOR_CHATROOM_CALLS:
+      return {
+        ...state,
+        calls: [...state.calls, ...action.payload.calls],
+        end: action.payload.end,
       };
     default:
       return state;

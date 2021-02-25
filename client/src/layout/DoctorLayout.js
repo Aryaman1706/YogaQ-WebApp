@@ -1,6 +1,6 @@
 import { makeStyles } from "@material-ui/core";
 import React from "react";
-import SideNav from "./SideNav";
+import SideNav from "./DoctorSideNav";
 
 const useStyles = makeStyles((theme) => ({
   sideNav: {

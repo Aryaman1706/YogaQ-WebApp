@@ -20,6 +20,7 @@ import {
   DOCTOR_ADD_QUESTION_TO_QUESTION_SET,
   DOCTOR_REMOVE_QUESTION_TO_QUESTION_SET,
   GET_DOCTOR_QUESTION_SET,
+  GET_DOCTOR_CHATROOM_CALLS,
 } from "../types";
 import axios from "../../utils/axios";
 import store from "../store";
@@ -331,6 +332,25 @@ export const removeQuestionToQuestionSet = ({
     dispatch({
       type: DOCTOR_ERROR,
       payload: error.response.data.error,
+    });
+  }
+};
+
+// * List all calls by chatroomId
+export const listCallsByChatroom = (id, page) => async (dispatch) => {
+  try {
+    console.log(id);
+    const res = await axios.get(`/call/list/${id}?page=${page}`);
+    if (res) {
+      dispatch({
+        type: GET_DOCTOR_CHATROOM_CALLS,
+        payload: res.data.body,
+      });
+    }
+  } catch (error) {
+    dispatch({
+      type: DOCTOR_ERROR,
+      payload: error,
     });
   }
 };

@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const CallHistoryItem = ({ item, chatroomId, type }) => {
+const CallHistoryItem = ({ chatroomId, type, value: item }) => {
   const classes = useStyles();
   const history = useHistory();
   const [open, setOpen] = useState(false);

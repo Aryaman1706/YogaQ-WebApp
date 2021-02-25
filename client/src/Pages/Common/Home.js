@@ -7,7 +7,7 @@ import Chatroom from "../../Components/Common/Chatroom";
 import ChatroomAppbar from "../../Components/Common/ChatroomAppbar";
 import UserAppbar from "../../Components/Common/Appbar";
 import Landing from "../../Components/Landing/Landing";
-import ChatroomDrawer from "../../Components/User/ChatroomDrawer";
+import ChatroomDrawer from "../../Components/Common/ChatroomDrawer";
 
 const useStyles = makeStyles((theme) => ({
   container: {

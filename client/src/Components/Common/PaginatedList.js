@@ -7,6 +7,7 @@ const PaginatedList = ({
   loadFunction,
   end: globalStateEnd,
   list: globalStateList,
+  ...rest
 }) => {
   const [pagination, setPagination] = useState({
     loadedPages: 1,
@@ -118,7 +119,7 @@ const PaginatedList = ({
                 {list.slice(startIndex, endIndex).map((item, index) => {
                   return (
                     <Fragment key={index}>
-                      <ListItem value={item} />
+                      <ListItem value={item} {...rest} />
                     </Fragment>
                   );
                 })}

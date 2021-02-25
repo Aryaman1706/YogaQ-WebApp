@@ -166,7 +166,7 @@ const ChatroomDrawer = ({ type }) => {
                 className={classes.btn}
                 disabled={active_chatroom.partner.id.role !== "doctor"}
                 onClick={() => {
-                  history.push(`/book-call/${active_chatroom._id}`);
+                  history.push(`/doctor/calls/${active_chatroom._id}`);
                 }}
               >
                 View Calls
