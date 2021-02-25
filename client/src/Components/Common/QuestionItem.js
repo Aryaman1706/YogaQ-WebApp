@@ -91,23 +91,6 @@ const QuestionItem = ({
   };
 
   const errorHandler = () => {
-    if (error) {
-      Swal.fire({
-        title: "Error",
-        text: error,
-        icon: "error",
-        showConfirmButton: true,
-      });
-    }
-    if (message) {
-      Swal.fire({
-        title: "Sucess",
-        text: message,
-        icon: "success",
-        showConfirmButton: true,
-      });
-    }
-
     clearErrors();
   };
 

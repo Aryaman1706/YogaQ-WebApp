@@ -358,9 +358,27 @@ export const removeQuestionToQuestionSet = ({
         question._id.toString().trim() !== questionId.toString().trim()
     );
 
-    axios.put(`/questionSet/removeQuestion/${chatroomId}`, {
-      questionId,
-    });
+    axios
+      .put(`/questionSet/removeQuestion/${chatroomId}`, {
+        questionId,
+      })
+      .then((res) => {
+        console.log(res);
+        Swal.fire({
+          title: "Sucess",
+          text: "Deleted Successfully",
+          icon: "success",
+          showConfirmButton: true,
+        });
+      })
+      .catch((err) => {
+        Swal.fire({
+          title: "Error",
+          text: err.response.data.error,
+          icon: "error",
+          showConfirmButton: true,
+        });
+      });
     dispatch({
       type: REMOVE_QUESTION_TO_QUESTION_SET,
       payload: { message: "Question removed successfully.", questions },
