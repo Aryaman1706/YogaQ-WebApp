@@ -7,13 +7,11 @@ import {
   IconButton,
   Tooltip,
 } from "@material-ui/core";
-import { useHistory } from "react-router-dom";
 import { format } from "date-fns";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import ErrorIcon from "@material-ui/icons/Error";
 import EditIcon from "@material-ui/icons/Edit";
 import EditCallModal from "./EditCallModal";
-import { chatroom } from "../../redux/actions";
 import CheckIcon from "@material-ui/icons/Check";
 import ClearIcon from "@material-ui/icons/Clear";
 import DoneAllIcon from "@material-ui/icons/DoneAll";
@@ -43,7 +41,6 @@ const useStyles = makeStyles((theme) => ({
 
 const CallHistoryItem = ({ chatroomId, type, value: item }) => {
   const classes = useStyles();
-  const history = useHistory();
   const [open, setOpen] = useState(false);
 
   const renderStatus = () => {

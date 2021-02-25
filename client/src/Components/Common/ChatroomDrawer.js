@@ -49,7 +49,7 @@ const ChatroomDrawer = ({ type }) => {
   const classes = useStyles();
   const history = useHistory();
   const { active_chatroom } = useSelector((state) => {
-    if (type.trim === "user") return state.user;
+    if (type.trim() === "user") return state.user;
     else if (type.trim() === "doctor") return state.doctor;
   });
   const [show, setShow] = useState(false);
