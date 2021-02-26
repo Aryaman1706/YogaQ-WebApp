@@ -8,22 +8,10 @@ const useCallForm = (callData) => {
   const history = useHistory();
   const { date, chatroomId, callId } = callData;
   const newDate = new Date(date);
+  const currentDate = new Date();
 
   const validate = () => {
-    if (newDate === new Date(Date.now())) {
-      setError(true);
-      Swal.fire({
-        position: "center",
-        icon: "error",
-        title: "Error!",
-        text: "Invalid Date and Time",
-        showConfirmButton: true,
-        timer: 1500,
-        willClose: () => {
-          setError(false);
-        },
-      });
-    } else if (newDate <= new Date(Date.now())) {
+    if (newDate <= currentDate.setDate(currentDate.getDate() + 1)) {
       setError(true);
       Swal.fire({
         position: "center",
@@ -42,20 +30,7 @@ const useCallForm = (callData) => {
   };
 
   const validateEdit = () => {
-    if (newDate === new Date(Date.now())) {
-      setError(true);
-      Swal.fire({
-        position: "center",
-        icon: "error",
-        title: "Error!",
-        text: "Invalid Date and Time",
-        showConfirmButton: true,
-        timer: 1500,
-        willClose: () => {
-          setError(false);
-        },
-      });
-    } else if (newDate <= new Date(Date.now())) {
+    if (newDate <= currentDate.setDate(currentDate.getDate() + 1)) {
       setError(true);
       Swal.fire({
         position: "center",
@@ -74,13 +49,13 @@ const useCallForm = (callData) => {
   };
 
   const submit = async () => {
-    const formData = {
-      chatroomId,
-      time: newDate,
-    };
-    const res = await axios.post("/call/request", formData);
+    try {
+      const formData = {
+        chatroomId,
+        time: newDate,
+      };
+      await axios.post("/call/request", formData);
 
-    if (res.status === 200) {
       Swal.fire({
         position: "center",
         icon: "success",
@@ -91,13 +66,12 @@ const useCallForm = (callData) => {
           history.push("/");
         },
       });
-    }
-    if (res.status !== 200) {
+    } catch (error) {
       Swal.fire({
         position: "center",
         icon: "error",
         title: "Error!",
-        text: `${res.data.error}`,
+        text: `${error.response.data.error}`,
         showConfirmButton: true,
         timer: 1500,
       });
@@ -105,12 +79,12 @@ const useCallForm = (callData) => {
   };
 
   const submitEditRequest = async () => {
-    const formData = {
-      time: newDate,
-    };
-    const res = await axios.put(`/call/edit/${callId}`, formData);
+    try {
+      const formData = {
+        time: newDate,
+      };
+      await axios.put(`/call/edit/${callId}`, formData);
 
-    if (res.status === 200) {
       Swal.fire({
         position: "center",
         icon: "success",
@@ -121,13 +95,12 @@ const useCallForm = (callData) => {
           history.push("/");
         },
       });
-    }
-    if (res.status !== 200) {
+    } catch (error) {
       Swal.fire({
         position: "center",
         icon: "error",
         title: "Error!",
-        text: `${res.data.error}`,
+        text: `${error.response.data.error}`,
         showConfirmButton: true,
         timer: 1500,
       });
