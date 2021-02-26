@@ -1,11 +1,11 @@
 // * Models
 const { Chatroom, Message } = require("./models");
-const { models: User } = require("../user");
+const { User } = require("../user/models");
 const { models: Admin } = require("../admin");
 const {
   models: { Doctor },
 } = require("../doctor");
-const { models: Call } = require("../call");
+const { Call } = require("../call/models");
 
 // * Utils
 const validators = require("./validators");

@@ -1,9 +1,9 @@
-const { routes: user } = require("../user");
 const { routes: admin } = require("../admin");
-const { routes: doctor } = require("../doctor");
-const { routes: chatroom } = require("../chatroom");
 const { routes: call } = require("../call");
+const { routes: chatroom } = require("../chatroom");
+const { routes: doctor } = require("../doctor");
 const { routes: questionSet } = require("../questionSet");
+const { routes: user } = require("../user");
 
 module.exports = (app) => {
   app.use("/api/user", user);

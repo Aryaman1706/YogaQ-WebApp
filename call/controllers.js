@@ -1,6 +1,8 @@
 // * Models
 const Call = require("./models");
-const { Chatroom } = require("../chatroom/models");
+const {
+  models: { Chatroom },
+} = require("../chatroom");
 const {
   models: { Doctor },
 } = require("../doctor");

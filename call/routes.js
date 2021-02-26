@@ -1,11 +1,15 @@
 const express = require("express");
 
 // * Middleware
-const { complete: userComplete } = require("../user/middlewares");
+const {
+  middlewares: { complete: userComplete },
+} = require("../user");
 const {
   middlewares: { login: doctorLogin },
 } = require("../doctor");
-const { loggedIn, auth } = require("../chatroom/middlewares");
+const {
+  middlewares: { loggedIn, auth },
+} = require("../chatroom");
 // const {
 //   middlewares: { login: loginAdmin },
 // } = require("../admin");

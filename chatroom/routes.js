@@ -2,7 +2,9 @@ const express = require("express");
 
 // * Middlewares
 const { loggedIn, auth } = require("./middlewares");
-const { login: loginAdmin } = require("../admin/middlewares");
+const {
+  middlewares: { login: loginAdmin },
+} = require("../admin");
 
 // * Controllers
 const controllers = require("./controllers");
