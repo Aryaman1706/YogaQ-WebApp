@@ -1,3 +1,7 @@
-exports.Question = require("./question");
-exports.QuestionSet = require("./questionSet");
-exports.Response = require("./response");
+/* eslint-disable */
+
+module.exports = {
+  Question: require("./question"),
+  QuestionSet: require("./questionSet"),
+  Response: require("./response"),
+};

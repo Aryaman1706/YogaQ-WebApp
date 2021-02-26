@@ -3,9 +3,7 @@ const { randomBytes } = require("crypto");
 
 // * Models
 const Admin = require("./models");
-const {
-  models: { Chatroom },
-} = require("../chatroom");
+const { Chatroom } = require("../chatroom/models");
 
 // * Utils
 const validators = require("./validators");

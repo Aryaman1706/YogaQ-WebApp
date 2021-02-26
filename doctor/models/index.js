@@ -1,2 +1,6 @@
-exports.Doctor = require("./doctor");
-exports.Enquiry = require("./enquiry");
+/* eslint-disable */
+
+module.exports = {
+  Doctor: require("./doctor"),
+  Enquiry: require("./enquiry"),
+};

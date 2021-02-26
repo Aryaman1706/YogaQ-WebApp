@@ -71,3 +71,20 @@ exports.complete = (body) => {
 
   return schema.validate(body);
 };
+
+/**
+ * {
+ *  page: 1,
+ *  startDate= new Date(),
+ *  endDate= new Date(),
+ * }
+ */
+exports.listCalls = (body) => {
+  const schema = Joi.object({
+    page: Joi.number().integer().positive().required(),
+    startDate: Joi.date().max("now").required(),
+    endDate: Joi.date().min(Joi.ref("startDate")).default("now"),
+  });
+
+  return schema.validate(body);
+};

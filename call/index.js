@@ -1,4 +1,8 @@
-exports.models = require("./models");
-exports.routes = require("./routes");
-exports.controllers = require("./controllers");
-exports.validators = require("./validators");
+/* eslint-disable */
+
+module.exports = {
+  models: require("./models"),
+  routes: require("./routes"),
+  controllers: require("./controllers"),
+  validators: require("./validators"),
+};
