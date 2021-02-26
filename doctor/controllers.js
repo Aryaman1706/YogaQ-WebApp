@@ -4,9 +4,7 @@ const { validate: uuidValidate } = require("uuid");
 
 // * Models
 const { Doctor, Enquiry } = require("./models");
-const {
-  models: { Chatroom },
-} = require("../chatroom");
+const { Chatroom } = require("../chatroom/models");
 
 // * Utils
 const validators = require("./validators");

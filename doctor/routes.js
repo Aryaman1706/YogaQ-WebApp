@@ -4,9 +4,7 @@ const passport = require("passport");
 
 // * Middleware
 const { login: loginDoctor } = require("./middlewares");
-const {
-  middlewares: { login: loginAdmin },
-} = require("../admin");
+const { login: loginAdmin } = require("../admin/middlewares");
 
 // * Controllers
 const controllers = require("./controllers");

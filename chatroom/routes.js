@@ -2,9 +2,7 @@ const express = require("express");
 
 // * Middlewares
 const { loggedIn, auth } = require("./middlewares");
-const {
-  middlewares: { login: loginAdmin },
-} = require("../admin");
+const { login: loginAdmin } = require("../admin/middlewares");
 
 // * Controllers
 const controllers = require("./controllers");
@@ -77,11 +75,11 @@ router.put("/lastAccess/:id", [loggedIn, auth], controllers.lastAccess);
 /**
  * Type:- GET
  * Desc:- List chatrooms of any doctor
- * Route:- {{server_url}}/chatroom/list/:doctorId/?startDate=new Date()&endDate=new Date()&onlyNew=true
+ * Route:- {{server_url}}/chatroom/list/:doctorId/?page=1&startDate=new Date()&endDate=new Date()&onlyNew=true
  * Middlewares:- Admin Login
  * Request Body: None
  */
-router.put("/list/:doctorId", loginAdmin, controllers.listChatrooms);
+router.get("/list/:doctorId", loginAdmin, controllers.listChatrooms);
 
 // * End of API Endpoints -->
 

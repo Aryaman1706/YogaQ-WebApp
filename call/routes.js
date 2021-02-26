@@ -1,18 +1,17 @@
 const express = require("express");
 
 // * Middleware
-const {
-  middlewares: { complete: userComplete },
-} = require("../user");
+const { complete: userComplete } = require("../user/middlewares");
 const {
   middlewares: { login: doctorLogin },
 } = require("../doctor");
-const {
-  middlewares: { loggedIn, auth },
-} = require("../chatroom");
+const { loggedIn, auth } = require("../chatroom/middlewares");
+// const {
+//   middlewares: { login: loginAdmin },
+// } = require("../admin");
 
 // * Controllers
-const controller = require("./controllers");
+const controllers = require("./controllers");
 
 // * API Endpoints -->
 const router = express.Router();
@@ -24,7 +23,7 @@ const router = express.Router();
  * Middlewares:- User/Partner Login, Active Chatroom
  * Request Body:- None
  */
-router.get("/list/:id", [loggedIn, auth], controller.list);
+router.get("/list/:id", [loggedIn, auth], controllers.list);
 
 /**
  * Type:- POST
@@ -36,7 +35,7 @@ router.get("/list/:id", [loggedIn, auth], controller.list);
  *  "time": new Date()
  * }
  */
-router.post("/request", userComplete, controller.request);
+router.post("/request", userComplete, controllers.request);
 
 /**
  * Type:- PUT
@@ -47,7 +46,7 @@ router.post("/request", userComplete, controller.request);
  *  "time": new Date()
  * }
  */
-router.put("/edit/:id", userComplete, controller.edit);
+router.put("/edit/:id", userComplete, controllers.edit);
 
 /**
  * Type:- DELETE
@@ -56,7 +55,7 @@ router.put("/edit/:id", userComplete, controller.edit);
  * Middlewares:- User Profile Complete
  * Request Body:- None
  */
-router.delete("/cancel/:id", userComplete, controller.cancel);
+router.delete("/cancel/:id", userComplete, controllers.cancel);
 
 /**
  * Type:- PUT
@@ -67,7 +66,7 @@ router.delete("/cancel/:id", userComplete, controller.cancel);
  *  "accepted": true
  * }
  */
-router.put("/accept/:id", doctorLogin, controller.accept);
+router.put("/accept/:id", doctorLogin, controllers.accept);
 
 /**
  * Type:- PUT
@@ -78,7 +77,16 @@ router.put("/accept/:id", doctorLogin, controller.accept);
  *  "completed": false
  * }
  */
-router.put("/complete/:id", doctorLogin, controller.complete);
+router.put("/complete/:id", doctorLogin, controllers.complete);
+
+/**
+ * Type:- GET
+ * Desc:- List chatrooms of any doctor
+ * Route:- {{server_url}}/call/doctor/list/:doctorId/?page=1&startDate=new Date()&endDate=new Date()
+ * Middlewares:- Admin Login
+ * Request Body: None
+ */
+router.get("/doctor/list/:doctorId", controllers.listCalls);
 
 // * End of API Endpoints -->
 

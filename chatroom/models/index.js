@@ -1,2 +1,5 @@
-exports.Chatroom = require("./chatroom");
-exports.Message = require("./message");
+/* eslint-disable */
+module.exports = {
+  Chatroom: require("./chatroom"),
+  Message: require("./message"),
+};
