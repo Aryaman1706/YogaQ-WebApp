@@ -231,7 +231,8 @@ exports.listCalls = async (req, res) => {
         "partner.id": req.params.doctorId,
         "partner.model": "Doctor",
       })
-        .select("_id")
+        .select("_id user")
+        .populate("user.id", "username email")
         .exec(),
     ]);
     if (!doctor)
@@ -243,11 +244,19 @@ exports.listCalls = async (req, res) => {
         .json({ error: "No associated chatrooms", body: null });
 
     // Formatting chatrooms
-    const chatroomIdList = chatrooms.map((obj) => obj._id);
+    const chatroomIdList = [];
+    const chatroomMap = {};
+    chatrooms.forEach((obj) => {
+      chatroomIdList.push(obj._id);
+      chatroomMap[obj._id] = {
+        username: obj.user.id.username,
+        email: obj.user.id.email,
+      };
+    });
 
     // Paginating calls
     const limit = 2;
-    const calls = await Call.aggregate([
+    const [result] = await Call.aggregate([
       {
         $match: {
           chatroomId: { $in: chatroomIdList },
@@ -273,7 +282,20 @@ exports.listCalls = async (req, res) => {
       },
     ]);
 
-    return res.status(200).json({ error: null, body: { calls } });
+    // Formatting and calculating response
+    let callCount = 0;
+    const calls = result.chatrooms.map((obj) => {
+      callCount += obj.calls.length;
+      return {
+        ...obj,
+        partner: chatroomMap[obj._id],
+      };
+    });
+
+    return res.status(200).json({
+      error: null,
+      body: { calls, end: callCount === 0 || callCount < limit },
+    });
   } catch (error) {
     console.log("Error occured here\n", error);
     return res.status(500).json({ error: "Server Error.", body: null });
