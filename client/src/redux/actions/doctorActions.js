@@ -230,9 +230,9 @@ export const appendMessage = (data) => async (dispatch) => {
 };
 
 // * Modify Last access
-export const modifyLastAccess = () => async (dispatch) => {
+export const modifyLastAccess = ({ id, formData }) => async (dispatch) => {
   try {
-    // await axios.put(`/chatroom/lastAccess/${id}`, formData);
+    await axios.put(`/chatroom/lastAccess/${id}`, formData);
     dispatch({
       type: CLEAR_DOCTOR_CHATROOM,
       payload: null,

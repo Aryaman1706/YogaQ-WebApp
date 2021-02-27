@@ -55,7 +55,7 @@ const SideDrawer = ({ sideDrawer, setSideDrawer }) => {
             key={text}
             onClick={(e) => {
               if (text === "Continue as Therapist") {
-                history.push("/doctor/login");
+                window.location.href = "/doctor/login";
               }
             }}
             data-aos="fade-up"

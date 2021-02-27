@@ -1,6 +1,22 @@
 const socketIO = require("socket.io");
 const getEmbeds = require("./getEmbeds");
 const Message = require("../chatroom/models/message");
+const Chatroom = require("../chatroom/models/chatroom");
+
+const modifyLastAccess = ({ userRole, chatroomId }) => {
+  console.log("Last access change");
+  let update = {};
+  if (userRole === "user") {
+    update = {
+      "lastOpened.user": new Date(),
+    };
+  } else {
+    update = {
+      "lastOpened.partner": new Date(),
+    };
+  }
+  Chatroom.findByIdAndUpdate(chatroomId, update);
+};
 
 const chat = async (server) => {
   const io = socketIO(server, {
@@ -10,10 +26,11 @@ const chat = async (server) => {
   });
   io.on("connection", (socket) => {
     console.log("Connection ", socket.id);
-    socket.on("join", (chatroomId) => {
+    socket.on("join", ({ userRole, chatroomId }) => {
+      console.log(userRole);
       socket.rooms.forEach((room) => {
         if (room !== socket.id) {
-          console.log("I will call modify last access.");
+          modifyLastAccess({ userRole, chatroomId });
           socket.leave(room);
           socket.removeAllListeners("toServer");
         }
@@ -41,13 +58,12 @@ const chat = async (server) => {
           data.urlEmbeds = embeds;
         }
         socket.to(chatroomId).emit("toClient", data);
-        console.log("Message sent");
-        await Message.create(data);
+        Message.create(data);
       });
-    });
-
-    socket.on("disconnect", () => {
-      console.log("socket io disconnected");
+      socket.on("disconnect", () => {
+        modifyLastAccess({ userRole, chatroomId });
+        console.log("socket io disconnected");
+      });
     });
   });
 };

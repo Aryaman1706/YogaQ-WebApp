@@ -10,8 +10,14 @@ const useStyles = makeStyles((theme) => ({
 
 const DoctorProfile = ({ doctor, chatrooms }) => {
   let callCount = 0;
+  let completedCallCount = 0;
   chatrooms.forEach((chatroom) => {
     callCount = callCount + chatroom.call.length;
+    chatroom.call.forEach((call) => {
+      if (call.completed) {
+        completedCallCount++;
+      }
+    });
   });
   const classes = useStyles();
   return (
@@ -45,6 +51,14 @@ const DoctorProfile = ({ doctor, chatrooms }) => {
           <Typography variant="subtitle1">Number of Calls</Typography>
           <Typography variant="subtitle1" color="secondary">
             {callCount}
+          </Typography>
+        </div>
+      </Grid>
+      <Grid item>
+        <div className={classes.div}>
+          <Typography variant="subtitle1">Number of Completed Calls</Typography>
+          <Typography variant="subtitle1" color="secondary">
+            {completedCallCount}
           </Typography>
         </div>
       </Grid>

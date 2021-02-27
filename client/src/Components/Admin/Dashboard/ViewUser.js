@@ -1,4 +1,4 @@
-import React, { useEffect, Fragment, useState, useRef } from "react";
+import React, { useEffect, Fragment, useState } from "react";
 import {
   Typography,
   Toolbar,
@@ -21,6 +21,10 @@ import AdminAppbar from "../../Common/Appbar";
 import AdminLayout from "../../../layout/AdminLayout";
 
 const useStyles = makeStyles((theme) => ({
+  div3: {
+    display: "flex",
+    justifyContent: "space-between",
+  },
   div: {
     display: "flex",
     justifyContent: "flex-end",
@@ -67,7 +71,6 @@ const ViewUser = () => {
 
   const [compLoading, setCompLoading] = useState(false);
   const [loadingBlock, setLoadingBlock] = useState(false);
-  const callCount = useRef(0);
   const start = async () => {
     await dispatch(userActions.selectUser(id));
     setCompLoading(false);
@@ -164,12 +167,18 @@ const ViewUser = () => {
     // eslint-disable-next-line
   }, [loadingBlock]);
 
-  const getCallCount = () => {
+  const getCalls = () => {
     let x = 0;
+    let y = 0;
     selectUser.chatrooms.forEach((chatroom) => {
-      x = x + chatroom.call.length;
+      x += chatroom.call.length;
+      chatroom.call.forEach((call) => {
+        if (call.completed) {
+          y++;
+        }
+      });
     });
-    callCount.current = x;
+    return { Total: x, Completed: y };
   };
 
   const viewChatroom = async (event, chatroomId) => {
@@ -262,9 +271,8 @@ const ViewUser = () => {
                         value={selectUser.user.country}
                       />
                     </Grid>
-                    {getCallCount()}
                     <Grid item>
-                      <div className={classes.div}>
+                      <div className={classes.div3}>
                         <Typography variant="subtitle1">
                           Number of Chat Rooms
                         </Typography>
@@ -273,16 +281,19 @@ const ViewUser = () => {
                         </Typography>
                       </div>
                     </Grid>
-                    <Grid item>
-                      <div className={classes.div}>
-                        <Typography variant="subtitle1">
-                          Number of Calls
-                        </Typography>
-                        <Typography variant="subtitle1" color="secondary">
-                          {callCount.current}
-                        </Typography>
-                      </div>
-                    </Grid>
+
+                    {Object.keys(getCalls()).map((item, index) => (
+                      <Grid item key={index}>
+                        <div className={classes.div3}>
+                          <Typography variant="subtitle1">
+                            {item.toString()} Calls
+                          </Typography>
+                          <Typography variant="subtitle1" color="secondary">
+                            {getCalls()[item]}
+                          </Typography>
+                        </div>
+                      </Grid>
+                    ))}
                     <Grid item>
                       <Button
                         fullWidth

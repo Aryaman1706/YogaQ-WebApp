@@ -54,7 +54,7 @@ const Edit = () => {
     const [compLoading, setCompLoading] = useState(false);
 
     const errorHandler = () => {
-      if (error && /^Validation Error*/i.test(error)) {
+      if (error) {
         Swal.fire({
           position: "center",
           icon: "error",
@@ -62,13 +62,13 @@ const Edit = () => {
           text: `${error}`,
           showConfirmButton: true,
           timer: 1500,
+          willClose: () => {
+            dispatch(adminActions.clear());
+          },
         });
       }
 
-      if (
-        message &&
-        /^Changes to profile changed successfully.*/i.test(message)
-      ) {
+      if (message) {
         Swal.fire({
           position: "center",
           icon: "success",
@@ -76,10 +76,11 @@ const Edit = () => {
           text: message,
           showConfirmButton: true,
           timer: 1500,
+          willClose: () => {
+            dispatch(adminActions.clear());
+          },
         });
       }
-
-      dispatch(adminActions.clear());
     };
 
     useEffect(() => {
@@ -112,14 +113,17 @@ const Edit = () => {
     };
 
     const submit = async () => {
-      const formData = new FormData();
-      if (file) {
-        formData.append("profilePicture", file);
-      }
-      formData.append("username", username);
-      formData.append("email", email);
-      formData.append("welcomeMessage", welcomeMessage);
-      await dispatch(adminActions.editAdmin(formData));
+      // const formData = new FormData();
+      // if (file) {
+      //   formData.append("profilePicture", file);
+      // }
+      // formData.append("username", username);
+      // formData.append("email", email);
+      // formData.append("welcomeMessage", welcomeMessage);
+      // await dispatch(adminActions.editAdmin(formData));
+      await dispatch(
+        adminActions.editAdmin({ username, email, welcomeMessage })
+      );
       setCompLoading(false);
     };
 
@@ -144,6 +148,7 @@ const Edit = () => {
               />
               <div className={classes.container}>
                 <input
+                  disabled={true} // ! Remove it once storage is set up
                   accept="image/*"
                   id="profilePicture"
                   type="file"

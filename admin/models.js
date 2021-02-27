@@ -34,7 +34,7 @@ const adminSchema = new mongoose.Schema(
     welcomeMessage: {
       type: String,
       maxlength: 500,
-      default: null,
+      default: "Hello",
     },
     role: {
       type: String,

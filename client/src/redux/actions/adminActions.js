@@ -78,11 +78,12 @@ export const logoutAdmin = () => async (dispatch) => {
 // * Edit Admin
 export const editAdmin = (formData) => async (dispatch) => {
   try {
-    const res = await axios.put("/admin/profile", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
+    // const res = await axios.put("/admin/profile", formData, {
+    //   headers: {
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // });
+    const res = await axios.put("/admin/profile", formData);
     dispatch({
       type: EDIT_ADMIN,
       payload: res.data.body,
@@ -202,9 +203,9 @@ export const appendMessage = (data) => async (dispatch) => {
 };
 
 // * Modify Last access
-export const modifyLastAccess = () => async (dispatch) => {
+export const modifyLastAccess = ({ id, formData }) => async (dispatch) => {
   try {
-    // await axios.put(`/chatroom/lastAccess/${id}`, formData);
+    await axios.put(`/chatroom/lastAccess/${id}`, formData);
     dispatch({
       type: CLEAR_ADMIN_CHATROOM,
       payload: null,
