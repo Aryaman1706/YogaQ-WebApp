@@ -133,6 +133,12 @@ const Routes = () => {
             <QuestionBankAdminDoctor type="admin" {...props} />
           )}
         />
+        <Route
+          adminLogin
+          exact
+          path="/admin/call-history/:chatroomId"
+          render={(props) => <CallHistory type="admin" {...props} />}
+        />
 
         {/* Doctor */}
         <Route
@@ -196,7 +202,7 @@ const Routes = () => {
           userComplete
           exact
           path="/call-history/:chatroomId"
-          component={CallHistory}
+          render={(props) => <CallHistory type={"user"} />}
         />
         <Route
           userComplete

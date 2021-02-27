@@ -1,24 +1,16 @@
 import React, { useEffect, useState } from "react";
-import {
-  Typography,
-  Grid,
-  Button,
-  ButtonGroup,
-  makeStyles,
-} from "@material-ui/core";
-import { ArrowBackIos, ArrowForwardIos } from "@material-ui/icons";
+import { Typography, Grid, makeStyles } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import {
   user as userActions,
+  admin as adminActions,
   callHistory as callHistoryActions,
-  chatroom,
 } from "../../redux/actions/index";
 import CallHistoryItem from "./CallHistoryItem";
 import { useHistory, useParams } from "react-router-dom";
 import Loader from "../Common/Loader";
 import homeIcon from "../../assets/home.svg";
 import UserAppbar from "../Common/Appbar";
-import EditCallModal from "./EditCallModal";
 import PaginatedList from "../Common/PaginatedList";
 
 const useStyles = makeStyles((theme) => ({
@@ -48,39 +40,61 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const CallHistory = () => {
+const CallHistory = ({ type }) => {
   const classes = useStyles();
   const history = useHistory();
-  const [compLoading, setCompLoading] = useState(true);
-  const [state, setState] = useState(null);
+  const [compLoading, setCompLoading] = useState(false);
   const dispatch = useDispatch();
-  const { user, active_chatroom } = useSelector((state) => state.user);
+  const { active_chatroom } = useSelector((state) => {
+    if (type.trim() === "user") return state.user;
+    else if (type.trim() === "admin") return state.admin;
+  });
   const { list, end } = useSelector((state) => state.callHistory);
   const { chatroomId } = useParams();
 
-  useEffect(() => {
-    return () => {
+  const clear = () => {
+    if (type.trim() === "user") {
       dispatch(userActions.clear());
-      // dispatch(userActions.clearActiveChatroom());
+    } else if (type.trim() === "admin") {
+      dispatch(adminActions.clear());
+    }
+  };
+
+  useEffect(() => {
+    if (!active_chatroom) {
+      setCompLoading(true);
+    }
+    return () => {
+      clear();
       dispatch(callHistoryActions.clearList());
     };
     // eslint-disable-next-line
   }, []);
 
+  const loadChatroom = async () => {
+    if (type.trim() === "user") {
+      await dispatch(userActions.getChatroom(chatroomId));
+    } else if (type.trim() === "admin") {
+      await dispatch(adminActions.getChatroom(chatroomId));
+    }
+
+    setCompLoading(false);
+  };
+
   useEffect(() => {
-    console.log(user);
-    setState(user);
-  }, [user]);
+    if (compLoading && !active_chatroom) {
+      loadChatroom();
+    }
+    // eslint-disable-next-line
+  }, [compLoading]);
 
   const load = async (page) => {
-    // setCompLoading(true);
     await dispatch(callHistoryActions.listEnquiries(page, chatroomId));
-    setCompLoading(false);
   };
 
   return (
     <>
-      <UserAppbar type={"user"}>
+      <UserAppbar type={type.trim()}>
         <Grid container spacing={2}>
           <Grid item xs={12} style={{ padding: "1rem" }}>
             <div
@@ -134,13 +148,14 @@ const CallHistory = () => {
                   </Typography>
                 </Grid>
               </Grid>
-              {list ? (
+              {list && !compLoading ? (
                 <PaginatedList
                   ListItem={CallHistoryItem}
                   loadFunction={load}
                   end={end}
                   list={list}
                   chatroomId={chatroomId}
+                  type={type.trim()}
                 />
               ) : (
                 <Loader />

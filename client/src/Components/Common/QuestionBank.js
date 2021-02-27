@@ -117,17 +117,19 @@ const QuestionBank = ({ type }) => {
       loadDoctorQuestionSet();
     }
     // eslint-disable-next-line
-  }, [compLoading, type]);
+  }, [compLoading]);
 
   useEffect(() => {
     // * Rerun the following function when active_chatroom changes from null to valid
-    if (type.trim() === "admin") {
-      loadAdminQuestionSet();
-    } else if (type.trim() === "doctor") {
-      loadDoctorQuestionSet();
+    if (active_chatroom) {
+      if (type.trim() === "admin") {
+        loadAdminQuestionSet();
+      } else if (type.trim() === "doctor") {
+        loadDoctorQuestionSet();
+      }
     }
     // eslint-disable-next-line
-  }, [active_chatroom, type]);
+  }, [active_chatroom]);
 
   const [responses, setResponses] = useState({});
   return (

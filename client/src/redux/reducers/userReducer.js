@@ -159,6 +159,8 @@ const stateHandler = (state = defaultState, action) => {
       return {
         ...state,
         active_chatroom: null,
+        user_messages: [],
+        message_end: false,
       };
     case GET_QUESTION_SET:
       return {

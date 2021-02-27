@@ -278,13 +278,13 @@ exports.lastAccess = async (req, res) => {
       return res.status(404).json({ error: "Chatroom Not Found.", body: null });
 
     // Clearing session
-    req.session.active_chatroom = null;
+    // req.session.active_chatroom = null;
     return res
       .status(200)
       .json({ error: null, body: "Last Opended Updated Successfully." });
   } catch (error) {
     // Clearing session
-    req.session.active_chatroom = null;
+    // req.session.active_chatroom = null;
     console.log("Error occured here\n", error);
     return res.status(500).json({ error: "Server Error.", body: null });
   }

@@ -31,6 +31,13 @@ exports.create = async (req, res) => {
         .status(400)
         .json({ error: "Question set already exists.", body: null });
 
+    if (chatroom.partner.model.trim() === "Admin") {
+      return res.status(400).json({
+        error: "Can not make question set for chatrooms with admin.",
+        body: null,
+      });
+    }
+
     // Creating new questionSet
     await QuestionSet.create({
       chatroomId: chatroom._id,

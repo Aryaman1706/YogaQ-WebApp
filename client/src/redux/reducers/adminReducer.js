@@ -88,7 +88,7 @@ const stateHandler = (state = defaultState, action) => {
     case CLEAR_ADMIN_CHATROOM:
       return {
         ...state,
-        active_chatroom: null,
+        // active_chatroom: null,
         admin_messages: [],
         message_end: false,
       };
@@ -122,6 +122,8 @@ const stateHandler = (state = defaultState, action) => {
       return {
         ...state,
         active_chatroom: null,
+        admin_messages: [],
+        message_end: false,
       };
     case CLEAR_UNREAD_MESSAGES_ACTIVE_ADMIN:
       return {

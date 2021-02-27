@@ -8,6 +8,7 @@ import SendIcon from "@material-ui/icons/Send";
 import { useHistory, useParams } from "react-router-dom";
 import AdminViewChatAppbar from "../AdminViewChatAppbar";
 import AdminChatroomDrawer from "../AdminChatroomDrawer";
+import AdminLayout from "../../../layout/AdminLayout";
 
 const useStyles = makeStyles((theme) => ({
   scrollDiv: {
@@ -43,7 +44,6 @@ const MessageList = () => {
     message_end,
     active_chatroom,
     admin,
-    error,
     chatroomLoading,
   } = useSelector((state) => state.admin);
   const dispatch = useDispatch();
@@ -100,12 +100,7 @@ const MessageList = () => {
   // * Clear
   useEffect(() => {
     return () => {
-      // dispatch(
-      //   adminActions.modifyLastAccess({
-      //     id: active_chatroom._id,
-      //     formData: { lastAccess: new Date() },
-      //   })
-      // );
+      dispatch(adminActions.clearActiveChatroom());
     };
     // eslint-disable-next-line
   }, []);
@@ -189,97 +184,101 @@ const MessageList = () => {
   return (
     <>
       <AdminViewChatAppbar setShowDrawer={setShowDrawer}>
-        {chatroomLoading || !active_chatroom ? (
-          <Loader />
-        ) : (
-          <Grid container>
-            <Grid item xs={2}></Grid>
-            <Grid item xs={10}>
-              <Grid
-                container
-                direction="row"
-                justify="stretch"
-                alignItems="flex-end"
-                spacing={2}
-                style={{ overflow: "hidden" }}
-              >
+        <AdminLayout>
+          {chatroomLoading || !active_chatroom ? (
+            <Loader />
+          ) : (
+            <Grid container>
+              <Grid item xs={0}></Grid>
+              <Grid item xs={12}>
                 <Grid
-                  item
-                  xs={showDrawer ? 10 : 12}
-                  className={classes.scrollDiv}
-                  ref={scroller}
+                  container
+                  direction="row"
+                  justify="stretch"
+                  alignItems="flex-end"
+                  spacing={2}
+                  style={{ overflow: "hidden" }}
                 >
                   <Grid
-                    container
-                    direction="row"
-                    justify="center"
-                    alignItems="stretch"
-                    spacing={2}
-                  >
-                    <div ref={firstMessage}></div>
-                    {admin_messages.length > 0 &&
-                      admin_messages
-                        .slice(0)
-                        .reverse()
-                        .map((item, index) => {
-                          if (
-                            active_chatroom.unreadMessages > 0 &&
-                            admin_messages.length - index ===
-                              active_chatroom.unreadMessages
-                          ) {
-                            return (
-                              <>
-                                {newMessageIndicator()}
-                                <MessageItem
-                                  message={item}
-                                  id={admin._id}
-                                  path={path}
-                                />
-                              </>
-                            );
-                          }
-                          return (
-                            <MessageItem
-                              message={item}
-                              id={admin._id}
-                              path={path}
-                            />
-                          );
-                        })}
-                    <div ref={lastMessage}></div>
-                  </Grid>
-                </Grid>
-                {showDrawer && (
-                  <Grid
                     item
-                    lg={2}
-                    className={showDrawer ? classes.itemC : classes.hideDrawer}
+                    xs={showDrawer ? 10 : 12}
+                    className={classes.scrollDiv}
+                    ref={scroller}
                   >
-                    <AdminChatroomDrawer />
+                    <Grid
+                      container
+                      direction="row"
+                      justify="center"
+                      alignItems="stretch"
+                      spacing={2}
+                    >
+                      <div ref={firstMessage}></div>
+                      {admin_messages.length > 0 &&
+                        admin_messages
+                          .slice(0)
+                          .reverse()
+                          .map((item, index) => {
+                            if (
+                              active_chatroom.unreadMessages > 0 &&
+                              admin_messages.length - index ===
+                                active_chatroom.unreadMessages
+                            ) {
+                              return (
+                                <>
+                                  {newMessageIndicator()}
+                                  <MessageItem
+                                    message={item}
+                                    id={admin._id}
+                                    path={path}
+                                  />
+                                </>
+                              );
+                            }
+                            return (
+                              <MessageItem
+                                message={item}
+                                id={admin._id}
+                                path={path}
+                              />
+                            );
+                          })}
+                      <div ref={lastMessage}></div>
+                    </Grid>
                   </Grid>
-                )}
-                <Grid item xs={12} className={classes.chatInputContainer}>
-                  <div className={classes.chatFlexContainer}>
-                    <div style={{ width: "95%" }}>
-                      <TextField
-                        fullWidth
-                        disabled
-                        variant="outlined"
-                        placeholder={`Message ${active_chatroom.partner.id.username} .  ..`}
-                        InputProps={{ className: classes.input }}
-                      />
+                  {showDrawer && (
+                    <Grid
+                      item
+                      lg={2}
+                      className={
+                        showDrawer ? classes.itemC : classes.hideDrawer
+                      }
+                    >
+                      <AdminChatroomDrawer />
+                    </Grid>
+                  )}
+                  <Grid item xs={12} className={classes.chatInputContainer}>
+                    <div className={classes.chatFlexContainer}>
+                      <div style={{ width: "95%" }}>
+                        <TextField
+                          fullWidth
+                          disabled
+                          variant="outlined"
+                          placeholder={`Message ${active_chatroom.partner.id.username} .  ..`}
+                          InputProps={{ className: classes.input }}
+                        />
+                      </div>
+                      <div style={{ margin: "auto" }}>
+                        <IconButton disabled={true} color="primary">
+                          <SendIcon />
+                        </IconButton>
+                      </div>
                     </div>
-                    <div style={{ margin: "auto" }}>
-                      <IconButton disabled={true} color="primary">
-                        <SendIcon />
-                      </IconButton>
-                    </div>
-                  </div>
+                  </Grid>
                 </Grid>
               </Grid>
             </Grid>
-          </Grid>
-        )}
+          )}
+        </AdminLayout>
       </AdminViewChatAppbar>
     </>
   );
