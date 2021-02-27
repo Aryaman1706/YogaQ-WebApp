@@ -21,6 +21,8 @@ import {
   DOCTOR_REMOVE_QUESTION_TO_QUESTION_SET,
   GET_DOCTOR_QUESTION_SET,
   GET_DOCTOR_CHATROOM_CALLS,
+  ACCEPT_CALL,
+  COMPLETE_CALL,
 } from "../types";
 import pick from "lodash/pick";
 
@@ -176,6 +178,12 @@ const stateHandler = (state = defaultState, action) => {
         ...state,
         calls: [...state.calls, ...action.payload.calls],
         end: action.payload.end,
+      };
+    case ACCEPT_CALL:
+    case COMPLETE_CALL:
+      return {
+        ...state,
+        calls: action.payload,
       };
     default:
       return state;

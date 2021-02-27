@@ -1,6 +1,6 @@
 // * Models
 const { Chatroom, Message } = require("./models");
-const { User } = require("../user/models");
+const { models: User } = require("../user");
 const { models: Admin } = require("../admin");
 const {
   models: { Doctor },
