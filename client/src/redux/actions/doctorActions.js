@@ -24,6 +24,7 @@ import {
   ACCEPT_CALL,
   COMPLETE_CALL,
   CLEAR_ACTIVE_CHATROOM_DOCTOR,
+  LOGOUT_DOCTOR,
 } from "../types";
 import axios from "../../utils/axios";
 import store from "../store";
@@ -41,6 +42,23 @@ export const loginDoctor = (formData) => async (dispatch) => {
     dispatch({
       type: DOCTOR_ERROR,
       payload: error.response.data?.error,
+    });
+  }
+};
+
+// * Logout Doctor
+export const logoutDoctor = () => async (dispatch) => {
+  try {
+    // await axios.get("/user/auth/logout");
+    // ! add logout doctor request here
+    dispatch({
+      type: LOGOUT_DOCTOR,
+      payload: null,
+    });
+  } catch (error) {
+    dispatch({
+      type: DOCTOR_ERROR,
+      error: error.response.data.error,
     });
   }
 };

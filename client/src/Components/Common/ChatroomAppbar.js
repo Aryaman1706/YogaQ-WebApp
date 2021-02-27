@@ -22,6 +22,7 @@ import { format } from "date-fns";
 import { chatroom as chatroomActions } from "../../redux/actions";
 import AdminChatroomAppbarExt from "../Admin/ChatroomAppbarExt";
 import UserChatroomAppbarExt from "../User/ChatroomAppbarExt";
+import DoctorChatroomAppbarExt from "../Doctor/DoctorAppbarExt";
 import {
   user as userActions,
   doctor as doctorActions,
@@ -116,6 +117,7 @@ const useStyles = makeStyles((theme) => ({
     "&:hover": {
       backgroundColor: "rgb(211,211,211, 0.4)",
       borderRadius: 6,
+      cursor: "pointer",
     },
   },
   hide: {
@@ -193,6 +195,7 @@ const CharoomAppbar = ({ type, children }) => {
       );
     } else if (type.trim() === "doctor") {
       //
+      <DoctorChatroomAppbarExt classes={classes} setAnchorEl={setAnchorEl} />;
     }
   };
 

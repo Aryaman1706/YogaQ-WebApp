@@ -24,6 +24,7 @@ import {
   ACCEPT_CALL,
   COMPLETE_CALL,
   CLEAR_ACTIVE_CHATROOM_DOCTOR,
+  LOGOUT_DOCTOR,
 } from "../types";
 import pick from "lodash/pick";
 
@@ -190,6 +191,15 @@ const stateHandler = (state = defaultState, action) => {
       return {
         ...state,
         active_chatroom: null,
+      };
+    case LOGOUT_DOCTOR:
+      return {
+        ...state,
+        doctor: null,
+        isAuthenticated: false,
+        chatrooms: [],
+        active_chatroom: null,
+        doctor_messages: [],
       };
     default:
       return state;
