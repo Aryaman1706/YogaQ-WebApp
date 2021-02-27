@@ -5,7 +5,7 @@ exports.edit = (body) => {
   const schema = Joi.object({
     username: Joi.string().min(3).max(150).trim().required(),
     phoneNumber: Joi.string().trim().required(),
-    age: Joi.number().integer().required(),
+    age: Joi.number().integer().positive().required(),
     gender: Joi.string()
       .lowercase()
       .trim()

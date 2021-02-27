@@ -25,13 +25,17 @@ const Login = ({ type }) => {
   });
   const history = useHistory();
 
+  const clearErrors = () => {
+    if (type.trim() === "admin") {
+      dispatch(admin.clear());
+    } else if (type.trim() === "doctor") {
+      dispatch(doctor.clear());
+    }
+  };
+
   useEffect(() => {
     return () => {
-      if (type.trim() === "admin") {
-        dispatch(admin.clear());
-      } else if (type.trim() === "doctor") {
-        dispatch(doctor.clear());
-      }
+      clearErrors();
     };
     //eslint-disable-next-line
   }, []);
@@ -54,22 +58,17 @@ const Login = ({ type }) => {
     };
 
     const errorHandler = async () => {
-      if (/^Validation Error*/i.test(error)) {
-        Swal.fire({
-          position: "center",
-          icon: "error",
-          title: "Error Occured.",
-          text: `${error}`,
-          showConfirmButton: true,
-          timer: 1500,
-        });
-      }
-
-      if (type.trim() === "admin") {
-        dispatch(admin.clear());
-      } else if (type.trim() === "doctor") {
-        dispatch(doctor.clear());
-      }
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: "Error Occured.",
+        text: `${error}`,
+        showConfirmButton: true,
+        timer: 1500,
+        willClose: () => {
+          clearErrors();
+        },
+      });
     };
 
     useEffect(() => {
