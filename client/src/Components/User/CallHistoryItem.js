@@ -121,17 +121,6 @@ const CallHistoryItem = ({ chatroomId, type, value: item }) => {
                   </IconButton>
                 </Tooltip>
               </div>
-              <div className={classes.flexCol}>
-                <Tooltip title="Reject Call">
-                  <IconButton
-                    onClick={() => {
-                      setOpen(true);
-                    }}
-                  >
-                    <ClearIcon />
-                  </IconButton>
-                </Tooltip>
-              </div>
             </>
           )}
           {type === "doctor" && item.accepted && !item.completed && (

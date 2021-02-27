@@ -51,7 +51,7 @@ const QuestionBank = () => {
   const loadQuestionSet = async () => {
     if (!active_chatroom) {
       await dispatch(userActions.getChatroom(chatroomId));
-    } else if (active_chatroom) {
+    } else {
       await dispatch(userActions.getQuestionSet(active_chatroom?._id));
       setCompLoading(false);
     }

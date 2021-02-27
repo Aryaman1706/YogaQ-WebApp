@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
 const AdminChatroomDrawer = () => {
   const classes = useStyles();
   const history = useHistory();
-  const { admin_messages } = useSelector((state) => state.admin);
+  const { active_chatroom } = useSelector((state) => state.admin);
 
   return (
     <>
@@ -38,14 +38,25 @@ const AdminChatroomDrawer = () => {
         <Grid item xs={12} style={{ textAlign: "center" }}>
           <br />
           <Button
+            disabled={active_chatroom.partner.model.trim() === "Admin"}
             className={classes.btn}
             onClick={() => {
-              history.push(
-                `/admin/question-bank/${admin_messages[0].chatroomId}`
-              );
+              history.push(`/admin/question-bank/${active_chatroom._id}`);
             }}
           >
             View Questions
+          </Button>
+        </Grid>
+        <Grid item xs={12} style={{ textAlign: "center" }}>
+          <br />
+          <Button
+            disabled={active_chatroom.partner.model.trim() === "Admin"}
+            className={classes.btn}
+            onClick={() => {
+              history.push(`/admin/call-history/${active_chatroom._id}`);
+            }}
+          >
+            Call history
           </Button>
         </Grid>
       </Grid>
