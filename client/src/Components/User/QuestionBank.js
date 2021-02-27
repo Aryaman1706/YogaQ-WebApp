@@ -49,9 +49,12 @@ const QuestionBank = () => {
   const { chatroomId } = useParams();
 
   const loadQuestionSet = async () => {
-    console.log("user magic yaay");
-    await dispatch(userActions.getQuestionSet(active_chatroom?._id));
-    setCompLoading(false);
+    if (!active_chatroom) {
+      await dispatch(userActions.getChatroom(chatroomId));
+    } else if (active_chatroom) {
+      await dispatch(userActions.getQuestionSet(active_chatroom?._id));
+      setCompLoading(false);
+    }
   };
 
   const submitHandler = async () => {
@@ -65,6 +68,10 @@ const QuestionBank = () => {
 
   useEffect(() => {
     setCompLoading(true);
+    return () => {
+      dispatch(userActions.clear());
+    };
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
@@ -74,6 +81,12 @@ const QuestionBank = () => {
     // eslint-disable-next-line
   }, [compLoading]);
 
+  useEffect(() => {
+    loadQuestionSet();
+
+    // eslint-disable-next-line
+  }, [active_chatroom]);
+
   const errorHandling = async () => {
     if (message && /^Response Submitted Successfully*/i.test(message)) {
       Swal.fire({
@@ -82,6 +95,9 @@ const QuestionBank = () => {
         title: "Success",
         text: "Response Submitted Successfully.",
         showConfirmButton: true,
+        willClose: () => {
+          dispatch(userActions.clear());
+        },
       });
     }
     if (error) {
@@ -92,10 +108,11 @@ const QuestionBank = () => {
         text: error,
         showConfirmButton: true,
         timer: 1500,
+        willClose: () => {
+          dispatch(userActions.clear());
+        },
       });
     }
-
-    await dispatch(userActions.clear());
   };
 
   useEffect(() => {
@@ -148,6 +165,7 @@ const QuestionBank = () => {
                         question={question}
                         responses={responses}
                         setResponses={setResponses}
+                        type={"user"}
                       />
                     ))}
                   </>
@@ -158,6 +176,7 @@ const QuestionBank = () => {
         </Grid>
         <Grid item xs={12}>
           <Button
+            disabled={!questionSet || questionSet?.questions?.length === 0}
             onClick={submitHandler}
             variant="contained"
             color="primary"
