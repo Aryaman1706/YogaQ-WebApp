@@ -21,6 +21,8 @@ import {
   DOCTOR_REMOVE_QUESTION_TO_QUESTION_SET,
   GET_DOCTOR_QUESTION_SET,
   GET_DOCTOR_CHATROOM_CALLS,
+  ACCEPT_CALL,
+  COMPLETE_CALL,
 } from "../types";
 import axios from "../../utils/axios";
 import store from "../store";
@@ -339,7 +341,6 @@ export const removeQuestionToQuestionSet = ({
 // * List all calls by chatroomId
 export const listCallsByChatroom = (id, page) => async (dispatch) => {
   try {
-    console.log(id);
     const res = await axios.get(`/call/list/${id}?page=${page}`);
     if (res) {
       dispatch({
@@ -348,6 +349,82 @@ export const listCallsByChatroom = (id, page) => async (dispatch) => {
       });
     }
   } catch (error) {
+    dispatch({
+      type: DOCTOR_ERROR,
+      payload: error,
+    });
+  }
+};
+
+// * Accept a call
+export const acceptCall = (id) => async (dispatch) => {
+  try {
+    const storeState = store.getState();
+    const res = await axios.put(`/call/accept/${id}`, {
+      accepted: true,
+    });
+    if (res?.status === 200) {
+      const newCallList = storeState.doctor.calls.map((item) => {
+        if (item._id === id) {
+          const newItem = { ...item, accepted: true };
+          return newItem;
+        } else {
+          return item;
+        }
+      });
+      Swal.fire({
+        title: "Accepted Call",
+        icon: "success",
+      });
+      dispatch({
+        type: ACCEPT_CALL,
+        payload: newCallList,
+      });
+    }
+  } catch (error) {
+    Swal.fire({
+      title: "Error",
+      text: "Something went wrong",
+      icon: "error",
+    });
+    dispatch({
+      type: DOCTOR_ERROR,
+      payload: error,
+    });
+  }
+};
+
+// * Complete a call
+export const completeCall = (id) => async (dispatch) => {
+  try {
+    const storeState = store.getState();
+    const res = await axios.put(`/call/complete/${id}`, {
+      completed: true,
+    });
+    if (res?.status === 200) {
+      const newCallList = storeState.doctor.calls.map((item) => {
+        if (item._id === id) {
+          const newItem = { ...item, completed: true };
+          return newItem;
+        } else {
+          return item;
+        }
+      });
+      Swal.fire({
+        title: "Completed Call",
+        icon: "success",
+      });
+      dispatch({
+        type: COMPLETE_CALL,
+        payload: newCallList,
+      });
+    }
+  } catch (error) {
+    Swal.fire({
+      title: "Error",
+      text: "Something went wrong",
+      icon: "error",
+    });
     dispatch({
       type: DOCTOR_ERROR,
       payload: error,

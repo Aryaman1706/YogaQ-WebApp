@@ -8,13 +8,16 @@ import {
   Tooltip,
 } from "@material-ui/core";
 import { format } from "date-fns";
+import { useDispatch } from "react-redux";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import ErrorIcon from "@material-ui/icons/Error";
 import EditIcon from "@material-ui/icons/Edit";
+import { doctor as doctorActions } from "../../redux/actions/index";
 import EditCallModal from "./EditCallModal";
 import CheckIcon from "@material-ui/icons/Check";
 import ClearIcon from "@material-ui/icons/Clear";
 import DoneAllIcon from "@material-ui/icons/DoneAll";
+import Swal from "sweetalert2";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -42,6 +45,35 @@ const useStyles = makeStyles((theme) => ({
 const CallHistoryItem = ({ chatroomId, type, value: item }) => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
+  const dispatch = useDispatch();
+
+  const accept = () => {
+    Swal.fire({
+      title: "Are you sure you want to accept the selected call?",
+      icon: "question",
+      showConfirmButton: true,
+      showCancelButton: true,
+      confirmButtonText: "Yes",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(doctorActions.acceptCall(item._id));
+      }
+    });
+  };
+
+  const complete = () => {
+    Swal.fire({
+      title: "Are you sure you want to mark the selected call as completed?",
+      icon: "question",
+      showConfirmButton: true,
+      showCancelButton: true,
+      confirmButtonText: "Yes",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(doctorActions.completeCall(item._id));
+      }
+    });
+  };
 
   const renderStatus = () => {
     if (item.accepted) {
@@ -84,11 +116,7 @@ const CallHistoryItem = ({ chatroomId, type, value: item }) => {
             <>
               <div className={classes.flexCol}>
                 <Tooltip title="Accept Call">
-                  <IconButton
-                    onClick={() => {
-                      setOpen(true);
-                    }}
-                  >
+                  <IconButton onClick={accept}>
                     <CheckIcon />
                   </IconButton>
                 </Tooltip>
@@ -110,11 +138,7 @@ const CallHistoryItem = ({ chatroomId, type, value: item }) => {
             <>
               <div className={classes.flexCol}>
                 <Tooltip title="Mark as completed">
-                  <IconButton
-                    onClick={() => {
-                      setOpen(true);
-                    }}
-                  >
+                  <IconButton onClick={complete}>
                     <DoneAllIcon />
                   </IconButton>
                 </Tooltip>

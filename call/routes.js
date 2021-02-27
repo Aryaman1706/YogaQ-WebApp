@@ -64,7 +64,7 @@ router.delete("/cancel/:id", userComplete, controllers.cancel);
 /**
  * Type:- PUT
  * Desc:- Accept the call request
- * Route:- {{server_url}}/call/edit/:callId
+ * Route:- {{server_url}}/call/accept/:callId
  * Middlewares:- Doctor login
  * Request Body:- {
  *  "accepted": true
@@ -75,7 +75,7 @@ router.put("/accept/:id", doctorLogin, controllers.accept);
 /**
  * Type:- PUT
  * Desc:- Mark the call as completed
- * Route:- {{server_url}}/call/edit/:callId
+ * Route:- {{server_url}}/call/complete/:callId
  * Middlewares:- Doctor login
  * Request Body:- {
  *  "completed": false
