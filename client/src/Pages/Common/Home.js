@@ -58,8 +58,10 @@ const Home = ({ type }) => {
   const renderClassname = () => {
     if (!active_chatroom) {
       return `${classes.itemB} ${classes.hide}`;
-    } else if (active_chatroom) {
+    } else if (active_chatroom && !showDrawer) {
       return classes.itemB;
+    } else if (active_chatroom && showDrawer) {
+      return `${classes.itemB} ${classes.hide}`;
     }
   };
 

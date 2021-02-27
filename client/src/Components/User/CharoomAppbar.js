@@ -19,9 +19,10 @@ import Profile from "../../assets/user.svg";
 import { format } from "date-fns";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import {
-  clearActiveChatroom,
-  logoutUser,
-} from "../../redux/actions/userActions";
+  user as userActions,
+  doctor as doctorActions,
+  admin as adminActions,
+} from "../../redux/actions/index";
 
 const useStyles = makeStyles((theme) => ({
   parent: {
@@ -151,7 +152,7 @@ const StyledMenu = withStyles({
   />
 ));
 
-const CharoomAppbar = ({ children }) => {
+const CharoomAppbar = ({ children, type }) => {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
   const { active_chatroom, isAuthenticated, user, loading } = useSelector(
@@ -174,8 +175,18 @@ const CharoomAppbar = ({ children }) => {
   };
 
   const userLogOut = async () => {
-    await dispatch(logoutUser());
+    await dispatch(userActions.logoutUser());
     history.push("/");
+  };
+
+  const clearActive = () => {
+    if (type.trim() === "user") {
+      dispatch(userActions.clearActiveChatroom());
+    } else if (type.trim() === "doctor") {
+      dispatch(doctorActions.clearActiveChatroom());
+    } else if (type.trim() === "admin") {
+      dispatch(adminActions.clearActiveChatroom());
+    }
   };
 
   return (
@@ -283,9 +294,7 @@ const CharoomAppbar = ({ children }) => {
                 item
                 xs={1}
                 className={classes.backIcon}
-                onClick={() => {
-                  dispatch(clearActiveChatroom());
-                }}
+                onClick={clearActive}
               >
                 <ArrowBackIcon />
               </Grid>

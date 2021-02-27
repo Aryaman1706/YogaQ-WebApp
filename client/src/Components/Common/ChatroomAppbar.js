@@ -22,6 +22,11 @@ import { format } from "date-fns";
 import { chatroom as chatroomActions } from "../../redux/actions";
 import AdminChatroomAppbarExt from "../Admin/ChatroomAppbarExt";
 import UserChatroomAppbarExt from "../User/ChatroomAppbarExt";
+import {
+  user as userActions,
+  doctor as doctorActions,
+  admin as adminActions,
+} from "../../redux/actions/index";
 
 const useStyles = makeStyles((theme) => ({
   parent: {
@@ -225,6 +230,16 @@ const CharoomAppbar = ({ type, children }) => {
     }
   };
 
+  const clearActive = () => {
+    if (type.trim() === "user") {
+      dispatch(userActions.clearActiveChatroom());
+    } else if (type.trim() === "doctor") {
+      dispatch(doctorActions.clearActiveChatroom());
+    } else if (type.trim() === "admin") {
+      dispatch(adminActions.clearActiveChatroom());
+    }
+  };
+
   return (
     <>
       <Grid
@@ -342,9 +357,7 @@ const CharoomAppbar = ({ type, children }) => {
               item
               xs={1}
               className={classes.backIcon}
-              onClick={() => {
-                // dispatch(clearActiveChatroom());
-              }}
+              onClick={clearActive}
             >
               <ArrowBackIcon />
             </Grid>

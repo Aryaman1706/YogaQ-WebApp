@@ -23,6 +23,7 @@ import {
   GET_DOCTOR_CHATROOM_CALLS,
   ACCEPT_CALL,
   COMPLETE_CALL,
+  CLEAR_ACTIVE_CHATROOM_DOCTOR,
 } from "../types";
 import pick from "lodash/pick";
 
@@ -184,6 +185,11 @@ const stateHandler = (state = defaultState, action) => {
       return {
         ...state,
         calls: action.payload,
+      };
+    case CLEAR_ACTIVE_CHATROOM_DOCTOR:
+      return {
+        ...state,
+        active_chatroom: null,
       };
     default:
       return state;
