@@ -23,6 +23,7 @@ import {
   GET_DOCTOR_CHATROOM_CALLS,
   ACCEPT_CALL,
   COMPLETE_CALL,
+  CLEAR_ACTIVE_CHATROOM_DOCTOR,
 } from "../types";
 import axios from "../../utils/axios";
 import store from "../store";
@@ -430,4 +431,11 @@ export const completeCall = (id) => async (dispatch) => {
       payload: error,
     });
   }
+};
+
+// * Set active chatroom to null
+export const clearActiveChatroom = () => async (dispatch) => {
+  dispatch({
+    type: CLEAR_ACTIVE_CHATROOM_DOCTOR,
+  });
 };
