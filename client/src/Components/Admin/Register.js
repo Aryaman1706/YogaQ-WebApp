@@ -36,7 +36,7 @@ const Register = () => {
     };
 
     const errorHandler = () => {
-      if (error && /^Validation Error*/i.test(error)) {
+      if (error) {
         Swal.fire({
           position: "center",
           icon: "error",
@@ -44,9 +44,12 @@ const Register = () => {
           text: error,
           showConfirmButton: true,
           timer: 1500,
+          willClose: () => {
+            dispatch(admin.clear());
+          },
         });
       }
-      if (message && /^New admin registered successfully*/i.test(message)) {
+      if (message) {
         Swal.fire({
           position: "center",
           icon: "success",
@@ -55,11 +58,10 @@ const Register = () => {
           showConfirmButton: true,
           timer: 1500,
         }).then(() => {
+          dispatch(admin.clear());
           resetForm();
         });
       }
-
-      dispatch(admin.clear());
     };
 
     useEffect(() => {

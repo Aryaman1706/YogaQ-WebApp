@@ -15,7 +15,7 @@ const DoctorAppbarExt = ({ classes, StyledMenu }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [sideDrawer, setSideDrawer] = useState(false);
   const history = useHistory();
-  const { isAuthenticated, user } = useSelector((state) => state.user);
+  const { isAuthenticated, doctor } = useSelector((state) => state.doctor);
   const dispatch = useDispatch();
 
   const handleClick = (e) => {
@@ -26,14 +26,14 @@ const DoctorAppbarExt = ({ classes, StyledMenu }) => {
     setAnchorEl(null);
   };
 
-  const userLogOut = async () => {
+  const doctorLogOut = async () => {
     await dispatch(logoutDoctor());
     history.push("/");
   };
 
   return (
     <>
-      {isAuthenticated && user ? (
+      {isAuthenticated && doctor ? (
         <>
           <IconButton
             aria-controls="menu"
@@ -66,10 +66,15 @@ const DoctorAppbarExt = ({ classes, StyledMenu }) => {
               >
                 <Avatar alt="Profile" src={Profile} />
                 <div className={classes.profileFlex}>
-                  <div className={classes.profileName}>{user.username}</div>
-                  <div className={classes.profileJoin}>
-                    Joined {format(new Date(user.createdAt), "MMM dd, yyyy")}
-                  </div>
+                  <div className={classes.profileName}>{doctor.username}</div>
+                  {doctor.createdAt ? (
+                    <>
+                      <div className={classes.profileJoin}>
+                        Joined{" "}
+                        {format(new Date(doctor.createdAt), "MMM dd, yyyy")}
+                      </div>
+                    </>
+                  ) : null}
                 </div>
               </div>
               <Divider />
@@ -93,7 +98,7 @@ const DoctorAppbarExt = ({ classes, StyledMenu }) => {
               <div
                 className={`${classes.flexRow} ${classes.paddingMenuItem}`}
                 onClick={() => {
-                  userLogOut();
+                  doctorLogOut();
                   setAnchorEl(null);
                 }}
               >

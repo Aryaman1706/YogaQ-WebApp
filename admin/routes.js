@@ -87,7 +87,7 @@ router.get("/logout", loginAdmin, controllers.logoutAdmin);
  *  "welcomeMessage": "Hello!"
  * }
  */
-router.put("/profile", [loginAdmin], controllers.edit);
+router.put("/profile", loginAdmin, controllers.edit);
 
 /**
  * Type:- PUT

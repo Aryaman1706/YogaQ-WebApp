@@ -34,7 +34,10 @@ const MessageList = ({ type, socket }) => {
 
   // * Socket Setup
   useEffect(() => {
-    socket.current.emit("join", active_chatroom._id);
+    socket.current.emit("join", {
+      userRole: globalState[type.trim()].role,
+      chatroomId: active_chatroom._id,
+    });
 
     socket.current.on("toClient", (message) => {
       if (type.trim() === "admin") {
@@ -87,11 +90,26 @@ const MessageList = ({ type, socket }) => {
     console.log("MessageList unmount.");
     socket.current.removeAllListeners("toClient");
     if (type.trim() === "admin") {
-      await dispatch(adminActions.modifyLastAccess());
+      await dispatch(
+        adminActions.modifyLastAccess({
+          id: active_chatroom._id,
+          formData: { lastAccess: new Date() },
+        })
+      );
     } else if (type.trim() === "doctor") {
-      await dispatch(doctorActions.modifyLastAccess());
+      await dispatch(
+        doctorActions.modifyLastAccess({
+          id: active_chatroom._id,
+          formData: { lastAccess: new Date() },
+        })
+      );
     } else if (type.trim() === "user") {
-      await dispatch(userActions.modifyLastAccess());
+      await dispatch(
+        userActions.modifyLastAccess({
+          id: active_chatroom._id,
+          formData: { lastAccess: new Date() },
+        })
+      );
     }
   };
 
@@ -117,8 +135,8 @@ const MessageList = ({ type, socket }) => {
       setTop(false);
     } else {
       lastMessage.current.scrollIntoView();
-      // eslint-disable-next-line
     }
+    // eslint-disable-next-line
   }, depArrayForScroll());
 
   // * Load More Messages
@@ -218,7 +236,7 @@ const MessageList = ({ type, socket }) => {
       socket.current.emit("toServer", data);
       // ! Why?
       // if (type.trim() === "admin") {
-      //   dispatch(adminActions.clearUnreadMessagesActive());
+      // dispatch(adminActions.clearUnreadMessagesActive());
       // } else if (type.trim() === "user") {
       //   dispatch(userActions.clearUnreadMessagesActive());
       // }

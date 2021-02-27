@@ -40,13 +40,14 @@ const ChangePassword = ({ type }) => {
     handleChange,
     isValid,
     setFieldTouched,
+    resetForm,
   }) => {
     const [showOld, setShowOld] = useState(false);
     const [showNew, setShowNew] = useState(false);
     const [compLoading, setCompLoading] = useState(false);
 
     const errorHandler = () => {
-      if (/^Validation Error*/i.test(error)) {
+      if (error) {
         Swal.fire({
           position: "center",
           icon: "error",
@@ -54,9 +55,16 @@ const ChangePassword = ({ type }) => {
           text: error,
           showConfirmButton: true,
           timer: 1500,
+          willClose: () => {
+            if (type.trim() === "admin") {
+              dispatch(admin.clear());
+            } else if (type.trim() === "doctor") {
+              dispatch(doctor.clear());
+            }
+          },
         });
       }
-      if (/^Password changed successfully*/i.test(message)) {
+      if (message) {
         Swal.fire({
           position: "center",
           icon: "success",
@@ -64,13 +72,15 @@ const ChangePassword = ({ type }) => {
           text: message,
           showConfirmButton: true,
           timer: 1500,
+          willClose: () => {
+            if (type.trim() === "admin") {
+              dispatch(admin.clear());
+            } else if (type.trim() === "doctor") {
+              dispatch(doctor.clear());
+            }
+            resetForm();
+          },
         });
-      }
-
-      if (type.trim() === "admin") {
-        dispatch(admin.clear());
-      } else if (type.trim() === "doctor") {
-        dispatch(doctor.clear());
       }
     };
 

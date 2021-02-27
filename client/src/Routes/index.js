@@ -126,6 +126,7 @@ const Routes = () => {
           )}
         />
         <Route
+          adminLogin
           exact
           path="/admin/question-bank/:chatroomId"
           render={(props) => (
@@ -144,7 +145,7 @@ const Routes = () => {
         <Route
           exact
           path="/doctor/login"
-          render={(props) => <Login type={"doctor"} />}
+          render={(props) => <Login type={"doctor"} {...props} />}
         />
         <Route
           doctorLogin
@@ -165,8 +166,13 @@ const Routes = () => {
           )}
         />
         {/* Doctor Dashboard */}
-        <Route exact path="/doctor/calls" component={CallListing} />
-        <Route exact path="/doctor/calls/:chatroomId" component={CallListing} />
+        <Route doctorLogin exact path="/doctor/calls" component={CallListing} />
+        <Route
+          doctorLogin
+          exact
+          path="/doctor/calls/:chatroomId"
+          component={CallListing}
+        />
 
         {/* User */}
         <Route
@@ -193,6 +199,7 @@ const Routes = () => {
           component={CallHistory}
         />
         <Route
+          userComplete
           exact
           path="/question-bank/:chatroomId"
           render={(props) => (
