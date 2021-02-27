@@ -8,7 +8,6 @@ import Home from "../Pages/Common/Home";
 import Login from "../Components/Common/Login";
 
 // * Admin
-import AdminLogin from "../Pages/Admin/LoginPage";
 import AdminProfile from "../Pages/Admin/Profile";
 
 // * Admin DashBoard
@@ -29,7 +28,6 @@ import QuestionBankAdminDoctor from "../Components/Common/QuestionBank";
 import NewEnquiry from "../Components/Doctor/Enquiry/NewEnquiry";
 
 // * Doctor
-import DoctorLogin from "../Pages/Doctor/LoginPage";
 
 // * Doctor Dashboard
 import CallListing from "../Pages/Doctor/CallListing";

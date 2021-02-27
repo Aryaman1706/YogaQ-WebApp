@@ -27,7 +27,7 @@ exports.list = async (req, res) => {
     const limit = 5;
     if ((parseInt(value.page, 10) - 1) * limit < total) {
       const calls = await Call.find({ chatroomId: req.params.id })
-        .sort("time")
+        .sort("-time")
         .skip((parseInt(value.page, 10) - 1) * limit)
         .limit(limit)
         .exec();
