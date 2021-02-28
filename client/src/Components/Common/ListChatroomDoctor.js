@@ -48,6 +48,7 @@ const ListChatroomDoctor = ({ doctorId }) => {
     end: false,
   });
   const [onlyNew, setOnlyNew] = useState(false);
+  const [newChatrooms, setNewChatrooms] = useState([]);
 
   const dateHandler = (e) => {
     setChatroomFilter((prev) => {
@@ -65,7 +66,7 @@ const ListChatroomDoctor = ({ doctorId }) => {
   const submitHandler = async () => {
     try {
       const res = await axios.get(
-        `/chatroom/list/${doctorId}/page=${1}&startDate=${
+        `/chatroom/list/${doctorId}/?page=${1}&startDate=${
           chatroomFilter.startDate
         }&endDate=${chatroomFilter.endDate}`
       );
@@ -74,6 +75,7 @@ const ListChatroomDoctor = ({ doctorId }) => {
         list: res.data.body.chatrooms,
         end: res.data.body.end,
       });
+      filterNewResults(res.data.body.chatrooms);
     } catch (error) {
       setChatroomFilter({ startDate: null, endDate: null });
       setOnlyNew(false);
@@ -81,11 +83,72 @@ const ListChatroomDoctor = ({ doctorId }) => {
     }
   };
 
+  const filterNewResults = (list) => {
+    const onlyNewChatrooms = [];
+    list.forEach((chatroom) => {
+      if (
+        new Date(chatroom.createdAt) >= new Date(chatroomFilter.startDate) &&
+        new Date(chatroom.createdAt) <= new Date(chatroomFilter.endDate)
+      ) {
+        onlyNewChatrooms.push(chatroom);
+      }
+    });
+    setNewChatrooms(onlyNewChatrooms);
+  };
+
   const viewChatroom = async (event, chatroomId) => {
     await dispatch(adminActions.getChatroom(chatroomId));
     history.push(`/admin/chatroom/view/${chatroomId}`);
   };
 
+  const renderChatrooms = () => {
+    if (onlyNew) {
+      if (!newChatrooms || newChatrooms.length === 0) {
+        return <>No available Chatrooms</>;
+      } else {
+        return newChatrooms.map((chatroom) => (
+          <ChatroomItem chatroom={chatroom} />
+        ));
+      }
+    } else {
+      if (!chatrooms.list || chatrooms.list.length === 0) {
+        return <>No available Chatrooms</>;
+      } else {
+        return chatrooms.list.map((chatroom) => (
+          <ChatroomItem chatroom={chatroom} />
+        ));
+      }
+    }
+  };
+
+  const ChatroomItem = ({ chatroom }) => {
+    return (
+      <>
+        <Grid item xs={12}>
+          <Paper
+            elevation={0}
+            className={classes.paperChatroom}
+            onClick={(event) => viewChatroom(event, chatroom._id)}
+          >
+            <div className={classes.div2}>
+              <div>
+                <Typography variant="subtitle1">
+                  Username:- {chatroom.user.id.username}
+                </Typography>
+                <Typography variant="subtitle1">
+                  Email Address:- {chatroom.user.id.email}
+                </Typography>
+                <Typography variant="subtitle2">
+                  Created On:-{" "}
+                  {new Date(chatroom.createdAt).toLocaleDateString()}
+                </Typography>
+              </div>
+            </div>
+          </Paper>
+        </Grid>
+      </>
+    );
+  };
   return (
     <>
       <Typography variant="h4" align="center">
@@ -98,7 +161,7 @@ const ListChatroomDoctor = ({ doctorId }) => {
         alignItems="stretch"
         spacing={1}
       >
-        <Grid item xs={3}>
+        <Grid item xs={4}>
           <Grid container spacing={1}>
             <Grid item xs={12}>
               <TextField
@@ -161,43 +224,12 @@ const ListChatroomDoctor = ({ doctorId }) => {
             </Grid>
           </Grid>
         </Grid>
-        <Grid item xs={9}>
-          {chatrooms.list && chatrooms.list.length > 0 ? (
-            <>
-              {chatrooms.list.map((chatroom) => (
-                <Fragment key={chatroom._id}>
-                  <Grid container spacing={1}>
-                    <Grid item xs={12}>
-                      <Paper
-                        elevation={0}
-                        className={classes.paperChatroom}
-                        onClick={(event) => viewChatroom(event, chatroom._id)}
-                      >
-                        <div className={classes.div2}>
-                          <div>
-                            <Typography variant="subtitle1">
-                              Username:- {chatroom.user.id.username}
-                            </Typography>
-                            <Typography variant="subtitle1">
-                              Email Address:- {chatroom.user.id.email}
-                            </Typography>
-                            <Typography variant="subtitle2">
-                              Created On:-{" "}
-                              {new Date(
-                                chatroom.createdAt
-                              ).toLocaleDateString()}
-                            </Typography>
-                          </div>
-                        </div>
-                      </Paper>
-                    </Grid>
-                  </Grid>
-                </Fragment>
-              ))}
-            </>
-          ) : (
-            <> No available chatrooms </>
-          )}
+        <Grid item xs={8}>
+          <>
+            <Grid container spacing={1}>
+              {renderChatrooms()}
+            </Grid>
+          </>
         </Grid>
       </Grid>
     </>

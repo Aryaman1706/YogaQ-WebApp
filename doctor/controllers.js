@@ -468,28 +468,13 @@ exports.listDoctors = async (req, res) => {
 exports.viewDoctor = async (req, res) => {
   try {
     // Finding valid doctor and associated chatrooms
-    const [doctor, chatrooms] = await Promise.all([
-      Doctor.findById(req.params.id)
-        .select("-password -resetToken -resetTokenValidity")
-        .exec(),
-      Chatroom.find({
-        "partner.id": req.params.id,
-        "partner.model": "Doctor",
-      })
-        .select("user partner blocked createdAt")
-        .sort("-createdAt")
-        .populate("user.id", "username email")
-        .populate({
-          path: "call",
-          select: "time accepted completed",
-          sort: "-time",
-        })
-        .exec(),
-    ]);
+    const doctor = await Doctor.findById(req.params.id)
+      .select("-password -resetToken -resetTokenValidity")
+      .exec();
     if (!doctor)
       return res.status(400).json({ error: "Doctor not found.", body: null });
 
-    return res.status(200).json({ error: null, body: { doctor, chatrooms } });
+    return res.status(200).json({ error: null, body: doctor });
   } catch (error) {
     console.log("Error occured here\n", error);
     return res.status(500).json({ error: "Server Error.", body: null });

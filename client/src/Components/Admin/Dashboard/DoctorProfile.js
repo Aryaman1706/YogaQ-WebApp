@@ -1,25 +1,7 @@
 import React from "react";
-import { Grid, TextField, Typography, makeStyles } from "@material-ui/core";
+import { Grid, TextField } from "@material-ui/core";
 
-const useStyles = makeStyles((theme) => ({
-  div: {
-    display: "flex",
-    justifyContent: "space-between",
-  },
-}));
-
-const DoctorProfile = ({ doctor, chatrooms }) => {
-  let callCount = 0;
-  let completedCallCount = 0;
-  chatrooms.forEach((chatroom) => {
-    callCount = callCount + chatroom.call.length;
-    chatroom.call.forEach((call) => {
-      if (call.completed) {
-        completedCallCount++;
-      }
-    });
-  });
-  const classes = useStyles();
+const DoctorProfile = ({ doctor }) => {
   return (
     <>
       <Grid item>
@@ -37,30 +19,6 @@ const DoctorProfile = ({ doctor, chatrooms }) => {
           label="Email Address"
           value={doctor.email}
         />
-      </Grid>
-      <Grid item>
-        <div className={classes.div}>
-          <Typography variant="subtitle1">Number of Chat Rooms</Typography>
-          <Typography variant="subtitle1" color="secondary">
-            {chatrooms.length}
-          </Typography>
-        </div>
-      </Grid>
-      <Grid item>
-        <div className={classes.div}>
-          <Typography variant="subtitle1">Number of Calls</Typography>
-          <Typography variant="subtitle1" color="secondary">
-            {callCount}
-          </Typography>
-        </div>
-      </Grid>
-      <Grid item>
-        <div className={classes.div}>
-          <Typography variant="subtitle1">Number of Completed Calls</Typography>
-          <Typography variant="subtitle1" color="secondary">
-            {completedCallCount}
-          </Typography>
-        </div>
       </Grid>
     </>
   );

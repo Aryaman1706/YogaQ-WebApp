@@ -77,7 +77,7 @@ exports.listChatrooms = (body) => {
   const schema = Joi.object({
     page: Joi.number().integer().positive().required(),
     startDate: Joi.date().max("now").required(),
-    endDate: Joi.date().min(Joi.ref("startDate")).max("now").default("now"),
+    endDate: Joi.date().min(Joi.ref("startDate")).default("now"),
     onlyNew: Joi.boolean().default(false),
   });
   return schema.validate(body);

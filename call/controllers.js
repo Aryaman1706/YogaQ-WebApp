@@ -255,7 +255,7 @@ exports.listCalls = async (req, res) => {
     });
 
     // Paginating calls
-    const limit = 2;
+    const limit = 5;
     const [result] = await Call.aggregate([
       {
         $match: {
