@@ -12,6 +12,7 @@ import {
 import background from "../../../assets/background.svg";
 import AdminAppbar from "../../Common/Appbar";
 import AdminLayout from "../../../layout/AdminLayout";
+import ListChatroomDoctor from "../../Common/ListChatroomDoctor";
 
 const useStyles = makeStyles((theme) => ({
   div: {
@@ -167,7 +168,9 @@ const ViewDoctor = () => {
                           )}
                         </Grid>
 
-                        <Typography variant="h3" align="center">
+                        <ListChatroomDoctor doctorId={selectDoctor._id} />
+
+                        {/* <Typography variant="h3" align="center">
                           Chat Rooms
                         </Typography>
                         <Grid
@@ -209,7 +212,7 @@ const ViewDoctor = () => {
                               </Fragment>
                             );
                           })}
-                        </Grid>
+                        </Grid> */}
                       </Grid>
                     </Grid>
                   </Paper>
