@@ -1,17 +1,23 @@
 import React, { useState, useEffect, Fragment } from "react";
 import DoctorProfile from "./DoctorProfile";
 import DoctorProfileComplete from "./DoctorProfileComplete";
-import { Typography, Grid, Button, makeStyles, Paper } from "@material-ui/core";
+import {
+  Typography,
+  Grid,
+  Button,
+  makeStyles,
+  Paper,
+  Toolbar,
+} from "@material-ui/core";
 import Swal from "sweetalert2";
 import { useHistory, useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  doctor as doctorActions,
-  admin as adminActions,
-} from "../../../redux/actions/index";
+import { doctor as doctorActions } from "../../../redux/actions/index";
 import background from "../../../assets/background.svg";
 import AdminAppbar from "../../Common/Appbar";
 import AdminLayout from "../../../layout/AdminLayout";
+import ListChatroomDoctor from "../../Common/ListChatroomDoctor";
+import ListCallsDoctor from "../../Common/ListCallsDoctor";
 
 const useStyles = makeStyles((theme) => ({
   div: {
@@ -95,8 +101,11 @@ const ViewDoctor = () => {
         text: error,
         showConfirmButton: true,
         timer: 1500,
-      }).then(() => {
-        history.push("/admin/doctors");
+        willClose: () => {
+          dispatch(doctorActions.clearSelected());
+          dispatch(doctorActions.clear());
+          history.push("/admin/doctors");
+        },
       });
     }
     // eslint-disable-next-line
@@ -106,12 +115,6 @@ const ViewDoctor = () => {
     setFull((prev) => {
       return !prev;
     });
-  };
-
-  const viewChatroom = async (event, chatroomId) => {
-    // set active_chatroom
-    await dispatch(adminActions.getChatroom(chatroomId));
-    history.push(`/admin/chatroom/view/${chatroomId}`);
   };
 
   const classes = useStyles();
@@ -156,60 +159,15 @@ const ViewDoctor = () => {
                             </div>
                           </Grid>
                           {full ? (
-                            <DoctorProfileComplete
-                              doctor={selectDoctor.doctor}
-                            />
+                            <DoctorProfileComplete doctor={selectDoctor} />
                           ) : (
-                            <DoctorProfile
-                              doctor={selectDoctor.doctor}
-                              chatrooms={selectDoctor.chatrooms}
-                            />
+                            <DoctorProfile doctor={selectDoctor} />
                           )}
                         </Grid>
-
-                        <Typography variant="h3" align="center">
-                          Chat Rooms
-                        </Typography>
-                        <Grid
-                          container
-                          direction="column"
-                          justify="space-around"
-                          alignItems="stretch"
-                          spacing={2}
-                        >
-                          {selectDoctor.chatrooms.map((obj, index) => {
-                            return (
-                              <Fragment key={index}>
-                                <Grid item>
-                                  <Paper
-                                    elevation={0}
-                                    className={classes.paperChatroom}
-                                    onClick={(event) =>
-                                      viewChatroom(event, obj._id)
-                                    }
-                                  >
-                                    <div className={classes.div2}>
-                                      <div>
-                                        <Typography variant="subtitle1">
-                                          Username:- {obj.user.id.username}
-                                        </Typography>
-                                        <Typography variant="subtitle1">
-                                          Email Address:- {obj.user.id.email}
-                                        </Typography>
-                                        <Typography variant="subtitle2">
-                                          Created On:-{" "}
-                                          {new Date(
-                                            obj.createdAt
-                                          ).toLocaleDateString()}
-                                        </Typography>
-                                      </div>
-                                    </div>
-                                  </Paper>
-                                </Grid>
-                              </Fragment>
-                            );
-                          })}
-                        </Grid>
+                        <Toolbar></Toolbar>
+                        <ListChatroomDoctor doctorId={selectDoctor._id} />
+                        <Toolbar></Toolbar>
+                        <ListCallsDoctor doctorId={selectDoctor._id} />
                       </Grid>
                     </Grid>
                   </Paper>

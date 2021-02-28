@@ -57,13 +57,36 @@ const QuestionBank = () => {
     }
   };
 
+  const checkResponses = () => {
+    for (const question of questionSet.questions) {
+      if (
+        !responses[question._id] ||
+        !question.options.includes(responses[question._id])
+      ) {
+        return false;
+      }
+    }
+    return true;
+  };
+
   const submitHandler = async () => {
-    await dispatch(
-      userActions.fillQuestionSet({
-        chatroomId: active_chatroom._id,
-        responses,
-      })
-    );
+    if (checkResponses()) {
+      await dispatch(
+        userActions.fillQuestionSet({
+          chatroomId: active_chatroom._id,
+          responses,
+        })
+      );
+    } else {
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: "Error Occured.",
+        text: "Provide valid answers to all questions",
+        showConfirmButton: true,
+        timer: 1500,
+      });
+    }
   };
 
   useEffect(() => {

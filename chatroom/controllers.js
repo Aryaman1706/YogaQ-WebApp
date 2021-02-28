@@ -5,7 +5,6 @@ const { models: Admin } = require("../admin");
 const {
   models: { Doctor },
 } = require("../doctor");
-const { Call } = require("../call/models");
 
 // * Utils
 const validators = require("./validators");
@@ -327,6 +326,7 @@ exports.listChatrooms = async (req, res) => {
         "partner.model": "Doctor",
         createdAt: dateFilter,
       })
+        .select("user createdAt _id")
         .populate("user.id", "username email")
         .sort("-createdAt")
         .skip((parseInt(value.page, 10) - 1) * limit)
@@ -343,71 +343,6 @@ exports.listChatrooms = async (req, res) => {
       error: null,
       body: { chatrooms: [], end: true },
     });
-  } catch (error) {
-    console.log("Error occured here\n", error);
-    return res.status(500).json({ error: "Server Error.", body: null });
-  }
-};
-
-// * List calls of any doctor
-exports.listCalls = async (req, res) => {
-  try {
-    // Validating request query
-    const { error, value } = validators.listChatrooms(req.query);
-    if (error)
-      return res.status(400).json({
-        error: `Validation Error. ${error.details[0].message}`,
-        body: null,
-      });
-
-    // Finding valid doctor and associated chatrooms
-    const [doctor, chatrooms] = await Promise.all([
-      Doctor.findById(req.params.doctorId).exec(),
-      Chatroom.find({
-        "partner.id": req.params.doctorId,
-        "partner.model": "Doctor",
-      })
-        .select("_id")
-        .exec(),
-    ]);
-    if (!doctor)
-      return res.status(404).json({ error: "Invalid Doctor.", body: null });
-
-    if (!chatrooms || chatrooms.length() === 0)
-      return res
-        .status(404)
-        .json({ error: "No associated chatrooms", body: null });
-
-    // Formatting chatrooms
-    const chatroomIdList = chatrooms.map((obj) => obj._id);
-
-    // Paginating calls
-    const limit = 2;
-    const calls = Call.aggregate([
-      {
-        $match: {
-          chatroomId: { $in: chatroomIdList },
-          time: { $gte: value.startDate, $lte: value.endDate },
-        },
-      },
-      {
-        $facet: {
-          metadata: [{ $count: "total" }],
-          chatrooms: [
-            { $sort: { time: -1 } },
-            { $skip: (parseInt(value.page, 10) - 1) * limit },
-            { $limit: limit },
-            { $group: { _id: "$chatroomId", calls: { $push: "$$ROOT" } } },
-          ],
-        },
-        $project: {
-          chatrooms: 1,
-          total: { $arrayElemAt: ["$metadata.total", 0] },
-        },
-      },
-    ]);
-
-    return res.status(200).json({ error: null, body: { calls } });
   } catch (error) {
     console.log("Error occured here\n", error);
     return res.status(500).json({ error: "Server Error.", body: null });

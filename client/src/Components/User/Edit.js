@@ -10,6 +10,7 @@ import {
   Button,
   makeStyles,
   Paper,
+  FormHelperText,
 } from "@material-ui/core";
 import Swal from "sweetalert2";
 import { useSelector, useDispatch } from "react-redux";
@@ -19,6 +20,8 @@ import background from "../../assets/background.svg";
 import homeIcon from "../../assets/home.svg";
 import { useHistory } from "react-router-dom";
 import UserAppbar from "../Common/Appbar";
+import { Formik } from "formik";
+import { object, string, number } from "yup";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -67,12 +70,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Edit = () => {
-  const { error, user, message, loading } = useSelector((state) => state.user);
-  const [state, setState] = useState(null);
-  const [compLoading, setCompLoading] = useState(false);
   const classes = useStyles();
+  const { error, user, message } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const history = useHistory();
+  const Yup = { object, string, number };
 
   useEffect(() => {
     return () => {
@@ -81,74 +83,189 @@ const Edit = () => {
     // eslint-disable-next-line
   }, []);
 
-  useEffect(() => {
-    console.log(user);
-    setState(user);
-  }, [user]);
+  const Form = ({
+    values: { email, username, phoneNumber, age, gender, country },
+    errors,
+    touched,
+    handleChange,
+    isValid,
+    setFieldTouched,
+  }) => {
+    const [compLoading, setCompLoading] = useState(false);
 
-  useEffect(() => {
-    if (/^Validation Error*/i.test(error)) {
-      Swal.fire({
-        position: "center",
-        icon: "error",
-        title: "Error!",
-        text: `${error}`,
-        showConfirmButton: true,
-        timer: 1500,
-      });
-    }
-    if (/Profile updated successfully*/i.test(message)) {
-      Swal.fire({
-        position: "center",
-        icon: "success",
-        title: "Success!",
-        text: `${message}`,
-        showConfirmButton: true,
-        timer: 1500,
-      });
-    }
-  }, [error, message]);
+    useEffect(() => {
+      if (error) {
+        Swal.fire({
+          position: "center",
+          icon: "error",
+          title: "Error!",
+          text: `${error}`,
+          showConfirmButton: true,
+          timer: 1500,
+          willClose: () => {
+            dispatch(userActions.clear());
+          },
+        });
+      }
+      if (message) {
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: "Success!",
+          text: `${message}`,
+          showConfirmButton: true,
+          timer: 1500,
+          willClose: () => {
+            dispatch(userActions.clear());
+          },
+        });
+      }
+      // eslint-disable-next-line
+    }, [error, message]);
 
-  const changeHandler = (e) => {
-    setState((prev) => {
-      return {
-        ...prev,
-        [e.target.id]: e.target.value,
-      };
-    });
-  };
-
-  const genderHandler = (e) => {
-    setState((prev) => {
-      return {
-        ...prev,
-        gender: e.target.value,
-      };
-    });
-  };
-
-  const submitHandler = (e) => {
-    setCompLoading(true);
-  };
-
-  const submit = async () => {
-    const formData = {
-      username: state.username,
-      phoneNumber: state.phoneNumber,
-      age: state.age,
-      gender: state.gender,
-      country: state.country,
+    const changeHandler = (e) => {
+      handleChange(e);
+      setFieldTouched(e.target.name, true, false);
     };
-    await dispatch(userActions.editProfile(formData));
-    setCompLoading(false);
+
+    const submitHandler = (e) => {
+      if (isValid) {
+        setCompLoading(true);
+      } else {
+        Swal.fire({
+          position: "center",
+          icon: "error",
+          title: "Error Occured.",
+          text: "Invalid Inputs. Try Again.",
+          showConfirmButton: true,
+          timer: 1500,
+        });
+      }
+    };
+
+    const submit = async () => {
+      await dispatch(
+        userActions.editProfile({ username, phoneNumber, age, gender, country })
+      );
+      setCompLoading(false);
+    };
+
+    useEffect(() => {
+      if (compLoading) {
+        submit();
+      }
+      // eslint-disable-next-line
+    }, [compLoading]);
+
+    return (
+      <>
+        <Grid item>
+          <TextField
+            fullWidth
+            variant="outlined"
+            label="Email Address"
+            value={email}
+          />
+        </Grid>
+        <Grid item>
+          <TextField
+            fullWidth
+            variant="outlined"
+            label="User Name"
+            name="username"
+            value={username}
+            onChange={(event) => changeHandler(event)}
+            error={touched.username && Boolean(errors.username)}
+            helperText={touched.username ? errors.username : ""}
+          />
+        </Grid>
+        <Grid item>
+          <TextField
+            fullWidth
+            variant="outlined"
+            label="Phone Number"
+            name="phoneNumber"
+            value={phoneNumber}
+            onChange={(event) => changeHandler(event)}
+            error={touched.phoneNumber && Boolean(errors.phoneNumber)}
+            helperText={touched.phoneNumber ? errors.phoneNumber : ""}
+          />
+        </Grid>
+        <Grid item>
+          <TextField
+            fullWidth
+            type="number"
+            variant="outlined"
+            label="Age"
+            name="age"
+            value={age}
+            onChange={(event) => changeHandler(event)}
+            error={touched.age && Boolean(errors.age)}
+            helperText={touched.age ? errors.age : ""}
+          />
+        </Grid>
+        <Grid item>
+          <FormControl
+            variant="outlined"
+            fullWidth
+            error={touched.gender && Boolean(errors.gender)}
+          >
+            <InputLabel id="genderSelect">Gender</InputLabel>
+            <Select
+              labelId="genderSelect"
+              name="gender"
+              label="Gender"
+              value={gender}
+              onChange={(event) => changeHandler(event)}
+            >
+              <MenuItem value="male">Male</MenuItem>
+              <MenuItem value="female">Female</MenuItem>
+              <MenuItem value="other">Other</MenuItem>
+            </Select>
+            {touched.gender && errors.gender ? (
+              <FormHelperText>{errors.gender}</FormHelperText>
+            ) : null}
+          </FormControl>
+        </Grid>
+        <Grid item>
+          <TextField
+            fullWidth
+            variant="outlined"
+            label="Country"
+            name="country"
+            value={country}
+            onChange={(event) => changeHandler(event)}
+            error={touched.country && Boolean(errors.country)}
+            helperText={touched.country ? errors.country : ""}
+          />
+        </Grid>
+        <Grid item>
+          <Button
+            disabled={!isValid}
+            fullWidth
+            variant="contained"
+            color="primary"
+            className={classes.btn}
+            onClick={(event) => submitHandler(event)}
+          >
+            Submit
+          </Button>
+        </Grid>
+      </>
+    );
   };
 
-  useEffect(() => {
-    if (compLoading) {
-      submit();
-    }
-    // eslint-disable-next-line
-  }, [compLoading]);
+  const validationSchema = Yup.object({
+    username: Yup.string().min(3).max(150).trim().required(),
+    phoneNumber: Yup.string().trim().required(),
+    age: Yup.number().integer().positive().required(),
+    gender: Yup.string()
+      .lowercase()
+      .trim()
+      .oneOf(["male", "female", "other"])
+      .required(),
+    country: Yup.string().max(150).trim().required(),
+  });
 
   return (
     <>
@@ -188,85 +305,13 @@ const Edit = () => {
                       Edit Profile
                     </Typography>
                   </Grid>
-                  {console.log(state)}
-                  {state ? (
-                    <>
-                      <Grid item>
-                        <TextField
-                          fullWidth
-                          variant="outlined"
-                          label="Email Address"
-                          value={state.email}
-                        />
-                      </Grid>
-                      <Grid item>
-                        <TextField
-                          fullWidth
-                          variant="outlined"
-                          label="User Name"
-                          id="username"
-                          value={state.username}
-                          onChange={(event) => changeHandler(event)}
-                        />
-                      </Grid>
-                      <Grid item>
-                        <TextField
-                          fullWidth
-                          variant="outlined"
-                          label="Phone Number"
-                          id="phoneNumber"
-                          value={state.phoneNumber}
-                          onChange={(event) => changeHandler(event)}
-                        />
-                      </Grid>
-                      <Grid item>
-                        <TextField
-                          fullWidth
-                          type="number"
-                          variant="outlined"
-                          label="Age"
-                          id="age"
-                          value={state.age}
-                          onChange={(event) => changeHandler(event)}
-                        />
-                      </Grid>
-                      <Grid item>
-                        <FormControl variant="outlined" fullWidth>
-                          <InputLabel id="genderSelect">Gender</InputLabel>
-                          <Select
-                            labelId="genderSelect"
-                            label="Gender"
-                            value={state.gender}
-                            onChange={(event) => genderHandler(event)}
-                          >
-                            <MenuItem value="male">Male</MenuItem>
-                            <MenuItem value="female">Female</MenuItem>
-                            <MenuItem value="other">Other</MenuItem>
-                          </Select>
-                        </FormControl>
-                      </Grid>
-                      <Grid item>
-                        <TextField
-                          fullWidth
-                          variant="outlined"
-                          label="Country"
-                          id="country"
-                          value={state.country}
-                          onChange={(event) => changeHandler(event)}
-                        />
-                      </Grid>
-                      <Grid item>
-                        <Button
-                          fullWidth
-                          variant="contained"
-                          color="primary"
-                          className={classes.btn}
-                          onClick={(event) => submitHandler(event)}
-                        >
-                          Submit
-                        </Button>
-                      </Grid>
-                    </>
+                  {user ? (
+                    <Formik
+                      validationSchema={validationSchema}
+                      validateOnMount={true}
+                      initialValues={user}
+                      component={Form}
+                    />
                   ) : (
                     <Loader />
                   )}

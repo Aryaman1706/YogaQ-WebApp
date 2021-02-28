@@ -91,6 +91,32 @@ const QuestionItem = ({
   };
 
   const errorHandler = () => {
+    if (error) {
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: "Error Occured.",
+        text: `${error}`,
+        showConfirmButton: true,
+        timer: 1500,
+        willClose: () => {
+          clearErrors();
+        },
+      });
+    }
+    if (message) {
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "Success.",
+        text: `${message}`,
+        showConfirmButton: true,
+        timer: 1500,
+        willClose: () => {
+          clearErrors();
+        },
+      });
+    }
     clearErrors();
   };
 
@@ -99,7 +125,6 @@ const QuestionItem = ({
     // eslint-disable-next-line
   }, [error, message]);
 
-  // ! Fix get chatroomId first
   const deleteQuestion = () => {
     if (type.trim() === "admin") {
       dispatch(
