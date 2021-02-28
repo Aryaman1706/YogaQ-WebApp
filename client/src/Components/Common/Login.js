@@ -58,17 +58,18 @@ const Login = ({ type }) => {
     };
 
     const errorHandler = async () => {
-      Swal.fire({
-        position: "center",
-        icon: "error",
-        title: "Error Occured.",
-        text: `${error}`,
-        showConfirmButton: true,
-        timer: 1500,
-        willClose: () => {
-          clearErrors();
-        },
-      });
+      if (!/^Permission Denied*/i.test(error))
+        Swal.fire({
+          position: "center",
+          icon: "error",
+          title: "Error Occured.",
+          text: `${error}`,
+          showConfirmButton: true,
+          timer: 1500,
+          willClose: () => {
+            clearErrors();
+          },
+        });
     };
 
     useEffect(() => {
