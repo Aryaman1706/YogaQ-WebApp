@@ -16,8 +16,6 @@ import { useHistory, useParams } from "react-router-dom";
 import Appbar from "./Appbar";
 import Swal from "sweetalert2";
 import axios from "../../utils/axios";
-import AdminLayout from "../../layout/AdminLayout";
-import DoctorLayout from "../../layout/DoctorLayout";
 
 const useStyles = makeStyles((theme) => ({
   btn: {
@@ -135,26 +133,9 @@ const QuestionBank = ({ type }) => {
 
   const [responses, setResponses] = useState({});
 
-  const Layout = ({ children }) => {
-    return (
-      <>
-        {type.trim() === "admin" ? (
-          <>
-            <AdminLayout>{children}</AdminLayout>
-          </>
-        ) : (
-          <>
-            <DoctorLayout>{children}</DoctorLayout>
-          </>
-        )}
-      </>
-    );
-  };
-
   return (
     <>
       <Appbar type={type}>
-        {/* <Layout> */}
         <Grid container spacing={2}>
           <Grid item xs={12} style={{ textAlign: "right" }}>
             <Button
@@ -238,7 +219,6 @@ const QuestionBank = ({ type }) => {
             </Typography>
           </Grid>
         </Grid>
-        {/* </Layout> */}
       </Appbar>
     </>
   );

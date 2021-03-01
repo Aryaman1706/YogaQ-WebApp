@@ -175,10 +175,11 @@ const ListCallsDoctor = ({ doctorId }) => {
         justify="flex-start"
         alignItems="stretch"
         spacing={1}
+        style={{ marginTop: "1rem" }}
       >
-        <Grid item xs={4}>
-          <Grid container spacing={1}>
-            <Grid item xs={12}>
+        <Grid item xs={12}>
+          <Grid container spacing={1} justify="space-between">
+            <Grid item xs={4}>
               <TextField
                 fullWidth
                 variant="outlined"
@@ -191,7 +192,7 @@ const ListCallsDoctor = ({ doctorId }) => {
                 }}
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={4}>
               <TextField
                 fullWidth
                 variant="outlined"
@@ -204,7 +205,7 @@ const ListCallsDoctor = ({ doctorId }) => {
                 }}
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={3}>
               <Button
                 fullWidth
                 variant="contained"
@@ -222,7 +223,7 @@ const ListCallsDoctor = ({ doctorId }) => {
             </Grid>
           </Grid>
         </Grid>
-        <Grid item xs={8}>
+        <Grid item xs={12} style={{ marginTop: "1rem" }}>
           <>
             <Grid container spacing={1}>
               {renderChatrooms()}

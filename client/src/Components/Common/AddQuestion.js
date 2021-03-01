@@ -7,8 +7,6 @@ import {
 } from "../../redux/actions";
 import Swal from "sweetalert2";
 import Appbar from "./Appbar";
-import AdminLayout from "../../layout/AdminLayout";
-import DoctorLayout from "../../layout/DoctorLayout";
 
 const AddQuestion = ({ type }) => {
   const [state, setState] = useState({
@@ -100,26 +98,9 @@ const AddQuestion = ({ type }) => {
     // eslint-disable-next-line
   }, [message, error]);
 
-  const Layout = ({ children }) => {
-    return (
-      <>
-        {type.trim() === "admin" ? (
-          <>
-            <AdminLayout>{children}</AdminLayout>
-          </>
-        ) : (
-          <>
-            <DoctorLayout>{children}</DoctorLayout>
-          </>
-        )}
-      </>
-    );
-  };
-
   return (
     <>
       <Appbar type={type}>
-        {/* <Layout> */}
         <Grid container spacing={2} style={{ padding: "1rem" }}>
           <Grid item xs={12}>
             <Typography variant="h4" align="center" style={{ margin: "1rem" }}>
@@ -260,7 +241,6 @@ const AddQuestion = ({ type }) => {
             </div>
           </Grid>
         </Grid>
-        {/* </Layout> */}
       </Appbar>
     </>
   );

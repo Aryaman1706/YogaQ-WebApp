@@ -13,8 +13,6 @@ import Loader from "./Loader";
 import homeIcon from "../../assets/home.svg";
 import Appbar from "./Appbar";
 import PaginatedList from "./PaginatedList";
-import AdminLayout from "../../layout/AdminLayout";
-import DoctorLayout from "../../layout/DoctorLayout";
 
 const useStyles = makeStyles((theme) => ({
   homeIcon: {
@@ -100,26 +98,9 @@ const CallHistory = ({ type }) => {
     await dispatch(callHistoryActions.listEnquiries(page, chatroomId));
   };
 
-  const Layout = ({ children }) => {
-    return (
-      <>
-        {type.trim() === "admin" ? (
-          <>
-            <AdminLayout>{children}</AdminLayout>
-          </>
-        ) : (
-          <>
-            <DoctorLayout>{children}</DoctorLayout>
-          </>
-        )}
-      </>
-    );
-  };
-
   return (
     <>
       <Appbar type={type.trim()}>
-        {/* <Layout> */}
         <Grid container spacing={2}>
           <Grid item xs={12} style={{ padding: "1rem" }}>
             <div
@@ -194,7 +175,6 @@ const CallHistory = ({ type }) => {
             </Grid>
           </Grid>
         </Grid>
-        {/* </Layout> */}
       </Appbar>
     </>
   );
