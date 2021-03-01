@@ -4,14 +4,17 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   user as userActions,
   admin as adminActions,
+  doctor as doctorActions,
   callHistory as callHistoryActions,
 } from "../../redux/actions/index";
 import CallHistoryItem from "./CallHistoryItem";
 import { useHistory, useParams } from "react-router-dom";
-import Loader from "../Common/Loader";
+import Loader from "./Loader";
 import homeIcon from "../../assets/home.svg";
-import UserAppbar from "../Common/Appbar";
-import PaginatedList from "../Common/PaginatedList";
+import Appbar from "./Appbar";
+import PaginatedList from "./PaginatedList";
+import AdminLayout from "../../layout/AdminLayout";
+import DoctorLayout from "../../layout/DoctorLayout";
 
 const useStyles = makeStyles((theme) => ({
   homeIcon: {
@@ -48,6 +51,7 @@ const CallHistory = ({ type }) => {
   const { active_chatroom } = useSelector((state) => {
     if (type.trim() === "user") return state.user;
     else if (type.trim() === "admin") return state.admin;
+    else if (type.trim() === "doctor") return state.doctor;
   });
   const { list, end } = useSelector((state) => state.callHistory);
   const { chatroomId } = useParams();
@@ -57,6 +61,8 @@ const CallHistory = ({ type }) => {
       dispatch(userActions.clear());
     } else if (type.trim() === "admin") {
       dispatch(adminActions.clear());
+    } else if (type.trim() === "admin") {
+      dispatch(doctorActions.clear());
     }
   };
 
@@ -76,6 +82,8 @@ const CallHistory = ({ type }) => {
       await dispatch(userActions.getChatroom(chatroomId));
     } else if (type.trim() === "admin") {
       await dispatch(adminActions.getChatroom(chatroomId));
+    } else if (type.trim() === "doctor") {
+      await dispatch(doctorActions.getChatroom(chatroomId));
     }
 
     setCompLoading(false);
@@ -92,15 +100,38 @@ const CallHistory = ({ type }) => {
     await dispatch(callHistoryActions.listEnquiries(page, chatroomId));
   };
 
+  const Layout = ({ children }) => {
+    return (
+      <>
+        {type.trim() === "admin" ? (
+          <>
+            <AdminLayout>{children}</AdminLayout>
+          </>
+        ) : (
+          <>
+            <DoctorLayout>{children}</DoctorLayout>
+          </>
+        )}
+      </>
+    );
+  };
+
   return (
     <>
-      <UserAppbar type={type.trim()}>
+      <Appbar type={type.trim()}>
+        {/* <Layout> */}
         <Grid container spacing={2}>
           <Grid item xs={12} style={{ padding: "1rem" }}>
             <div
               className={classes.flexRow}
               onClick={() => {
-                history.push("/");
+                if (type.trim() === "user") {
+                  history.push("/");
+                } else if (type.trim() === "admin") {
+                  history.push("/admin");
+                } else if (type.trim() === "doctor") {
+                  history.push("/doctor");
+                }
               }}
             >
               <img src={homeIcon} alt="home" className={classes.homeIcon} />
@@ -163,7 +194,8 @@ const CallHistory = ({ type }) => {
             </Grid>
           </Grid>
         </Grid>
-      </UserAppbar>
+        {/* </Layout> */}
+      </Appbar>
     </>
   );
 };

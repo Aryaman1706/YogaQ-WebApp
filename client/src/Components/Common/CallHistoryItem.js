@@ -13,9 +13,8 @@ import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import ErrorIcon from "@material-ui/icons/Error";
 import EditIcon from "@material-ui/icons/Edit";
 import { doctor as doctorActions } from "../../redux/actions/index";
-import EditCallModal from "./EditCallModal";
+import EditCallModal from "../User/EditCallModal";
 import CheckIcon from "@material-ui/icons/Check";
-import ClearIcon from "@material-ui/icons/Clear";
 import DoneAllIcon from "@material-ui/icons/DoneAll";
 import Swal from "sweetalert2";
 

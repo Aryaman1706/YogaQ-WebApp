@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme) => ({
     top: 70,
     left: 0,
     backgroundColor: "#F2F0ED",
-    overflowY: 'auto'
+    overflowY: "auto",
   },
   borderClass: {
     border: "1px solid grey",
