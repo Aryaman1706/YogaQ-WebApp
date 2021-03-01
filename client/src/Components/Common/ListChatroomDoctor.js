@@ -160,10 +160,11 @@ const ListChatroomDoctor = ({ doctorId }) => {
         justify="flex-start"
         alignItems="stretch"
         spacing={1}
+        style={{ marginTop: "1rem" }}
       >
-        <Grid item xs={4}>
-          <Grid container spacing={1}>
-            <Grid item xs={12}>
+        <Grid item xs={12}>
+          <Grid container spacing={1} justify="space-between">
+            <Grid item xs={4}>
               <TextField
                 fullWidth
                 variant="outlined"
@@ -176,7 +177,7 @@ const ListChatroomDoctor = ({ doctorId }) => {
                 }}
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={4}>
               <TextField
                 fullWidth
                 variant="outlined"
@@ -189,24 +190,7 @@ const ListChatroomDoctor = ({ doctorId }) => {
                 }}
               />
             </Grid>
-            <Grid item xs={12}>
-              {chatrooms.list && chatrooms.list.length > 0 ? (
-                <>
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={onlyNew}
-                        onChange={(event) => onlyNewHandler(event)}
-                        name="onlyNew"
-                        color="primary"
-                      />
-                    }
-                    label="Only New"
-                  />
-                </>
-              ) : null}
-            </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={3}>
               <Button
                 fullWidth
                 variant="contained"
@@ -222,9 +206,24 @@ const ListChatroomDoctor = ({ doctorId }) => {
                 Filter
               </Button>
             </Grid>
+            {chatrooms.list && chatrooms.list.length > 0 ? (
+              <Grid item xs={12}>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={onlyNew}
+                      onChange={(event) => onlyNewHandler(event)}
+                      name="onlyNew"
+                      color="primary"
+                    />
+                  }
+                  label="Only New"
+                />
+              </Grid>
+            ) : null}
           </Grid>
         </Grid>
-        <Grid item xs={8}>
+        <Grid item xs={12} style={{ marginTop: "1rem" }}>
           <>
             <Grid container spacing={1}>
               {renderChatrooms()}
