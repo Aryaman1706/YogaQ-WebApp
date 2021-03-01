@@ -403,12 +403,8 @@ export const acceptCall = (id) => async (dispatch) => {
   } catch (error) {
     Swal.fire({
       title: "Error",
-      text: "Something went wrong",
+      text: error.response?.data?.error,
       icon: "error",
-    });
-    dispatch({
-      type: DOCTOR_ERROR,
-      payload: error,
     });
   }
 };
@@ -441,12 +437,8 @@ export const completeCall = (id) => async (dispatch) => {
   } catch (error) {
     Swal.fire({
       title: "Error",
-      text: "Something went wrong",
+      text: error.response?.data?.error,
       icon: "error",
-    });
-    dispatch({
-      type: DOCTOR_ERROR,
-      payload: error,
     });
   }
 };

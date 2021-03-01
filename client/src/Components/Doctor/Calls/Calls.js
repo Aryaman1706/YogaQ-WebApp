@@ -2,7 +2,7 @@ import React from "react";
 import { Typography, Grid, makeStyles } from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import { doctor as doctorActions } from "../../../redux/actions/index";
-import CallHistoryItem from "../../User/CallHistoryItem";
+import CallHistoryItem from "../../Common/CallHistoryItem";
 import { useHistory, useParams } from "react-router-dom";
 import homeIcon from "../../../assets/home.svg";
 import PaginatedList from "../../Common/PaginatedList";
@@ -55,7 +55,7 @@ const Calls = () => {
           <div
             className={classes.flexRow}
             onClick={() => {
-              history.push("/");
+              history.push("/doctor");
             }}
           >
             <img src={homeIcon} alt="home" className={classes.homeIcon} />

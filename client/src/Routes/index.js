@@ -37,7 +37,7 @@ import CallListing from "../Pages/Doctor/CallListing";
 import Signup from "../Pages/Signup";
 import EditUser from "../Components/User/Edit";
 import BookCall from "../Components/User/BookCall";
-import CallHistory from "../Components/User/CallHistory";
+import CallHistory from "../Components/Common/CallHistory";
 import QuestionBank from "../Components/User/QuestionBank";
 import UserAppbar from "../Components/Common/Appbar";
 
@@ -170,6 +170,12 @@ const Routes = () => {
               <AddQuestion type="doctor" {...props} />
             </>
           )}
+        />
+        <Route
+          doctorLogin
+          exact
+          path="/doctor/call-history/:chatroomId"
+          render={(props) => <CallHistory type={"doctor"} />}
         />
         {/* Doctor Dashboard */}
         <Route doctorLogin exact path="/doctor/calls" component={CallListing} />

@@ -146,7 +146,7 @@ const stateHandler = (state = defaultState, action) => {
     case CLEAR_DOCTOR_CHATROOM:
       return {
         ...state,
-        active_chatroom: null,
+        // active_chatroom: null,
         doctor_messages: [],
         message_end: false,
       };
