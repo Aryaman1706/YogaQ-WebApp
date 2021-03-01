@@ -5,12 +5,36 @@ import {
   TextField,
   Button,
   makeStyles,
+  Paper,
+  IconButton,
+  Divider,
 } from "@material-ui/core";
+import { Visibility as VisibilityIcon } from "@material-ui/icons";
 import axios from "../../utils/axios";
 
-const useStyles = makeStyles((theme) => ({}));
+const useStyles = makeStyles((theme) => ({
+  div2: {
+    padding: "5px 10px 5px 10px",
+    display: "flex",
+    justifyContent: "space-between",
+  },
+  paperChatroom: {
+    padding: "5px 10px 5px 10px",
+    placeItems: "center",
+    display: "flex",
+    justifyContent: "space-between",
+    boxShadow: "rgba(0, 0, 0, 0.05) 0px 5px 16px 0px",
+    borderRadius: "3px",
+    "&:hover": {
+      transform: "scale(1.02)",
+      transition: "all 0.16s ease-in 0s",
+      cursor: "pointer",
+    },
+  },
+}));
 
 const ListCallsDoctor = ({ doctorId }) => {
+  const classes = useStyles();
   const [callFilter, setCallFilter] = useState({
     startDate: null,
     endDate: null,
@@ -61,16 +85,50 @@ const ListCallsDoctor = ({ doctorId }) => {
     };
     return (
       <>
-        <div>
-          <h4>Chatroom Details:-</h4>
-          <h4>User Name:- {chatroom.partner.username}</h4>
-          <h4>User Email:- {chatroom.partner.email}</h4>
-          <br />
-          <div>
-            <h5>Calls</h5>
-            {renderCalls()}
-          </div>
-        </div>
+        <Grid item xs={12}>
+          <Paper elevation={0} className={classes.paperChatroom}>
+            <Grid container>
+              <Grid item xs={10}>
+                <div>
+                  <Typography variant="subtitle1">
+                    Username:- {chatroom.partner.username}
+                  </Typography>
+                  <Typography variant="subtitle1">
+                    Email Address:- {chatroom.partner.email}
+                  </Typography>
+                  {chatroom?.createdAt ? (
+                    <Typography variant="subtitle2">
+                      Created On:-{" "}
+                      {new Date(chatroom?.createdAt).toLocaleDateString()}
+                    </Typography>
+                  ) : null}
+                </div>
+              </Grid>
+              <Grid item xs={2}>
+                <div style={{ display: "flex", placeItems: "center" }}>
+                  <IconButton color="primary">
+                    <VisibilityIcon />
+                  </IconButton>
+                </div>
+              </Grid>
+              <Grid item xs={12}>
+                <Divider />
+              </Grid>
+              <Grid item xs={12}>
+                <Grid container>
+                  <Grid item xs={4}>
+                    <div style={{ display: "flex", placeItems: "center" }}>
+                      <Typography variant="subtitle1">Calls:-</Typography>
+                    </div>
+                  </Grid>
+                  <Grid item xs={8}>
+                    <Grid container>{renderCalls()}</Grid>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Paper>
+        </Grid>
       </>
     );
   };
@@ -78,9 +136,31 @@ const ListCallsDoctor = ({ doctorId }) => {
   const CallItem = ({ call }) => {
     return (
       <>
-        <h5>Time:- {new Date(call.time).toLocaleDateString()}</h5>
-        <h5>Accepted:- {Boolean(call?.accepted).toString()}</h5>
-        <h5>Completed:- {Boolean(call?.completed).toString()}</h5>
+        <Grid item xs={12}>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <Typography variant="subtitle2">
+              Time:- {new Date(call.time).toLocaleDateString()},{" "}
+              {new Date(call.time).toLocaleTimeString()}
+            </Typography>
+            {call.completed ? (
+              <>
+                <Typography variant="subtitle2">Completed</Typography>
+              </>
+            ) : (
+              <>
+                {call.accepted ? (
+                  <>
+                    <Typography variant="subtitle2">Accepted</Typography>
+                  </>
+                ) : (
+                  <>
+                    <Typography variant="subtitle2">Pending</Typography>
+                  </>
+                )}
+              </>
+            )}
+          </div>
+        </Grid>
       </>
     );
   };
