@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from "react";
+import React, { useEffect, useState, Fragment } from "react";
 import {
   Grid,
   Typography,
@@ -9,7 +9,9 @@ import {
   IconButton,
   Divider,
 } from "@material-ui/core";
+import Loader from "./Loader"
 import { Visibility as VisibilityIcon } from "@material-ui/icons";
+import Swal from "sweetalert2";
 import axios from "../../utils/axios";
 
 const useStyles = makeStyles((theme) => ({
@@ -39,7 +41,12 @@ const ListCallsDoctor = ({ doctorId }) => {
     startDate: null,
     endDate: null,
   });
-  const [calls, setCalls] = useState({
+  const [compLoading, setCompLoading] = useState(false);
+  const [pagination, setPagination] = useState({
+    loadedPages: 0,
+    currentPage: 0,
+    startIndex: 0,
+    endIndex: 0,
     list: [],
     end: false,
   });
@@ -53,24 +60,90 @@ const ListCallsDoctor = ({ doctorId }) => {
     });
   };
 
-  const submitHandler = async () => {
+  const submitHandler = () => {
+    setCompLoading(true);
+  };
+
+  useEffect(() => {
+    if (compLoading) {
+      loadFunction();
+    }
+  }, [compLoading]);
+
+  const loadFunction = async () => {
     try {
       const res = await axios.get(
-        `/call/doctor/list/${doctorId}/?page=${1}&startDate=${
-          callFilter.startDate
-        }&endDate=${callFilter.endDate}`
+        `/call/doctor/list/${doctorId}/?page=${
+          pagination.loadedPages + 1
+        }&startDate=${callFilter.startDate}&endDate=${callFilter.endDate}`
       );
 
-      console.log(res.data.body);
-      setCalls({
-        list: res.data.body.calls,
-        end: res.data.body.end,
+      setPagination((prev) => {
+        return {
+          loadedPages: prev.loadedPages + 1,
+          currentPage: prev.currentPage + 1,
+          startIndex: prev.currentPage * 5,
+          endIndex: (prev.currentPage + 1) * 5,
+          list: [...prev.list, res.data.body.list],
+          end: res.data.body.end,
+        };
       });
     } catch (error) {
       setCallFilter({ startDate: null, endDate: null });
-      console.log(error.response.data);
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: "Error Occured.",
+        text: `${error.response.data.error}`,
+        showConfirmButton: true,
+        timer: 1500,
+      });
     }
   };
+
+  useEffect(() => {
+    setCompLoading(false);
+  }, [pagination.loadedPages]);
+
+  const nextHandler = () => {
+    if (!pagination.end) {
+      if (pagination.currentPage === pagination.loadedPages) {
+        setCompLoading(true);
+      } else {
+        setPagination((prev) => {
+          return {
+            ...prev,
+            currentPage: prev.currentPage + 1,
+            startIndex: prev.currentPage * 5,
+            endIndex: (prev.currentPage + 1) * 5,
+          };
+        });
+      }
+    } else {
+      if (pagination.currentPage !== pagination.loadedPages) {
+        setPagination((prev) => {
+          return {
+            ...prev,
+            currentPage: prev.currentPage + 1,
+            startIndex: prev.currentPage * 5,
+            endIndex: (prev.currentPage + 1) * 5,
+          };
+        });
+      }
+  };
+
+  const prevHandler = () => {
+    if (pagination.currentPage > 1) {
+      setPagination((prev) => {
+        return {
+          ...prev,
+          currentPage: prev.currentPage - 1,
+          startIndex: (prev.currentPage - 2) * 5,
+          endIndex: (prev.currentPage - 1) * 5,
+        };
+      });
+    }
+  }
 
   const renderChatrooms = () => {
     if (!calls.list || calls.list.length === 0) {
@@ -226,6 +299,55 @@ const ListCallsDoctor = ({ doctorId }) => {
         <Grid item xs={12} style={{ marginTop: "1rem" }}>
           <>
             <Grid container spacing={1}>
+              { compLoading ? <Loader /> : <>
+              <Grid
+                container
+                direction="column"
+                justify="space-around"
+                alignItems="stretch"
+                spacing={2}
+                style={{ padding: "1rem" }}
+              >
+                {list.slice(startIndex, endIndex).map((item, index) => {
+                  return (
+                    <Fragment key={index}>
+                      <ListItem value={item} {...rest} />
+                    </Fragment>
+                  );
+                })}
+              </Grid>
+              <Toolbar></Toolbar>
+              <ButtonGroup variant="contained" color="primary" fullWidth>
+                {currentPage !== 1 ? (
+                  <Button
+                    startIcon={<ArrowBackIos />}
+                    onClick={(event) => prevHandler(event)}
+                    style={{
+                      backgroundColor: "#0FC1A7",
+                      height: "50px",
+                      backgroundImage:
+                        "linear-gradient(315deg, #abe9cd 0%, #3eadcf 74%)",
+                    }}
+                  >
+                    Previous
+                  </Button>
+                ) : null}
+                {end && currentPage === loadedPages ? null : (
+                  <Button
+                    endIcon={<ArrowForwardIos />}
+                    onClick={(event) => nextHandler(event)}
+                    style={{
+                      backgroundColor: "#0FC1A7",
+                      height: "50px",
+                      backgroundImage:
+                        "linear-gradient(315deg, #abe9cd 0%, #3eadcf 74%)",
+                    }}
+                  >
+                    Next
+                  </Button>
+                )}
+              </ButtonGroup>
+            </> }
               {renderChatrooms()}
             </Grid>
           </>
