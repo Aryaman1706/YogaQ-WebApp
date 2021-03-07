@@ -101,7 +101,7 @@ const SideNav = () => {
           <span>
             <SupervisorAccountIcon fontSize="large" />
           </span>
-          <span className={classes.text}>Doctors</span>
+          <span className={classes.text}>Therapists</span>
         </div>
         <div
           className={
@@ -127,7 +127,7 @@ const SideNav = () => {
           <span style={{ alignSelf: "flex-end" }}>
             <CreateIcon fontSize="large" />
           </span>
-          <span className={classes.text}>Enquires</span>
+          <span className={classes.text}>Therapist Applications</span>
         </div>
 
         <div

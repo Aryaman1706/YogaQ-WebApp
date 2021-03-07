@@ -5,6 +5,7 @@ import "aos/dist/aos.css";
 import { Button, Grid, makeStyles } from "@material-ui/core";
 import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight";
 import LandingImg from "../../assets/landing.jpg";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -27,8 +28,6 @@ const useStyles = makeStyles((theme) => ({
     display: "grid",
     placeItems: "center",
     height: "calc(100vh - 70px)",
-    // textAlign: "center",
-    // alignItems: "center",
   },
   primaryText: {
     fontFamily: "Quarto, sans-serif",
@@ -80,6 +79,10 @@ const useStyles = makeStyles((theme) => ({
       margin: "auto",
       marginTop: "2rem",
     },
+  },
+  applyText: {
+    color: "#0FC1A7",
+    padding: "1rem 0 1rem 0",
   },
 }));
 
@@ -137,11 +140,14 @@ const Landing = () => {
                 data-aos="zoom-out-up"
                 data-aos-delay="200"
               >
-                Get Started&nbsp;
+                Get Started for Patient&nbsp;
                 <KeyboardArrowRightIcon />
               </StyledButton>
-              {/* <Button className={classes.btn2}>Sign in as Therapist</Button> */}
             </div>
+            <Link to="/enquire" className={classes.applyText}>
+              Apply as a Therapist
+            </Link>
+            {/* <Button className={classes.btn2}>Sign in as Therapist</Button> */}
           </div>
         </Grid>
         <Grid item lg={5} xl={5}>
