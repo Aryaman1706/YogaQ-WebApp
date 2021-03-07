@@ -4,13 +4,12 @@ import SideNav from "./SideNav";
 
 const useStyles = makeStyles((theme) => ({
   sideNav: {
-    // borderRight: "1px solid grey",
     height: "calc(100% - 70px)",
     position: "fixed",
     width: "300px",
     top: 70,
     left: 0,
-    backgroundColor: "#F2F0ED",
+    backgroundColor: "#FFF",
     overflowY: "auto",
   },
   borderClass: {

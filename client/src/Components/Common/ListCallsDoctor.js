@@ -145,12 +145,12 @@ const ListCallsDoctor = ({ doctorId }) => {
       }
     };
 
-    const renderChatrooms = () => {
-      if (!calls.list || calls.list.length === 0) {
-        return <>No Available Calls</>;
-      }
-      return calls.list.map((chatroom) => <ChatroomItem chatroom={chatroom} />);
-    };
+    // const renderChatrooms = () => {
+    //   if (!calls.list || calls.list.length === 0) {
+    //     return <>No Available Calls</>;
+    //   }
+    //   return calls.list.map((chatroom) => <ChatroomItem chatroom={chatroom} />);
+    // };
 
     const ChatroomItem = ({ chatroom }) => {
       const renderCalls = () => {
@@ -299,7 +299,7 @@ const ListCallsDoctor = ({ doctorId }) => {
           <Grid item xs={12} style={{ marginTop: "1rem" }}>
             <>
               <Grid container spacing={1}>
-                {renderChatrooms()}
+                {/* {renderChatrooms()} */}
               </Grid>
             </>
           </Grid>

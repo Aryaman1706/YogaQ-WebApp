@@ -14,6 +14,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
     margin: "1rem 0 0 1rem",
+    color: "#282d31",
   },
   flexRow: {
     display: "flex",
@@ -21,13 +22,19 @@ const useStyles = makeStyles((theme) => ({
     width: "90%",
     padding: "10px 0 10px 10px",
     "&:hover": {
-      backgroundColor: "#fff",
-      borderRadius: "10px",
+      backgroundColor: "#abe9cd",
+      backgroundImage: "linear-gradient(315deg, #abe9cd 0%, #3eadcf 74%)",
+      color: "#fff",
+      borderRadius: "6px",
       cursor: "pointer",
-      boxShadow: " 0px 3px 5px 0px rgba(76, 34, 50, 0.52)",
     },
-    // justifyContent: "space-evenly",
-    // margin: "1rem 0 0 0",
+  },
+  active: {
+    backgroundColor: "#abe9cd",
+    backgroundImage: "linear-gradient(315deg, #abe9cd 0%, #3eadcf 74%)",
+    color: "#fff",
+    borderRadius: "6px",
+    cursor: "pointer",
   },
   text: {
     margin: "auto 0 auto 0.5rem",
@@ -43,6 +50,9 @@ const useStyles = makeStyles((theme) => ({
 const SideNav = () => {
   const classes = useStyles();
   const history = useHistory();
+  const {
+    location: { pathname },
+  } = history;
   const admin = useSelector((state) => state.admin.admin);
   return (
     <>
@@ -64,7 +74,11 @@ const SideNav = () => {
           Hello {admin?.username}
         </div>
         <div
-          className={classes.flexRow}
+          className={
+            pathname === "/admin/enquiries"
+              ? `${classes.flexRow} ${classes.active}`
+              : classes.flexRow
+          }
           onClick={() => {
             history.push("/admin/enquiries");
           }}
@@ -75,7 +89,11 @@ const SideNav = () => {
           <span className={classes.text}>Home</span>
         </div>
         <div
-          className={classes.flexRow}
+          className={
+            pathname === "/admin/doctors"
+              ? `${classes.flexRow} ${classes.active}`
+              : classes.flexRow
+          }
           onClick={() => {
             history.push("/admin/doctors");
           }}
@@ -86,7 +104,11 @@ const SideNav = () => {
           <span className={classes.text}>Doctors</span>
         </div>
         <div
-          className={classes.flexRow}
+          className={
+            pathname === "/admin/users"
+              ? `${classes.flexRow} ${classes.active}`
+              : classes.flexRow
+          }
           onClick={() => {
             history.push("/admin/users");
           }}
@@ -109,7 +131,11 @@ const SideNav = () => {
         </div>
 
         <div
-          className={classes.flexRow}
+          className={
+            pathname === "/admin"
+              ? `${classes.flexRow} ${classes.active}`
+              : classes.flexRow
+          }
           onClick={() => {
             history.push("/admin");
           }}
@@ -120,7 +146,11 @@ const SideNav = () => {
           <span className={classes.text}>Chats</span>
         </div>
         <div
-          className={classes.flexRow}
+          className={
+            pathname === "/admin/chatroom/create"
+              ? `${classes.flexRow} ${classes.active}`
+              : classes.flexRow
+          }
           onClick={() => {
             history.push("/admin/chatroom/create");
           }}
@@ -131,7 +161,11 @@ const SideNav = () => {
           <span className={classes.text}>Create Chatroom</span>
         </div>
         <div
-          className={classes.flexRow}
+          className={
+            pathname === "/admin/register"
+              ? `${classes.flexRow} ${classes.active}`
+              : classes.flexRow
+          }
           onClick={() => {
             history.push("/admin/register");
           }}
@@ -142,7 +176,11 @@ const SideNav = () => {
           <span className={classes.text}>Create Admin</span>
         </div>
         <div
-          className={classes.flexRow}
+          className={
+            pathname === "/admin/profile"
+              ? `${classes.flexRow} ${classes.active}`
+              : classes.flexRow
+          }
           onClick={() => {
             history.push("/admin/profile");
           }}

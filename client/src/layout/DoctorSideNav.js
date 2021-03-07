@@ -19,13 +19,19 @@ const useStyles = makeStyles((theme) => ({
     width: "90%",
     padding: "10px 0 10px 10px",
     "&:hover": {
-      backgroundColor: "#fff",
-      borderRadius: "10px",
+      backgroundColor: "#abe9cd",
+      backgroundImage: "linear-gradient(315deg, #abe9cd 0%, #3eadcf 74%)",
+      color: "#fff",
+      borderRadius: "6px",
       cursor: "pointer",
-      boxShadow: " 0px 3px 5px 0px rgba(76, 34, 50, 0.52)",
     },
-    // justifyContent: "space-evenly",
-    // margin: "1rem 0 0 0",
+  },
+  active: {
+    backgroundColor: "#abe9cd",
+    backgroundImage: "linear-gradient(315deg, #abe9cd 0%, #3eadcf 74%)",
+    color: "#fff",
+    borderRadius: "6px",
+    cursor: "pointer",
   },
   text: {
     margin: "auto 0 auto 0.5rem",
@@ -41,6 +47,9 @@ const useStyles = makeStyles((theme) => ({
 const DoctorSideNav = () => {
   const classes = useStyles();
   const history = useHistory();
+  const {
+    location: { pathname },
+  } = history;
   const doctor = useSelector((state) => state.doctor.doctor);
   return (
     <>
@@ -62,7 +71,11 @@ const DoctorSideNav = () => {
           Hello {doctor?.username}
         </div>
         <div
-          className={classes.flexRow}
+          className={
+            pathname === "/doctor/calls"
+              ? `${classes.flexRow} ${classes.active}`
+              : classes.flexRow
+          }
           onClick={() => {
             history.push("/doctor/calls");
           }}
@@ -74,7 +87,11 @@ const DoctorSideNav = () => {
         </div>
 
         <div
-          className={classes.flexRow}
+          className={
+            pathname === "/doctor"
+              ? `${classes.flexRow} ${classes.active}`
+              : classes.flexRow
+          }
           onClick={() => {
             history.push("/doctor");
           }}
@@ -96,7 +113,11 @@ const DoctorSideNav = () => {
           <span className={classes.text}>Calls</span>
         </div>
         <div
-          className={classes.flexRow}
+          className={
+            pathname === "/doctor/profile"
+              ? `${classes.flexRow} ${classes.active}`
+              : classes.flexRow
+          }
           onClick={() => {
             history.push("/doctor/profile");
           }}
