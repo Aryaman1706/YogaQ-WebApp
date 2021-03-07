@@ -28,7 +28,7 @@ const DoctorList = () => {
       <AdminAppbar type={"admin"}>
         <AdminLayout>
           <Typography variant="h2" style={{ padding: "1rem" }}>
-            All Doctors
+            All Therapists
           </Typography>
           <PaginatedList
             ListItem={DoctorItem}

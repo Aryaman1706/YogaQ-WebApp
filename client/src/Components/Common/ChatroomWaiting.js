@@ -1,6 +1,13 @@
 import React from "react";
 import { Grid, makeStyles } from "@material-ui/core";
 import ChatroomWaitingCard from "../User/ChatroomWaitingCard";
+import profileLogo from "../../assets/user-1.svg";
+import membershipLogo from "../../assets/membership.svg";
+import contactLogo from "../../assets/headphone.svg";
+import doctorLogo from "../../assets/doctor.svg";
+import doctorLogo2 from "../../assets/doctor2.svg";
+import userLogo from "../../assets/user3.svg";
+import phoneLogo from "../../assets/phone-call2.svg";
 
 const useStyles = makeStyles(() => ({
   textContainer: {
@@ -18,10 +25,18 @@ const ChatroomWaiting = ({ type }) => {
     <>
       <Grid container spacing={2} className={classes.mainContainer}>
         <Grid item xs={12} className={classes.textContainer}>
-          <h1>
-            Start your journey towards healthier you by chatting with one of our
-            therapists
-          </h1>
+          {type.trim() === "user" && (
+            <h1>
+              Start your journey towards healthier you by chatting with one of
+              our therapists
+            </h1>
+          )}
+          {type.trim() === "doctor" && (
+            <h1>Get Started by chatting with one of your assigned patients</h1>
+          )}
+          {type.trim() === "admin" && (
+            <h1>Get Started by chatting with one of your assigned partner</h1>
+          )}
         </Grid>
         {type.trim() === "user" && (
           <>
@@ -31,6 +46,7 @@ const ChatroomWaiting = ({ type }) => {
               btnText={"Edit Profile"}
               link={"/edit"}
               color={"#E1F0EE"}
+              logo={profileLogo}
             />
             <ChatroomWaitingCard
               title={"Membership"}
@@ -38,6 +54,7 @@ const ChatroomWaiting = ({ type }) => {
               btnText={"Upgrade Membership"}
               link={"/edit"}
               color={"#F1DDDD"}
+              logo={membershipLogo}
             />
             <ChatroomWaitingCard
               title={"Contact Us"}
@@ -45,17 +62,19 @@ const ChatroomWaiting = ({ type }) => {
               btnText={"Contact"}
               link={"/edit"}
               color={"#C5CBF1"}
+              logo={contactLogo}
             />
           </>
         )}
         {type.trim() === "admin" && (
           <>
             <ChatroomWaitingCard
-              title={"Enquires"}
-              description={"Detailed Analysis of enquiries"}
+              title={"Therapist Applications"}
+              description={"Detailed Analysis of all therapist applications"}
               btnText={"Proceed"}
               link={"/admin/enquiries"}
               color={"#E1F0EE"}
+              logo={doctorLogo}
             />
             <ChatroomWaitingCard
               title={"Doctors"}
@@ -63,6 +82,7 @@ const ChatroomWaiting = ({ type }) => {
               btnText={"Proceed"}
               link={"/admin/doctors"}
               color={"#F1DDDD"}
+              logo={doctorLogo2}
             />
             <ChatroomWaitingCard
               title={"Profile"}
@@ -70,6 +90,7 @@ const ChatroomWaiting = ({ type }) => {
               btnText={"Edit Profile"}
               link={"/admin/profile"}
               color={"#C5CBF1"}
+              logo={userLogo}
             />
           </>
         )}
@@ -81,21 +102,8 @@ const ChatroomWaiting = ({ type }) => {
               btnText={"Proceed"}
               link={"/doctor/calls"}
               color={"#E1F0EE"}
+              logo={phoneLogo}
             />
-            {/* <ChatroomWaitingCard
-              title={"Doctors"}
-              description={"Detailed Analysis of all the doctors"}
-              btnText={"Proceed"}
-              link={"/admin/doctors"}
-              color={"#F1DDDD"}
-            />
-            <ChatroomWaitingCard
-              title={"Profile"}
-              description={"Customise your profile"}
-              btnText={"Edit Profile"}
-              link={"/admin/profile"}
-              color={"#C5CBF1"}
-            /> */}
           </>
         )}
       </Grid>

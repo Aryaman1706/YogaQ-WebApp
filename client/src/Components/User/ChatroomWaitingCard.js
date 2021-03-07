@@ -15,8 +15,7 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.only("lg")]: {
       height: "360px",
       width: "290px",
-      
-    }
+    },
   },
   title: {
     fontSize: "26px",
@@ -27,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
   para: {
     color: "#005368",
     fontSize: "1rem",
-    flexGrow: "3",
+    flexGrow: "1",
   },
   btn: {
     backgroundColor: "#175c62",
@@ -41,6 +40,20 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: "#175c62",
     },
   },
+  logo: {
+    height: "4rem",
+    width: "auto",
+    objectFit: "contain",
+    "& svg": {
+      fill: (props) => props.color,
+    },
+  },
+  logoContainer: {
+    display: "flex",
+    placeItems: "center",
+    justifyContent: "center",
+    flexGrow: "2",
+  },
 }));
 
 const ChatroomWaitingCard = ({
@@ -48,6 +61,7 @@ const ChatroomWaitingCard = ({
   description,
   btnText,
   link,
+  logo,
   ...props
 }) => {
   const classes = useStyles(props);
@@ -56,6 +70,9 @@ const ChatroomWaitingCard = ({
     <>
       <Grid item lg={4} xl={3}>
         <Paper elevation={0} className={classes.card}>
+          <div className={classes.logoContainer}>
+            <img src={logo} alt={"logo"} className={classes.logo} />
+          </div>
           <h2 className={classes.title}>{title}</h2>
           <p className={classes.para}>{description}</p>
           <Button

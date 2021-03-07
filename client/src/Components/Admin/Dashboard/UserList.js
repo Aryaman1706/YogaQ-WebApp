@@ -27,7 +27,7 @@ const UserList = () => {
     <>
       <AdminAppbar type={"admin"}>
         <AdminLayout>
-          <Typography variant="h2" align="center">
+          <Typography variant="h2" style={{ padding: "1rem" }}>
             All Users
           </Typography>
           <PaginatedList

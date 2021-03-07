@@ -108,6 +108,7 @@ const Home = ({ type }) => {
                 item
                 xs={12}
                 lg={2}
+                xl={2}
                 className={
                   active_chatroom
                     ? `${classes.item} ${classes.hide}`

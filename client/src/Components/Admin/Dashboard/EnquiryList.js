@@ -27,7 +27,7 @@ const EnquiryList = () => {
       <AdminAppbar type={"admin"}>
         <AdminLayout>
           <Typography variant="h2" style={{ padding: "1rem" }}>
-            All Enquiries
+            Therapists Applications
           </Typography>
           <PaginatedList
             ListItem={EnquiryItem}
