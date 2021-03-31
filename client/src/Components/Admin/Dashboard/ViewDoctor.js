@@ -18,6 +18,7 @@ import AdminAppbar from "../../Common/Appbar";
 import AdminLayout from "../../../layout/AdminLayout";
 import ListChatroomDoctor from "../../Common/ListChatroomDoctor";
 import ListCallsDoctor from "../../Common/ListCallsDoctor";
+import PaginatedCalls from "../../Common/PaginatedCalls";
 
 const useStyles = makeStyles((theme) => ({
   div: {
@@ -66,8 +67,8 @@ const ViewDoctor = () => {
   const [full, setFull] = useState(false);
   const [compLoading, setCompLoading] = useState(true);
 
-  const start = async () => {
-    await dispatch(doctorActions.selectDoctor(id));
+  const start = () => {
+    dispatch(doctorActions.selectDoctor(id));
     setCompLoading(false);
   };
 
@@ -77,7 +78,6 @@ const ViewDoctor = () => {
     } else {
       setCompLoading(true);
     }
-
     return () => {
       dispatch(doctorActions.clearSelected());
       dispatch(doctorActions.clear());
@@ -86,7 +86,7 @@ const ViewDoctor = () => {
   }, []);
 
   useEffect(() => {
-    if (compLoading) {
+    if (compLoading === true) {
       start();
     }
     // eslint-disable-next-line
@@ -122,7 +122,7 @@ const ViewDoctor = () => {
     <>
       <AdminAppbar type={"admin"}>
         <AdminLayout>
-          {!compLoading && selectDoctor ? (
+          {!compLoading && selectDoctor !== null ? (
             <>
               <div className={classes.container}>
                 <Grid container item xs={12} sm={12} lg={12} justify="center">
@@ -167,7 +167,8 @@ const ViewDoctor = () => {
                         <Toolbar></Toolbar>
                         <ListChatroomDoctor doctorId={selectDoctor._id} />
                         <Toolbar></Toolbar>
-                        <ListCallsDoctor doctorId={selectDoctor._id} />
+                        {/* <ListCallsDoctor doctorId={selectDoctor._id} /> */}
+                        <PaginatedCalls doctorId={selectDoctor._id} />
                       </Grid>
                     </Grid>
                   </Paper>
