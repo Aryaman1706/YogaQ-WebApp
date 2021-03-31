@@ -17,7 +17,6 @@ import background from "../../../assets/background.svg";
 import AdminAppbar from "../../Common/Appbar";
 import AdminLayout from "../../../layout/AdminLayout";
 import ListChatroomDoctor from "../../Common/ListChatroomDoctor";
-import ListCallsDoctor from "../../Common/ListCallsDoctor";
 import PaginatedCalls from "../../Common/PaginatedCalls";
 
 const useStyles = makeStyles((theme) => ({
@@ -167,7 +166,6 @@ const ViewDoctor = () => {
                         <Toolbar></Toolbar>
                         <ListChatroomDoctor doctorId={selectDoctor._id} />
                         <Toolbar></Toolbar>
-                        {/* <ListCallsDoctor doctorId={selectDoctor._id} /> */}
                         <PaginatedCalls doctorId={selectDoctor._id} />
                       </Grid>
                     </Grid>
