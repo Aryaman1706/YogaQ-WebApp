@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Grid,
   Typography,
@@ -8,11 +8,13 @@ import {
   Button,
   Paper,
   makeStyles,
+  ButtonGroup,
 } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { admin as adminActions } from "../../redux/actions";
-import axios from "../../utils/axios";
+import useLazyPagination from "../../hooks/useLazyPagination";
+import { ArrowBackIos, ArrowForwardIos } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
   div2: {
@@ -27,6 +29,8 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "space-between",
     boxShadow: "rgba(0, 0, 0, 0.05) 0px 5px 16px 0px",
     borderRadius: "3px",
+    margin: "1rem 0",
+    minWidth: "100%",
     "&:hover": {
       transform: "scale(1.02)",
       transition: "all 0.16s ease-in 0s",
@@ -43,12 +47,50 @@ const ListChatroomDoctor = ({ doctorId }) => {
     startDate: null,
     endDate: null,
   });
-  const [chatrooms, setChatrooms] = useState({
+  const [compLoading, setCompLoading] = useState(false);
+  const [loadMore, setLoadMore] = useState(false);
+
+  const [pagination, setPagination] = useState({
+    loadedPages: 0,
+    currentPage: 0,
+    startIndex: 0,
+    endIndex: 0,
     list: [],
     end: false,
   });
+  const [
+    loadFunction,
+    fetchMore,
+    nextHandler,
+    prevHandler,
+    isLoaded,
+  ] = useLazyPagination({
+    endpoint: "/chatroom/list/",
+    doctorId,
+    pagination,
+    setPagination,
+    callFilter: chatroomFilter,
+    setCallFilter: setChatroomFilter,
+    setCompLoading,
+    setLoadMore,
+  });
   const [onlyNew, setOnlyNew] = useState(false);
   const [newChatrooms, setNewChatrooms] = useState([]);
+
+  useEffect(() => {
+    if (compLoading && loadMore === false) {
+      loadFunction();
+    } else if (compLoading && loadMore === true) {
+      fetchMore();
+    }
+    // eslint-disable-next-line
+  }, [compLoading, loadMore]);
+
+  useEffect(() => {
+    if (isLoaded) {
+      setCompLoading(false);
+    }
+  }, [pagination.loadedPages, isLoaded]);
 
   const dateHandler = (e) => {
     setChatroomFilter((prev) => {
@@ -61,28 +103,21 @@ const ListChatroomDoctor = ({ doctorId }) => {
 
   const onlyNewHandler = (e) => {
     setOnlyNew(e.target.checked);
+    filterNewResults(pagination.list);
   };
 
   const submitHandler = async () => {
-    try {
-      const res = await axios.get(
-        `/chatroom/list/${doctorId}/?page=${1}&startDate=${
-          chatroomFilter.startDate
-        }&endDate=${chatroomFilter.endDate}`
-      );
-
-      setChatrooms({
-        list: res.data.body.chatrooms,
-        end: res.data.body.end,
+    if (chatroomFilter.startDate && chatroomFilter.endDate) {
+      setPagination((prev) => {
+        return { ...prev, list: [] };
       });
-      filterNewResults(res.data.body.chatrooms);
-    } catch (error) {
-      setChatroomFilter({ startDate: null, endDate: null });
-      setOnlyNew(false);
-      console.log(error.response.data);
+      setCompLoading(true);
+      setLoadMore(false);
     }
   };
-
+  /**
+   * @description returns only the chatrooms that were created between startDate and endDate of the filters
+   */
   const filterNewResults = (list) => {
     const onlyNewChatrooms = [];
     list.forEach((chatroom) => {
@@ -111,12 +146,19 @@ const ListChatroomDoctor = ({ doctorId }) => {
         ));
       }
     } else {
-      if (!chatrooms.list || chatrooms.list.length === 0) {
+      if (
+        !pagination.list ||
+        pagination.list.length === 0 ||
+        !pagination.list[pagination.startIndex]
+      ) {
         return <>No available Chatrooms</>;
       } else {
-        return chatrooms.list.map((chatroom) => (
-          <ChatroomItem chatroom={chatroom} />
-        ));
+        return pagination.list?.map((chatroom, index) => {
+          if (index >= pagination.startIndex && index <= pagination.endIndex) {
+            return <ChatroomItem chatroom={chatroom} key={index} />;
+          }
+          return <></>;
+        });
       }
     }
   };
@@ -149,6 +191,7 @@ const ListChatroomDoctor = ({ doctorId }) => {
       </>
     );
   };
+
   return (
     <>
       <Typography variant="h4" align="center">
@@ -158,7 +201,6 @@ const ListChatroomDoctor = ({ doctorId }) => {
         container
         direction="row"
         justify="flex-start"
-        alignItems="stretch"
         spacing={1}
         style={{ marginTop: "1rem" }}
       >
@@ -206,7 +248,7 @@ const ListChatroomDoctor = ({ doctorId }) => {
                 Filter
               </Button>
             </Grid>
-            {chatrooms.list && chatrooms.list.length > 0 ? (
+            {pagination.list && pagination.list.length > 0 ? (
               <Grid item xs={12}>
                 <FormControlLabel
                   control={
@@ -221,14 +263,46 @@ const ListChatroomDoctor = ({ doctorId }) => {
                 />
               </Grid>
             ) : null}
-          </Grid>
-        </Grid>
-        <Grid item xs={12} style={{ marginTop: "1rem" }}>
-          <>
-            <Grid container spacing={1}>
+            <Grid item xs={12} style={{ marginTop: "1rem" }}>
               {renderChatrooms()}
             </Grid>
-          </>
+            {pagination.currentPage !== 0 && (
+              <ButtonGroup variant="contained" color="primary" fullWidth>
+                {pagination.currentPage !== 1 ? (
+                  <Button
+                    startIcon={<ArrowBackIos />}
+                    onClick={(event) => prevHandler(event)}
+                    style={{
+                      backgroundColor: "#0FC1A7",
+                      height: "50px",
+                      backgroundImage:
+                        "linear-gradient(315deg, #abe9cd 0%, #3eadcf 74%)",
+                    }}
+                  >
+                    Previous
+                  </Button>
+                ) : null}
+                {pagination.end &&
+                pagination.currentPage === pagination.loadedPages ? null : (
+                  <Button
+                    endIcon={<ArrowForwardIos />}
+                    onClick={(event) => {
+                      setLoadMore(true);
+                      nextHandler(event);
+                    }}
+                    style={{
+                      backgroundColor: "#0FC1A7",
+                      height: "50px",
+                      backgroundImage:
+                        "linear-gradient(315deg, #abe9cd 0%, #3eadcf 74%)",
+                    }}
+                  >
+                    Next
+                  </Button>
+                )}
+              </ButtonGroup>
+            )}
+          </Grid>
         </Grid>
       </Grid>
     </>
