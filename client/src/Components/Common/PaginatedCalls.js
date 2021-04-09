@@ -79,6 +79,7 @@ const PaginatedCalls = ({ doctorId }) => {
     });
   };
   const submitHandler = () => {
+    setLoadMore(false);
     if (callFilter.startDate && callFilter.endDate) {
       setPagination((prev) => {
         return { ...prev, list: [] };

@@ -107,6 +107,7 @@ const ListChatroomDoctor = ({ doctorId }) => {
   };
 
   const submitHandler = async () => {
+    setLoadMore(false);
     if (chatroomFilter.startDate && chatroomFilter.endDate) {
       setPagination((prev) => {
         return { ...prev, list: [] };
