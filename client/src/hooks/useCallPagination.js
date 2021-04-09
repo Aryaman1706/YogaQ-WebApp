@@ -1,9 +1,10 @@
+import { useState } from "react";
 import Swal from "sweetalert2";
 import axios from "../utils/axios";
 
 /** 
  * 
- @desc Fetches data for nested call listings in admin panel
+ @description Fetches data for nested call listings in admin panel
 */
 const useCallPagination = (
   doctorId,
@@ -13,38 +14,24 @@ const useCallPagination = (
   setCallFilter,
   setCompLoading
 ) => {
+  const [isLoaded, setIsLoaded] = useState(false);
   const loadFunction = async () => {
-    console.log("load called");
-
     try {
+      setIsLoaded(false);
       const res = await axios.get(
-        `/call/doctor/list/${doctorId}/?page=${
-          pagination.loadedPages + 1
-        }&startDate=${callFilter.startDate}&endDate=${callFilter.endDate}`
+        `/call/doctor/list/${doctorId}/?page=1&startDate=${callFilter.startDate}&endDate=${callFilter.endDate}`
       );
-      console.log(res, "response");
-
-      setPagination((prev) => {
-        if (prev.list?.length > 0) {
-          return {
-            loadedPages: 1,
-            currentPage: 1,
-            startIndex: 0,
-            endIndex: 5,
-            list: [...prev.list, ...res.data.body.calls],
-            end: res.data.body.end,
-          };
-        } else {
-          return {
-            loadedPages: 1,
-            currentPage: 1,
-            startIndex: 0,
-            endIndex: 5,
-            list: res.data.body.calls,
-            end: res.data.body.end,
-          };
-        }
+      setPagination(() => {
+        return {
+          loadedPages: 1,
+          currentPage: 1,
+          startIndex: 0,
+          endIndex: 5,
+          [`list1`]: res.data.body.calls,
+          end: res.data.body.end,
+        };
       });
+      setIsLoaded(true);
     } catch (error) {
       console.log(error);
       setCallFilter({ startDate: null, endDate: null });
@@ -60,22 +47,20 @@ const useCallPagination = (
   };
 
   const fetchMore = async () => {
-    console.log("fetch more called");
     try {
       const res = await axios.get(
         `/call/doctor/list/${doctorId}/?page=${
           pagination.loadedPages + 1
         }&startDate=${callFilter.startDate}&endDate=${callFilter.endDate}`
       );
-      console.log(res, "response");
-
       setPagination((prev) => {
         return {
+          ...prev,
           loadedPages: prev.loadedPages + 1,
           currentPage: prev.currentPage + 1,
           startIndex: prev.currentPage * 5,
           endIndex: (prev.currentPage + 1) * 5,
-          list: [...prev.list, ...res.data.body.calls],
+          [`list${prev.loadedPages + 1}`]: res.data.body.calls,
           end: res.data.body.end,
         };
       });
@@ -133,7 +118,7 @@ const useCallPagination = (
       });
     }
   };
-  return [loadFunction, fetchMore, nextHandler, prevHandler];
+  return [loadFunction, fetchMore, nextHandler, prevHandler, isLoaded];
 };
 
 export default useCallPagination;

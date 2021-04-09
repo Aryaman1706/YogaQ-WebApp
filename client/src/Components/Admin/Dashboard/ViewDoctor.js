@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
   },
   paper: {
     padding: 50,
-    marginTop: "6rem",
+    margin: "6rem 3rem 0 3rem",
     [theme.breakpoints.only("xs")]: {
       padding: 10,
       marginTop: "1rem",
