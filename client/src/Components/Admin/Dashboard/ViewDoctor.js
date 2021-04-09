@@ -164,7 +164,9 @@ const ViewDoctor = () => {
                           )}
                         </Grid>
                         <Toolbar></Toolbar>
-                        <ListChatroomDoctor doctorId={selectDoctor._id} />
+                        <Grid item xs={12}>
+                          <ListChatroomDoctor doctorId={selectDoctor._id} />
+                        </Grid>
                         <Toolbar></Toolbar>
                         <PaginatedCalls doctorId={selectDoctor._id} />
                       </Grid>
