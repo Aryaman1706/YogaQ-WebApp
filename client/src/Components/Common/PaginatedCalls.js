@@ -30,6 +30,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "space-between",
     boxShadow: "rgba(0, 0, 0, 0.05) 0px 5px 16px 0px",
     borderRadius: "3px",
+    margin: "1rem 0",
     "&:hover": {
       transform: "scale(1.02)",
       transition: "all 0.16s ease-in 0s",
@@ -55,7 +56,13 @@ const PaginatedCalls = ({ doctorId }) => {
     list: [],
     end: false,
   });
-  const [loadFunction, fetchMore, nextHandler, prevHandler] = useCallPagination(
+  const [
+    loadFunction,
+    fetchMore,
+    nextHandler,
+    prevHandler,
+    isLoaded,
+  ] = useCallPagination(
     doctorId,
     pagination,
     setPagination,
@@ -77,7 +84,6 @@ const PaginatedCalls = ({ doctorId }) => {
         return { ...prev, list: [] };
       });
       setCompLoading(true);
-      // setFetch(true);
     }
   };
 
@@ -87,25 +93,30 @@ const PaginatedCalls = ({ doctorId }) => {
     } else if (compLoading && loadMore === true) {
       fetchMore();
     }
+    // eslint-disable-next-line
   }, [compLoading, loadMore]);
 
   useEffect(() => {
-    setCompLoading(false);
-  }, [pagination.loadedPages]);
+    if (isLoaded) {
+      setCompLoading(false);
+    }
+  }, [pagination.loadedPages, isLoaded]);
 
   // ****Render Chatroom*****//
   const renderChatrooms = () => {
-    console.log(pagination.list, pagination.list.length);
     if (
-      !pagination.list ||
-      pagination.list.length === 0 ||
-      pagination.list[0] === undefined
+      !pagination[`list${pagination.currentPage}`] ||
+      pagination[`list${pagination.currentPage}`]?.length === 0 ||
+      pagination[`list${pagination.currentPage}`][0] === undefined
     ) {
       return <div>No Available Calls</div>;
-    } else if (pagination.list && pagination.list.length > 0) {
+    } else if (
+      pagination[`list${pagination.currentPage}`] &&
+      pagination[`list${pagination.currentPage}`].length > 0
+    ) {
       return (
         <>
-          {pagination.list?.map((chatroom) => (
+          {pagination[`list${pagination.currentPage}`]?.map((chatroom) => (
             <ChatroomItem chatroom={chatroom} />
           ))}
         </>
@@ -147,12 +158,18 @@ const PaginatedCalls = ({ doctorId }) => {
                   ) : null}
                 </div>
               </Grid>
-              <Grid item xs={2}>
-                <div style={{ display: "flex", placeItems: "center" }}>
-                  <IconButton color="primary">
-                    <VisibilityIcon />
-                  </IconButton>
-                </div>
+              <Grid
+                item
+                xs={2}
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  alignItems: "center",
+                }}
+              >
+                <IconButton color="primary">
+                  <VisibilityIcon />
+                </IconButton>
               </Grid>
               <Grid item xs={12}>
                 <Divider />
@@ -213,7 +230,6 @@ const PaginatedCalls = ({ doctorId }) => {
 
   return (
     <>
-      {console.log(pagination, "pagination")}
       <Typography variant="h4" align="center">
         Calls
       </Typography>
@@ -269,51 +285,48 @@ const PaginatedCalls = ({ doctorId }) => {
                 Filter
               </Button>
             </Grid>
-          </Grid>
-        </Grid>
-        <Grid item xs={12} style={{ marginTop: "1rem" }}>
-          <>
-            <Grid container spacing={1}>
+
+            <Grid item xs={12} style={{ marginTop: "1rem" }}>
               {renderChatrooms()}
             </Grid>
-          </>
-        </Grid>
-        {pagination.currentPage !== 0 && (
-          <ButtonGroup variant="contained" color="primary" fullWidth>
-            {pagination.currentPage !== 1 ? (
-              <Button
-                startIcon={<ArrowBackIos />}
-                onClick={(event) => prevHandler(event)}
-                style={{
-                  backgroundColor: "#0FC1A7",
-                  height: "50px",
-                  backgroundImage:
-                    "linear-gradient(315deg, #abe9cd 0%, #3eadcf 74%)",
-                }}
-              >
-                Previous
-              </Button>
-            ) : null}
-            {pagination.end &&
-            pagination.currentPage === pagination.loadedPages ? null : (
-              <Button
-                endIcon={<ArrowForwardIos />}
-                onClick={(event) => {
-                  setLoadMore(true);
-                  nextHandler(event);
-                }}
-                style={{
-                  backgroundColor: "#0FC1A7",
-                  height: "50px",
-                  backgroundImage:
-                    "linear-gradient(315deg, #abe9cd 0%, #3eadcf 74%)",
-                }}
-              >
-                Next
-              </Button>
+            {pagination.currentPage !== 0 && (
+              <ButtonGroup variant="contained" color="primary" fullWidth>
+                {pagination.currentPage !== 1 ? (
+                  <Button
+                    startIcon={<ArrowBackIos />}
+                    onClick={(event) => prevHandler(event)}
+                    style={{
+                      backgroundColor: "#0FC1A7",
+                      height: "50px",
+                      backgroundImage:
+                        "linear-gradient(315deg, #abe9cd 0%, #3eadcf 74%)",
+                    }}
+                  >
+                    Previous
+                  </Button>
+                ) : null}
+                {pagination.end &&
+                pagination.currentPage === pagination.loadedPages ? null : (
+                  <Button
+                    endIcon={<ArrowForwardIos />}
+                    onClick={(event) => {
+                      setLoadMore(true);
+                      nextHandler(event);
+                    }}
+                    style={{
+                      backgroundColor: "#0FC1A7",
+                      height: "50px",
+                      backgroundImage:
+                        "linear-gradient(315deg, #abe9cd 0%, #3eadcf 74%)",
+                    }}
+                  >
+                    Next
+                  </Button>
+                )}
+              </ButtonGroup>
             )}
-          </ButtonGroup>
-        )}
+          </Grid>
+        </Grid>
       </Grid>
     </>
   );
