@@ -6,6 +6,7 @@ import CallHistoryItem from "../../Common/CallHistoryItem";
 import { useHistory, useParams } from "react-router-dom";
 import homeIcon from "../../../assets/home.svg";
 import PaginatedList from "../../Common/PaginatedList";
+import PaginatedCalls from "../../Common/PaginatedCalls";
 
 const useStyles = makeStyles((theme) => ({
   homeIcon: {
@@ -37,7 +38,11 @@ const useStyles = makeStyles((theme) => ({
 const Calls = () => {
   const classes = useStyles();
   const history = useHistory();
-  const { calls, end } = useSelector((state) => state.doctor);
+  const {
+    calls,
+    end,
+    doctor: { _id },
+  } = useSelector((state) => state.doctor);
 
   const dispatch = useDispatch();
   const { chatroomId } = useParams();
@@ -63,9 +68,6 @@ const Calls = () => {
           </div>
         </Grid>
       </Grid>
-      <Typography variant="h2" style={{ padding: "1rem" }}>
-        Calls
-      </Typography>
       <Grid
         container
         direction="row"
@@ -73,23 +75,6 @@ const Calls = () => {
         alignItems="stretch"
         style={{ padding: "1rem" }}
       >
-        <Grid item xs={6}>
-          <Typography
-            variant="h5"
-            style={{ color: "#606060", paddingLeft: "1.5rem" }}
-          >
-            Date
-          </Typography>
-        </Grid>
-        <Grid item xs={6}>
-          <Typography
-            variant="h5"
-            align="right"
-            style={{ color: "#606060", paddingRight: "1.5rem" }}
-          >
-            Status
-          </Typography>
-        </Grid>
         {chatroomId ? (
           <PaginatedList
             ListItem={CallHistoryItem}
@@ -100,7 +85,7 @@ const Calls = () => {
             type={"doctor"}
           />
         ) : (
-          <h1>List all calls here with filters and all</h1>
+          <PaginatedCalls doctorId={_id} />
         )}
       </Grid>
     </>
