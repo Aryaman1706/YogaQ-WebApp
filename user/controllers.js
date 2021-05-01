@@ -3,8 +3,9 @@ const queryString = require("query-string");
 // * Models
 const User = require("./models");
 const {
-  models: { Chatroom },
+  models: { Chatroom, Message },
 } = require("../chatroom");
+const { models: Admin } = require("../admin");
 
 // * Utils
 const validators = require("./validators");
@@ -213,7 +214,10 @@ exports.authCallback = async (req, res) => {
 // * Put request for signup
 exports.signup = async (req, res) => {
   try {
-    const user = await User.findById(req.user._id).exec();
+    const [user, admin] = await Promise.all([
+      User.findById(req.user._id).exec(),
+      Admin.findById("5fb6b2accbecb72838aece98").exec(),
+    ]);
     if (!user)
       return res.status(404).json({ error: "User not found.", body: null });
 
@@ -231,16 +235,30 @@ exports.signup = async (req, res) => {
       user.phoneNumber = value.phoneNumber;
     }
     user.complete = true;
+
     const chatroom = {
       user: {
         id: user._id,
       },
       partner: {
-        id: "5fb6b2accbecb72838aece98",
+        id: admin._id,
         model: "Admin",
       },
     };
-    await Promise.all([user.save(), Chatroom.create(chatroom)]);
+    const [newChatroom] = await Promise.all([
+      Chatroom.create(chatroom),
+      user.save(),
+    ]);
+    await Message.create({
+      chatroomId: newChatroom._id,
+      sender: {
+        id: newChatroom.partner.id,
+        model: newChatroom.partner.model,
+      },
+      text: admin.welcomeMessage || "Hello!",
+      time: new Date(),
+    });
+
     return res.status(200).json({
       error: null,
       body: { user, message: "Congratulations! SignUp process is complete." },

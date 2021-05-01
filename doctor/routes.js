@@ -1,6 +1,8 @@
 const express = require("express");
 const multer = require("multer");
 const passport = require("passport");
+const CloudinaryStorage = require("cloudinary-multer");
+const cloudinary = require("cloudinary").v2;
 
 // * Middleware
 const { login: loginDoctor } = require("./middlewares");
@@ -12,10 +14,18 @@ const {
 const controllers = require("./controllers");
 
 // * Config
-const customStorage = require("../config/multerStorage");
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+const storage = CloudinaryStorage({
+  cloudinary,
+});
 
 const upload = multer({
-  storage: customStorage(),
+  storage,
 });
 
 // * API Endpoints -->

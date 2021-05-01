@@ -292,6 +292,7 @@ export const addQuestionToQuestionSet = ({ chatroomId, question }) => async (
       payload: res.data.body,
     });
   } catch (error) {
+    console.log(error);
     dispatch({
       type: ADMIN_ERROR,
       payload: error.response.data.error,
@@ -314,6 +315,7 @@ export const getQuestionSet = (chatroomId) => async (dispatch) => {
         text: "No question set found for this chatroom.",
         icon: "error",
         showConfirmButton: true,
+        showDenyButton: true,
         confirmButtonText: "Create Question Set",
         allowOutsideClick: false,
       }).then((result) => {

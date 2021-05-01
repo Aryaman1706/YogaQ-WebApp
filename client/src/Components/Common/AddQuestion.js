@@ -7,6 +7,7 @@ import {
 } from "../../redux/actions";
 import Swal from "sweetalert2";
 import Appbar from "./Appbar";
+import { useParams } from "react-router-dom";
 
 const AddQuestion = ({ type }) => {
   const [state, setState] = useState({
@@ -18,6 +19,7 @@ const AddQuestion = ({ type }) => {
     else if (type.trim() === "doctor") return state.doctor;
   });
   const dispatch = useDispatch();
+  const { chatroomId } = useParams();
 
   const {
     statement,
@@ -49,14 +51,14 @@ const AddQuestion = ({ type }) => {
     if (type.trim() === "admin") {
       await dispatch(
         adminActions.addQuestionToQuestionSet({
-          chatroomId: active_chatroom._id,
+          chatroomId: active_chatroom?._id || chatroomId,
           question: state,
         })
       );
     } else if (type.trim() === "doctor") {
       await dispatch(
         doctorActions.addQuestionToQuestionSet({
-          chatroomId: active_chatroom._id,
+          chatroomId: active_chatroom?._id || chatroomId,
           question: state,
         })
       );

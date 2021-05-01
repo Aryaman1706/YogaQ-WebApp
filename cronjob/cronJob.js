@@ -13,7 +13,7 @@
 */
 
 const mongoose = require("mongoose");
-const Message = require("../models/Message");
+const { Message } = require("../chatroom/models/index");
 
 const main = async () => {
   try {
