@@ -4,7 +4,6 @@ const Joi = require("joi");
 /**
  * {
  *  "links": [{ url: "https://google.com" }],
- *  "enabled": true
  * }
  */
 exports.createOrEdit = (body) => {
@@ -13,9 +12,24 @@ exports.createOrEdit = (body) => {
       .items(
         Joi.object({
           url: Joi.string().required(),
+          thumbnail: Joi.string().required(),
         }).required()
       )
       .required(),
+  });
+
+  return schema.validate(body);
+};
+
+// * Enable link document
+/**
+ * {
+ *  "enabled": true,
+ * }
+ */
+exports.enable = (body) => {
+  const schema = Joi.object({
+    enable: Joi.boolean().required(),
   });
 
   return schema.validate(body);

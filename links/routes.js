@@ -27,14 +27,25 @@ router.post("/", adminLogin);
 /**
  * Type:- Put
  * Desc:- Edit Link document
- * Route:- {{server_url}}/link/:linkId
+ * Route:- {{server_url}}/link/edit/:linkId
  * Middlewares:- Admin Login
  * Request Body:- {
  *  "links": [{ url: "test_url" }],
  *  "enabled": true
  * }
  */
-router.put("/:linkId", adminLogin);
+router.put("/edit/:linkId", adminLogin);
+
+/**
+ * Type:- Put
+ * Desc:- Enable link document
+ * Route:- {{server_url}}/link/enable/:linkId
+ * Middlewares:- Admin Login
+ * Request Body:- {
+ *  "enabled": true
+ * }
+ */
+router.put("/enable/:linkId", adminLogin);
 
 /**
  * Type:- Delete
@@ -55,10 +66,10 @@ router.get("/admin-list", adminLogin);
 /**
  * Type:- Get
  * Desc:- Get enabled link document
- * Route:- {{server_url}}/link
+ * Route:- {{server_url}}/link/list
  * Middlewares:- User Login
  */
-router.get("/", userLogin);
+router.get("/list", userLogin);
 
 // * End of API Endpoints -->
 
