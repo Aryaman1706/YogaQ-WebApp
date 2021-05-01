@@ -114,7 +114,7 @@ const doctorSchema = new mongoose.Schema({
   welcomeMessage: {
     type: String,
     maxlength: 200,
-    default: "Hello!",
+    default: "Hello! This is a welcome message.",
   },
   // Admin Access
   restricted: {

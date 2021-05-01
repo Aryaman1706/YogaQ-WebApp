@@ -3,7 +3,7 @@ const getEmbeds = require("./getEmbeds");
 const Message = require("../chatroom/models/message");
 const Chatroom = require("../chatroom/models/chatroom");
 
-const modifyLastAccess = ({ userRole, chatroomId }) => {
+const modifyLastAccess = async ({ userRole, chatroomId }) => {
   console.log("Last access change");
   let update = {};
   if (userRole === "user") {
@@ -15,7 +15,8 @@ const modifyLastAccess = ({ userRole, chatroomId }) => {
       "lastOpened.partner": new Date(),
     };
   }
-  Chatroom.findByIdAndUpdate(chatroomId, update);
+  console.log(chatroomId, update);
+  await Chatroom.findByIdAndUpdate(chatroomId, update);
 };
 
 const chat = async (server) => {
@@ -60,8 +61,8 @@ const chat = async (server) => {
         socket.to(chatroomId).emit("toClient", data);
         Message.create(data);
       });
-      socket.on("disconnect", () => {
-        modifyLastAccess({ userRole, chatroomId });
+      socket.on("disconnect", async () => {
+        await modifyLastAccess({ userRole, chatroomId });
         console.log("socket io disconnected");
       });
     });

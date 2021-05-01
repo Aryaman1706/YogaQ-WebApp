@@ -1,14 +1,30 @@
 import React, { useState } from "react";
+import { IconButton, Divider, Avatar } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
+import { format } from "date-fns";
 import ProfileIcon from "../../assets/profile.svg";
+import Profile from "../../assets/user.svg";
 import LogoutIcon from "../../assets/log-out.svg";
-import { useDispatch } from "react-redux";
+import AccountCircleOutlinedIcon from "@material-ui/icons/AccountCircleOutlined";
+import SideDrawer from "../Landing/SideDrawer";
+import MenuIcon from "@material-ui/icons/Menu";
+import { useDispatch, useSelector } from "react-redux";
 import { logoutDoctor } from "../../redux/actions/doctorActions";
 
 const DoctorAppbarExt = ({ classes, StyledMenu }) => {
-  const [, setAnchorEl] = useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [sideDrawer, setSideDrawer] = useState(false);
   const history = useHistory();
+  const { isAuthenticated, doctor } = useSelector((state) => state.doctor);
   const dispatch = useDispatch();
+
+  const handleClick = (e) => {
+    setAnchorEl(e.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   const doctorLogOut = async () => {
     await dispatch(logoutDoctor());
@@ -17,38 +33,103 @@ const DoctorAppbarExt = ({ classes, StyledMenu }) => {
 
   return (
     <>
-      <div
-        className={`${classes.flexRow} ${classes.paddingMenuItem}`}
-        onClick={() => {
-          history.push("/edit");
-          setAnchorEl(null);
-        }}
-      >
-        <div>
-          <img
-            src={ProfileIcon}
-            alt="profile-icon"
-            className={classes.profileIcon}
-          />
-        </div>
-        <div className={classes.menuitem}>Profile</div>
-      </div>
-      <div
-        className={`${classes.flexRow} ${classes.paddingMenuItem}`}
-        onClick={() => {
-          doctorLogOut();
-          setAnchorEl(null);
-        }}
-      >
-        <div>
-          <img
-            src={LogoutIcon}
-            alt="profile-icon"
-            className={classes.profileIcon}
-          />
-        </div>
-        <div className={classes.menuitem}>Log out</div>
-      </div>
+      {isAuthenticated && doctor ? (
+        <>
+          <IconButton
+            aria-controls="menu"
+            aria-haspopup="true"
+            onClick={handleClick}
+            className={classes.profile}
+          >
+            <AccountCircleOutlinedIcon />
+          </IconButton>
+          <StyledMenu
+            id="menu"
+            keepMounted
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
+            className={classes.menu}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "right",
+            }}
+            transformOrigin={{
+              vertical: "bottom",
+              horizontal: "right",
+            }}
+          >
+            <div className={classes.menuFlex}>
+              <div
+                className={classes.flexRow}
+                style={{ paddingBottom: "1rem" }}
+              >
+                <Avatar alt="Profile" src={Profile} />
+                <div className={classes.profileFlex}>
+                  <div className={classes.profileName}>{doctor.username}</div>
+                  {doctor.createdAt ? (
+                    <>
+                      <div className={classes.profileJoin}>
+                        Joined{" "}
+                        {format(new Date(doctor.createdAt), "MMM dd, yyyy")}
+                      </div>
+                    </>
+                  ) : null}
+                </div>
+              </div>
+              <Divider />
+              <br />
+              <div
+                className={`${classes.flexRow} ${classes.paddingMenuItem}`}
+                onClick={() => {
+                  history.push("/edit");
+                  setAnchorEl(null);
+                }}
+              >
+                <div>
+                  <img
+                    src={ProfileIcon}
+                    alt="profile-icon"
+                    className={classes.profileIcon}
+                  />
+                </div>
+                <div className={classes.menuitem}>Profile</div>
+              </div>
+              <div
+                className={`${classes.flexRow} ${classes.paddingMenuItem}`}
+                onClick={() => {
+                  doctorLogOut();
+                  setAnchorEl(null);
+                }}
+              >
+                <div>
+                  <img
+                    src={LogoutIcon}
+                    alt="profile-icon"
+                    className={classes.profileIcon}
+                  />
+                </div>
+                <div className={classes.menuitem}>Log out</div>
+              </div>
+            </div>
+          </StyledMenu>
+        </>
+      ) : (
+        <>
+          <IconButton
+            aria-controls="menu"
+            aria-haspopup="true"
+            onClick={() => {
+              setSideDrawer(true);
+            }}
+            className={classes.menuIcon}
+            style={{ color: "rgb(92, 132, 251)" }}
+          >
+            <MenuIcon />
+          </IconButton>
+          <SideDrawer sideDrawer={sideDrawer} setSideDrawer={setSideDrawer} />
+        </>
+      )}
     </>
   );
 };

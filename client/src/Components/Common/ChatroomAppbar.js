@@ -22,7 +22,7 @@ import { format } from "date-fns";
 import { chatroom as chatroomActions } from "../../redux/actions";
 import AdminChatroomAppbarExt from "../Admin/ChatroomAppbarExt";
 import UserChatroomAppbarExt from "../User/ChatroomAppbarExt";
-import DoctorChatroomAppbarExt from "../Doctor/DoctorAppbarExt";
+import DoctorChatroomAppbarExt from "../Doctor/ChatroomAppbarExt";
 import {
   user as userActions,
   doctor as doctorActions,
@@ -194,8 +194,9 @@ const CharoomAppbar = ({ type, children }) => {
         <UserChatroomAppbarExt classes={classes} setAnchorEl={setAnchorEl} />
       );
     } else if (type.trim() === "doctor") {
-      //
-      <DoctorChatroomAppbarExt classes={classes} setAnchorEl={setAnchorEl} />;
+      return (
+        <DoctorChatroomAppbarExt classes={classes} setAnchorEl={setAnchorEl} />
+      );
     }
   };
 
